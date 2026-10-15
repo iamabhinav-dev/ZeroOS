@@ -14,6 +14,16 @@
     <string name="home_open_alarms">Open alarms</string>
     <string name="home_open_calendar">Open calendar</string>
 
+    <!-- App list (F2, wireframe B) -->
+    <string name="app_list_search_hint">search…</string>
+    <string name="app_list_search_label">Search apps</string>
+    <string name="app_list_search_web">Search the web for \"%1$s\"</string>
+    <string name="app_list_search_play_store">Search Play Store for \"%1$s\"</string>
+    <string name="app_list_profile_tag">%1$s · %2$s</string>
+    <string name="profile_clone">clone</string>
+    <string name="profile_work">work</string>
+    <string name="profile_private">private</string>
+
     <!-- Diagnostics (F17.9–F17.11, wireframe C) -->
     <string name="diagnostics_title">Diagnostics</string>
     <string name="diagnostics_filter_all">All</string>
