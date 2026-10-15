@@ -50,6 +50,8 @@ kover {
                     "*_MembersInjector",
                     "dagger.hilt.*",
                     "hilt_aggregated_deps.*",
+                    // Test helpers, not app logic.
+                    "com.zeroos.core.testing.*",
                     "com.zeroos.launcher.MainActivity",
                     "com.zeroos.launcher.ZeroApplication",
                 )

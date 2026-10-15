@@ -20,6 +20,7 @@ mockk = "1.14.11"
 turbine = "1.2.1"
 androidxTestCore = "1.7.0"
 androidxTestExtJunit = "1.3.0"
+espresso = "3.7.0"
 leakcanary = "2.14"
 
 [libraries]
@@ -45,6 +46,8 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 androidx-test-core = { module = "androidx.test:core-ktx", version.ref = "androidxTestCore" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit-ktx", version.ref = "androidxTestExtJunit" }
 androidx-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }
+# Pinned: the Compose test BOM brings Espresso 3.5.1, which fails on API 37.
+androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso" }
 androidx-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
 # Debug-only tools

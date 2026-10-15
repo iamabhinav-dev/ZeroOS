@@ -34,6 +34,7 @@ internal fun Project.configureCompose() {
         add("implementation", libs.lib("androidx-compose-material3"))
         add("testImplementation", bom)
         add("testImplementation", libs.lib("androidx-compose-ui-test-junit4"))
+        add("testImplementation", libs.lib("androidx-test-espresso-core"))
         add("testImplementation", libs.lib("roborazzi"))
         add("testImplementation", libs.lib("roborazzi-compose"))
         add("debugImplementation", bom)
