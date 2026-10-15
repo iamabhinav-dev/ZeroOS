@@ -1,0 +1,24 @@
+# Gradle / build
+.gradle/
+build/
+.kotlin/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signing — never commit keys (NFR-S6)
+keystore.properties
+*.jks
+*.keystore
+
+# APKs kept locally for reference (Install Checklist)
+releases/
+*.apk
+*.aab
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
