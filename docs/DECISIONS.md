@@ -85,13 +85,22 @@ From v1.1 (when the manifest declares a notification listener and an Accessibili
 The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears as soon as Shorts/Reels is detected again (only a ~1 s transition pause).
 *Why:* Spike testing showed one Back press often stays on the Shorts tab; apps can't force-close other apps; a grace period would be a loophole.
 
-**D-020 — Doto dot-matrix font for clock and numbers** · 2026-10-15 · Accepted
-Clock, date, stats numbers, focus timer and block-screen title use Doto (OFL); other text uses a readable bundled font.
-*Why:* User wanted the Nothing Ndot 57 look; Ndot is proprietary, Doto is a free look-alike; dot fonts are hard to read at small sizes.
+**D-020 — Ndot 57 bundled for clock and numbers** · 2026-10-15 · Accepted (revised)
+Clock, date, stats numbers, focus timer and stop-screen puns use Ndot 57, bundled from a font file the user provides; Doto (OFL) is the fallback if the file is missing. Other text uses a readable bundled font.
+*Why:* User's explicit choice (over an import-your-own-font option).
+*Consequences:* Ndot 57 is Nothing's proprietary font. It's acceptable here only because the app is personal, unpublished, and the repo is private. If the app or repo is ever shared or published, remove Ndot and use Doto. Agents must not download Ndot from the internet; the user supplies the file.
 
 **D-021 — Random puns on stop screens** · 2026-10-15 · Accepted
 The F16 black screen, the F8 mindful pause and the F8 limit-reached screen each show a random pun from their own built-in list by default (F16.9, F8.13); custom message (F16) or plain text (F8.14) optional.
 *Why:* User's request; keeps the block screen light instead of preachy.
+
+**D-022 — Dot animations on stop screens** · 2026-10-15 · Accepted
+Breathing dots (pause), draining battery (limit reached), closing shutter (Shorts block); monochrome dot-matrix style; static when reduced motion is on.
+*Why:* User chose small animations over per-pun pictograms.
+
+**D-023 — Shorts blocker watches which app is in front** · 2026-10-15 · Accepted
+The Accessibility service receives window changes from all apps (app name only) and reads content only from YouTube/Instagram; the overlay stays up through gaps under 1 s.
+*Why:* Spike-2 testing: the overlay reappeared over Recents (it never learned the user had left YouTube) and blinked while Shorts loaded.
 
 ---
 
