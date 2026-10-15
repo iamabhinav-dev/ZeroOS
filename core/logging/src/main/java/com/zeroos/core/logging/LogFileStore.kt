@@ -55,6 +55,9 @@ class LogFileStore(
         (logFiles() + crashReports()).forEach { it.delete() }
     }
 
+    /** All log lines in file order, oldest first (for [parseLogLines]). */
+    fun readAllLinesOldestFirst(): List<String> = logFiles().asReversed().flatMap { it.readLines() }
+
     /** All log lines, newest first, up to [limit]. */
     fun readRecentLines(limit: Int): List<String> =
         logFiles().asSequence().flatMap { it.readLines().asReversed().asSequence() }.take(limit).toList()
