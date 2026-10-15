@@ -13,8 +13,8 @@ Time estimates are **full-time-equivalent for one developer**; scale to your own
 | 1 | Prototype (M0) | 1 week | Usable as default launcher |
 | 2 | v1.0 features | 3–4 weeks | F1–F6, F14 complete |
 | 3 | Daily-driver hardening | 1 week | v1.0 installed as my default launcher |
-| 4 | v1.1 Wellbeing | 4–5 weeks | F7, F8, F9 |
-| 5 | v1.2 Insights & extras | 2–3 weeks | F10–F13 |
+| 4 | v1.1 Wellbeing & insights | 5–6 weeks | F7, F8, F9, F10 |
+| 5 | v1.2 Extras | 1–2 weeks | F11–F13 |
 | 6 | v1.3 Short-form blocker | 2–3 weeks | F16 |
 | **Total** | | **~4 months** | |
 
@@ -225,7 +225,7 @@ Home · App list · Gestures · Appearance · Hidden apps · About. Later phases
 
 ---
 
-## Phase 4 — v1.1 Wellbeing (F7, F8, F9)
+## Phase 4 — v1.1 Wellbeing & Insights (F7, F8, F9, F10)
 
 ### Step 4.1 — Infrastructure
 - Add **Room** (limits, inbox, usage cache, focus schedules) with exported schemas for migration tests.
@@ -253,35 +253,39 @@ Build in this order:
 ### Step 4.5 — Focus mode (F9)
 - Start from home (long-press clock) → duration + allow-list; filtered app list, maximal notification filtering, remaining time on home, hold-3s to end; optional DND; scheduled sessions.
 
-**Tests:**
-- Unit: F8 toggles (master off disables all, per-part, config kept, friction), usage calculation from fake `UsageEvents` (midnight, time-zone, DST, clock change, "5 more minutes" cap), notification filter rules, digest scheduling, focus timer & allow-list, permission helper states (granted/denied/revoked).
-- Robolectric: Room DAOs + migration tests, WorkManager jobs (`work-testing`), notification listener logic with fake `StatusBarNotification`s, accessibility event handling with fake events.
-- UI + screenshots: pause, limit-reached, inbox, focus start/end, permission explanation screens.
+### Step 4.6 — Screen-time insights & home-screen stats (F10)
+Reuses the usage calculation from Step 4.3.
+- `UsageSummaryRepository`: today's screen time, unlocks (`KEYGUARD_HIDDEN`, Android 9+), per-hour buckets, last 7 days, yesterday comparison.
+- Insights screen: totals, top 5 apps, 7-day monochrome bars.
+- Home-screen stats in `feature/home`: four styles (text, progress bar, weekly bars, hourly timeline) drawn with Compose `Canvas`; goal and yesterday comparison options; refresh on home visible / screen on; tap → Insights; "Tap to show screen time" line until Usage Access is granted.
+- Must fit the non-scrolling home layout (F1.6) at the largest font scale.
 
-**Done when:** F7–F9 met and traced; every feature works with permissions denied; manual check: limits and filter work on the test phone, and services survive overnight + reboot with the F14.6 settings applied.
+**Tests:**
+- Unit: F8 toggles (master off disables all, per-part, config kept, friction), usage calculation from fake `UsageEvents` (midnight, time-zone, DST, clock change, "5 more minutes" cap), notification filter rules, digest scheduling, focus timer & allow-list, permission helper states (granted/denied/revoked), F10 aggregation (screen time, unlocks, hourly buckets, 7-day, yesterday %, goal exceeded, Android 8 no-unlock fallback), chart data mapping and content descriptions.
+- Robolectric: Room DAOs + migration tests, WorkManager jobs (`work-testing`), notification listener logic with fake `StatusBarNotification`s, accessibility event handling with fake events.
+- UI + screenshots: pause, limit-reached, inbox, focus start/end, permission explanation screens, Insights screen, home with each stats style (dark/light, default/largest font, permission not granted).
+
+**Done when:** F7–F10 met and traced; every feature works with permissions denied; manual check: limits and filter work on the test phone, services survive overnight + reboot with the F14.6 settings applied, and home-screen screen time/unlocks roughly match the phone's own screen-time screen.
 
 ---
 
-## Phase 5 — v1.2 Insights & Extras (F10–F13)
+## Phase 5 — v1.2 Extras (F11–F13)
 
-### Step 5.1 — Screen-time insights (F10)
-- Daily total, unlocks (`KEYGUARD_HIDDEN` / `SCREEN_INTERACTIVE` events), top 5, 7-day monochrome bars, optional home line.
-
-### Step 5.2 — Grayscale shortcut (F11)
+### Step 5.1 — Grayscale shortcut (F11)
 - Settings entry opening the system accessibility/color-correction screen + accessibility-shortcut tip. No `WRITE_SECURE_SETTINGS`.
 
-### Step 5.3 — Minimal widgets (F12)
-- Weather (first and only `INTERNET` use; coarse location opt-in; a free no-key weather API, chosen in DECISIONS.md; cache per Appendix A), next calendar event (`READ_CALENDAR`), 3-item to-do in Room. All off by default.
+### Step 5.2 — Minimal widgets (F12)
+- Next calendar event (`READ_CALENDAR`) and 3-item to-do in Room. All off by default. No weather.
 
-### Step 5.4 — Backup & restore (F13)
+### Step 5.3 — Backup & restore (F13)
 - Export/import JSON via Storage Access Framework; schema version field; Auto Backup rules for DataStore/Room.
 
 **Tests:**
-- Unit: insights aggregation (time-zone/DST edges), weather parsing & caching (fake HTTP), calendar mapping, to-do rules, backup round-trip + older-schema import.
-- UI + screenshots: insights, widgets, grayscale screen, backup/restore flow.
-- Permission allowlist updated for `INTERNET`, `ACCESS_COARSE_LOCATION`, `READ_CALENDAR` with IDs.
+- Unit: calendar mapping, to-do rules, backup round-trip + older-schema import.
+- UI + screenshots: widgets, grayscale screen, backup/restore flow.
+- Permission allowlist updated for `READ_CALENDAR` with its ID.
 
-**Done when:** F10–F13 met and traced; manual check on the test phone.
+**Done when:** F11–F13 met and traced; manual check on the test phone.
 
 ---
 

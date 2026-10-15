@@ -16,9 +16,10 @@ Update this file in the same commit as the code and tests.
 | F7.1–F7.6 | ⬜ | | |
 | F8.1–F8.12 | ⬜ | | |
 | F9.1–F9.7 | ⬜ | | |
-| F10.1–F10.4 | ⬜ | | |
+| F10.1–F10.13 | ⬜ | | Compare with the phone's screen-time screen |
 | F11.1–F11.3 | ⬜ | | |
-| F12.1–F12.4 | ⬜ | | |
+| F12.2–F12.4 | ⬜ | | |
+| F12.1 | ❌ | Removed (D-008) | |
 | F13.1–F13.3 | ⬜ | | |
 | F14.1–F14.6 | ⬜ | | |
 | F15 | ❌ | Removed (D-001) | |

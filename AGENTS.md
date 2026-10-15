@@ -25,7 +25,7 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 6. **No unrelated refactors.** Only touch code needed for the current step. Report other problems you notice; don't fix them silently.
 7. **Every change must map to an ID.** If you can't name the requirement (e.g., F2.4) or plan step (e.g., Step 2.4) a change serves, don't make it.
 8. **Use the defaults in REQUIREMENTS.md Appendix A.** Don't invent default values, thresholds, or limits.
-9. **Removed or deferred items stay out:** F15 (premium), F16.13 (remote rules), ADB-based features, store/release work, translations/RTL, and device/emulator tests, unless I ask for them.
+9. **Removed or deferred items stay out:** F15 (premium), F12.1 (weather), F16.13 (remote rules), ADB-based features, store/release work, translations/RTL, and device/emulator tests, unless I ask for them.
 10. **Only public Android APIs.** No OEM-private APIs, reflection into hidden APIs, root, or device-specific code paths.
 
 ## 3. Commits — Small and Incremental
@@ -57,7 +57,7 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **Logging:** only through the `Logger` wrapper, debug builds only, and **never log user data** such as notification text, usage, or intentions (NFR-S5).
 
 ## 5. Privacy & Permissions (non-negotiable)
-- No analytics, ads, crash-reporting services, or trackers. No network access except weather (F12.1, Phase 5).
+- No analytics, ads, crash-reporting services, or trackers. **No network access at all**: never add the `INTERNET` permission (NFR-S3).
 - **Do not add a permission to the manifest** unless the current step's requirement needs it. Update `config/permissions-allowlist.txt` in the same commit with the requirement ID; the allowlist test enforces this.
 - Sensitive permissions (Usage Access, Notification Access, Accessibility, DND) must be opt-in, have an explanation screen (including the Android 13+ "Allow restricted settings" instructions where relevant), be requested only when needed, and have a working fallback if denied.
 - All user data stays on the device.

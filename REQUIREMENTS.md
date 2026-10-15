@@ -49,9 +49,9 @@ Default launchers are designed for engagement: bright icons, notification badges
 | F7 | Notification filter / inbox | P1 | v1.1 |
 | F8 | App usage limits & mindful pause (toggleable) | P1 | v1.1 |
 | F9 | Focus mode | P1 | v1.1 |
-| F10 | Screen-time insights | P2 | v1.2 |
+| F10 | Screen-time insights & home-screen stats | P1 | v1.1 |
 | F11 | Grayscale shortcut | P2 | v1.2 |
-| F12 | Minimal widgets (weather, calendar, to-do) | P2 | v1.2 |
+| F12 | Minimal widgets (calendar, to-do) | P2 | v1.2 |
 | F13 | Backup & restore settings | P2 | v1.2 |
 | F16 | Short-form content blocker (Reels, Shorts) | P2 | v1.3 |
 | ~~F15~~ | ~~Premium / monetization~~ | Removed | Not needed for personal use |
@@ -181,8 +181,17 @@ The default screen shown when I press Home.
 |---|---|
 | F10.1 | Daily total screen time and number of unlocks. |
 | F10.2 | Top 5 apps by usage today, plus 7-day trend (simple text/bar, monochrome). |
-| F10.3 | Optional subtle screen-time text on the home screen (e.g., "1h 12m today"). |
+| F10.3 | **Home-screen stats**: show today's **total screen time** and **number of unlocks** on the home screen. On by default; can be turned off. |
 | F10.4 | All data computed locally from `UsageStatsManager`; nothing uploaded. |
+| F10.5 | Home-screen stats **display style** (one selectable): **Text** (e.g., "2h 14m · 38 unlocks"), **Progress bar** (screen time vs. a daily goal, plus unlock count), **Weekly bars** (7 small bars for screen time, today highlighted, plus unlock count), or **Hourly timeline** (24 thin bars of today's screen time per hour, plus unlock count). |
+| F10.6 | All styles are monochrome, small, and fit on the non-scrolling home screen (F1.6) without pushing favorites off-screen. Charts are drawn with Compose `Canvas` (no chart library). |
+| F10.7 | Optional **daily screen-time goal** (used by the progress bar); when exceeded, the bar fills completely and the text says "over by Xm". No colors or alerts. |
+| F10.8 | Optional comparison with yesterday (e.g., "↓ 12% vs yesterday"). |
+| F10.9 | Values refresh when the home screen becomes visible and when the screen turns on. No background polling. |
+| F10.10 | Tapping the stats opens the Insights screen (F10.1–F10.2). |
+| F10.11 | Needs Usage Access. Until granted, the home shows one subtle line "Tap to show screen time" that opens the permission explanation; if declined, the line can be dismissed and the stats stay hidden. |
+| F10.12 | Unlock count uses `KEYGUARD_HIDDEN` usage events (Android 9+). On Android 8.x, unlocks are hidden and only screen time is shown. |
+| F10.13 | Each chart has a content description stating its values (e.g., "Screen time 2 hours 14 minutes, 38 unlocks") for accessibility. |
 
 ### F11 — Grayscale Shortcut
 Android stores grayscale (color correction) in *Secure Settings*, which third-party apps can only change with `WRITE_SECURE_SETTINGS`, a permission grantable only via ADB. Since ADB is out of scope, ZeroOS helps me use the **system's own** grayscale instead.
@@ -197,7 +206,7 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 
 | ID | Requirement |
 |---|---|
-| F12.1 | **Weather**: single text line (e.g., "18° Cloudy"); location coarse, opt-in. |
+| ~~F12.1~~ | ~~Weather~~ (removed: not needed; keeps the app fully offline). |
 | F12.2 | **Calendar**: next event text line. |
 | F12.3 | **To-do**: up to 3 short tasks, editable inline, stored locally. |
 | F12.4 | All widgets are text-only and individually toggleable; off by default. |
@@ -277,7 +286,7 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 |---|---|
 | NFR-S1 | No analytics, ads, crash reporting services, or third-party trackers. |
 | NFR-S2 | All usage data, notifications, and settings stored locally only. |
-| NFR-S3 | No `INTERNET` permission until F12.1 (weather); afterwards used only for weather. |
+| NFR-S3 | The app never requests the `INTERNET` permission; it works fully offline. |
 | NFR-S4 | Every sensitive permission (Notification access, Usage access, Accessibility, DND) has a short in-app explanation and a working fallback if denied. |
 | NFR-S5 | No user data (notification text, app usage, intentions) is ever written to logs. |
 | NFR-S6 | The release signing keystore is kept outside the repo and backed up; losing it means reinstalling and losing settings. |
@@ -352,7 +361,7 @@ feature/shortsblock/   – F16
 
 ## 6. Screens
 
-1. **Home**: clock, date, battery, favorites list.
+1. **Home**: clock, date, battery, screen-time & unlock stats, favorites list.
 2. **App list**: search bar + alphabetical list.
 3. **App context menu**: bottom sheet with actions.
 4. **Mindful pause / limit-reached**: full-screen interstitial.
@@ -375,6 +384,7 @@ Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in
 - I want to hide distracting apps, so I only open them when I truly mean to.
 - I want to rename apps, so their labels remind me of my intentions.
 - I want a pure-black theme, so the phone looks calm and saves battery.
+- I want to see today's screen time and unlock count on my home screen, so I notice how much I'm using the phone.
 - I want Shorts and Reels blocked with a black screen, so I don't get pulled into endless scrolling.
 
 ---
@@ -383,7 +393,7 @@ Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in
 
 | Criterion | Target |
 |---|---|
-| Daily screen time (from F10 / system Digital Wellbeing) | ≥ 20% lower after 30 days vs. the week before switching |
+| Daily screen time (from F10) | ≥ 20% lower after 30 days vs. the week before switching |
 | Still using ZeroOS as default launcher | After 30 days |
 | Crashes / ANRs noticed in daily use | 0 per week |
 
@@ -395,8 +405,8 @@ Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in
 |---|---|
 | **M0 – Prototype** | Home screen + app list + set as default launcher. |
 | **v1.0 – Daily driver** | F1–F6, F14; installed on my phone as the default launcher. |
-| **v1.1** | F7 Notification filter, F8 Usage limits, F9 Focus mode. |
-| **v1.2** | F10 Insights, F11 Grayscale shortcut, F12 Widgets, F13 Backup. |
+| **v1.1** | F7 Notification filter, F8 Usage limits, F9 Focus mode, F10 Insights & home-screen stats. |
+| **v1.2** | F11 Grayscale shortcut, F12 Widgets (calendar, to-do), F13 Backup. |
 | **v1.3** | F16 Short-form content blocker (YouTube Shorts + Instagram Reels). |
 
 ---
@@ -453,6 +463,9 @@ Agents must use these values instead of guessing. Change them here only with my 
 | F16 auto-back after (F16.10) | Off | off / 3–10 s |
 | F16 "Allow 5 minutes" uses/day (F16.11) | 1 | 0–5 |
 | F16 detection throttle (F16.6) | 400 ms | 300–500 ms |
-| Weather refresh (F12.1) | Every 2 h | 1–3 h |
+| Home-screen stats (F10.3) | On (asks for Usage Access first) | on/off |
+| Home-screen stats style (F10.5) | Text | text / progress bar / weekly bars / hourly timeline |
+| Daily screen-time goal (F10.7) | Off; 2 h when on | 30 min–8 h |
+| Compare with yesterday (F10.8) | Off | on/off |
 | To-do items (F12.3) | 3 max | — |
 | Daily reset time (F8.6, F16.8) | Local midnight | — |

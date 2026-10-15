@@ -34,9 +34,16 @@ Short-form detection rules ship in a bundled asset file; when target apps change
 F14 stays, including the intro pages and a background-reliability step (F14.6) for battery settings.
 *Why:* The user's choice.
 
+**D-008 — No weather; app is fully offline** · 2026-10-15 · Accepted
+F12.1 weather removed. The app never requests `INTERNET`.
+*Why:* Not needed; also removes location permission and a third-party API.
+
+**D-009 — Screen time & unlocks on the home screen, in v1.1** · 2026-10-15 · Accepted
+F10 home-screen stats (text, progress bar, weekly bars, or hourly timeline) are on by default. F10 moves from v1.2 to v1.1 because it reuses the usage-stats code built for F8.
+*Why:* User wants daily usage visible on the home screen.
+
 ---
 
 ## Pending (to be decided during the plan)
 - Feasibility spike results (Step 0.5): app-clone visibility, usage-stats accuracy, service survival on the phone, F16 detection.
-- Weather API choice (Step 5.3): must be free and need no API key or account.
 - Bundled fonts (Step 2.2): OFL-licensed only.
