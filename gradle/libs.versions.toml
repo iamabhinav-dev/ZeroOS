@@ -10,6 +10,8 @@ composeBom = "2026.09.00"
 lifecycle = "2.11.0"
 hiltAndroidx = "1.4.0"
 coroutines = "1.11.0"
+datastore = "1.2.1"
+serialization = "1.11.0"
 detekt = "1.23.8"
 ktlintGradle = "14.2.0"
 ktlint = "1.8.0"
@@ -33,6 +35,8 @@ androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 androidx-hilt-lifecycle-viewmodel-compose = { module = "androidx.hilt:hilt-lifecycle-viewmodel-compose", version.ref = "hiltAndroidx" }
+androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
@@ -76,6 +80,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlintGradle" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

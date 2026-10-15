@@ -5,6 +5,8 @@ import android.content.pm.LauncherApps
 import android.os.UserManager
 import com.zeroos.core.data.apps.AndroidLauncherAppsSource
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.settings.createSettingsDataStore
 import com.zeroos.core.logging.Logger
 import dagger.Module
 import dagger.Provides
@@ -13,12 +15,19 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 /** Provides repositories from core/data (Step 1.2). */
 @Module
 @InstallIn(SingletonComponent::class)
 object DataModule {
+
+    @Provides
+    @Singleton
+    fun settingsRepository(@ApplicationContext context: Context, logger: Logger, io: CoroutineDispatcher): SettingsRepository =
+        SettingsRepository(createSettingsDataStore(context, logger, CoroutineScope(SupervisorJob() + io)), logger)
 
     /** Dispatcher for disk and system-service work. */
     @Provides

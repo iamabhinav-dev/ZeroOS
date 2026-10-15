@@ -190,8 +190,8 @@ Behaviour:
 ### Step 2.0 — Wireframes for Phase 2 ✅
 App context menu, rename dialog, favorites edit mode, hidden apps, all Settings screens (home, app list, gestures, appearance, backup, diagnostics, about), onboarding pages. **Approved by me before Step 2.1.**
 
-### Step 2.1 — Settings storage
-- Add DataStore. `core/data/SettingsRepository` on **Proto DataStore** (typed).
+### Step 2.1 — Settings storage ✅
+- Add DataStore. `core/data/SettingsRepository` on a typed DataStore saved as **JSON** with kotlinx-serialization (D-029).
 - Stores favorites (ordered keys), hidden set, renames map, gesture bindings, appearance, onboarding flag.
 - Default values come from REQUIREMENTS.md **Appendix A**.
 
