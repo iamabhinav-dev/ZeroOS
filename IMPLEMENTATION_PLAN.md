@@ -174,7 +174,7 @@ Behaviour:
 - One-time "crashed last time" message on the next start after a crash.
 - Log the Phase 1 events: app start, home/list shown, app launched, package changes.
 
-### Step 1.5 — Safe mode (F18)
+### Step 1.5 — Safe mode (F18) ✅
 - Start/crash counter in a small synchronous file; crash handler (F17.5) increments it.
 - Trigger at 3 crashes within 60 s of start; minimal safe-mode screen in `app/` with plain app list and the F18.3 buttons.
 - README: "Never disable or uninstall the stock launcher" and how to switch back (Settings → Apps → Default apps → Home app).
