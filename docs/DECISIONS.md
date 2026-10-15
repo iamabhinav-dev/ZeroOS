@@ -130,4 +130,4 @@ Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usag
 ---
 
 ## Pending (to be decided during the plan)
-- Remaining spike checks (D-028), see `docs/spike/RESULTS.md`: overnight survival (before Phase 4), Instagram Reels + a Shorts screen capture (before Phase 6).
+- Remaining spike check (D-028), see `docs/spike/RESULTS.md`: overnight survival (before Phase 4).

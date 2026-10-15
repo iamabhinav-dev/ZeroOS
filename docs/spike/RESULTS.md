@@ -11,13 +11,13 @@ The raw log isn't committed (it lists which apps were used); only YouTube screen
 | 4 | Accessibility service survives | Connected once at 14:15, events until 23:49, never unbound. Reconnected on its own right after the restart | ✅ Same day + restart · ⏳ overnight |
 | 4 | YouTube Shorts detection | `reel_recycler`, `reel_player_page_container`, `reel_watch_player` present on every Shorts screen, absent on all other YouTube screens; lookups 1–79 ms | ✅ |
 | 4 | Normal YouTube not blocked | Evening use in "Shorts only" mode: many normal screens, no overlay | ✅ |
-| 4 | Instagram Reels detection | Instagram not opened during the test | ⏳ Not tested |
+| 4 | Instagram Reels detection | `clips_viewer_view_pager`, `clips_video_container`, `root_clips_layout` all present on Reels, absent on 28 normal Instagram screens; lookups 2–32 ms | ✅ |
 | 5 | Black overlay | Shown 132–705 ms after the event (most under 250 ms); "Go home" works; no overlay over Recents/launcher after leaving YouTube | ✅ |
 | 6 | Play Protect install block | **Blocked** the spike install (it declares notification-listener and Accessibility services); installing anyway from the Play Protect dialog worked | ✅ Workaround confirmed |
 
 Other findings:
 - The phone's default launcher package is `com.android.launcher3`; `com.example.simplelauncher` also exists.
-- Overlay latency target is ≤ 300 ms (F16 budget); one case took 705 ms, to watch in Phase 6.
-- `youtube-normal-screens/`: 30 screen-structure dumps of non-Shorts YouTube screens (view IDs, bounds, no text),
-  kept as "must not match" test data for Phase 6. A Shorts dump still needs capturing (the trial app keeps only
-  the last 30 dumps, so the Shorts ones were rotated out).
+- Overlay latency target is ≤ 300 ms (F16 budget): YouTube mostly under 250 ms (one 705 ms); Instagram Reels 387–845 ms. **Needs tuning in Phase 6** (e.g. check on every window change, not only throttled content changes).
+- Screen-structure dumps (view IDs, bounds, "has-text" flags; never text) kept as Phase 6 test data:
+  `youtube-shorts-screens/` (1, must match), `youtube-normal-screens/` (30, must not match),
+  `instagram-reels-screens/` (2, must match), `instagram-normal-screens/` (28, must not match).
