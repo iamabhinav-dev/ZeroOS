@@ -7,13 +7,17 @@ Update this file in the same commit as the code and tests.
 
 | ID | Status | Automated tests (class › test) | Manual check |
 |---|---|---|---|
-| F1.1–F1.9 | ⬜ | | |
-| F2.1, F2.3–F2.8, F2.11 | ⬜ | | |
-| F2.2 | 🟡 | AppsRepositoryTest › f2_2_listsAppsAlphabeticallyIgnoringCase (data; UI in Step 1.3) | |
+| F1.1 | 🟡 | ClockFormatTest › f1_1_*, TimeTicksTest › f1_1_*, HomeScreenTest › f1_1_f1_2_showsClockAndDate (tap → alarms in Step 2.3) | Clock updates each minute |
+| F1.2 | 🟡 | ClockFormatTest › f1_2_formatsWeekdayDayAndMonth, HomeScreenTest › f1_1_f1_2_showsClockAndDate (tap → calendar in Step 2.3) | |
+| F1.3–F1.9 | ⬜ | | |
+| F2.1, F2.3–F2.8 | ⬜ | | |
+| F2.11 | 🟡 | AppListScreenTest › f2_11_backClosesList, MainActivityTest › f2_11_backFromListReturnsHome (swipe down in Phase 2) | |
+| F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
 | F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
 | F2.10 | 🟡 | AppsRepositoryTest › f2_10_marksAppsFromOtherProfilesAndKeepsBothCopies (data; tag in Phase 2) | App clones on the phone (spike) |
 | F3.1–F3.4 | ⬜ | | |
-| F4.1–F4.6 | ⬜ | | |
+| F4.1 | 🟡 | SwipeUpTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
+| F4.2–F4.6 | ⬜ | | |
 | F5.1–F5.5 | ⬜ | | |
 | F6.1–F6.6 | ⬜ | | |
 | F7.1–F7.6 | ⬜ | | |
