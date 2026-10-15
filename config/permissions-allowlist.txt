@@ -2,3 +2,4 @@
 # Add a line only when a requirement needs it, with the requirement ID, in the same commit.
 # Format: <permission>  # <requirement ID / reason>
 com.zeroos.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION  # androidx.core internal, signature-level, for non-exported receivers
+com.android.alarm.permission.SET_ALARM  # F1.1: tap clock opens alarms (ACTION_SHOW_ALARMS requires it)

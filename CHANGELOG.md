@@ -4,6 +4,10 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.4 (versionCode 4)
+- Fix: tapping the clock crashed ZeroOS (the Clock app requires the SET_ALARM permission); clock and date taps
+  can no longer crash, failures are logged (Step 2.3)
+
 ## 0.0.3 (versionCode 3)
 - Doto dot-matrix font for all text; new design system (Step 2.2)
 - Settings storage (Step 2.1)

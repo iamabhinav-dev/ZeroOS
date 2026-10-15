@@ -1,6 +1,5 @@
 package com.zeroos.feature.home
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.provider.AlarmClock
 import android.text.format.DateFormat
@@ -52,11 +51,7 @@ fun HomeRoute(onSwipeUp: () -> Unit, onLongPress: () -> Unit, viewModel: HomeVie
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     fun open(name: String, intent: Intent) {
-        try {
-            context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-        } catch (e: ActivityNotFoundException) {
-            viewModel.onShortcutFailed(name, e)
-        }
+        startShortcut(context, intent)?.let { viewModel.onShortcutFailed(name, it) }
     }
     HomeScreen(
         state = state,

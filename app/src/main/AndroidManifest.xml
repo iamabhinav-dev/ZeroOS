@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Opening the Clock app's alarms when the home clock is tapped requires this (F1.1). Normal permission, no prompt. -->
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+
     <!-- Package visibility on Android 11+: see every app that has a launcher entry (Step 1.1). -->
     <queries>
         <intent>
