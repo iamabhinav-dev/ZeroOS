@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Monochrome "0" ring on the 108dp adaptive-icon canvas (safe zone: central 66dp). -->
+<!-- Doto's "0" (for ZeroOS) as 12 round dots on its 5 x 7 grid, inside the adaptive-icon safe zone (central 66 dp).
+     Dot positions were read from doto_bold.ttf; dot size matches Doto's dot-to-pitch ratio. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:fillColor="#00000000"
-        android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="5"
-        android:pathData="M54,36 a12,18 0 1,0 0.01,0 Z" />
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M51.36,33.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M44.36,40.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M58.36,40.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M37.36,47.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M65.36,47.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M37.36,54.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M65.36,54.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M37.36,61.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M65.36,61.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M44.36,68.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M58.36,68.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0 M51.36,75.0 a2.64,2.64 0 1,0 5.28,0 a2.64,2.64 0 1,0 -5.28,0" />
 </vector>
