@@ -45,7 +45,10 @@ Update this file in the same commit as the code and tests.
 | F17.10 | 🟡 | DiagnosticsPiecesTest › f17_10_*, LauncherViewModelTest › f17_10_*, DiagnosticsScreenTest › f17_10_crashBannerButtons | Banner after a forced crash |
 | F17.11 | 🟡 | DiagnosticsPiecesTest › f17_11_*, DiagnosticsViewModelTest › f17_11_* | |
 | F17.12 | 🟡 | FileLoggerTest › f17_12_neverThrowsWhenStorageFails, ExitReasonLoggerTest › f17_12_* | |
-| F18.1–F18.7 | ⬜ | | Debug crash-on-start → safe mode; switch to the stock launcher |
+| F18.1, F18.2, F18.6 | 🟡 | CrashLoopGuardTest › f18_*, SafeModeActivityTest › f18_* | Debug crash-on-start → safe mode after 3 starts |
+| F18.3 | 🟡 | SafeModeScreenTest › f18_3_*, SafeModeAppsTest › f18_3_* | "Open Home settings" switches to the stock launcher |
+| F18.4, F18.5 | 🟡 | By design: SafeModeRoot only gets SafeModeApps (LauncherApps) and crash-report text; reviewed in code | |
+| F18.7 | ✅ | README "If ZeroOS breaks" | |
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
 | NFR-P3 | ⬜ | | |
 | NFR-P6 | ⬜ | | APK size check |

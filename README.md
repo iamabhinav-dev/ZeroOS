@@ -59,3 +59,10 @@ config/           detekt config, permission allowlists, Robolectric settings
 4. Run the manual check for the step, then follow the Install Checklist in IMPLEMENTATION_PLAN.md.
 
 Rules: bump `versionCode` for every install; never install an APK built from older code than what's on the phone.
+
+## If ZeroOS breaks (F18)
+- **Never disable or uninstall the stock launcher.** It's the fallback if ZeroOS can't start.
+- After 3 crashes within 60 s of starting, ZeroOS opens in **safe mode**: a plain app list with
+  "View crash report", "Open Home settings" and "Exit safe mode".
+- To switch back to the stock launcher at any time: pull down the notification shade → ⚙ Settings →
+  **Apps → Default apps → Home app** → the stock launcher (menu names may differ slightly on the phone).

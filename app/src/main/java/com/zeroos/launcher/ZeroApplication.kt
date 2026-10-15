@@ -3,14 +3,18 @@ package com.zeroos.launcher
 import android.app.ActivityManager
 import android.app.Application
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.StrictMode
 import com.zeroos.core.logging.AndroidExitInfoSource
 import com.zeroos.core.logging.CrashHandler
+import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.ExitReasonLogger
 import com.zeroos.core.logging.FileLogger
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.info
 import com.zeroos.core.logging.warn
+import com.zeroos.launcher.safemode.CrashLoopGuard
 import dagger.hilt.android.HiltAndroidApp
 import java.io.File
 import java.time.Clock
@@ -26,10 +30,22 @@ class ZeroApplication : Application() {
 
     @Inject lateinit var clock: Clock
 
+    @Inject lateinit var crashLoopGuard: CrashLoopGuard
+
+    @Inject lateinit var diagnosticsSettings: DiagnosticsSettings
+
     override fun onCreate() {
         super.onCreate()
-        CrashHandler.install(logger, logStore, clock, appInfo())
+        crashLoopGuard.onProcessStart()
+        CrashHandler.install(logger, logStore, clock, appInfo(), onCrash = crashLoopGuard::recordCrash)
         logger.info(TAG, "app start: ${appInfo()}")
+        if (crashLoopGuard.isSafeMode) {
+            logger.warn(TAG, "safe mode: crashed ${crashLoopGuard.recordedCrashes()} times soon after start")
+            // Don't keep crashing on purpose once safe mode has caught it (Step 1.5 test switch).
+            diagnosticsSettings.crashOnStart = false
+        }
+        // Still running after the window: stable, so reset the crash count (F18.6).
+        Handler(Looper.getMainLooper()).postDelayed(crashLoopGuard::markStable, CrashLoopGuard.DEFAULT_WINDOW.toMillis())
         Executors.newSingleThreadExecutor().execute {
             logStore.deleteExpired()
             logPreviousExit()

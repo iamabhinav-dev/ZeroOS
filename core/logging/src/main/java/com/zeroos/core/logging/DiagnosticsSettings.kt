@@ -22,7 +22,13 @@ class DiagnosticsSettings(private val prefs: SharedPreferences, private val defa
         get() = prefs.getString(KEY_LAST_SEEN_CRASH, null)
         set(value) = prefs.edit().putString(KEY_LAST_SEEN_CRASH, value).apply()
 
+    /** Debug builds only: crash on every start, to test safe mode (Step 1.5). Cleared when safe mode starts. */
+    var crashOnStart: Boolean
+        get() = prefs.getBoolean(KEY_CRASH_ON_START, false)
+        set(value) = prefs.edit().putBoolean(KEY_CRASH_ON_START, value).apply()
+
     private companion object {
+        const val KEY_CRASH_ON_START = "debug_crash_on_start"
         const val KEY_ENABLED = "logging_enabled"
         const val KEY_LEVEL = "logging_level"
         const val KEY_LAST_SEEN_CRASH = "last_seen_crash_report"
