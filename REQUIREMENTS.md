@@ -112,7 +112,7 @@ The default screen shown when I press Home.
 | F4.1 | **Swipe up** → app list (default). |
 | F4.2 | **Swipe left** → assigned app (default: Camera). |
 | F4.3 | **Swipe right** → assigned app (default: Phone/Dialer). |
-| F4.4 | **Swipe down** → expand notification shade or open search (configurable). |
+| F4.4 | **Swipe down** → open search (default) or expand the notification shade. The shade option is available only while the optional Accessibility Service is enabled (`GLOBAL_ACTION_NOTIFICATIONS`); if the service is turned off, the gesture falls back to search. |
 | F4.5 | **Double-tap** → lock screen (uses the optional Accessibility Service; off by default). |
 | F4.6 | Each gesture can be set to: an app, a launcher action, or "None". |
 
@@ -481,7 +481,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Max favorites (F3.3) | 6 | 1–10 |
 | Default favorites (F14.3) | Phone, Messages, Camera, Maps | any |
 | Swipe left / right (F4.2, F4.3) | Camera / Phone | app, action, none |
-| Swipe down (F4.4) | Notification shade | shade, search, none |
+| Swipe down (F4.4) | Search | search, none; shade only when Accessibility Service is on |
 | Swipe distance threshold | 48 dp | 32–96 dp |
 | Swipe velocity threshold | 300 dp/s | — |
 | Double-tap to lock (F4.5) | Off | on/off |

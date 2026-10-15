@@ -209,7 +209,7 @@ Behaviour:
 ### Step 2.7 — Gestures (F4)
 - `pointerInput` swipe detection with thresholds from Appendix A.
 - Swipe left/right/down bindings: app / action / none.
-- Swipe down → notification shade if the Accessibility Service is enabled (`GLOBAL_ACTION_NOTIFICATIONS`), otherwise search.
+- Swipe down → search (default). The "notification shade" option is added in Step 4.2 together with the Accessibility Service, and falls back to search when the service is off. No hidden APIs (e.g., `StatusBarManager` reflection).
 - Double-tap lock: shown as "needs Accessibility (v1.1)" until Phase 4.
 
 ### Step 2.8 — Appearance (F6)
@@ -266,7 +266,7 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 - **Permission helper**: one "explain → open system screen → verify on return → fallback" flow for Usage Access, Notification Access, Accessibility, DND. It includes the **restricted settings** instructions (App info → ⋮ → Allow restricted settings) for Accessibility/Notification access (F14.4, NFR-S4).
 
 ### Step 4.2 — Shared Accessibility Service
-- Single `ZeroAccessibilityService` for F4.5 (double-tap lock via `GLOBAL_ACTION_LOCK_SCREEN`, API 28+), F8.7, and later F16.
+- Single `ZeroAccessibilityService` for F4.4 (swipe down → notification shade via `GLOBAL_ACTION_NOTIFICATIONS`), F4.5 (double-tap lock via `GLOBAL_ACTION_LOCK_SCREEN`, API 28+), F8.7, and later F16.
 - Off by default; `serviceInfo.packageNames` updated at runtime to only the packages enabled features need.
 - Detect disabled/killed state and show a warning in Settings.
 
