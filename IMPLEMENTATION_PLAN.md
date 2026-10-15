@@ -164,7 +164,7 @@ Behaviour:
   - Sort with a locale-aware `Collator`.
 - Launch via `LauncherApps.startMainActivity(component, user, ...)`.
 
-### Step 1.3 — Bare-bones UI
+### Step 1.3 — Bare-bones UI ✅
 - Home: big clock + date via a `Flow` that ticks each minute, aligned to the minute boundary (injected `Clock`).
 - Swipe up → scrollable list of app labels; tap launches.
 
