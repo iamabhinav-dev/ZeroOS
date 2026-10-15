@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.ProfileType
 import java.util.Locale
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
@@ -44,7 +45,7 @@ class AppsRepositoryTest {
     }
 
     private fun app(label: String, pkg: String = label.lowercase(), serial: Long = 0, main: Boolean = true) =
-        LaunchableActivity(AppKey(pkg, "$pkg.Main", serial), label, main)
+        LaunchableActivity(AppKey(pkg, "$pkg.Main", serial), label, if (main) ProfileType.MAIN else ProfileType.CLONE)
 
     private val source = FakeSource()
     private val logger = RecordingLogger()

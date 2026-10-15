@@ -38,7 +38,8 @@ object DataModule {
     fun appsRepository(@ApplicationContext context: Context, logger: Logger, io: CoroutineDispatcher): AppsRepository = AppsRepository(
         source = AndroidLauncherAppsSource(
             context.getSystemService(LauncherApps::class.java),
-            context.getSystemService(UserManager::class.java)
+            context.getSystemService(UserManager::class.java),
+            logger
         ),
         logger = logger,
         ioDispatcher = io

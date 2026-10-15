@@ -13,9 +13,14 @@ data class AppKey(
     fun asString(): String = "$packageName/$activityName#$userSerial"
 }
 
-/** An app shown by the launcher (F2.2). [isMainProfile] is false for work-profile and app-clone apps (F2.10). */
+/** Which profile an app belongs to (F2.10). Apps outside [MAIN] are tagged in the app list, e.g. "WhatsApp · clone". */
+enum class ProfileType { MAIN, CLONE, WORK, PRIVATE }
+
+/** An app shown by the launcher (F2.2). */
 data class AppEntry(
     val key: AppKey,
     val label: String,
-    val isMainProfile: Boolean
-)
+    val profile: ProfileType = ProfileType.MAIN
+) {
+    val isMainProfile: Boolean get() = profile == ProfileType.MAIN
+}

@@ -12,7 +12,7 @@ import org.junit.Test
 
 class HomeUiStateTest {
     private val time = ZonedDateTime.parse("2026-10-16T10:42:00+05:30[Asia/Kolkata]")
-    private fun app(name: String) = AppEntry(AppKey("pkg.$name", "Main", 0), name, true)
+    private fun app(name: String) = AppEntry(AppKey("pkg.$name", "Main", 0), name)
     private val apps = listOf("Phone", "Messages", "Camera", "Maps").map(::app)
     private fun key(name: String) = AppKey("pkg.$name", "Main", 0).asString()
 
