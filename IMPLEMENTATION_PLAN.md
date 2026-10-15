@@ -1,67 +1,119 @@
 # ZeroOS Launcher — Implementation Plan
 
 Step-by-step build plan for the features in [REQUIREMENTS.md](REQUIREMENTS.md).
-Each step lists **what to build**, **key technical notes**, and a **done when** checklist. Steps are ordered so the app is runnable and usable after every phase.
+Each step lists **what to build**, **key technical notes**, **tests**, and a **done when** checklist. Steps are ordered so the app is installable and usable after every phase.
 
-Time estimates assume **one developer, full-time**. Scale accordingly.
+**Context:** personal app, primary device: the primary phone, installed by sideloading a signed APK. No ADB, no Developer options, no app store.
 
-## Testing Policy (applies to every step)
-Tests are **required**, not a separate phase. A step is **not done** until:
-1. **Unit tests** cover all new logic: repositories, ViewModels, matching/filtering, calculations, parsers, and state reducers.
-2. **Compose UI tests** cover every new or changed user flow on a screen.
-3. **Instrumented tests** cover Android integration where feasible (services, DataStore/Room, permission fallbacks), using fakes for system services.
-4. **Regression test first** for every bug fix: write a failing test, then fix.
-5. `./gradlew assembleDebug lint test` passes locally and on CI. Instrumented tests (`connectedCheck`) pass on an emulator before merging a step.
-6. Coverage of `core/` and `feature/*` logic (excluding UI-only composables) stays **≥ 80%**, measured with Kover or JaCoCo from Phase 1 onward.
-
-Every "Done when" checklist below implicitly includes these rules.
+Time estimates are **full-time-equivalent for one developer**; scale to your own pace.
 
 | Phase | Scope | Est. time | Outcome |
 |---|---|---|---|
-| 0 | Project setup | 3–4 days | Empty app builds, CI green |
+| 0 | Setup, wireframes, feasibility spikes | 1–1.5 weeks | Project builds; risky APIs proven on the phone |
 | 1 | Prototype (M0) | 1 week | Usable as default launcher |
-| 2 | MVP features | 3–4 weeks | F1–F6, F14 complete |
-| 3 | Hardening & release v1.0 | 2 weeks | On Play Store |
+| 2 | v1.0 features | 3–4 weeks | F1–F6, F14 complete |
+| 3 | Daily-driver hardening | 1 week | v1.0 installed as my default launcher |
 | 4 | v1.1 Wellbeing | 4–5 weeks | F7, F8, F9 |
-| 5 | v1.2 Insights & Premium | 4 weeks | F10–F13, F15 |
-| 6 | v1.3 Short-form blocker | 3–5 weeks | F16 |
-| **Total** | | **~5 months** | |
+| 5 | v1.2 Insights & extras | 2–3 weeks | F10–F13 |
+| 6 | v1.3 Short-form blocker | 2–3 weeks | F16 |
+| **Total** | | **~4 months** | |
 
 ---
 
-## Phase 0 — Project Setup
+## Testing Policy (applies to every step)
+Tests are **required**, not a separate phase. For now, **all automated tests run on the JVM only** (no phone or emulator needed). A step is **not done** until:
+
+1. **Unit tests** cover all new logic: repositories, ViewModels, matching/filtering, calculations, parsers, and state reducers.
+2. **Compose UI tests** (run on Robolectric) cover every new or changed user flow.
+3. **Screenshot tests** (Roborazzi) cover every new or changed screen in dark + light theme and at default + largest font scale.
+4. **Accessibility checks** are enabled in Compose UI tests where supported (content descriptions, touch target size).
+5. **Persistence tests** (Robolectric): DataStore/Room read/write, and a **migration test** for every schema change.
+6. **Time-dependent logic** uses an injected `Clock`/`TimeSource` and is tested for: local midnight, time-zone change, DST change, and manual clock change.
+7. **Regression test first** for every bug fix: write a failing test, then fix.
+8. **Permission allowlist test**: a unit test compares the merged manifest's permissions to an allowlist in `config/permissions-allowlist.txt`. Adding a permission means updating the allowlist in the same commit, with the requirement ID.
+9. `./gradlew check` (build, lint, detekt/ktlint, all JVM tests, coverage verification) passes locally before every commit.
+10. Coverage of `core/` and `feature/*` logic (excluding UI-only composables) stays **≥ 80%** (Kover) from Phase 1 onward.
+11. [TRACEABILITY.md](TRACEABILITY.md) maps each implemented requirement ID to its tests.
+
+**Deferred (not required for now):** instrumented tests, emulator tests, Macrobenchmark/Baseline Profiles. These are listed in *Deferred Work* at the end and can be re-enabled later.
+
+### Manual phone check (for steps that change UI or Android services)
+1. Build and install the APK on the primary phone (see *Install workflow*, Step 0.7).
+2. Check the step's "Done when" items by hand.
+3. Note the result in the step's final commit message (`Manual check: passed on the primary phone`).
+
+---
+
+## Definition of Done (every step)
+- [ ] All requirement IDs for the step are implemented, and nothing else.
+- [ ] Tests from the Testing Policy are written and pass (`./gradlew check`).
+- [ ] TRACEABILITY.md is updated.
+- [ ] Screenshots are updated, and wireframe differences are approved by me.
+- [ ] Manual phone check is done (if applicable).
+- [ ] CHANGELOG.md has an entry under "Unreleased".
+- [ ] New decisions are recorded in docs/DECISIONS.md.
+- [ ] Step heading marked ✅ in this file.
+
+---
+
+## Phase 0 — Setup, Wireframes & Feasibility
 
 ### Step 0.1 — Tooling
-- Install latest stable Android Studio, JDK 17+, Android SDK (latest stable target SDK, min SDK 26).
-- Prepare test devices: one Pixel (stock Android), one Samsung; add a Xiaomi/OnePlus later for OEM testing.
+- Install latest stable Android Studio and JDK 17+; Android SDK with latest stable target SDK, min SDK 26.
+- On the phone: nothing yet. Later, allow "Install unknown apps" for the app used to open the APK (Files/Drive). No Developer options.
 
 ### Step 0.2 — Create the project
 - New project → *Empty Activity (Compose)*, package `com.zeroos.launcher`.
 - Gradle Kotlin DSL + version catalog (`gradle/libs.versions.toml`).
-- Add dependencies: Compose BOM, Material 3, Navigation Compose, Hilt, DataStore, Room, Coroutines, WorkManager, Lifecycle.
+- Add only what Phase 0–1 needs: Compose BOM, Material 3, Lifecycle, Coroutines, Hilt. Add DataStore in Phase 2, Room/WorkManager in Phase 4.
 - Enable R8/minify for release builds.
 
 ### Step 0.3 — Module structure
-Start with modules you need now; add feature modules when their phase begins.
+Start with modules needed now; add feature modules when their phase begins.
 ```
 app/
+core/model/
 core/ui/
 core/data/
-core/model/
+core/testing/
 feature/home/
 feature/applist/
-feature/settings/
-feature/onboarding/
 ```
 
-### Step 0.4 — Quality gates
-- ktlint/detekt, Android Lint with warnings as errors on CI.
-- GitHub Actions: build, lint, unit tests on every push/PR; instrumented tests on an emulator (e.g., Gradle Managed Devices) for PRs into `main`.
-- Test stack: JUnit, MockK or fakes, Turbine (Flow), Robolectric where useful, Compose UI test, AndroidX Test; coverage via Kover/JaCoCo.
-- Add one sample unit test and one sample UI test so the pipeline is proven working.
-- `.gitignore`, `README.md`, `LICENSE`.
+### Step 0.4 — Wireframes
+- Create `docs/wireframes.md` with ASCII/low-fi wireframes for every screen in REQUIREMENTS.md §6.
+- **I review and approve them before Phase 1.** Agents build screens to match the wireframes; differences need my approval.
 
-**Done when:** `./gradlew assembleDebug test lint` passes locally and on CI, including the sample unit and UI tests; coverage report is generated.
+### Step 0.5 — Feasibility spikes (throwaway, on a `spike/` branch, not merged)
+A small debug APK installed on the test phone to check the risky parts **before** building on them:
+1. **App list**: `LauncherApps` returns all apps, including App Clone apps if any.
+2. **Usage stats**: `UsageStatsManager` totals for 2–3 apps vs. the phone's own screen-time screen over 1 day.
+3. **Notification listener**: survives overnight and after a reboot with default battery settings, and again with background activity allowed.
+4. **Accessibility service**: can be enabled after "Allow restricted settings"; survives overnight; a debug **node-tree dumper** saves YouTube Shorts and Instagram Reels screen structures to a file (these become F16 test fixtures, with no ADB needed).
+5. **Overlay**: `TYPE_ACCESSIBILITY_OVERLAY` shows a black screen over YouTube.
+
+Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss** before continuing the plan.
+
+### Step 0.6 — Quality gates & test setup
+- ktlint + detekt; Android Lint with warnings as errors.
+- Test stack: JUnit, MockK or hand-written fakes (`core/testing`), Turbine, Robolectric, Compose UI test, Roborazzi; Kover with an 80% verification rule.
+- Permission allowlist test (Testing Policy #8), starting with an empty allowlist.
+- Debug builds only: LeakCanary and StrictMode (`detectAll().penaltyLog()`).
+- Logging: one `Logger` wrapper; logs only in debug builds; never log user data (NFR-S5).
+- One sample unit test, one Robolectric UI test, one screenshot test to prove the setup.
+- `.gitignore` (incl. `keystore.properties`, `*.jks`), `README.md`, `CHANGELOG.md`.
+- Optional: GitHub Actions running `./gradlew check` if the repo is pushed to GitHub later.
+
+### Step 0.7 — Signing & install workflow
+- Generate a release keystore **outside the repo**; reference it from a git-ignored `keystore.properties`. Back it up (NFR-S6).
+- Versioning: `versionCode` +1 per install; `versionName` = milestone (e.g., `1.0.3`).
+- Document the install workflow in `README.md`:
+  1. `./gradlew check assembleRelease`
+  2. Copy `app/build/outputs/apk/release/*.apk` to the phone (USB file transfer / Drive / Telegram)
+  3. Open it on the phone and install over the previous version
+  4. Run the manual check
+
+**Done when:** `./gradlew check` passes with sample tests; wireframes are approved; spike results are recorded with no blockers; a signed release APK installs on the test phone.
 
 ---
 
@@ -74,215 +126,207 @@ In `AndroidManifest.xml`, declare `MainActivity` with:
 - `<queries>` block with a `MAIN`/`LAUNCHER` intent (package visibility on Android 11+).
 
 Behaviour:
-- Pressing Home while already on the launcher → `onNewIntent` closes the drawer and returns to the home page.
-- Back button on home → does nothing.
+- Pressing Home while already on the launcher → `onNewIntent` closes the drawer and returns to home.
+- Back on home → does nothing.
 
 ### Step 1.2 — Load installed apps
 - `core/model`: `AppEntry(packageName, activityName, user: UserHandle, label, customLabel?, isHidden)`; unique key = component + user serial.
 - `core/data/AppsRepository`:
-  - Use `LauncherApps.getActivityList(null, user)` for every profile in `UserManager.userProfiles`.
-  - Register `LauncherApps.Callback` → expose `Flow<List<AppEntry>>` that updates on install/uninstall/update.
-  - Sort labels with a locale-aware `Collator`.
-- Launch apps with `LauncherApps.startMainActivity(component, user, ...)`.
+  - `LauncherApps.getActivityList(null, user)` for every profile in `UserManager.userProfiles`.
+  - `LauncherApps.Callback` → `Flow<List<AppEntry>>` updating on install/uninstall/update.
+  - Sort with a locale-aware `Collator`.
+- Launch via `LauncherApps.startMainActivity(component, user, ...)`.
 
 ### Step 1.3 — Bare-bones UI
-- Home: big clock + date (static composables, ticking via a `Flow` that emits every minute aligned to the minute boundary).
-- Swipe up → simple scrollable list of all app labels; tap launches.
+- Home: big clock + date via a `Flow` that ticks each minute, aligned to the minute boundary (injected `Clock`).
+- Swipe up → scrollable list of app labels; tap launches.
 
-**Tests:** `AppsRepository` (fake `LauncherApps`: list, sort, install/uninstall updates, work profile), clock Flow (minute alignment), UI test (home → swipe up → list shows apps → tap launches intent).
+**Tests:** `AppsRepository` with a fake `LauncherApps` (list, sort, install/uninstall updates, extra profiles); clock Flow (minute alignment, time-zone change); Robolectric UI test (home → swipe up → list → tap fires launch); screenshots of home and list.
 
-**Done when:** you can set ZeroOS as default launcher on a real device, see the clock, swipe up, and open any app; new installs appear without restarting; tests above pass.
+**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the test phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart.
 
 ---
 
-## Phase 2 — MVP Features (F1–F6, F14)
+## Phase 2 — v1.0 Features (F1–F6, F14)
 
-### Step 2.1 — Settings storage (foundation)
-- `core/data/SettingsRepository` on **DataStore** (Proto DataStore recommended for typed settings).
-- Store: favorites (ordered list of keys), hidden set, renames map, gesture bindings, appearance settings, onboarding-completed flag.
-- Room is **not needed yet**; add it in Phase 4.
+### Step 2.1 — Settings storage
+- Add DataStore. `core/data/SettingsRepository` on **Proto DataStore** (typed).
+- Stores favorites (ordered keys), hidden set, renames map, gesture bindings, appearance, onboarding flag.
+- Default values come from REQUIREMENTS.md **Appendix A**.
 
 ### Step 2.2 — Design system (`core/ui`)
 - Theme tokens: pure black / light / system; monochrome palette; optional accent.
-- Typography: bundle 3–5 fonts (OFL-licensed, e.g., Inter, JetBrains Mono, Lora); text size scale S/M/L/XL multiplied by system font scale.
+- Typography: 3–5 bundled OFL-licensed fonts (e.g., Inter, JetBrains Mono, Lora); size scale S/M/L/XL × system font scale.
 - Shared composables: `AppLabel`, `MinimalListItem`, `MinimalBottomSheet`, `SettingRow`, `ToggleRow`.
-- Edge-to-edge with proper insets for gesture and 3-button navigation.
+- Edge-to-edge with insets for gesture and 3-button navigation.
 
 ### Step 2.3 — Home screen (F1)
-- Clock (tap → `AlarmClock.ACTION_SHOW_ALARMS`), date (tap → calendar app via `CATEGORY_APP_CALENDAR`), battery % (`ACTION_BATTERY_CHANGED` sticky broadcast as a Flow).
-- Favorites list from SettingsRepository joined with AppsRepository (drop missing apps automatically → F3.4).
-- Alignment left/center/right; no scrolling; long-press empty area → Settings.
-- Optional next alarm (`AlarmManager.nextAlarmClock`) line.
+- Clock tap → `AlarmClock.ACTION_SHOW_ALARMS`; date tap → `CATEGORY_APP_CALENDAR`; battery % from the `ACTION_BATTERY_CHANGED` sticky broadcast as a Flow.
+- Favorites joined with apps (missing apps dropped → F3.4).
+- Alignment; no scroll; long-press empty area → Settings; optional next alarm.
 
 ### Step 2.4 — App list & search (F2)
-- Search field with auto-focus + keyboard (toggle).
-- Matching: case-insensitive substring + initials ("gm" → Google Maps); normalize accents.
-- Auto-launch on single match (toggle).
-- No-match actions: web search intent, Play Store search intent.
-- Optional alphabet fast-scroller.
-- Work-profile apps tagged "· work".
-- Back / swipe down → home.
-- Use `LazyColumn` with stable keys; precompute lowercase/initials once per app list change.
+- Search with auto-focus + keyboard (toggle); substring + initials + accent-insensitive matching; auto-launch single match (toggle).
+- No-match actions: web search, Play Store search.
+- Optional fast-scroller; profile tags (F2.10); back/swipe down → home.
+- Precompute normalized labels/initials once per list change; `LazyColumn` with stable keys.
+- JVM micro-benchmark test: matching 300 apps ≤ 16 ms per query (NFR-P3).
 
-### Step 2.5 — Favorites management (F3)
-- Add/remove from app-list long-press menu and from Settings.
-- Edit mode with drag-and-drop reorder; max count configurable (default 6, max 10).
+### Step 2.5 — Favorites (F3)
+- Add/remove from long-press menu and Settings; drag-and-drop edit mode; max count.
 
 ### Step 2.6 — Hide & rename (F5)
-- Long-press bottom sheet: Add to favorites · Rename · Hide · App info · Uninstall.
-  - App info: `Settings.ACTION_APPLICATION_DETAILS_SETTINGS` (or `LauncherApps.startAppDetailsActivity`).
-  - Uninstall: `Intent.ACTION_DELETE` with `package:` URI.
-- Rename dialog with "Reset to original".
-- Settings → Hidden apps: list with unhide; optional delay/confirmation before showing.
+- Long-press sheet: Add to favorites · Rename · Hide · App info · Uninstall.
+- Rename dialog with reset; Settings → Hidden apps with unhide and optional confirmation/delay.
 
 ### Step 2.7 — Gestures (F4)
-- Detect swipes on the home root with `pointerInput` (thresholds in dp, velocity-aware).
-- Configurable: swipe left/right/down → app / action / none.
-- Swipe down → expand notification shade (via reflection-free approach: Accessibility `GLOBAL_ACTION_NOTIFICATIONS` if enabled, otherwise open search).
-- Double-tap to lock: implement in Phase 4 together with the shared Accessibility Service (show "requires permission" for now).
+- `pointerInput` swipe detection with thresholds from Appendix A.
+- Swipe left/right/down bindings: app / action / none.
+- Swipe down → notification shade if the Accessibility Service is enabled (`GLOBAL_ACTION_NOTIFICATIONS`), otherwise search.
+- Double-tap lock: shown as "needs Accessibility (v1.1)" until Phase 4.
 
 ### Step 2.8 — Appearance (F6)
-- Settings screens for theme, wallpaper (solid color, or system wallpaper with dim overlay using `windowShowWallpaper`), font, text size, show/hide clock/date/battery/status bar.
+- Theme, wallpaper (solid / system with dim overlay), font, text size, visibility toggles.
 
 ### Step 2.9 — Onboarding (F14)
-- 3–4 pages explaining the idea → "Set as default" (`RoleManager.createRequestRoleIntent(ROLE_HOME)` on API 29+, otherwise open `Settings.ACTION_HOME_SETTINGS`) → pick favorites (suggest Phone, Messages, Camera, Maps).
-- Skippable; shown once.
+- Intro (3–4 pages) → set as default (`RoleManager` / home settings) → pick favorites → background reliability (F14.6). Skippable; shown once.
 
-### Step 2.10 — Settings screen structure
-Home · App list · Gestures · Appearance · Hidden apps · About. (Wellbeing, Notifications, Backup, Premium sections added in later phases.)
+### Step 2.10 — Settings structure
+Home · App list · Gestures · Appearance · Hidden apps · About. Later phases add sections.
 
-**Tests (written within each step, not after):**
-- Unit: SettingsRepository read/write/migration, search matching (substring, initials, accents, auto-launch), favorites add/remove/reorder/max/auto-remove, hide/rename/reset, gesture binding resolution, appearance settings mapping.
-- UI: home layout & alignment, app list search + no-match actions, long-press menu actions, favorites edit mode, rename/hide flows, gesture navigation, onboarding flow & skip.
+**Tests (written within each step):**
+- Unit: SettingsRepository (defaults from Appendix A, read/write), search matching + benchmark, favorites rules, hide/rename/reset, gesture resolution, appearance mapping, onboarding state machine, battery-optimization detection logic (fake `PowerManager`).
+- UI (Robolectric): home & alignment, search + no-match actions, long-press actions, favorites edit mode, rename/hide flows, gestures, onboarding flow & skip.
+- Screenshots: every screen, dark/light, default/largest font.
+- Process death / config change: ViewModel state restored via `SavedStateHandle` (NFR-R7).
 
-**Done when:** every F1–F6 and F14 requirement in REQUIREMENTS.md is met, covered by the tests above, and manually verified on 2 devices.
+**Done when:** every F1–F6 and F14 requirement is met and traced to tests; manual check on the test phone passes for each step.
 
 ---
 
-## Phase 3 — Hardening & v1.0 Release
+## Phase 3 — Daily-Driver Hardening (v1.0)
 
-### Step 3.1 — Test audit & performance tests
-- Audit coverage and fill gaps against every F1–F6/F14 requirement ID (each requirement maps to at least one test).
-- End-to-end UI tests of the main journeys on a release-like build.
-- Macrobenchmark + Baseline Profile: verify NFR-P1 (home ≤ 100 ms warm) and NFR-P2 (cold ≤ 500 ms); add benchmarks to CI as a regression check.
+### Step 3.1 — Test audit
+- Every F1–F6/F14 ID in TRACEABILITY.md has at least one test; fill gaps.
 
-### Step 3.2 — Accessibility & localization
-- TalkBack pass, 48dp targets, contrast check (NFR-A1–A4).
-- All strings in `strings.xml`; test RTL with pseudo-locales.
+### Step 3.2 — Manual performance & stability check on the test phone
+- Home appears instantly after Home press (NFR-P1); cold start feels ≤ 0.5 s (NFR-P2).
+- Memory in system settings → app info ≤ 60 MB idle (NFR-P4); battery usage of ZeroOS negligible after 24 h (NFR-P5).
+- No LeakCanary reports or StrictMode violations in a debug build during 1 day of use.
+- Rotation, dark-mode switch and font-size change keep state (NFR-R7).
 
-### Step 3.3 — Device matrix
-- Pixel, Samsung, Xiaomi, OnePlus; gesture & 3-button nav; work profile; secondary user; tablet/foldable layout sanity.
+### Step 3.3 — Upgrade check
+- Install the previous APK, configure favorites/renames/hidden apps, install the new APK over it → all settings retained (NFR-R6).
 
-### Step 3.4 — Release prep
-- App icon, Play listing text & screenshots, privacy policy page.
-- Signing (Play App Signing), versioning scheme, release build with R8.
-- Internal testing track → closed testing (≥ 12 testers for 14 days if a new personal developer account) → production.
-- Opt-in crash reporting only (or none) per NFR-S1.
+### Step 3.4 — One week of daily use
+- Use v1.0 as the default launcher for 7 days; file every bug as a regression test + fix.
 
-**Done when:** all requirement IDs have tests; benchmarks meet targets; v1.0 is live on Play Store; crash-free rate is being monitored.
+**Done when:** audit complete; manual checks pass; one week of use with no open crash bugs.
 
 ---
 
 ## Phase 4 — v1.1 Wellbeing (F7, F8, F9)
 
 ### Step 4.1 — Infrastructure
-- Add **Room** to `core/data` (tables: app limits, notification inbox, usage cache, focus schedules).
-- Add **WorkManager** jobs: midnight reset, notification digests, scheduled focus.
+- Add **Room** (limits, inbox, usage cache, focus schedules) with exported schemas for migration tests.
+- Add **WorkManager**: midnight reset, digests, scheduled focus.
 - New modules: `feature/notifications/`, `feature/wellbeing/`.
-- **Permission helper**: one reusable "explain → request → verify → fallback" flow for Usage Access, Notification Access, Accessibility, DND access (F14.4, NFR-S4).
+- **Permission helper**: one "explain → open system screen → verify on return → fallback" flow for Usage Access, Notification Access, Accessibility, DND. It includes the **restricted settings** instructions (App info → ⋮ → Allow restricted settings) for Accessibility/Notification access (F14.4, NFR-S4).
 
 ### Step 4.2 — Shared Accessibility Service
-- Single `ZeroAccessibilityService` used by F4.5 (double-tap lock via `GLOBAL_ACTION_LOCK_SCREEN`, API 28+), F8.7, and later F16.
-- Opt-in only, with prominent disclosure + consent screen; start minimal (no package filter needed until F8.7/F16 are enabled — update `serviceInfo` at runtime based on enabled features).
+- Single `ZeroAccessibilityService` for F4.5 (double-tap lock via `GLOBAL_ACTION_LOCK_SCREEN`, API 28+), F8.7, and later F16.
+- Off by default; `serviceInfo.packageNames` updated at runtime to only the packages enabled features need.
 - Detect disabled/killed state and show a warning in Settings.
 
 ### Step 4.3 — Usage limits & mindful pause (F8)
 Build in this order:
-1. **Toggles first (F8.8–F8.12):** master switch (off by default) + per-part switches stored in DataStore; config preserved when off; permissions requested on first enable; background work stopped on disable; optional "hold to disable" friction.
-2. **Mindful pause (F8.1, F8.2):** intercept launches *from the launcher* for flagged apps → full-screen pause activity/composable with countdown and optional intention field.
-3. **Daily limits (F8.3–F8.6):** compute today's usage per app via `UsageStatsManager.queryEvents` (foreground/background events since local midnight); cache in Room; block screen with "5 more minutes" (max N/day); remaining time label in app list.
-4. **Outside-launcher enforcement (F8.7):** Accessibility service watches `TYPE_WINDOW_STATE_CHANGED` for limited packages → show block overlay.
+1. **Toggles (F8.8–F8.12)**: master (off by default) + per-part switches; config kept when off; permissions on first enable; background work stopped on disable; disable friction.
+2. **Mindful pause (F8.1, F8.2)**: intercept launches from the launcher for flagged apps → full-screen pause with countdown + optional intention field.
+3. **Daily limits (F8.3–F8.6)**: today's usage via `UsageStatsManager.queryEvents` since local midnight; cache in Room; block screen with "5 more minutes"; remaining time in app list.
+4. **Outside-launcher enforcement (F8.7)**: Accessibility service on `TYPE_WINDOW_STATE_CHANGED` for limited packages → block overlay.
 
 ### Step 4.4 — Notification filter (F7)
-- `NotificationListenerService`: allowed apps pass through; others → `cancelNotification` + save to Room inbox.
-- Never filter calls, alarms, system/critical categories (`CATEGORY_CALL`, `CATEGORY_ALARM`, etc.).
-- Inbox screen (open via stored `contentIntent` when still valid, dismiss, clear all).
-- Scheduled digest notifications via WorkManager.
+- `NotificationListenerService`: allowed apps pass; others → `cancelNotification` + store in Room inbox.
+- Never filter `CATEGORY_CALL`, `CATEGORY_ALARM`, or system/critical notifications.
+- Inbox screen (open stored `contentIntent` if valid, dismiss, clear all); scheduled digests.
 
 ### Step 4.5 — Focus mode (F9)
-- Start from home (long-press clock) → duration + allow-list.
-- While active: app list filtered to allowed apps, maximal notification filtering, remaining time on home, hold-3s to end early.
-- Optional DND via `NotificationManager.setInterruptionFilter` (needs DND access).
-- Scheduled sessions via WorkManager / exact alarms.
+- Start from home (long-press clock) → duration + allow-list; filtered app list, maximal notification filtering, remaining time on home, hold-3s to end; optional DND; scheduled sessions.
 
 **Tests:**
-- Unit: F8 toggle logic (master off disables everything, per-part toggles, config preserved, disable friction), usage calculation from fake `UsageEvents` (incl. midnight reset, "5 more minutes" cap), notification filter rules (allow-list, never-filter categories), digest scheduling, focus timer & allow-list filtering.
-- Instrumented: Room DAOs, WorkManager jobs (`work-testing`), permission-denied fallbacks for each sensitive permission.
-- UI: pause screen, limit-reached screen, inbox, focus start/end-early flows.
+- Unit: F8 toggles (master off disables all, per-part, config kept, friction), usage calculation from fake `UsageEvents` (midnight, time-zone, DST, clock change, "5 more minutes" cap), notification filter rules, digest scheduling, focus timer & allow-list, permission helper states (granted/denied/revoked).
+- Robolectric: Room DAOs + migration tests, WorkManager jobs (`work-testing`), notification listener logic with fake `StatusBarNotification`s, accessibility event handling with fake events.
+- UI + screenshots: pause, limit-reached, inbox, focus start/end, permission explanation screens.
 
-**Done when:** F7–F9 requirements pass and are covered by the tests above; all features work with permissions denied (graceful fallback); battery stays within NFR-P5 on a 24h idle test.
+**Done when:** F7–F9 met and traced; every feature works with permissions denied; manual check: limits and filter work on the test phone, and services survive overnight + reboot with the F14.6 settings applied.
 
 ---
 
-## Phase 5 — v1.2 Insights, Extras & Premium (F10–F13, F15)
+## Phase 5 — v1.2 Insights & Extras (F10–F13)
 
 ### Step 5.1 — Screen-time insights (F10)
-- Daily total, unlock count (`KEYGUARD_HIDDEN` / `SCREEN_INTERACTIVE` usage events), top 5 apps, 7-day monochrome bars; optional home-screen line.
+- Daily total, unlocks (`KEYGUARD_HIDDEN` / `SCREEN_INTERACTIVE` events), top 5, 7-day monochrome bars, optional home line.
 
-### Step 5.2 — Grayscale (F11)
-- Guide screen with per-OEM instructions; if `WRITE_SECURE_SETTINGS` granted via ADB, toggle `accessibility_display_daltonizer` settings + schedule.
+### Step 5.2 — Grayscale shortcut (F11)
+- Settings entry opening the system accessibility/color-correction screen + accessibility-shortcut tip. No `WRITE_SECURE_SETTINGS`.
 
 ### Step 5.3 — Minimal widgets (F12)
-- Weather (coarse location, opt-in; a free weather API; cache 1–3 h), next calendar event (`CalendarContract`, READ_CALENDAR), 3-item to-do in Room. All off by default.
+- Weather (first and only `INTERNET` use; coarse location opt-in; a free no-key weather API, chosen in DECISIONS.md; cache per Appendix A), next calendar event (`READ_CALENDAR`), 3-item to-do in Room. All off by default.
 
 ### Step 5.4 — Backup & restore (F13)
-- Export/import JSON via Storage Access Framework (`CreateDocument`/`OpenDocument`); schema version field; Auto Backup rules for DataStore files.
-
-### Step 5.5 — Premium (F15)
-- `feature/billing/` with Play Billing Library: products, purchase flow, acknowledgement, restore, 7-day trial.
-- `PremiumGate` in `core` — single place to check entitlements; premium features show an upsell instead of hiding.
+- Export/import JSON via Storage Access Framework; schema version field; Auto Backup rules for DataStore/Room.
 
 **Tests:**
-- Unit: insights aggregation (totals, unlocks, top 5, 7-day), grayscale permission detection, widget data mapping & caching, backup export/import round-trip and schema versioning, `PremiumGate` entitlement logic with a fake billing client.
-- UI: insights screen, widgets toggles, backup/restore flow, upsell screens.
+- Unit: insights aggregation (time-zone/DST edges), weather parsing & caching (fake HTTP), calendar mapping, to-do rules, backup round-trip + older-schema import.
+- UI + screenshots: insights, widgets, grayscale screen, backup/restore flow.
+- Permission allowlist updated for `INTERNET`, `ACCESS_COARSE_LOCATION`, `READ_CALENDAR` with IDs.
 
-**Done when:** F10–F13 and F15 requirements pass and are covered by the tests above; billing tested with license testers.
+**Done when:** F10–F13 met and traced; manual check on the test phone.
 
 ---
 
 ## Phase 6 — v1.3 Short-Form Content Blocker (F16)
 
 ### Step 6.1 — Detection rules as data
-- `rules.json` bundled in assets: `{ version, apps: [{ package, viewIds: [...], minAppVersion? }] }`.
-- Start with YouTube Shorts and Instagram Reels; find view IDs with Android Studio Layout Inspector / `uiautomator dump`.
+- `assets/shortform_rules.json`: `{ version, apps: [{ package, viewIds: [...], minAppVersion? }] }`.
+- View IDs taken from the node-tree dumps captured with the debug dumper (Step 0.5); re-capture if apps have updated.
 
 ### Step 6.2 — Detection in the shared Accessibility Service
-- Enable package filter for selected target apps only.
-- On window-state/content events, throttle to ≤ 1 check per 300–500 ms, use `findAccessibilityNodeInfosByViewId`; recycle nodes.
+- Package filter limited to enabled target apps; throttle per Appendix A; `findAccessibilityNodeInfosByViewId`; no full-tree traversal.
 
 ### Step 6.3 — Block overlay & limit mode
-- `TYPE_ACCESSIBILITY_OVERLAY` black screen with custom message + "Go back" (`GLOBAL_ACTION_BACK`).
-- Limit mode: accumulate time while detected → block after daily allowance; reset at midnight; "Allow 5 minutes" through mindful pause.
-- Always block during Focus mode; report stats into Insights.
-
-### Step 6.4 — Remote rule updates
-- WorkManager job ≤ 1×/day fetching a **signed** rules file (verify signature with a bundled public key); fall back to bundled rules.
-
-### Step 6.5 — Policy & release
-- Prominent disclosure, Play Accessibility declaration form, reviewer demo video, `isAccessibilityTool=false`.
-- Build flag to strip F16 if the Play review fails.
+- `TYPE_ACCESSIBILITY_OVERLAY` black screen with message + "Go back" (`GLOBAL_ACTION_BACK`); optional auto-back.
+- Limit mode with daily allowance and midnight reset; "Allow 5 minutes" via the pause screen; always blocks during Focus; stats into Insights.
+- Explanation screen with restricted-settings instructions (F16.2); killed-service warning (F16.15).
 
 **Tests:**
-- Unit: rules JSON parsing & versioning, signature verification (valid/invalid/tampered), detection matching against recorded node-tree fixtures for each target app, throttling, limit-mode time accumulation & midnight reset, focus-mode override.
-- Instrumented: overlay shows/dismisses, "Go back" action, remote-update fallback to bundled rules.
-- Fixture check: re-run detection tests against fresh `uiautomator dump` fixtures whenever a target app updates.
+- Unit: rules parsing & versioning (valid/invalid/unknown version), detection against **recorded node-tree fixtures** per app (Shorts → detected; normal video/feed → not detected), throttling, limit accumulation (midnight/time-zone/DST), focus override, bypass cap.
+- Robolectric: service event handling with fake events; overlay show/dismiss logic.
+- Screenshots: overlay, settings, explanation screen.
 
-**Done when:** F16 requirements pass and are covered by the tests above; performance budget met (≤ 2% battery/day, ≤ 300 ms overlay latency); Play review approved.
+**Done when:** F16 met and traced; manual check on the test phone: Shorts/Reels blocked within ~300 ms, normal videos untouched, battery impact acceptable after 1 day.
 
 ---
 
-## Ongoing (after every release)
-- Monitor crash rate, ANRs, and reviews; triage weekly.
-- Re-verify F16 detection rules whenever YouTube/Instagram update.
-- Keep target SDK current (Play requires updating yearly).
-- Re-run Macrobenchmarks before each release to catch performance regressions.
+## Install Checklist (every time a new APK goes on the phone)
+1. `./gradlew check` passes.
+2. Bump `versionCode`; update `versionName` if a milestone changed.
+3. Move "Unreleased" entries in CHANGELOG.md under the new version.
+4. Export a settings backup on the phone (once F13 exists).
+5. `./gradlew assembleRelease` (signed with the backed-up keystore).
+6. Install over the existing app; confirm settings retained.
+7. Quick smoke test: Home, search, launch, gestures, plus any enabled wellbeing/F16 features.
+8. If something is broken: reinstall the previous APK (keep the last 2 APKs in a local `releases/` folder, git-ignored).
+
+---
+
+## Ongoing
+- When YouTube/Instagram update and F16 breaks: capture new node-tree dumps, update fixtures and rules, rebuild.
+- Bump target SDK when a new Android version reaches the phone.
+- Every bug: regression test first.
+
+## Deferred Work (not planned now; revisit when wanted)
+- Instrumented tests on an emulator or the phone.
+- Macrobenchmark + Baseline Profiles for startup (NFR-P1/P2 measured automatically).
+- Translations / RTL.
+- ADB-based grayscale toggle.
