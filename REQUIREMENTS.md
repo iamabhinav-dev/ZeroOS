@@ -1,12 +1,15 @@
 # ZeroOS Launcher — Requirements & Features
 
-> A minimalist Android home-screen launcher that replaces colorful icons and endless feeds with a calm, text-first interface, helping people use their phone intentionally instead of compulsively.
+> A personal, minimalist Android home-screen launcher that replaces colorful icons and endless feeds with a calm, text-first interface, so I use my phone intentionally instead of compulsively.
 
 | | |
 |---|---|
+| **Audience** | Personal use only (one user). Not published to any app store. |
+| **Primary device** | the primary phone. Must also work on any other Android phone (no device-specific code paths). |
 | **Platform** | Android (min SDK 26 / Android 8.0, target latest stable SDK) |
+| **Distribution** | Signed release APK, sideloaded (copied to the phone and installed via "Install unknown apps"). **No ADB and no Developer options required.** |
 | **Type** | Home-screen launcher (`android.intent.category.HOME`) |
-| **Status** | Draft v0.1 |
+| **Status** | Draft v0.2 (personal edition) |
 | **Last updated** | 2026-10-15 |
 
 ---
@@ -14,26 +17,21 @@
 ## 1. Vision & Goals
 
 ### 1.1 Problem
-Default launchers are designed for engagement: bright icons, notification badges, and widgets pull users into apps they didn't intend to open. Users want to reduce screen time without giving up a smartphone.
+Default launchers are designed for engagement: bright icons, notification badges, and widgets pull me into apps I didn't intend to open. I want to reduce screen time without giving up a smartphone.
 
 ### 1.2 Goals
-1. **Reduce mindless phone use** — make opening an app a deliberate act.
-2. **Remove visual noise** — no icons, no badges, no colors by default.
-3. **Stay fast and functional** — every essential app is ≤ 2 interactions away.
-4. **Respect privacy** — no tracking, no ads, all data stays on the device.
+1. **Reduce mindless phone use**: make opening an app a deliberate act.
+2. **Remove visual noise**: no icons, no badges, no colors by default.
+3. **Stay fast and functional**: every essential app is ≤ 2 interactions away.
+4. **Privacy**: no tracking, no ads, all data stays on the device.
 
 ### 1.3 Non-Goals
 - Not a full OS or ROM replacement.
-- Not a parental-control or MDM tool (no remote enforcement).
-- No icon packs, themes marketplace, or heavy widget ecosystem.
-
-### 1.4 Target Users
-| Persona | Need |
-|---|---|
-| **The Distracted Professional** | Wants fewer interruptions during work hours. |
-| **The Digital Minimalist** | Wants a calm, aesthetic, text-only phone. |
-| **The Student** | Wants to limit social media and gaming during study time. |
-| **The Recovering Doomscroller** | Wants friction before opening addictive apps. |
+- Not a parental-control or MDM tool.
+- No icon packs, themes, or heavy widget ecosystem.
+- **No app store release, monetization, analytics, or multi-user support work.**
+- **No features that require ADB, root, or Developer options.**
+- No translations or RTL layout work (English only).
 
 ---
 
@@ -41,31 +39,32 @@ Default launchers are designed for engagement: bright icons, notification badges
 
 | ID | Feature | Priority | Release |
 |---|---|---|---|
-| F1 | Minimal home screen (clock, date, favorites) | P0 | MVP |
-| F2 | Text-based app list with search | P0 | MVP |
-| F3 | Favorite apps management | P0 | MVP |
-| F4 | Gestures & shortcuts | P0 | MVP |
-| F5 | Hide & rename apps | P0 | MVP |
-| F6 | Appearance customization | P1 | MVP |
+| F1 | Minimal home screen (clock, date, favorites) | P0 | v1.0 |
+| F2 | Text-based app list with search | P0 | v1.0 |
+| F3 | Favorite apps management | P0 | v1.0 |
+| F4 | Gestures & shortcuts | P0 | v1.0 |
+| F5 | Hide & rename apps | P0 | v1.0 |
+| F6 | Appearance customization | P1 | v1.0 |
+| F14 | Onboarding | P0 | v1.0 |
 | F7 | Notification filter / inbox | P1 | v1.1 |
-| F8 | App usage limits & mindful pause | P1 | v1.1 |
+| F8 | App usage limits & mindful pause (toggleable) | P1 | v1.1 |
 | F9 | Focus mode | P1 | v1.1 |
 | F10 | Screen-time insights | P2 | v1.2 |
-| F11 | Grayscale mode | P2 | v1.2 |
+| F11 | Grayscale shortcut | P2 | v1.2 |
 | F12 | Minimal widgets (weather, calendar, to-do) | P2 | v1.2 |
 | F13 | Backup & restore settings | P2 | v1.2 |
-| F14 | Onboarding | P0 | MVP |
-| F15 | Premium / monetization | P2 | v1.2 |
-| F16 | Short-form content blocker (Reels, Shorts, TikTok) | P2 | v1.3 |
+| F16 | Short-form content blocker (Reels, Shorts) | P2 | v1.3 |
+| ~~F15~~ | ~~Premium / monetization~~ | Removed | Not needed for personal use |
 
 Priority: **P0** = must have, **P1** = should have, **P2** = nice to have.
+All features are always available (no paywall).
 
 ---
 
 ## 3. Functional Requirements
 
 ### F1 — Minimal Home Screen
-The default screen shown when the user presses Home.
+The default screen shown when I press Home.
 
 | ID | Requirement |
 |---|---|
@@ -76,7 +75,7 @@ The default screen shown when the user presses Home.
 | F1.5 | No notification badges, dots, or counters on the home screen. |
 | F1.6 | Home screen must not scroll; all content fits within one viewport. |
 | F1.7 | Support configurable alignment of the favorites list: left, center, right. |
-| F1.8 | Optional: show the next upcoming calendar event or alarm in small text. |
+| F1.8 | Optional: show the next upcoming alarm in small text. |
 | F1.9 | Long-press on empty space opens launcher settings. |
 
 ### F2 — App List (Drawer)
@@ -90,17 +89,17 @@ The default screen shown when the user presses Home.
 | F2.5 | If search yields exactly one match, optionally **auto-launch** it. |
 | F2.6 | If no match, offer "Search the web for '<query>'" and "Search Play Store". |
 | F2.7 | Optional alphabetical fast-scroller on the side. |
-| F2.8 | Long-press an app → context menu: *Add to favorites, Rename, Hide, Set limit, App info, Uninstall*. |
-| F2.9 | List updates live when apps are installed/uninstalled/updated (`PACKAGE_ADDED/REMOVED/CHANGED`). |
-| F2.10 | Support work-profile apps, visually tagged (e.g., "Gmail · work"). |
+| F2.8 | Long-press an app → context menu: *Add to favorites, Rename, Hide, Set limit (from v1.1), App info, Uninstall*. |
+| F2.9 | List updates live when apps are installed/uninstalled/updated. |
+| F2.10 | Support apps in other profiles (work profile, or app clones such as App Clone **where Android exposes them via `LauncherApps`**), visually tagged (e.g., "WhatsApp · clone"). |
 | F2.11 | Back gesture or swipe down returns to home. |
 
 ### F3 — Favorite Apps
 
 | ID | Requirement |
 |---|---|
-| F3.1 | User can add/remove favorites from the app list or settings. |
-| F3.2 | User can reorder favorites via drag-and-drop in an edit mode. |
+| F3.1 | Add/remove favorites from the app list or settings. |
+| F3.2 | Reorder favorites via drag-and-drop in an edit mode. |
 | F3.3 | Max favorites configurable (default 6, max 10). |
 | F3.4 | If a favorite app is uninstalled, it is removed automatically. |
 
@@ -109,10 +108,10 @@ The default screen shown when the user presses Home.
 | ID | Requirement |
 |---|---|
 | F4.1 | **Swipe up** → app list (default). |
-| F4.2 | **Swipe left** → user-assigned app (default: Camera). |
-| F4.3 | **Swipe right** → user-assigned app (default: Phone/Dialer). |
+| F4.2 | **Swipe left** → assigned app (default: Camera). |
+| F4.3 | **Swipe right** → assigned app (default: Phone/Dialer). |
 | F4.4 | **Swipe down** → expand notification shade or open search (configurable). |
-| F4.5 | **Double-tap** → lock screen (requires Accessibility Service or Device Admin; must be opt-in with clear explanation). |
+| F4.5 | **Double-tap** → lock screen (uses the optional Accessibility Service; off by default). |
 | F4.6 | Each gesture can be set to: an app, a launcher action, or "None". |
 
 ### F5 — Hide & Rename Apps
@@ -140,8 +139,8 @@ The default screen shown when the user presses Home.
 
 | ID | Requirement |
 |---|---|
-| F7.1 | Uses `NotificationListenerService` (opt-in, with explanation). |
-| F7.2 | User selects **allowed apps** whose notifications come through normally. |
+| F7.1 | Uses `NotificationListenerService` (opt-in, with a short explanation). |
+| F7.2 | I select **allowed apps** whose notifications come through normally. |
 | F7.3 | Notifications from other apps are silenced and collected into a **Notification Inbox** inside the launcher. |
 | F7.4 | Optional **scheduled digest** (e.g., 12:00 and 18:00) showing a single summary notification. |
 | F7.5 | Inbox items can be opened, dismissed, or cleared all. |
@@ -157,10 +156,10 @@ The default screen shown when the user presses Home.
 | F8.4 | When limit is reached, show a blocking screen on launch from the launcher; allow "5 more minutes" (max N times/day, configurable). |
 | F8.5 | Show remaining time for limited apps in the app list (small subtle text). |
 | F8.6 | Limits reset at local midnight. |
-| F8.7 | Enforcement outside the launcher (e.g., opening via notification) is **best-effort** using an optional Accessibility Service; must be clearly disclosed. |
+| F8.7 | Enforcement outside the launcher (e.g., opening via notification) is **best-effort** using the optional Accessibility Service. |
 | F8.8 | **Master on/off toggle** for the whole feature in Settings → Wellbeing; **off by default**. When off, no pause screens, limits, or remaining-time labels are shown and no usage tracking runs. |
 | F8.9 | **Individual toggles** for each part: Mindful pause (F8.1), Intention prompt (F8.2), Daily limits (F8.3–F8.6), and Outside-launcher enforcement (F8.7). Each can be turned on/off independently while the master toggle is on. |
-| F8.10 | Turning the feature off **keeps the user's configuration** (flagged apps, limits, pause duration) so it's restored when turned back on. |
+| F8.10 | Turning the feature off **keeps the configuration** (flagged apps, limits, pause duration) so it's restored when turned back on. |
 | F8.11 | Permissions (Usage Access, Accessibility) are requested only when the related toggle is first switched on; switching off stops the related background work immediately. |
 | F8.12 | Optional friction when turning off during an active limit (e.g., mindful pause or "hold for 3 s"), configurable, to prevent impulsive disabling. |
 
@@ -169,7 +168,7 @@ The default screen shown when the user presses Home.
 | ID | Requirement |
 |---|---|
 | F9.1 | One-tap Focus mode from home (long-press clock or settings). |
-| F9.2 | User picks a duration (25 / 50 / 90 min / custom) and an allow-list of apps. |
+| F9.2 | Pick a duration (25 / 50 / 90 min / custom) and an allow-list of apps. |
 | F9.3 | During focus: only allowed apps are shown/launchable; notification filter is maximal. |
 | F9.4 | Home screen shows remaining focus time. |
 | F9.5 | Ending early requires a deliberate action (e.g., hold for 3 s). |
@@ -185,12 +184,14 @@ The default screen shown when the user presses Home.
 | F10.3 | Optional subtle screen-time text on the home screen (e.g., "1h 12m today"). |
 | F10.4 | All data computed locally from `UsageStatsManager`; nothing uploaded. |
 
-### F11 — Grayscale Mode
+### F11 — Grayscale Shortcut
+Android stores grayscale (color correction) in *Secure Settings*, which third-party apps can only change with `WRITE_SECURE_SETTINGS`, a permission grantable only via ADB. Since ADB is out of scope, ZeroOS helps me use the **system's own** grayscale instead.
 
 | ID | Requirement |
 |---|---|
-| F11.1 | Guide the user to enable system grayscale (Developer options / Digital Wellbeing / Bedtime mode), since third-party apps cannot toggle it directly without ADB-granted `WRITE_SECURE_SETTINGS`. |
-| F11.2 | If `WRITE_SECURE_SETTINGS` is granted via ADB, allow one-tap toggle and scheduling. |
+| F11.1 | Settings → Grayscale opens the system color-correction screen (`Settings.ACTION_ACCESSIBILITY_SETTINGS` or the closest available screen), with one line of instructions to choose **Grayscale**. |
+| F11.2 | Show a tip to assign color correction to the system **accessibility shortcut** (e.g., hold both volume keys) for instant on/off. |
+| F11.3 | No ADB-based toggling, scheduling, or `WRITE_SECURE_SETTINGS` usage. |
 
 ### F12 — Minimal Widgets
 
@@ -205,7 +206,7 @@ The default screen shown when the user presses Home.
 
 | ID | Requirement |
 |---|---|
-| F13.1 | Export all settings (favorites, hidden, renames, limits, gestures) to a JSON file. |
+| F13.1 | Export all settings (favorites, hidden, renames, limits, gestures, F16 settings) to a JSON file. |
 | F13.2 | Import from file with confirmation. |
 | F13.3 | Support Android Auto Backup for settings. |
 
@@ -214,42 +215,37 @@ The default screen shown when the user presses Home.
 | ID | Requirement |
 |---|---|
 | F14.1 | 3–4 screen intro explaining the philosophy. |
-| F14.2 | Prompt to set ZeroOS as default launcher (`RoleManager.ROLE_HOME` on Android 10+). |
-| F14.3 | Let user pick initial favorites (suggest Phone, Messages, Camera, Maps). |
+| F14.2 | Prompt to set ZeroOS as default launcher (`RoleManager.ROLE_HOME` on Android 10+, otherwise open home settings). |
+| F14.3 | Pick initial favorites (suggest Phone, Messages, Camera, Maps). |
 | F14.4 | Permissions requested **just-in-time** when the related feature is enabled, never all upfront. |
 | F14.5 | Onboarding is skippable. |
+| F14.6 | **Background reliability step**: detect if battery optimization is on for ZeroOS and offer to open the relevant screen (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`). Show OEM tips (Some phones: allow background activity / auto-start) as plain text; never depend on OEM-private APIs. |
 
-### F15 — Monetization (optional)
-
-| ID | Requirement |
-|---|---|
-| F15.1 | Core launcher (F1–F6, F14) is **free forever**, with no ads. |
-| F15.2 | Premium (one-time or subscription) unlocks: notification filter, usage limits, focus scheduling, insights, extra fonts, widgets, short-form content blocker (F16). |
-| F15.3 | Billing via Google Play Billing Library. |
-| F15.4 | Free trial (e.g., 7 days) for premium features. |
+### ~~F15 — Monetization~~ (removed)
+Not needed for personal use. All features are always available.
 
 ### F16 — Short-Form Content Blocker
-Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels, TikTok, etc.) **inside** other apps, showing a minimal black screen with a custom message. The rest of each app stays usable.
+Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) **inside** other apps, showing a minimal black screen with a custom message. The rest of each app stays usable.
 
-**Approach:** Extends the optional Accessibility Service from F8.7. No official Android API exists for this, so detection relies on matching screen elements (view resource IDs) of target apps.
+**Approach:** Extends the optional Accessibility Service from F8.7. No official Android API exists for this, so detection relies on matching screen elements (view resource IDs) of target apps. When those apps change their UI, I rebuild ZeroOS with updated rules.
 
 | ID | Requirement |
 |---|---|
 | F16.1 | Feature is **opt-in and off by default**; the launcher is fully functional if Accessibility permission is denied. |
-| F16.2 | Before enabling, show a **prominent disclosure** screen explaining what is read (only on-screen structure of selected apps), why, and that nothing leaves the device; require explicit consent. |
-| F16.3 | Supported apps at launch: **YouTube Shorts** and **Instagram Reels**. Later: TikTok, Facebook Reels, Snapchat Spotlight. |
-| F16.4 | User can enable/disable blocking per supported app. |
+| F16.2 | Before enabling, show a short explanation screen of what the service reads (only the on-screen structure of selected apps) and how to allow it on Android 13+ (App info → ⋮ → **Allow restricted settings**). |
+| F16.3 | Supported apps at launch: **YouTube Shorts** and **Instagram Reels**. Others (TikTok, Facebook Reels, Snapchat Spotlight) only if I ask later. |
+| F16.4 | Enable/disable blocking per supported app. |
 | F16.5 | Service listens only to events from the selected target packages (`packageNames` filter in the service config). |
 | F16.6 | Detection uses targeted lookups (`findAccessibilityNodeInfosByViewId`) on window-state/content-change events, **throttled to ≤ 1 check per 300–500 ms**; no full-tree traversal. |
-| F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with the user's custom message and a "Go back" button. |
+| F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with my custom message and a "Go back" button. |
 | F16.8 | **Limit mode:** track time spent in short-form content per day; show the block overlay once the daily allowance (e.g., 15 min) is used up. Allowance resets at local midnight. |
-| F16.9 | Custom message is user-editable (max 120 chars); default: "Nothing to see here. Go do something real." |
+| F16.9 | Custom message is editable (max 120 chars); default: "Nothing to see here. Go do something real." |
 | F16.10 | "Go back" performs `GLOBAL_ACTION_BACK` and dismisses the overlay; optionally auto-trigger back after N seconds. |
-| F16.11 | Optional friction to bypass: "Allow 5 minutes" after a mindful pause (reuses F8.1), limited to N times/day. |
-| F16.12 | Detection rules (package → view IDs) are stored as **versioned data**, not hard-coded, so they can be updated without changing logic. |
-| F16.13 | Optional **remote rule updates**: fetch a signed rules JSON periodically (WorkManager, ≤ 1×/day); falls back to bundled rules. No user data is sent. |
+| F16.11 | Optional friction to bypass: "Allow 5 minutes" after a mindful pause (reuses the F8.1 screen; works even if F8 is toggled off), limited to N times/day. |
+| F16.12 | Detection rules (package → view IDs) are stored as **versioned data in a bundled asset file**, not hard-coded in logic. Updating rules = edit the file + rebuild. |
+| ~~F16.13~~ | ~~Remote rule updates~~ (removed: no network, no rule server). |
 | F16.14 | Show today's short-form time and block count in Insights (F10). |
-| F16.15 | Detect and warn the user when the service has been killed or disabled by the system/OEM, with guidance to disable battery optimization. |
+| F16.15 | Detect and warn when the service has been killed or disabled by the system/OEM, with guidance to allow background activity. |
 | F16.16 | Respect Focus mode (F9): during focus, short-form content is always blocked regardless of limits. |
 
 **Performance budget (additional, on top of NFR-P):**
@@ -260,8 +256,6 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels, T
 | Overlay appearance latency after detection | ≤ 300 ms |
 | APK size increase | ≤ 100 KB |
 
-**Estimated effort:** ~3–5 weeks for one developer (2 apps), plus **ongoing maintenance** of detection rules whenever target apps update their UI.
-
 ---
 
 ## 4. Non-Functional Requirements
@@ -269,27 +263,29 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels, T
 ### 4.1 Performance
 | ID | Requirement |
 |---|---|
-| NFR-P1 | Home screen renders within **≤ 100 ms** after pressing Home (warm). |
-| NFR-P2 | Cold start ≤ 500 ms on a mid-range device. |
-| NFR-P3 | App list search results update within **≤ 16 ms** per keystroke for 300 apps. |
-| NFR-P4 | Idle memory footprint ≤ 60 MB; launcher should avoid being killed by the system. |
-| NFR-P5 | No measurable battery drain when idle (no polling loops; use system callbacks). |
+| NFR-P1 | Home screen appears with no visible delay after pressing Home (target ≤ 100 ms warm). |
+| NFR-P2 | Cold start ≤ 500 ms on the primary device. |
+| NFR-P3 | App list search results update within **≤ 16 ms** per keystroke for 300 apps (verified by a JVM unit benchmark of the matching function). |
+| NFR-P4 | Idle memory footprint ≤ 60 MB. |
+| NFR-P5 | No noticeable battery drain when idle (no polling loops; use system callbacks). |
 | NFR-P6 | APK size ≤ 10 MB. |
+
+Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **manually** on the phone (see the manual check in IMPLEMENTATION_PLAN.md).
 
 ### 4.2 Privacy & Security
 | ID | Requirement |
 |---|---|
-| NFR-S1 | No analytics, ads, or third-party trackers in the free tier; any crash reporting is opt-in. |
+| NFR-S1 | No analytics, ads, crash reporting services, or third-party trackers. |
 | NFR-S2 | All usage data, notifications, and settings stored locally only. |
-| NFR-S3 | `INTERNET` permission used only for weather and billing. |
-| NFR-S4 | Every sensitive permission (Notification access, Usage access, Accessibility, Device Admin) must have an in-app explanation screen and work-around if denied. |
-| NFR-S5 | Accessibility Service usage must comply with Google Play policy and be declared in the store listing. |
-| NFR-S6 | Publish a clear privacy policy. |
+| NFR-S3 | No `INTERNET` permission until F12.1 (weather); afterwards used only for weather. |
+| NFR-S4 | Every sensitive permission (Notification access, Usage access, Accessibility, DND) has a short in-app explanation and a working fallback if denied. |
+| NFR-S5 | No user data (notification text, app usage, intentions) is ever written to logs. |
+| NFR-S6 | The release signing keystore is kept outside the repo and backed up; losing it means reinstalling and losing settings. |
 
 ### 4.3 Accessibility
 | ID | Requirement |
 |---|---|
-| NFR-A1 | All interactive elements have content descriptions for TalkBack. |
+| NFR-A1 | All interactive elements have content descriptions. |
 | NFR-A2 | Minimum touch target 48×48 dp. |
 | NFR-A3 | Text contrast meets WCAG AA (4.5:1). |
 | NFR-A4 | Respect system font scaling and reduced motion settings. |
@@ -297,22 +293,23 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels, T
 ### 4.4 Reliability & Compatibility
 | ID | Requirement |
 |---|---|
-| NFR-R1 | Crash-free sessions ≥ 99.8%. |
-| NFR-R2 | Test on Pixel, Samsung (One UI), Xiaomi (HyperOS), OnePlus (OxygenOS). |
+| NFR-R1 | No crashes or ANRs in daily use on the primary device. |
+| NFR-R2 | Primary device: the primary phone. Code uses only public Android APIs so it works on other Android phones (Pixel, Samsung, etc.) without changes. |
 | NFR-R3 | Handle gesture navigation and 3-button navigation. |
-| NFR-R4 | Support portrait (required) and tablets/foldables (graceful layout). |
-| NFR-R5 | Handle multiple users and work profiles. |
+| NFR-R4 | Portrait layout required; landscape must not crash. |
+| NFR-R5 | Handle work-profile / app-clone apps. |
+| NFR-R6 | Settings and data survive app updates (installing a new APK over the old one). |
+| NFR-R7 | Survive process death and configuration changes (rotation, dark-mode switch, font-size change) without losing state. |
 
-### 4.5 Localization
+### 4.5 Language & Formats
 | ID | Requirement |
 |---|---|
-| NFR-L1 | All strings externalized; English at launch. |
-| NFR-L2 | Support RTL layouts. |
-| NFR-L3 | Date/time formats follow device locale and 12/24-hour setting. |
+| NFR-L1 | English only. All strings still live in `strings.xml` (no hardcoded UI text). |
+| NFR-L2 | Date/time formats follow device locale and 12/24-hour setting. |
 
 ---
 
-## 5. Technical Architecture (proposed)
+## 5. Technical Architecture
 
 | Layer | Choice |
 |---|---|
@@ -320,72 +317,75 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels, T
 | UI | Jetpack Compose (Material 3, heavily restyled to minimal) |
 | Architecture | MVVM + unidirectional data flow, single-activity |
 | DI | Hilt |
-| Persistence | Room (limits, inbox, usage cache), DataStore (preferences) |
+| Persistence | DataStore (preferences), Room (from v1.1: limits, inbox, usage cache) |
 | Async | Kotlin Coroutines + Flow |
 | Background | WorkManager (digests, daily reset, scheduled focus) |
-| Billing | Google Play Billing Library |
-| Testing | JUnit, Turbine, Compose UI tests, Macrobenchmark for startup |
+| Testing | JVM only for now: JUnit, Turbine, Robolectric, Compose UI tests on Robolectric, Roborazzi screenshots |
 
 ### 5.1 Key Android APIs
-- `LauncherApps` — enumerate apps incl. work profile, listen for package changes.
-- `RoleManager` — request default home role.
-- `UsageStatsManager` — screen time & per-app usage.
-- `NotificationListenerService` — notification filtering.
-- `AccessibilityService` — (opt-in) double-tap lock, enforcing limits outside launcher.
-- `NotificationManager` — DND policy access for Focus mode.
+- `LauncherApps`: enumerate apps incl. work/clone profiles, listen for package changes.
+- `RoleManager`: request default home role.
+- `UsageStatsManager`: screen time & per-app usage.
+- `NotificationListenerService`: notification filtering.
+- `AccessibilityService`: (opt-in) double-tap lock, limits outside launcher, short-form blocker.
+- `NotificationManager`: DND policy access for Focus mode.
+- `PowerManager`: battery-optimization status.
 
 ### 5.2 Module Structure
 ```
-app/                 – entry point, navigation, DI setup
-core/ui/             – theme, typography, shared composables
-core/data/           – DataStore, Room, repositories
-feature/home/        – F1, F3, F4
-feature/applist/     – F2, F5
-feature/settings/    – F6, F13
+app/                   – entry point, navigation, DI setup
+core/model/            – plain data models
+core/ui/               – theme, typography, shared composables
+core/data/             – DataStore, Room, repositories
+core/testing/          – fakes and test utilities (test-only)
+feature/home/          – F1, F3, F4
+feature/applist/       – F2, F5
+feature/settings/      – F6, F11, F13
+feature/onboarding/    – F14
 feature/notifications/ – F7
-feature/wellbeing/   – F8, F9, F10, F11
-feature/widgets/     – F12
-feature/onboarding/  – F14
-feature/billing/     – F15
-feature/shortsblock/ – F16 (Accessibility-based detection + overlay)
+feature/wellbeing/     – F8, F9, F10
+feature/widgets/       – F12
+feature/shortsblock/   – F16
 ```
 
 ---
 
 ## 6. Screens
 
-1. **Home** — clock, date, battery, favorites list.
-2. **App list** — search bar + alphabetical list.
-3. **App context menu** — bottom sheet with actions.
-4. **Mindful pause / limit-reached** — full-screen interstitial.
-5. **Focus session** — timer + allowed apps.
-6. **Notification inbox** — grouped list of filtered notifications.
-7. **Insights** — daily/weekly usage.
-8. **Settings** — Home, App list, Gestures, Appearance, Notifications, Wellbeing, Hidden apps, Backup, Premium, About.
-9. **Onboarding** — intro, set default, pick favorites.
+1. **Home**: clock, date, battery, favorites list.
+2. **App list**: search bar + alphabetical list.
+3. **App context menu**: bottom sheet with actions.
+4. **Mindful pause / limit-reached**: full-screen interstitial.
+5. **Focus session**: timer + allowed apps.
+6. **Notification inbox**: grouped list of filtered notifications.
+7. **Insights**: daily/weekly usage.
+8. **Settings**: Home, App list, Gestures, Appearance, Notifications, Wellbeing, Short-form blocker, Grayscale, Hidden apps, Backup, About.
+9. **Onboarding**: intro, set default, pick favorites, background reliability.
+10. **Short-form block overlay**: black screen + message + "Go back".
+
+Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in Step 0.4) and must be approved before the screen is built.
 
 ---
 
-## 7. User Stories (MVP)
+## 7. User Stories
 
-- As a user, I want to see only the time and a few app names when I unlock my phone, so I'm not tempted by colorful icons.
-- As a user, I want to type 2–3 letters to find and open any app, so I don't scroll through a grid.
-- As a user, I want to swipe right to open the dialer and left to open the camera, so common actions are instant.
-- As a user, I want to hide distracting apps, so I only open them when I truly mean to.
-- As a user, I want to rename apps, so their labels remind me of my intentions.
-- As a user, I want a pure-black theme, so the phone looks calm and saves battery.
+- I want to see only the time and a few app names when I unlock my phone, so I'm not tempted by colorful icons.
+- I want to type 2–3 letters to find and open any app, so I don't scroll through a grid.
+- I want to swipe right to open the dialer and left to open the camera, so common actions are instant.
+- I want to hide distracting apps, so I only open them when I truly mean to.
+- I want to rename apps, so their labels remind me of my intentions.
+- I want a pure-black theme, so the phone looks calm and saves battery.
+- I want Shorts and Reels blocked with a black screen, so I don't get pulled into endless scrolling.
 
 ---
 
-## 8. Success Metrics
+## 8. Personal Success Criteria
 
-| Metric | Target |
+| Criterion | Target |
 |---|---|
-| User-reported daily screen time reduction (survey) | ≥ 20% after 30 days |
-| Day-30 retention as default launcher | ≥ 40% |
-| Play Store rating | ≥ 4.5 |
-| Crash-free sessions | ≥ 99.8% |
-| Premium conversion (if F15 enabled) | ≥ 3% of active users |
+| Daily screen time (from F10 / system Digital Wellbeing) | ≥ 20% lower after 30 days vs. the week before switching |
+| Still using ZeroOS as default launcher | After 30 days |
+| Crashes / ANRs noticed in daily use | 0 per week |
 
 ---
 
@@ -394,10 +394,10 @@ feature/shortsblock/ – F16 (Accessibility-based detection + overlay)
 | Milestone | Scope |
 |---|---|
 | **M0 – Prototype** | Home screen + app list + set as default launcher. |
-| **MVP (v1.0)** | F1–F6, F14; Play Store release. |
+| **v1.0 – Daily driver** | F1–F6, F14; installed on my phone as the default launcher. |
 | **v1.1** | F7 Notification filter, F8 Usage limits, F9 Focus mode. |
-| **v1.2** | F10 Insights, F11 Grayscale, F12 Widgets, F13 Backup, F15 Premium. |
-| **v1.3** | F16 Short-form content blocker (YouTube Shorts + Instagram Reels first; more apps after measuring rule breakage). |
+| **v1.2** | F10 Insights, F11 Grayscale shortcut, F12 Widgets, F13 Backup. |
+| **v1.3** | F16 Short-form content blocker (YouTube Shorts + Instagram Reels). |
 
 ---
 
@@ -405,12 +405,54 @@ feature/shortsblock/ – F16 (Accessibility-based detection + overlay)
 
 | Risk / Question | Mitigation / Notes |
 |---|---|
-| Google Play scrutiny of Accessibility Service usage | Keep it optional, scoped, and clearly disclosed; core features must work without it. |
-| OEMs aggressively killing launcher/background services | Minimize background work; guide users to disable battery optimization if needed. |
-| Users can bypass limits by switching launchers | Accept as a non-goal — the app adds friction, not enforcement. |
-| Should limits be enforced only via launcher or system-wide? | Default: launcher-only; system-wide via opt-in Accessibility. |
-| Free vs. premium split | Validate with early users before v1.2. |
-| F16: Target apps change view IDs, silently breaking detection | Data-driven rules (F16.12), remote rule updates (F16.13), automated UI checks against latest app versions. |
-| F16: Play Store rejection for non-accessibility use of Accessibility API | Complete the Accessibility declaration form, prominent disclosure + consent, `isAccessibilityTool=false`, demo video for reviewers; keep feature removable via build flag. |
-| F16: Android 13+ "restricted settings" for sideloaded installs; Advanced Protection mode blocks non-accessibility tools | Document the steps in-app; degrade gracefully to whole-app limits (F8). |
-| F16: Short-form content in browsers (e.g., youtube.com/shorts) not covered | Out of scope for v1.3; consider URL-bar detection later. |
+| The primary phone aggressively kills background services (notification listener, Accessibility Service) | F14.6 background reliability step; F16.15 warning; feasibility spike in Step 0.5. |
+| Android 13+ "restricted settings" block Accessibility/Notification access for sideloaded apps | Explain in-app: App info → ⋮ → Allow restricted settings. No Developer options needed. |
+| `UsageStatsManager` accuracy differs per OEM | Spike in Step 0.5; treat usage numbers as approximate. |
+| Target apps change view IDs, silently breaking F16 detection | Rules in a data file (F16.12); detection tests use recorded fixtures; rebuild when broken. |
+| Short-form content in browsers (e.g., youtube.com/shorts) not covered | Out of scope for v1.3. |
+| Lost signing keystore | Back it up outside the repo (NFR-S6). |
+| I can bypass limits by switching launchers | Accepted: the app adds friction, not enforcement. |
+
+---
+
+## Appendix A — Default Values
+
+Agents must use these values instead of guessing. Change them here only with my approval.
+
+| Setting | Default | Range / Options |
+|---|---|---|
+| Max favorites (F3.3) | 6 | 1–10 |
+| Default favorites (F14.3) | Phone, Messages, Camera, Maps | any |
+| Swipe left / right (F4.2, F4.3) | Camera / Phone | app, action, none |
+| Swipe down (F4.4) | Notification shade | shade, search, none |
+| Swipe distance threshold | 48 dp | 32–96 dp |
+| Swipe velocity threshold | 300 dp/s | — |
+| Double-tap to lock (F4.5) | Off | on/off |
+| Keyboard auto-open (F2.3) | On | on/off |
+| Auto-launch single match (F2.5) | Off | on/off |
+| Fast-scroller (F2.7) | Off | on/off |
+| Hidden apps confirmation (F5.3) | Off | off / confirm / 5 s delay |
+| Theme (F6.1) | Dark (pure black) | dark, light, system |
+| Text size (F6.4) | Medium | S / M / L / XL |
+| Favorites alignment (F1.7) | Left | left, center, right |
+| Battery % / next alarm (F1.3, F1.8) | On / Off | on/off |
+| Notification digest times (F7.4) | Off; 12:00 & 18:00 when on | any times |
+| F8 master toggle (F8.8) | Off | on/off |
+| Mindful pause length (F8.1) | 5 s | 3–10 s |
+| Intention prompt (F8.2) | Off | on/off |
+| Daily app limit (F8.3) | 30 min | 5–240 min |
+| "5 more minutes" uses/day (F8.4) | 2 | 0–5 |
+| Disable friction (F8.12) | Hold 3 s | off / hold 3 s / pause |
+| Focus durations (F9.2) | 25 / 50 / 90 min | custom 5–240 min |
+| End focus early (F9.5) | Hold 3 s | — |
+| Focus toggles DND (F9.7) | Off | on/off |
+| F16 feature toggle (F16.1) | Off | on/off |
+| F16 mode (F16.7/F16.8) | Block | block / limit |
+| F16 daily allowance (F16.8) | 15 min | 0–120 min |
+| F16 custom message (F16.9) | "Nothing to see here. Go do something real." | ≤ 120 chars |
+| F16 auto-back after (F16.10) | Off | off / 3–10 s |
+| F16 "Allow 5 minutes" uses/day (F16.11) | 1 | 0–5 |
+| F16 detection throttle (F16.6) | 400 ms | 300–500 ms |
+| Weather refresh (F12.1) | Every 2 h | 1–3 h |
+| To-do items (F12.3) | 3 max | — |
+| Daily reset time (F8.6, F16.8) | Local midnight | — |
