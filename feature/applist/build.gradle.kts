@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.zeroos.android.library)
     alias(libs.plugins.zeroos.android.compose)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -13,4 +15,13 @@ dependencies {
     implementation(project(":core:resources"))
     implementation(project(":core:logging"))
     implementation(project(":core:data"))
+
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    testImplementation(project(":core:testing"))
 }
