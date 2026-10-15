@@ -81,8 +81,20 @@ From v1.1 (when the manifest declares a notification listener and an Accessibili
 *Why:* In India, Play Protect blocks apps from browsers, messaging apps and file managers that declare these permissions; this workaround is free and needs no ADB or Developer options.
 *Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available in India. Re-check during spike Step 0.5.
 
+**D-019 — Block screen sends you home, no grace period** · 2026-10-15 · Accepted
+The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears as soon as Shorts/Reels is detected again (only a ~1 s transition pause).
+*Why:* Spike testing showed one Back press often stays on the Shorts tab; apps can't force-close other apps; a grace period would be a loophole.
+
+**D-020 — Doto dot-matrix font for clock and numbers** · 2026-10-15 · Accepted
+Clock, date, stats numbers, focus timer and block-screen title use Doto (OFL); other text uses a readable bundled font.
+*Why:* User wanted the Nothing Ndot 57 look; Ndot is proprietary, Doto is a free look-alike; dot fonts are hard to read at small sizes.
+
+**D-021 — Random puns on the block screen** · 2026-10-15 · Accepted
+The F16 black screen shows a random pun from a built-in list by default; a custom message is optional.
+*Why:* User's request; keeps the block screen light instead of preachy.
+
 ---
 
 ## Pending (to be decided during the plan)
 - Feasibility spike results (Step 0.5): app-clone visibility, usage-stats accuracy, service survival on the phone, F16 detection.
-- Bundled fonts (Step 2.2): OFL-licensed only.
+- Text fonts besides Doto (Step 2.2): OFL-licensed only.

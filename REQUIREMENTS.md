@@ -132,7 +132,7 @@ The default screen shown when I press Home.
 |---|---|
 | F6.1 | Themes: **Dark** (default, pure black for OLED), **Light**, **System**. |
 | F6.2 | Wallpaper: solid color (default black), or system wallpaper with dim overlay. |
-| F6.3 | Font: choice of 3–5 bundled fonts + system font. |
+| F6.3 | Font: choice of 3–5 bundled OFL-licensed fonts + system font for text (app names, lists, settings). The **clock, date and numbers** (screen-time stats, focus timer, block-screen title) always use the dot-matrix font **Doto** (OFL; free look-alike of Nothing's Ndot 57, which is proprietary). |
 | F6.4 | Text size: small / medium / large / extra-large; respects system font scale. |
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
 | F6.6 | Accent color is monochrome by default; optional single accent color. |
@@ -250,10 +250,10 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) *
 | F16.4 | Enable/disable blocking per supported app. |
 | F16.5 | Service listens only to events from the selected target packages (`packageNames` filter in the service config). |
 | F16.6 | Detection uses targeted lookups (`findAccessibilityNodeInfosByViewId`) on window-state/content-change events, **throttled to ≤ 1 check per 300–500 ms**; no full-tree traversal. |
-| F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with my custom message and a "Go back" button. |
+| F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with the block message (F16.9) and a **"Go home"** button. |
 | F16.8 | **Limit mode:** track time spent in short-form content per day; show the block overlay once the daily allowance (e.g., 15 min) is used up. Allowance resets at local midnight. |
-| F16.9 | Custom message is editable (max 120 chars); default: "Nothing to see here. Go do something real." (defined as a string resource, NFR-L3). |
-| F16.10 | "Go back" performs `GLOBAL_ACTION_BACK` and dismisses the overlay; optionally auto-trigger back after N seconds. |
+| F16.9 | **Block message:** by default a **random pun** from a built-in list (string-array in `core/resources`, e.g. "This Short has been cut short."), a different one each time the screen appears. Option: use my own custom message instead (editable, max 120 chars). |
+| F16.10 | **"Go home"** performs `GLOBAL_ACTION_HOME` (leaves the app for the ZeroOS home screen; Android doesn't let apps force-close other apps) and dismisses the overlay. Optionally go home automatically after N seconds. **No grace period:** the overlay shows again as soon as short-form content is detected; the only pause is ~1 s while going home, to avoid flicker. A single Back press is not used because it often stays on the Shorts tab. |
 | F16.11 | Optional friction to bypass: "Allow 5 minutes" after a mindful pause (reuses the F8.1 screen; works even if F8 is toggled off), limited to N times/day. |
 | F16.12 | Detection rules (package → view IDs) are stored as **versioned data in a bundled asset file**, not hard-coded in logic. Updating rules = edit the file + rebuild. |
 | ~~F16.13~~ | ~~Remote rule updates~~ (removed: no network, no rule server). |
@@ -415,7 +415,7 @@ feature/shortsblock/   – F16
 7. **Insights**: daily/weekly usage.
 8. **Settings**: Home, App list, Gestures, Appearance, Notifications, Wellbeing, Short-form blocker, Grayscale, Hidden apps, Backup, About.
 9. **Onboarding**: intro, set default, pick favorites, background reliability.
-10. **Short-form block overlay**: black screen + message + "Go back".
+10. **Short-form block overlay**: black screen + pun or custom message + "Go home".
 11. **Diagnostics**: log viewer, crash reports, export, clear.
 12. **Safe mode**: plain app list, crash banner, crash report, home settings, exit.
 
@@ -508,8 +508,9 @@ Agents must use these values instead of guessing. Change them here only with my 
 | F16 feature toggle (F16.1) | Off | on/off |
 | F16 mode (F16.7/F16.8) | Block | block / limit |
 | F16 daily allowance (F16.8) | 15 min | 0–120 min |
-| F16 custom message (F16.9) | "Nothing to see here. Go do something real." | ≤ 120 chars |
-| F16 auto-back after (F16.10) | Off | off / 3–10 s |
+| F16 block message (F16.9) | Random pun | random pun / custom (≤ 120 chars) |
+| F16 auto-home after (F16.10) | Off | off / 3–10 s |
+| F16 pause after "Go home" before blocking again (F16.10) | 1 s | fixed |
 | F16 "Allow 5 minutes" uses/day (F16.11) | 1 | 0–5 |
 | F16 detection throttle (F16.6) | 400 ms | 300–500 ms |
 | Home-screen stats (F10.3) | On (asks for Usage Access first) | on/off |

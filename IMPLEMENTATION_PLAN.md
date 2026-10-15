@@ -195,7 +195,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 
 ### Step 2.2 — Design system (`core/ui`)
 - Theme tokens: pure black / light / system; monochrome palette; optional accent.
-- Typography: 3–5 bundled OFL-licensed fonts (e.g., Inter, JetBrains Mono, Lora); size scale S/M/L/XL × system font scale.
+- Typography: **Doto** (OFL dot-matrix) for clock, date and numbers; 3–5 bundled OFL-licensed text fonts (e.g., Inter, JetBrains Mono, Lora) for everything else (F6.3); size scale S/M/L/XL × system font scale. Screenshot tests check the clock at the largest font size.
 - Shared composables: `AppLabel`, `MinimalListItem`, `MinimalBottomSheet`, `SettingRow`, `ToggleRow`.
 - Edge-to-edge with insets for gesture and 3-button navigation.
 
@@ -351,7 +351,7 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 - Package filter limited to enabled target apps; throttle per Appendix A; `findAccessibilityNodeInfosByViewId`; no full-tree traversal.
 
 ### Step 6.3 — Block overlay & limit mode
-- `TYPE_ACCESSIBILITY_OVERLAY` black screen with message + "Go back" (`GLOBAL_ACTION_BACK`); optional auto-back.
+- `TYPE_ACCESSIBILITY_OVERLAY` black screen with a random pun (or custom message) + "Go home" (`GLOBAL_ACTION_HOME`); optional auto-home; no grace period beyond a ~1 s transition pause (F16.9, F16.10).
 - Limit mode with daily allowance and midnight reset; "Allow 5 minutes" via the pause screen; always blocks during Focus; stats into Insights.
 - Explanation screen with restricted-settings instructions (F16.2); killed-service warning (F16.15).
 
