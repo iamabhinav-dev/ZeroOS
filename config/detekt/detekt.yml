@@ -21,10 +21,13 @@ naming:
 complexity:
   LongParameterList:
     ignoreAnnotated: ['Composable']
+    constructorThreshold: 8
   LongMethod:
     ignoreAnnotated: ['Composable']
 
 style:
+  MaxLineLength:
+    maxLineLength: 140
   MagicNumber:
     ignoreAnnotated: ['Composable']
     ignorePropertyDeclaration: true

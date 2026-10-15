@@ -22,3 +22,6 @@ releases/
 *.iml
 .vscode/
 .DS_Store
+
+# Editor build output (VS Code Java/Kotlin extensions)
+bin/

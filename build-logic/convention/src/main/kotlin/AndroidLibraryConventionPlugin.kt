@@ -21,6 +21,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             testOptions {
                 unitTests.isIncludeAndroidResources = true
             }
+            sourceSets.getByName("test").resources.directories.add(rootProject.file("config/robolectric").path)
             lint {
                 configureZeroLint()
             }

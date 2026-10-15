@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             Box(
                 modifier = Modifier.fillMaxSize().background(Color.Black),
-                contentAlignment = Alignment.Center,
+                contentAlignment = Alignment.Center
             ) {
                 Text(text = stringResource(R.string.app_name), color = Color.White)
             }
