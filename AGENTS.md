@@ -49,7 +49,8 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **Stack:** Kotlin, Jetpack Compose (Material 3, restyled to minimal), MVVM + unidirectional data flow, single activity, Hilt, DataStore (from Phase 2), Room and WorkManager (from Phase 4), Coroutines/Flow.
 - **Module placement** follows IMPLEMENTATION_PLAN.md (`core/*`, `feature/*`). Feature modules must not depend on each other; shared code goes in `core/`.
 - **Dependencies:** add a library only if the current step needs it; use the version catalog (`gradle/libs.versions.toml`); prefer AndroidX and Jetpack. Mention every new dependency in the commit message.
-- **UI:** no app icons, badges, or colorful elements, which goes against the product's purpose. Use theme tokens from `core/ui` (no hardcoded colors or sizes) and keep all user-facing text in `strings.xml`.
+- **UI:** no app icons, badges, or colorful elements, which goes against the product's purpose. Use theme tokens from `core/ui` (no hardcoded colors, sizes, spacing, or durations).
+- **Text (NFR-L3–L7):** every user-facing text goes in `core/resources` (`strings.xml` / `plurals.xml`); never hardcode text in Kotlin or Compose. **Search for an existing string before adding one** and reuse it (`common_*` for shared text, `<screen>_*` for screen-specific text). Use placeholders and plurals, never concatenation. The build fails on hardcoded text.
 - **Accessibility:** content descriptions, 48dp touch targets, WCAG AA contrast (NFR-A1–A4).
 - **Performance:** no polling loops, no work on the main thread, and use system callbacks (NFR-P1–P6).
 - **Time:** never call `System.currentTimeMillis()` or `LocalDate.now()` directly in logic; inject a `Clock`/`TimeSource` so tests can control time.

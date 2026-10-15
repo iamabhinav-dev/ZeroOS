@@ -249,7 +249,7 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) *
 | F16.6 | Detection uses targeted lookups (`findAccessibilityNodeInfosByViewId`) on window-state/content-change events, **throttled to ≤ 1 check per 300–500 ms**; no full-tree traversal. |
 | F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with my custom message and a "Go back" button. |
 | F16.8 | **Limit mode:** track time spent in short-form content per day; show the block overlay once the daily allowance (e.g., 15 min) is used up. Allowance resets at local midnight. |
-| F16.9 | Custom message is editable (max 120 chars); default: "Nothing to see here. Go do something real." |
+| F16.9 | Custom message is editable (max 120 chars); default: "Nothing to see here. Go do something real." (defined as a string resource, NFR-L3). |
 | F16.10 | "Go back" performs `GLOBAL_ACTION_BACK` and dismisses the overlay; optionally auto-trigger back after N seconds. |
 | F16.11 | Optional friction to bypass: "Allow 5 minutes" after a mindful pause (reuses the F8.1 screen; works even if F8 is toggled off), limited to N times/day. |
 | F16.12 | Detection rules (package → view IDs) are stored as **versioned data in a bundled asset file**, not hard-coded in logic. Updating rules = edit the file + rebuild. |
@@ -329,11 +329,17 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | NFR-R6 | Settings and data survive app updates (installing a new APK over the old one). |
 | NFR-R7 | Survive process death and configuration changes (rotation, dark-mode switch, font-size change) without losing state. |
 
-### 4.5 Language & Formats
+### 4.5 Language, Text & Formats
 | ID | Requirement |
 |---|---|
-| NFR-L1 | English only. All strings still live in `strings.xml` (no hardcoded UI text). |
+| NFR-L1 | English only. |
 | NFR-L2 | Date/time formats follow device locale and 12/24-hour setting. |
+| NFR-L3 | **Single source for all text:** every piece of text shown to me (titles, labels, buttons, messages, errors, dialog text, notification text, content descriptions, and default texts such as the F16.9 block message) is defined once in the `core/resources` module (`res/values/strings.xml` and `plurals.xml`). Changing it there changes it everywhere. |
+| NFR-L4 | **No hardcoded text** in Kotlin or Compose code: screens use `stringResource(R.string.…)` / `pluralStringResource(…)`. |
+| NFR-L5 | **Reuse, don't duplicate:** the same concept uses the same string resource across screens (e.g., one `common_go_back` for every "Go back" button). Naming: `common_*` for shared text, `<screen>_*` for screen-specific text (e.g., `home_tap_to_show_screen_time`). |
+| NFR-L6 | Dynamic text uses placeholders (`%1$s`, `%1$d`) and plurals (e.g., "1 unlock" / "38 unlocks"), never string concatenation. |
+| NFR-L7 | The build **fails** if hardcoded user-facing text is found (Android Lint `HardcodedText` as error, plus a detekt rule for string literals passed to `Text()`, `contentDescription`, and similar UI parameters). |
+| NFR-L8 | Non-text UI values follow the same principle: colors, sizes, spacing, and durations come from theme tokens in `core/ui`, never hardcoded in screens. |
 
 ---
 
@@ -363,7 +369,8 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 ```
 app/                   – entry point, navigation, DI setup
 core/model/            – plain data models
-core/ui/               – theme, typography, shared composables
+core/ui/               – theme tokens (colors, typography, spacing), shared composables
+core/resources/        – all user-facing text: strings.xml, plurals.xml (NFR-L3)
 core/data/             – DataStore, Room, repositories
 core/testing/          – fakes and test utilities (test-only)
 core/logging/          – F17 Logger, file writer, crash handler, exit reasons

@@ -74,6 +74,8 @@ Start with modules needed now; add feature modules when their phase begins.
 app/
 core/model/
 core/ui/
+core/resources/   # all user-facing text (NFR-L3)
+core/logging/     # F17
 core/data/
 core/testing/
 feature/home/
@@ -96,6 +98,7 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 
 ### Step 0.6 — Quality gates & test setup
 - ktlint + detekt; Android Lint with warnings as errors.
+- **Text and token checks (NFR-L3–L8):** Lint `HardcodedText` as error; a custom detekt rule that fails on string literals passed to `Text()`, `contentDescription`, `label`, `placeholder`, and similar UI parameters, and on hardcoded `Color(…)`/`.dp` values outside `core/ui`. `core/resources` holds `strings.xml`/`plurals.xml` with the `common_*` / `<screen>_*` naming convention.
 - Test stack: JUnit, MockK or hand-written fakes (`core/testing`), Turbine, Robolectric, Compose UI test, Roborazzi; Kover with an 80% verification rule.
 - Permission allowlist test (Testing Policy #8), starting with an empty allowlist.
 - Debug builds only: LeakCanary and StrictMode (`detectAll().penaltyLog()`).

@@ -52,6 +52,10 @@ Debug and release use the release keystore and the same application ID, so eithe
 F17: rotating on-device log files, crash reports, previous-exit reasons, and a Diagnostics screen with export. Built in Phase 0–1. No crash-reporting service and no network.
 *Why:* So crashes and unexpected behaviour during early testing can be understood afterwards, including the phone killing background services.
 
+**D-012 — All user-facing text in one resources module** · 2026-10-15 · Accepted
+All text lives in `core/resources` (`strings.xml`, `plurals.xml`), reused across screens and enforced by Lint/detekt; colors and sizes come from `core/ui` tokens.
+*Why:* Change text once and it updates everywhere; no duplicated or inconsistent wording.
+
 ---
 
 ## Pending (to be decided during the plan)

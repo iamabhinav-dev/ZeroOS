@@ -32,6 +32,6 @@ Update this file in the same commit as the code and tests.
 | NFR-S1–S6 | ⬜ | | |
 | NFR-A1–A4 | ⬜ | | |
 | NFR-R1–R7 | ⬜ | | |
-| NFR-L1–L2 | ⬜ | | |
+| NFR-L1–L8 | ⬜ | | |
 
 When a feature's work starts, split its row into one row per requirement ID (e.g., F2.4) and list the tests.
