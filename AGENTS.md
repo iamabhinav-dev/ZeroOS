@@ -24,7 +24,7 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **Commit after each logical unit of work**, not at the end of a phase. One step usually means several commits.
   - Good: "add AppsRepository with LauncherApps callback", then "add app list screen", then "add search matching".
   - Bad: one commit containing a whole phase.
-- **Before each commit:** the project builds, and lint and existing tests pass (`./gradlew assembleDebug lint test` once the Android project exists).
+- **Before each commit:** the project builds, lint passes, new code has tests, and all tests pass (`./gradlew assembleDebug lint test` once the Android project exists).
 - **Message format** ([Conventional Commits](https://www.conventionalcommits.org/)) with the requirement/step ID:
   ```
   feat(applist): add initials-based search matching
@@ -51,14 +51,18 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - Sensitive permissions (Usage Access, Notification Access, Accessibility, Device Admin, DND) must be opt-in, have an explanation screen, be requested only when needed, and have a working fallback if denied.
 - All user data stays on the device.
 
-## 6. Testing
-- Add unit tests for logic (repositories, search, limit calculation, rule parsing).
-- Add Compose UI tests for main user flows when a screen is completed.
-- Don't delete or weaken existing tests to make a build pass; fix the cause or ask.
+## 6. Testing (mandatory)
+- **No step is done without tests.** Follow the *Testing Policy* in IMPLEMENTATION_PLAN.md and the step's **Tests** list.
+- Write tests **in the same branch and alongside the code**, ideally in the same commit as the logic they cover. Tests are not a later phase.
+- Unit tests for all logic; Compose UI tests for every new/changed user flow; instrumented tests for services, Room/DataStore, and permission fallbacks.
+- Bug fixes start with a failing regression test.
+- Every requirement ID you implement must be covered by at least one test; name or annotate tests with the ID (e.g., `fun f2_4_matchesInitials()`).
+- Keep logic coverage ≥ 80% (Kover/JaCoCo).
+- Don't delete, skip, or weaken existing tests to make a build pass. Fix the cause or ask.
 
 ## 7. When You Finish a Task
 Report briefly:
-1. Which step and requirement IDs were done.
+1. Which step and requirement IDs were done, and which tests cover them.
 2. What was committed (list of commits).
 3. Anything skipped, assumed, or blocked, and open questions.
 4. The next step in the plan, without starting it unless asked.
