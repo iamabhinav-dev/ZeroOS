@@ -1,0 +1,34 @@
+# Builds on detekt's default config (buildUponDefaultConfig = true); only overrides are listed.
+
+zeroos:
+  active: true
+  HardcodedUiText:
+    active: true
+    excludes: ['**/test/**', '**/androidTest/**']
+  HardcodedUiValue:
+    active: true
+    excludes: ['**/core/ui/**', '**/test/**', '**/androidTest/**']
+  NoDirectLogging:
+    active: true
+    excludes: ['**/core/logging/**', '**/detekt-rules/**']
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
+
+complexity:
+  LongParameterList:
+    ignoreAnnotated: ['Composable']
+  LongMethod:
+    ignoreAnnotated: ['Composable']
+
+style:
+  MagicNumber:
+    ignoreAnnotated: ['Composable']
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+    excludes: ['**/test/**', '**/androidTest/**']
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview']
