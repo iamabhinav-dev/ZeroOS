@@ -3,8 +3,6 @@ package com.zeroos.launcher
 import android.app.ActivityManager
 import android.app.Application
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.os.StrictMode
 import com.zeroos.core.logging.AndroidExitInfoSource
 import com.zeroos.core.logging.CrashHandler
@@ -19,6 +17,7 @@ import dagger.hilt.android.HiltAndroidApp
 import java.io.File
 import java.time.Clock
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -45,7 +44,12 @@ class ZeroApplication : Application() {
             diagnosticsSettings.crashOnStart = false
         }
         // Still running after the window: stable, so reset the crash count (F18.6).
-        Handler(Looper.getMainLooper()).postDelayed(crashLoopGuard::markStable, CrashLoopGuard.DEFAULT_WINDOW.toMillis())
+        // Clearing the crash record touches the disk, so it runs off the main thread.
+        Executors.newSingleThreadScheduledExecutor().schedule(
+            crashLoopGuard::markStable,
+            CrashLoopGuard.DEFAULT_WINDOW.toMillis(),
+            TimeUnit.MILLISECONDS
+        )
         Executors.newSingleThreadExecutor().execute {
             logStore.deleteExpired()
             logPreviousExit()
@@ -68,8 +72,8 @@ class ZeroApplication : Application() {
         val vmPolicy = StrictMode.VmPolicy.Builder().detectAll()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val executor = Executors.newSingleThreadExecutor()
-            threadPolicy.penaltyListener(executor) { logger.warn(STRICT_MODE_TAG, "thread policy violation", it) }
-            vmPolicy.penaltyListener(executor) { logger.warn(STRICT_MODE_TAG, "VM policy violation", it) }
+            threadPolicy.penaltyListener(executor) { if (isOwnCode(it)) logger.warn(STRICT_MODE_TAG, "thread policy violation", it) }
+            vmPolicy.penaltyListener(executor) { if (isOwnCode(it)) logger.warn(STRICT_MODE_TAG, "VM policy violation", it) }
         } else {
             threadPolicy.penaltyLog()
             vmPolicy.penaltyLog()
@@ -83,3 +87,9 @@ class ZeroApplication : Application() {
         const val STRICT_MODE_TAG = "strictmode"
     }
 }
+
+/**
+ * True if a StrictMode violation involves ZeroOS code. Violations raised only inside the system (e.g. the phone's
+ * theme loader on every activity start) aren't ours to fix and would flood the log.
+ */
+internal fun isOwnCode(violation: Throwable): Boolean = violation.stackTrace.any { it.className.startsWith("com.zeroos.") }

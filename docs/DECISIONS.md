@@ -130,6 +130,7 @@ Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usag
 **D-030 — Unknown second profiles are tagged "clone"** · 2026-10-16 · Accepted
 Apps from a profile Android reports as managed are tagged "work", private space "private", and every other non-main profile "clone". The raw profile type is logged once per profile.
 *Why:* App Clone apps have the same name as the original, so they need a tag; the phone may not use Android's standard clone type, and App Clone is the only extra profile on this phone. The log shows the real type to refine this later.
+*Confirmed 2026-10-16:* the test phone reports App Clone as Android's standard `android.os.usertype.profile.CLONE`, so the tag comes from the real type, not the fallback.
 
 ---
 
