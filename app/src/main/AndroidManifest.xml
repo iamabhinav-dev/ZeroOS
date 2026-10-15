@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Package visibility on Android 11+: see every app that has a launcher entry (Step 1.1). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
     <application
         android:name=".ZeroApplication"
         android:allowBackup="true"
@@ -9,9 +17,19 @@
         android:supportsRtl="false"
         android:theme="@android:style/Theme.Material.NoActionBar">
 
+        <!-- Home screen (Step 1.1). Also listed as a normal app so it can be opened before it's the default. -->
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:stateNotNeeded="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
