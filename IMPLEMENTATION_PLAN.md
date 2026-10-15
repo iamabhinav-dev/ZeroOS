@@ -101,6 +101,7 @@ A small debug APK installed on the test phone to check the risky parts **before*
 3. **Notification listener**: survives overnight and after a reboot with default battery settings, and again with background activity allowed.
 4. **Accessibility service**: can be enabled after "Allow restricted settings"; survives overnight; a debug **node-tree dumper** saves YouTube Shorts and Instagram Reels screen structures to a file (these become F16 test fixtures, with no ADB needed).
 5. **Overlay**: `TYPE_ACCESSIBILITY_OVERLAY` shows a black screen over YouTube.
+6. **Play Protect install block**: install the spike APK (which declares a notification listener and an Accessibility service) from a file manager/Drive/Telegram with Play Protect **on**. Record whether it is blocked, then confirm the workaround (pause Play Protect scanning → install → turn it back on) works (D-018).
 
 Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss** before continuing the plan.
 
@@ -129,7 +130,7 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 - Document the install workflow in `README.md`:
   1. `./gradlew check assembleRelease`
   2. Copy `app/build/outputs/apk/release/*.apk` to the phone (USB file transfer / Drive / Telegram)
-  3. Open it on the phone and install over the previous version
+  3. Open it on the phone and install over the previous version. From Phase 4 on (the app declares notification-listener/Accessibility services), Play Protect may block the install: pause it first (Play Store → profile → Play Protect → ⚙ → "Scan apps with Play Protect" off), install, then **turn it back on** (D-018)
   4. Run the manual check
 
 ### Step 0.8 — Off-machine backups
@@ -369,7 +370,7 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 3. Move "Unreleased" entries in CHANGELOG.md under the new version.
 4. Export a settings backup on the phone (F13).
 5. `./gradlew assembleRelease` (signed with the backed-up keystore).
-6. Install over the existing app; confirm settings retained.
+6. Install over the existing app; confirm settings retained. From Phase 4 on: pause Play Protect scanning before installing and **turn it back on right after** (D-018).
 7. Quick smoke test: Home, search, launch, gestures, plus any enabled wellbeing/F16 features.
 8. If something is broken: rebuild the last good commit with a higher `versionCode` and install it (keep the last 2 APKs in a local `releases/` folder, git-ignored, for reference).
 9. Before installing a debug APK over the everyday app, export a settings backup (F13) in case the debug build breaks settings.

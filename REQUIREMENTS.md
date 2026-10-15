@@ -464,6 +464,7 @@ Low-fidelity wireframes live in `docs/wireframes.md`. They are approved **phase 
 |---|---|
 | The primary phone aggressively kills background services (notification listener, Accessibility Service) | F14.6 background reliability step; F16.15 warning; feasibility spike in Step 0.5. |
 | Android 13+ "restricted settings" block Accessibility/Notification access for sideloaded apps | Explain in-app: App info → ⋮ → Allow restricted settings. No Developer options needed. |
+| Play Protect (enhanced fraud protection, India) blocks sideloaded APKs that declare notification-listener or Accessibility services | v1.0 is unaffected (declares neither). From v1.1: pause Play Protect scanning while installing, then re-enable (D-018). Fallbacks: Play Console internal testing track; Google's hobbyist developer verification when it reaches India. Verified in spike Step 0.5. |
 | `UsageStatsManager` accuracy differs per OEM | Spike in Step 0.5; treat usage numbers as approximate. |
 | Target apps change view IDs, silently breaking F16 detection | Rules in a data file (F16.12); detection tests use recorded fixtures; rebuild when broken. |
 | Short-form content in browsers (e.g., youtube.com/shorts) not covered | Out of scope for v1.3. |

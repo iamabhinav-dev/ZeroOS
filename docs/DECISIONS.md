@@ -76,6 +76,11 @@ Each phase starts with a wireframe step (0.4, 2.0, 4.0, 5.0, 6.0); the home scre
 JDK 17 + Android SDK command-line tools in the home folder; build with Gradle from the terminal; edit in VS Code; review UI through screenshot-test PNGs. Gradle memory is capped.
 *Why:* The development machine has 8 GB RAM; Android Studio alone needs about that much.
 
+**D-018 — Handling Play Protect install blocks** · 2026-10-15 · Accepted
+From v1.1 (when the manifest declares a notification listener and an Accessibility service), install updates by briefly turning off "Scan apps with Play Protect", installing, and turning it back on. v1.0 needs nothing.
+*Why:* In India, Play Protect blocks apps from browsers, messaging apps and file managers that declare these permissions; this workaround is free and needs no ADB or Developer options.
+*Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available in India. Re-check during spike Step 0.5.
+
 ---
 
 ## Pending (to be decided during the plan)
