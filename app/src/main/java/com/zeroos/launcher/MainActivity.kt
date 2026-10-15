@@ -5,7 +5,7 @@ import android.content.pm.LauncherApps
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
-import androidx.activity.addCallback
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.zeroos.core.logging.DiagnosticsSettings
@@ -33,15 +33,23 @@ class MainActivity : ComponentActivity() {
 
     @Inject lateinit var logger: Logger
 
+    /**
+     * Back on home does nothing while ZeroOS is the default launcher (there's nowhere to go back to).
+     * Opened as a normal app, it's disabled so Back leaves like in any app (Step 1.1).
+     */
+    private val ignoreBackOnHome = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() = Unit
+    }
+
     /** Emits when Home is pressed while ZeroOS is already in front (Step 1.1). */
     private val homePresses = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        // A launcher has nowhere to go back to: Back on home does nothing (Step 1.1).
         // Screens opened on top of home (app list, diagnostics) handle Back themselves.
-        onBackPressedDispatcher.addCallback(this) {}
+        updateBackBehaviour()
+        onBackPressedDispatcher.addCallback(this, ignoreBackOnHome)
 
         if (crashLoopGuard.isSafeMode) {
             showSafeMode()
@@ -72,6 +80,16 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // The default launcher can change while ZeroOS is in the background.
+        updateBackBehaviour()
+    }
+
+    private fun updateBackBehaviour() {
+        ignoreBackOnHome.isEnabled = isDefaultHome(packageManager, packageName)
     }
 
     private fun openHomeSettings() {
