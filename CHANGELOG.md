@@ -4,6 +4,12 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.3 (versionCode 3)
+- Doto dot-matrix font for all text; new design system (Step 2.2)
+- Settings storage (Step 2.1)
+- Home: tap clock for alarms, tap date for calendar, battery %, favorites area (Step 2.3)
+- App list: search (initials like "gm"), web/Play Store search, clone tags, swipe down to close (Step 2.4)
+
 ## 0.0.2 (versionCode 2)
 - Fix: opened as a normal app (not the default launcher), Back now leaves ZeroOS and it no longer blocks
   the system swipe-up-and-hold gesture; it's no longer excluded from Recents (Step 1.1)

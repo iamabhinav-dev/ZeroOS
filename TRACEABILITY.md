@@ -16,11 +16,17 @@ Update this file in the same commit as the code and tests.
 | F1.7 | 🟡 | HomeScreenTest › f1_7_centeredScreenshot (setting UI in Step 2.11) | |
 | F1.8 | ✅ | HomeSourcesTest › f1_8_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_8_* | |
 | F1.9 | 🟡 | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_* (opens Diagnostics until Settings exists) | |
-| F2.1, F2.3–F2.8 | ⬜ | | |
-| F2.11 | 🟡 | AppListScreenTest › f2_11_backClosesList, MainActivityTest › f2_11_backFromListReturnsHome (swipe down in Phase 2) | |
+| F2.1 | ✅ | MainActivityTest (swipe up opens list) | |
+| F2.3 | ✅ | AppListScreenTest › f2_2_f2_3_* | Keyboard opens on the phone |
+| F2.4 | ✅ | AppSearchTest › f2_4_*, AppListViewModelTest › f2_4_*, AppListScreenTest › f2_4_* | |
+| F2.5 | ✅ | AppListViewModelTest › f2_5_* | |
+| F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_* | |
+| F2.7 | ✅ | AppListScreenTest › f2_7_* | |
+| F2.8 | ⬜ | (Step 2.6) | |
+| F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
 | F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
-| F2.10 | 🟡 | AppsRepositoryTest › f2_10_marksAppsFromOtherProfilesAndKeepsBothCopies (data; tag in Phase 2) | App clones on the phone (spike) |
+| F2.10 | ✅ | AppsRepositoryTest › f2_10_*, AndroidLauncherAppsSourceTest › f2_10_*, AppListScreenTest › f2_10_* | Clone tag on the test phone |
 | F3.1, F3.2 | ⬜ | | |
 | F3.3, F3.4 | 🟡 | HomeUiStateTest › f3_3_*, f3_4_* (display; editing in Step 2.5) | |
 | F4.1 | 🟡 | SwipeUpTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
@@ -58,7 +64,7 @@ Update this file in the same commit as the code and tests.
 | F18.4, F18.5 | 🟡 | By design: SafeModeRoot only gets SafeModeApps (LauncherApps) and crash-report text; reviewed in code | |
 | F18.7 | ✅ | README "If ZeroOS breaks" | |
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
-| NFR-P3 | ⬜ | | |
+| NFR-P3 | ✅ | AppSearchTest › nfrP3_searchOver300AppsIsFast | |
 | NFR-P6 | ⬜ | | APK size check |
 | NFR-S1–S7 | ⬜ | | |
 | Testing Policy #8 (permissions) | ✅ | PermissionAllowlistTest › nfrS_requestedPermissionsMatchAllowlist | |

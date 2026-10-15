@@ -208,7 +208,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Build the home layout from the final wireframe with **slots** for later elements (stats, focus button/timer, widgets) that take no space while empty, so Phase 4–5 only fill slots and don't rework the layout.
 - Screenshot test: home at the largest font with all slots filled by placeholder content still fits without scrolling.
 
-### Step 2.4 — App list & search (F2)
+### Step 2.4 — App list & search (F2) ✅
 - Search with auto-focus + keyboard (toggle); substring + initials + accent-insensitive matching; auto-launch single match (toggle).
 - No-match actions: web search, Play Store search.
 - Optional fast-scroller; profile tags (F2.10); back/swipe down → home.
