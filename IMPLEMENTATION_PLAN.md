@@ -88,7 +88,7 @@ feature/home/
 feature/applist/
 ```
 
-### Step 0.4 — Wireframes
+### Step 0.4 — Wireframes ✅
 - Create `docs/wireframes.md` with ASCII/low-fi wireframes. **Wireframes are approved phase by phase:** each phase starts with a *Wireframes* step for its new screens, and I approve them before any screen in that phase is built.
 - In this step: wireframes for the Phase 1 screens (app list, diagnostics, safe mode) and the **final home screen** (below).
 - The **home wireframe shows its final layout**: clock, date, battery, screen-time stats (each F10.5 style), focus button / focus timer, calendar/to-do lines, and favorites. It also shows which areas collapse when a feature is off, and how it fits at the largest font size.
