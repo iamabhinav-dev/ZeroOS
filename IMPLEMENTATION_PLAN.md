@@ -168,7 +168,7 @@ Behaviour:
 - Home: big clock + date via a `Flow` that ticks each minute, aligned to the minute boundary (injected `Clock`).
 - Swipe up → scrollable list of app labels; tap launches.
 
-### Step 1.4 — Diagnostics screen (F17.9–F17.11)
+### Step 1.4 — Diagnostics screen (F17.9–F17.11) ✅
 - Minimal screen: recent logs (filter by level), crash reports, Export/Share (zip via share sheet or save-to-file), Clear.
 - Until Settings exists (Phase 2), open it by long-pressing empty space on home; in Step 2.11 it moves to Settings → Diagnostics and long-press opens Settings (F1.9).
 - One-time "crashed last time" message on the next start after a crash.

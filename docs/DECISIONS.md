@@ -105,6 +105,10 @@ The Accessibility service receives window changes from all apps (app name only) 
 Phase 1 (home, app list, diagnostics, safe mode) starts while Step 0.5 phone testing is still running; Step 0.5 must be finished before Phase 2.
 *Why:* None of the spike's open questions affect Phase 1; app-clone visibility (F2.10) is the earliest dependency, in Phase 2.
 
+**D-025 — Diagnostics settings in SharedPreferences** · 2026-10-15 · Accepted
+Logging on/off, log level and the last-seen crash report are stored in SharedPreferences, not DataStore.
+*Why:* The logger reads them on every call and they're needed from Phase 1, before DataStore arrives in Phase 2. They're included in the settings backup (F13) when it's built.
+
 ---
 
 ## Pending (to be decided during the plan)

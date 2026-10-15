@@ -12,6 +12,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 /** Provides repositories from core/data (Step 1.2). */
@@ -19,14 +20,18 @@ import kotlinx.coroutines.Dispatchers
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
+    /** Dispatcher for disk and system-service work. */
+    @Provides
+    fun ioDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
     @Provides
     @Singleton
-    fun appsRepository(@ApplicationContext context: Context, logger: Logger): AppsRepository = AppsRepository(
+    fun appsRepository(@ApplicationContext context: Context, logger: Logger, io: CoroutineDispatcher): AppsRepository = AppsRepository(
         source = AndroidLauncherAppsSource(
             context.getSystemService(LauncherApps::class.java),
             context.getSystemService(UserManager::class.java)
         ),
         logger = logger,
-        ioDispatcher = Dispatchers.IO
+        ioDispatcher = io
     )
 }

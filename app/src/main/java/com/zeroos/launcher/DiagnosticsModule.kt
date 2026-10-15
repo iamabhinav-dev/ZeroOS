@@ -1,7 +1,10 @@
 package com.zeroos.launcher
 
 import android.content.Context
+import com.zeroos.core.logging.CrashNotice
+import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.FileLogger
+import com.zeroos.core.logging.LogExporter
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.LogcatMirror
@@ -31,13 +34,27 @@ object DiagnosticsModule {
 
     @Provides
     @Singleton
-    fun fileLogger(store: LogFileStore, clock: Clock): FileLogger = FileLogger(
+    fun diagnosticsSettings(@ApplicationContext context: Context): DiagnosticsSettings = DiagnosticsSettings(
+        prefs = context.getSharedPreferences("diagnostics", Context.MODE_PRIVATE),
+        defaultLevel = if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.INFO
+    )
+
+    @Provides
+    @Singleton
+    fun fileLogger(store: LogFileStore, clock: Clock, settings: DiagnosticsSettings): FileLogger = FileLogger(
         store = store,
         clock = clock,
-        // Toggle and level become user settings in Step 1.4 (F17.11); defaults until then.
-        minLevel = { if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.INFO },
+        isEnabled = { settings.isLoggingEnabled },
+        minLevel = { settings.minLevel },
         mirror = if (BuildConfig.DEBUG) LogcatMirror else { _ -> }
     )
+
+    @Provides
+    fun logExporter(@ApplicationContext context: Context, store: LogFileStore, clock: Clock): LogExporter =
+        LogExporter(store, File(context.cacheDir, "log_export"), clock)
+
+    @Provides
+    fun crashNotice(store: LogFileStore, settings: DiagnosticsSettings): CrashNotice = CrashNotice(store, settings)
 
     @Provides
     @Singleton

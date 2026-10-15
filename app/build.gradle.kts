@@ -68,10 +68,13 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
     // Debug-only memory-leak detection (Step 0.6).
     debugImplementation(libs.leakcanary)
+
+    testImplementation(project(":core:testing"))
 }
