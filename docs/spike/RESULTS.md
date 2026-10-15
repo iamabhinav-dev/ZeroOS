@@ -5,7 +5,7 @@ The raw log isn't committed (it lists which apps were used); only YouTube screen
 
 | # | Check | Result | Status |
 |---|---|---|---|
-| 1 | App list (`LauncherApps`), app clones | Not in the export (shown on screen only) | ⏳ Needs answer |
+| 1 | App list (`LauncherApps`), app clones | App Clone apps appear as a separate profile with the **same name** as the original (the stock launcher shows them as "II-<name>"), so ZeroOS must tag them (F2.10) | ✅ |
 | 2 | Usage stats vs the phone's screen time | Reported as similar to the phone's own screen time | ✅ |
 | 3 | Notification listener survives | Connected once at 14:15, received notifications until 23:49 (~9.5 h, incl. gaming), never disconnected. After a restart at 00:03 it reconnected on its own within a second | ✅ Same day + restart · ⏳ overnight |
 | 4 | Accessibility service survives | Connected once at 14:15, events until 23:49, never unbound. Reconnected on its own right after the restart | ✅ Same day + restart · ⏳ overnight |
@@ -13,7 +13,7 @@ The raw log isn't committed (it lists which apps were used); only YouTube screen
 | 4 | Normal YouTube not blocked | Evening use in "Shorts only" mode: many normal screens, no overlay | ✅ |
 | 4 | Instagram Reels detection | Instagram not opened during the test | ⏳ Not tested |
 | 5 | Black overlay | Shown 132–705 ms after the event (most under 250 ms); "Go home" works; no overlay over Recents/launcher after leaving YouTube | ✅ |
-| 6 | Play Protect install block | Not reported | ⏳ Needs answer |
+| 6 | Play Protect install block | **Blocked** the spike install (it declares notification-listener and Accessibility services); installing anyway from the Play Protect dialog worked | ✅ Workaround confirmed |
 
 Other findings:
 - The phone's default launcher package is `com.android.launcher3`; `com.example.simplelauncher` also exists.

@@ -79,7 +79,8 @@ JDK 21 (originally 17; Robolectric needs 21 for API 37) + Android SDK command-li
 **D-018 — Handling Play Protect install blocks** · 2026-10-15 · Accepted
 From v1.1 (when the manifest declares a notification listener and an Accessibility service), install updates by briefly turning off "Scan apps with Play Protect", installing, and turning it back on. v1.0 needs nothing.
 *Why:* In India, Play Protect blocks apps from browsers, messaging apps and file managers that declare these permissions; this workaround is free and needs no ADB or Developer options.
-*Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available in India. Re-check during spike Step 0.5.
+*Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available in India.
+*Confirmed 2026-10-16:* Play Protect blocked the spike APK on the test phone; choosing to install anyway in the Play Protect dialog worked, so pausing scanning may not even be needed.
 
 **D-019 — Block screen sends you home, no grace period** · 2026-10-15 · Accepted
 The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears as soon as Shorts/Reels is detected again (only a ~1 s transition pause).
@@ -129,4 +130,4 @@ Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usag
 ---
 
 ## Pending (to be decided during the plan)
-- Remaining spike checks (D-028), see `docs/spike/RESULTS.md`: app clones (before Step 2.4), overnight survival and Play Protect (before Phase 4), Instagram Reels + a Shorts screen capture (before Phase 6).
+- Remaining spike checks (D-028), see `docs/spike/RESULTS.md`: overnight survival (before Phase 4), Instagram Reels + a Shorts screen capture (before Phase 6).
