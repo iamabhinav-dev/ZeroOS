@@ -39,6 +39,14 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:model"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:resources"))
+    implementation(project(":core:logging"))
+    implementation(project(":core:data"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:applist"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

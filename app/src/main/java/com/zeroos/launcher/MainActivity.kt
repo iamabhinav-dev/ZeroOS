@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import com.zeroos.core.resources.R
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
