@@ -43,12 +43,28 @@ class HomeUiStateTest {
     @Test
     fun f1_3_f1_8_batteryAndAlarmFollowSettings() {
         val alarm = Instant.parse("2026-10-17T01:00:00Z")
-        val shown = homeUiState(time, LauncherSettings(home = HomeSettings(showBattery = true, showNextAlarm = true)), apps, 82, alarm)
+        val shown =
+            homeUiState(
+                time,
+                LauncherSettings(home = HomeSettings(showBattery = true, showNextAlarm = true)),
+                apps,
+                BatteryStatus(82, charging = true),
+                alarm
+            )
         assertEquals(82, shown.batteryPercent)
+        assertEquals(true, shown.charging)
         assertEquals("06:30", shown.nextAlarm!!.toLocalTime().toString())
 
-        val hidden = homeUiState(time, LauncherSettings(home = HomeSettings(showBattery = false, showNextAlarm = false)), apps, 82, alarm)
+        val hidden =
+            homeUiState(
+                time,
+                LauncherSettings(home = HomeSettings(showBattery = false, showNextAlarm = false)),
+                apps,
+                BatteryStatus(82, charging = true),
+                alarm
+            )
         assertNull(hidden.batteryPercent)
+        assertEquals("no bolt without battery %", false, hidden.charging)
         assertNull(hidden.nextAlarm)
     }
 }

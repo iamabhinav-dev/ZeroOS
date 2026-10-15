@@ -132,6 +132,10 @@ Apps from a profile Android reports as managed are tagged "work", private space 
 *Why:* App Clone apps have the same name as the original, so they need a tag; the phone may not use Android's standard clone type, and App Clone is the only extra profile on this phone. The log shows the real type to refine this later.
 *Confirmed 2026-10-16:* the test phone reports App Clone as Android's standard `android.os.usertype.profile.CLONE`, so the tag comes from the real type, not the fallback.
 
+**D-031 — Dot-matrix charging bolt** · 2026-10-16 · Accepted
+While charging, a lightning bolt drawn as dots on Doto's 5 × 7 grid follows the battery %. Drawn by a reusable `DotMatrixIcon` (also for the Phase 4/6 dot animations).
+*Why:* User's request. Doto has no bolt glyph, and the ⚡ character would fall back to a colored emoji.
+
 ---
 
 ## Pending (to be decided during the plan)

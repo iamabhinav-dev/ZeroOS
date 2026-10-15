@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
         timeTicks.ticks,
         settingsRepository.settings,
         appsRepository.apps.onStart { emit(emptyList()) },
-        batteryLevel.percent.onStart { emit(null) },
+        batteryLevel.status.onStart { emit(null) },
         nextAlarm.time
     ) { time, settings, apps, battery, alarm -> homeUiState(time, settings, apps, battery, alarm) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState(timeTicks.now()))
