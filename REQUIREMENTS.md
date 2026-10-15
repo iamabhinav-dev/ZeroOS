@@ -75,7 +75,7 @@ The default screen shown when I press Home.
 | F1.3 | Optionally display **battery percentage** as plain text. |
 | F1.4 | Display a vertical list of **0–10 favorite apps** as text labels (no icons). |
 | F1.5 | No notification badges, dots, or counters on the home screen. |
-| F1.6 | Home screen must not scroll; all content fits within one viewport. The layout is designed from v1.0 for **all** home elements that come later (screen-time stats F10, focus timer F9, calendar/to-do F12), so adding them never pushes favorites off-screen at the largest font size. |
+| F1.6 | Home screen must not scroll; all content fits within one viewport. The layout is designed from v1.0 for **all** home elements that come later (screen-time stats F10, focus button/timer F9, calendar/to-do F12), so adding them never pushes favorites off-screen at the largest font size. |
 | F1.7 | Support configurable alignment of the favorites list: left, center, right. |
 | F1.8 | Optional: show the next upcoming alarm in small text. |
 | F1.9 | Long-press on empty space opens launcher settings. |
@@ -169,7 +169,7 @@ The default screen shown when I press Home.
 
 | ID | Requirement |
 |---|---|
-| F9.1 | One-tap Focus mode from home (long-press clock or settings). |
+| F9.1 | A text button **"focus"** on the home screen starts Focus mode with one tap (opens the duration + allow-list picker). It can be hidden in Settings; Focus can also be started from Settings. While Focus is active, the button is replaced by the remaining time (F9.4), and holding it ends the session (F9.5). |
 | F9.2 | Pick a duration (25 / 50 / 90 min / custom) and an allow-list of apps. |
 | F9.3 | During focus: only allowed apps are shown/launchable; notification filter is maximal. |
 | F9.4 | Home screen shows remaining focus time. |
@@ -500,6 +500,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Daily app limit (F8.3) | 30 min | 5–240 min |
 | "5 more minutes" uses/day (F8.4) | 2 | 0–5 |
 | Disable friction (F8.12) | Hold 3 s | off / hold 3 s / pause |
+| Focus button on home (F9.1) | Shown | shown / hidden |
 | Focus durations (F9.2) | 25 / 50 / 90 min | custom 5–240 min |
 | End focus early (F9.5) | Hold 3 s | — |
 | Focus toggles DND (F9.7) | Off | on/off |

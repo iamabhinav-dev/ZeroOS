@@ -84,7 +84,7 @@ feature/applist/
 
 ### Step 0.4 — Wireframes
 - Create `docs/wireframes.md` with ASCII/low-fi wireframes for every screen in REQUIREMENTS.md §6.
-- The **home wireframe shows its final layout**: clock, date, battery, screen-time stats (each F10.5 style), focus timer, calendar/to-do lines, and favorites. It also shows which areas collapse when a feature is off, and how it fits at the largest font size.
+- The **home wireframe shows its final layout**: clock, date, battery, screen-time stats (each F10.5 style), focus button / focus timer, calendar/to-do lines, and favorites. It also shows which areas collapse when a feature is off, and how it fits at the largest font size.
 - **I review and approve them before Phase 1.** Agents build screens to match the wireframes; differences need my approval.
 
 ### Step 0.5 — Feasibility spikes (throwaway, on a `spike/` branch, not merged)
@@ -192,7 +192,7 @@ Behaviour:
 - Clock tap → `AlarmClock.ACTION_SHOW_ALARMS`; date tap → `CATEGORY_APP_CALENDAR`; battery % from the `ACTION_BATTERY_CHANGED` sticky broadcast as a Flow.
 - Favorites joined with apps (missing apps dropped → F3.4).
 - Alignment; no scroll; long-press empty area → Settings; optional next alarm.
-- Build the home layout from the final wireframe with **slots** for later elements (stats, focus timer, widgets) that take no space while empty, so Phase 4–5 only fill slots and don't rework the layout.
+- Build the home layout from the final wireframe with **slots** for later elements (stats, focus button/timer, widgets) that take no space while empty, so Phase 4–5 only fill slots and don't rework the layout.
 - Screenshot test: home at the largest font with all slots filled by placeholder content still fits without scrolling.
 
 ### Step 2.4 — App list & search (F2)
@@ -286,7 +286,7 @@ Build in this order:
 - Inbox screen (open stored `contentIntent` if valid, dismiss, clear all); scheduled digests.
 
 ### Step 4.5 — Focus mode (F9)
-- Start from home (long-press clock) → duration + allow-list; filtered app list, maximal notification filtering, remaining time on home, hold-3s to end; optional DND; scheduled sessions.
+- Start from the home **"focus" text button** (fills the focus slot from Step 2.3) or Settings → duration + allow-list; while active the button shows remaining time and hold-3s ends it; filtered app list, maximal notification filtering, remaining time on home, hold-3s to end; optional DND; scheduled sessions.
 
 ### Step 4.6 — Screen-time insights & home-screen stats (F10)
 Reuses the usage calculation from Step 4.3.
