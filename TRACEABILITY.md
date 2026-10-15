@@ -7,16 +7,22 @@ Update this file in the same commit as the code and tests.
 
 | ID | Status | Automated tests (class › test) | Manual check |
 |---|---|---|---|
-| F1.1 | 🟡 | ClockFormatTest › f1_1_*, TimeTicksTest › f1_1_*, HomeScreenTest › f1_1_f1_2_showsClockAndDate (tap → alarms in Step 2.3) | Clock updates each minute |
-| F1.2 | 🟡 | ClockFormatTest › f1_2_formatsWeekdayDayAndMonth, HomeScreenTest › f1_1_f1_2_showsClockAndDate (tap → calendar in Step 2.3) | |
-| F1.3–F1.8 | ⬜ | | |
+| F1.1 | ✅ | ClockFormatTest › f1_1_*, TimeTicksTest › f1_1_*, HomeScreenTest › f1_1_* | Clock updates each minute; tap opens alarms |
+| F1.2 | ✅ | ClockFormatTest › f1_2_*, HomeScreenTest › f1_1_f1_2_* | Tap opens calendar |
+| F1.3 | ✅ | HomeSourcesTest › f1_3_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_1_f1_2_f1_3_* | |
+| F1.4 | ✅ | HomeUiStateTest › f1_4_*, HomeScreenTest › f1_4_* | |
+| F1.5 | ✅ | By design: home shows no badges or counters (screenshots) | |
+| F1.6 | ✅ | HomeScreenTest › f1_6_largestTextKeepsFavoritesVisible | |
+| F1.7 | 🟡 | HomeScreenTest › f1_7_centeredScreenshot (setting UI in Step 2.11) | |
+| F1.8 | ✅ | HomeSourcesTest › f1_8_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_8_* | |
 | F1.9 | 🟡 | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_* (opens Diagnostics until Settings exists) | |
 | F2.1, F2.3–F2.8 | ⬜ | | |
 | F2.11 | 🟡 | AppListScreenTest › f2_11_backClosesList, MainActivityTest › f2_11_backFromListReturnsHome (swipe down in Phase 2) | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
 | F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
 | F2.10 | 🟡 | AppsRepositoryTest › f2_10_marksAppsFromOtherProfilesAndKeepsBothCopies (data; tag in Phase 2) | App clones on the phone (spike) |
-| F3.1–F3.4 | ⬜ | | |
+| F3.1, F3.2 | ⬜ | | |
+| F3.3, F3.4 | 🟡 | HomeUiStateTest › f3_3_*, f3_4_* (display; editing in Step 2.5) | |
 | F4.1 | 🟡 | SwipeUpTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
 | F4.2–F4.6 | ⬜ | | |
 | F5.1–F5.5 | ⬜ | | |

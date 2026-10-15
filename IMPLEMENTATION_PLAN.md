@@ -201,7 +201,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Shared composables: `AppLabel`, `MinimalListItem`, `MinimalBottomSheet`, `SettingRow`, `ToggleRow`.
 - Edge-to-edge with insets for gesture and 3-button navigation.
 
-### Step 2.3 — Home screen (F1)
+### Step 2.3 — Home screen (F1) ✅
 - Clock tap → `AlarmClock.ACTION_SHOW_ALARMS`; date tap → `CATEGORY_APP_CALENDAR`; battery % from the `ACTION_BATTERY_CHANGED` sticky broadcast as a Flow.
 - Favorites joined with apps (missing apps dropped → F3.4).
 - Alignment; no scroll; long-press empty area → Settings; optional next alarm.

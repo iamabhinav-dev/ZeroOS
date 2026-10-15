@@ -1,5 +1,6 @@
 package com.zeroos.feature.home
 
+import android.app.AlarmManager
 import android.content.Context
 import dagger.Module
 import dagger.Provides
@@ -13,4 +14,11 @@ import java.time.Clock
 object HomeModule {
     @Provides
     fun timeTicks(@ApplicationContext context: Context, clock: Clock): TimeTicks = TimeTicks(context, clock)
+
+    @Provides
+    fun batteryLevel(@ApplicationContext context: Context): BatteryLevel = BatteryLevel(context)
+
+    @Provides
+    fun nextAlarm(@ApplicationContext context: Context): NextAlarm =
+        NextAlarm(context, context.getSystemService(AlarmManager::class.java))
 }
