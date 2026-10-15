@@ -132,7 +132,7 @@ The default screen shown when I press Home.
 |---|---|
 | F6.1 | Themes: **Dark** (default, pure black for OLED), **Light**, **System**. |
 | F6.2 | Wallpaper: solid color (default black), or system wallpaper with dim overlay. |
-| F6.3 | Font: choice of 3–5 bundled OFL-licensed fonts + system font for text (app names, lists, settings). The **clock, date and numbers** (screen-time stats, focus timer, block-screen title) always use the dot-matrix font **Doto** (OFL; free look-alike of Nothing's Ndot 57, which is proprietary). |
+| F6.3 | Font: choice of 3–5 bundled OFL-licensed fonts + system font for text (app names, lists, settings). The **clock, date and numbers** (screen-time stats, focus timer, stop-screen puns) use **Ndot 57** (Nothing's dot-matrix font), bundled in the app from a font file I provide. **Doto** (OFL look-alike) is the fallback if the Ndot file is absent from the build. |
 | F6.4 | Text size: small / medium / large / extra-large; respects system font scale. |
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
 | F6.6 | Accent color is monochrome by default; optional single accent color. |
@@ -166,6 +166,7 @@ The default screen shown when I press Home.
 | F8.12 | Optional friction when turning off during an active limit (e.g., mindful pause or "hold for 3 s"), configurable, to prevent impulsive disabling. |
 | F8.13 | **Puns on stop screens:** the mindful pause (F8.1) shows a random line from a "pause" list (e.g. "Is this a want, or a habit?"); the limit-reached block (F8.4, F8.7) shows a random line from a "limit" list (e.g. "That's a wrap for today."). Lists of ~20 lines each (approved text in `docs/puns.md`) become string-arrays in `core/resources`. **Shuffle-bag order:** every line once before any repeat, never the same line twice in a row; the position survives restarts. |
 | F8.14 | Puns can be turned off in Settings → Wellbeing; then a plain message is shown (e.g. "Daily limit reached"). |
+| F8.15 | **Dot animations** (monochrome, dot-matrix style, above the pun): the mindful pause shows **breathing dots** that slowly grow and shrink in time with the countdown; the limit-reached screen shows a **battery draining** to empty. They run only while the screen is visible, and are static when system "Remove animations" / reduced motion is on (NFR-A4). |
 
 ### F9 — Focus Mode
 
@@ -250,7 +251,7 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) *
 | F16.2 | Before enabling, show a short explanation screen of what the service reads (only the on-screen structure of selected apps) and how to allow it on Android 13+ (App info → ⋮ → **Allow restricted settings**). |
 | F16.3 | Supported apps at launch: **YouTube Shorts** and **Instagram Reels**. Others (TikTok, Facebook Reels, Snapchat Spotlight) only if I ask later. |
 | F16.4 | Enable/disable blocking per supported app. |
-| F16.5 | Service listens only to events from the selected target packages (`packageNames` filter in the service config). |
+| F16.5 | The service reads **screen content only from the selected target apps**. It also receives window-change events from all apps, but uses only the app name, to know which app is in front (F16.18). |
 | F16.6 | Detection uses targeted lookups (`findAccessibilityNodeInfosByViewId`) on window-state/content-change events, **throttled to ≤ 1 check per 300–500 ms**; no full-tree traversal. |
 | F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with the block message (F16.9) and a **"Go home"** button. |
 | F16.8 | **Limit mode:** track time spent in short-form content per day; show the block overlay once the daily allowance (e.g., 15 min) is used up. Allowance resets at local midnight. |
@@ -262,6 +263,8 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) *
 | F16.14 | Show today's short-form time and block count in Insights (F10). |
 | F16.15 | Detect and warn when the service has been killed or disabled by the system/OEM, with guidance to allow background activity. |
 | F16.16 | Respect Focus mode (F9): during focus, short-form content is always blocked regardless of limits. |
+| F16.17 | **Dot animation** on the block screen: a dot-matrix **shutter closing** over a play symbol, once, when the screen appears; then still. Static when reduced motion is on (NFR-A4). |
+| F16.18 | The overlay shows only while YouTube/Instagram is the app actually in front (not its preview in Recents), and stays up through short gaps (< 1 s) while a Short loads or changes, so it doesn't blink. Requires listening to window changes from all apps (app name only, no content); screen content is read only from target apps (updates F16.5). |
 
 **Performance budget (additional, on top of NFR-P):**
 | Metric | Target |
