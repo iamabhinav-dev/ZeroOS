@@ -42,6 +42,10 @@ F12.1 weather removed. The app never requests `INTERNET`.
 F10 home-screen stats (text, progress bar, weekly bars, or hourly timeline) are on by default. F10 moves from v1.2 to v1.1 because it reuses the usage-stats code built for F8.
 *Why:* User wants daily usage visible on the home screen.
 
+**D-010 — Debug and release install side by side** · 2026-10-15 · Accepted
+Debug build uses `applicationIdSuffix ".debug"` and label "ZeroOS Debug"; release is always signed with the same backed-up release keystore.
+*Why:* Debug and release are signed with different keys, so one can't be installed over the other. Separate app IDs avoid the conflict and keep the everyday launcher's settings safe from debug experiments.
+
 ---
 
 ## Pending (to be decided during the plan)
