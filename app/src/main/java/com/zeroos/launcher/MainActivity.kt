@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         onBackPressedDispatcher.addCallback(this) {}
         setContent {
             ZeroTheme {
-                LauncherRoot(homePresses)
+                LauncherRoot(homePresses, showDebugTools = BuildConfig.DEBUG)
             }
         }
     }

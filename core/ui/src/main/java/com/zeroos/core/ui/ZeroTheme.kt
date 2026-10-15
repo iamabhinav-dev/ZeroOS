@@ -31,6 +31,7 @@ data class ZeroColors(
 data class ZeroSpacing(
     val screenGutter: Dp = 24.dp,
     val listItemVertical: Dp = 12.dp,
+    val listItemCompact: Dp = 4.dp,
     val sectionGap: Dp = 8.dp,
     val minTouchTarget: Dp = 48.dp
 )
@@ -39,7 +40,10 @@ data class ZeroSpacing(
 data class ZeroTextSizes(
     val clock: TextUnit = 72.sp,
     val date: TextUnit = 18.sp,
-    val appLabel: TextUnit = 22.sp
+    val appLabel: TextUnit = 22.sp,
+    val title: TextUnit = 28.sp,
+    val body: TextUnit = 16.sp,
+    val mono: TextUnit = 12.sp
 )
 
 /** Gesture thresholds from REQUIREMENTS.md Appendix A. */
