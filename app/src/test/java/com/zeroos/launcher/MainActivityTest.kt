@@ -1,30 +1,50 @@
 package com.zeroos.launcher
 
+import android.content.Intent
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.feature.applist.AppListTestTags
+import com.zeroos.feature.home.HomeTestTags
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.annotation.GraphicsMode
 
-/** Sample Robolectric UI test and Roborazzi screenshot proving the test setup works (Step 0.6). */
+/** Step 1.3 end to end: home → swipe up → app list → Back / Home press → home. */
 @RunWith(AndroidJUnit4::class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
 class MainActivityTest {
-
     @get:Rule
     val compose = createAndroidComposeRule<MainActivity>()
 
-    @Test
-    fun step0_6_placeholderShowsAppName() {
-        compose.onNodeWithText("ZeroOS").assertExists()
+    private fun openList() {
+        compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeUp() }
+        compose.onNodeWithTag(AppListTestTags.LIST).assertExists()
     }
 
     @Test
-    fun step0_6_placeholderScreenshot() {
-        compose.onRoot().captureRoboImage()
+    fun step1_3_startsOnHome() {
+        compose.onNodeWithTag(HomeTestTags.ROOT).assertExists()
+    }
+
+    @Test
+    fun f2_11_backFromListReturnsHome() {
+        openList()
+        compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        compose.onNodeWithTag(HomeTestTags.ROOT).assertExists()
+    }
+
+    @Test
+    fun step1_1_homePressClosesList() {
+        openList()
+        compose.runOnUiThread {
+            val home = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+            // onNewIntent is protected; call it the way Android does when Home is pressed in front.
+            MainActivity::class.java.getDeclaredMethod("onNewIntent", Intent::class.java)
+                .apply { isAccessible = true }
+                .invoke(compose.activity, home)
+        }
+        compose.onNodeWithTag(HomeTestTags.ROOT).assertExists()
     }
 }
