@@ -1,31 +1,48 @@
 package com.zeroos.core.ui
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zeroos.core.model.settings.TextSize
+import com.zeroos.core.model.settings.ThemeMode
 
 /**
- * Minimal design tokens for Phase 1 (pure black, monochrome). Step 2.2 adds light/system themes,
- * the Doto clock font, text-size scale and the rest of the design system (F6, NFR-L8).
+ * ZeroOS design system (Step 2.2): monochrome dark/light palettes, Doto for all text (F6.3, D-020), a text-size
+ * scale (F6.4), spacing and gesture tokens (NFR-L8). Screens read tokens via `ZeroTheme.tokens`.
  */
 private val PureBlack = Color(0xFF000000)
 private val White = Color(0xFFFFFFFF)
-private val Gray = Color(0xFF9E9E9E)
+private val GrayOnBlack = Color(0xFF9E9E9E)
+private val GrayOnWhite = Color(0xFF5F5F5F)
+private val DividerOnBlack = Color(0xFF333333)
+private val DividerOnWhite = Color(0xFFDDDDDD)
 
 @Immutable
 data class ZeroColors(
-    val background: Color = PureBlack,
-    val text: Color = White,
-    val textMuted: Color = Gray
-)
+    val background: Color,
+    val text: Color,
+    val textMuted: Color,
+    val divider: Color
+) {
+    companion object {
+        /** Pure black for OLED (F6.1 default). */
+        val Dark = ZeroColors(background = PureBlack, text = White, textMuted = GrayOnBlack, divider = DividerOnBlack)
+        val Light = ZeroColors(background = White, text = PureBlack, textMuted = GrayOnWhite, divider = DividerOnWhite)
+    }
+}
 
 @Immutable
 data class ZeroSpacing(
@@ -36,15 +53,44 @@ data class ZeroSpacing(
     val minTouchTarget: Dp = 48.dp
 )
 
+/** Text sizes at "Medium"; [scaled] applies the S/M/L/XL setting (F6.4). The system font scale applies on top via sp. */
 @Immutable
 data class ZeroTextSizes(
     val clock: TextUnit = 72.sp,
     val date: TextUnit = 18.sp,
     val appLabel: TextUnit = 22.sp,
     val title: TextUnit = 28.sp,
-    val body: TextUnit = 16.sp,
-    val mono: TextUnit = 12.sp
-)
+    val body: TextUnit = 17.sp,
+    /** Smallest text (log lines, captions). Never below [MIN_SIZE_SP] after scaling. */
+    val small: TextUnit = 15.sp
+) {
+    fun scaled(textSize: TextSize): ZeroTextSizes {
+        val factor = textSize.factor
+        fun TextUnit.scale(min: Float = 0f) = (value * factor).coerceAtLeast(min).sp
+        return ZeroTextSizes(
+            clock = clock.scale(),
+            date = date.scale(MIN_SIZE_SP),
+            appLabel = appLabel.scale(MIN_SIZE_SP),
+            title = title.scale(MIN_SIZE_SP),
+            body = body.scale(MIN_SIZE_SP),
+            small = small.scale(MIN_SIZE_SP)
+        )
+    }
+
+    companion object {
+        /** Doto stays readable from about 14 sp (F6.4). */
+        const val MIN_SIZE_SP = 14f
+    }
+}
+
+/** Multipliers for the text-size setting (F6.4). */
+val TextSize.factor: Float
+    get() = when (this) {
+        TextSize.SMALL -> 0.85f
+        TextSize.MEDIUM -> 1f
+        TextSize.LARGE -> 1.15f
+        TextSize.EXTRA_LARGE -> 1.3f
+    }
 
 /** Gesture thresholds from REQUIREMENTS.md Appendix A. */
 @Immutable
@@ -56,10 +102,11 @@ data class ZeroGestures(
 
 @Immutable
 data class ZeroTokens(
-    val colors: ZeroColors = ZeroColors(),
+    val colors: ZeroColors = ZeroColors.Dark,
     val spacing: ZeroSpacing = ZeroSpacing(),
     val textSizes: ZeroTextSizes = ZeroTextSizes(),
-    val gestures: ZeroGestures = ZeroGestures()
+    val gestures: ZeroGestures = ZeroGestures(),
+    val isDark: Boolean = true
 )
 
 private val LocalZeroTokens = staticCompositionLocalOf { ZeroTokens() }
@@ -70,15 +117,71 @@ object ZeroTheme {
         @Composable get() = LocalZeroTokens.current
 }
 
+/** Builds tokens for the appearance settings (F6.1, F6.4). */
+fun zeroTokens(dark: Boolean, textSize: TextSize): ZeroTokens = ZeroTokens(
+    colors = if (dark) ZeroColors.Dark else ZeroColors.Light,
+    textSizes = ZeroTextSizes().scaled(textSize),
+    isDark = dark
+)
+
+/** Applies the ZeroOS theme. Every `Text` inside uses Doto by default (D-020). */
 @Composable
-fun ZeroTheme(tokens: ZeroTokens = ZeroTokens(), content: @Composable () -> Unit) {
-    val scheme = darkColorScheme(
-        background = tokens.colors.background,
-        surface = tokens.colors.background,
-        onBackground = tokens.colors.text,
-        onSurface = tokens.colors.text
-    )
-    CompositionLocalProvider(LocalZeroTokens provides tokens) {
-        MaterialTheme(colorScheme = scheme, content = content)
+fun ZeroTheme(
+    themeMode: ThemeMode = ThemeMode.DARK,
+    textSize: TextSize = TextSize.MEDIUM,
+    content: @Composable () -> Unit
+) {
+    val dark = when (themeMode) {
+        ThemeMode.DARK -> true
+        ThemeMode.LIGHT -> false
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
     }
+    val tokens = zeroTokens(dark, textSize)
+    val colors = tokens.colors
+    val scheme = if (dark) {
+        darkColorScheme(
+            background = colors.background,
+            surface = colors.background,
+            onBackground = colors.text,
+            onSurface = colors.text,
+            primary = colors.text,
+            onPrimary = colors.background
+        )
+    } else {
+        lightColorScheme(
+            background = colors.background,
+            surface = colors.background,
+            onBackground = colors.text,
+            onSurface = colors.text,
+            primary = colors.text,
+            onPrimary = colors.background
+        )
+    }
+    CompositionLocalProvider(LocalZeroTokens provides tokens) {
+        MaterialTheme(colorScheme = scheme, typography = dotoTypography(tokens.textSizes), content = content)
+    }
+}
+
+/** Material typography with Doto in every style, so dialogs and fields use it too. */
+private fun dotoTypography(sizes: ZeroTextSizes): Typography {
+    // Bold by default: Doto dots grow with weight, and thin dots are hard to read (F6.4).
+    val base = TextStyle(fontFamily = DotoFamily, fontWeight = FontWeight.Bold)
+    val defaults = Typography()
+    return Typography(
+        displayLarge = defaults.displayLarge.merge(base),
+        displayMedium = defaults.displayMedium.merge(base),
+        displaySmall = defaults.displaySmall.merge(base),
+        headlineLarge = defaults.headlineLarge.merge(base),
+        headlineMedium = defaults.headlineMedium.merge(base),
+        headlineSmall = defaults.headlineSmall.merge(base).copy(fontSize = sizes.title),
+        titleLarge = defaults.titleLarge.merge(base).copy(fontSize = sizes.title),
+        titleMedium = defaults.titleMedium.merge(base).copy(fontSize = sizes.body),
+        titleSmall = defaults.titleSmall.merge(base).copy(fontSize = sizes.small),
+        bodyLarge = defaults.bodyLarge.merge(base).copy(fontSize = sizes.body),
+        bodyMedium = defaults.bodyMedium.merge(base).copy(fontSize = sizes.body),
+        bodySmall = defaults.bodySmall.merge(base).copy(fontSize = sizes.small),
+        labelLarge = defaults.labelLarge.merge(base).copy(fontSize = sizes.body),
+        labelMedium = defaults.labelMedium.merge(base).copy(fontSize = sizes.small),
+        labelSmall = defaults.labelSmall.merge(base).copy(fontSize = sizes.small)
+    )
 }

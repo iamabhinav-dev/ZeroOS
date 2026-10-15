@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ZeroTheme
 
 /** Safe mode (F18.3, wireframe D): banner, three actions, plain alphabetical app list. */
@@ -53,28 +54,13 @@ fun SafeModeScreen(
                 modifier = Modifier.padding(horizontal = tokens.spacing.screenGutter)
             )
         }
-        item { Row(stringResource(R.string.safe_mode_view_report), onViewReport) }
-        item { Row(stringResource(R.string.safe_mode_home_settings), onHomeSettings) }
-        item { Row(stringResource(R.string.safe_mode_exit), onExit) }
-        item { HorizontalDivider(color = tokens.colors.textMuted) }
+        item { MinimalListItem(text = stringResource(R.string.safe_mode_view_report), onClick = onViewReport, large = true) }
+        item { MinimalListItem(text = stringResource(R.string.safe_mode_home_settings), onClick = onHomeSettings, large = true) }
+        item { MinimalListItem(text = stringResource(R.string.safe_mode_exit), onClick = onExit, large = true) }
+        item { HorizontalDivider(color = tokens.colors.divider) }
         items(apps, key = { "${it.component.flattenToString()}#${it.user.hashCode()}" }) { app ->
-            Row(app.label) { onAppClick(app) }
+            MinimalListItem(text = app.label, onClick = { onAppClick(app) }, large = true)
         }
-    }
-}
-
-@Composable
-private fun Row(text: String, onClick: () -> Unit) {
-    val tokens = ZeroTheme.tokens
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .heightIn(min = tokens.spacing.minTouchTarget)
-            .clickable(onClick = onClick)
-            .padding(horizontal = tokens.spacing.screenGutter),
-        contentAlignment = Alignment.CenterStart
-    ) {
-        Text(text = text, color = tokens.colors.text, fontSize = tokens.textSizes.appLabel)
     }
 }
 

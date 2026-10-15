@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
+import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ZeroTheme
 
 /** App list with its ViewModel (Step 1.3). Closes after an app starts. */
@@ -48,16 +49,7 @@ fun AppListScreen(apps: List<AppEntry>, onAppClick: (AppEntry) -> Unit, onClose:
         contentPadding = PaddingValues(vertical = tokens.spacing.screenGutter)
     ) {
         items(apps, key = { it.key.asString() }) { app ->
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = tokens.spacing.minTouchTarget)
-                    .clickable { onAppClick(app) }
-                    .padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.listItemVertical),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                Text(text = app.label, color = tokens.colors.text, fontSize = tokens.textSizes.appLabel)
-            }
+            MinimalListItem(text = app.label, onClick = { onAppClick(app) }, large = true)
         }
     }
 }

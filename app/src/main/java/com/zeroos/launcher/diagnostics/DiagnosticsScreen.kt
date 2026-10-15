@@ -6,18 +6,14 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,18 +24,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.core.content.FileProvider
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.StoredLogEntry
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BodyText
+import com.zeroos.core.ui.ScreenTitle
+import com.zeroos.core.ui.SettingRow
+import com.zeroos.core.ui.TextAction
 import com.zeroos.core.ui.ZeroTheme
 import java.io.File
 import kotlinx.coroutines.launch
@@ -140,11 +138,11 @@ fun DiagnosticsScreen(
             .safeDrawingPadding()
             .testTag(DiagnosticsTestTags.ROOT)
     ) {
-        item { Title(stringResource(R.string.diagnostics_title)) }
+        item { ScreenTitle(stringResource(R.string.diagnostics_title)) }
         item {
             Row(modifier = Modifier.padding(horizontal = tokens.spacing.screenGutter - tokens.spacing.sectionGap)) {
                 LogFilter.entries.forEach { filter ->
-                    Action(
+                    TextAction(
                         text = stringResource(filter.label()),
                         muted = filter != state.filter,
                         compact = true,
@@ -154,18 +152,18 @@ fun DiagnosticsScreen(
             }
         }
         if (state.visibleEntries.isEmpty()) {
-            item { Body(stringResource(R.string.diagnostics_empty), muted = true) }
+            item { BodyText(stringResource(R.string.diagnostics_empty), muted = true) }
         }
         items(state.visibleEntries.size) { index ->
             val entry = state.visibleEntries[index]
             EntryRow(entry, expanded = expanded == index, onClick = { expanded = if (expanded == index) null else index })
         }
-        item { Action(stringResource(R.string.diagnostics_crash_reports, state.crashReports.size), onClick = onOpenReports) }
-        state.lastStop?.let { item { Body(stringResource(R.string.diagnostics_last_stop, it), muted = true) } }
+        item { TextAction(stringResource(R.string.diagnostics_crash_reports, state.crashReports.size), onClick = onOpenReports) }
+        state.lastStop?.let { item { BodyText(stringResource(R.string.diagnostics_last_stop, it), muted = true) } }
         item {
             Row {
-                Action(stringResource(R.string.diagnostics_export), onClick = onExport)
-                Action(stringResource(R.string.diagnostics_clear), onClick = { confirmClear = true })
+                TextAction(stringResource(R.string.diagnostics_export), onClick = onExport)
+                TextAction(stringResource(R.string.diagnostics_clear), onClick = { confirmClear = true })
             }
         }
         item {
@@ -174,7 +172,7 @@ fun DiagnosticsScreen(
         }
         item { SettingRow(stringResource(R.string.diagnostics_level), stringResource(state.level.label()), onCycleLevel) }
         if (showDebugTools) {
-            item { Action(stringResource(R.string.diagnostics_crash_now), onClick = onCrashNow) }
+            item { TextAction(stringResource(R.string.diagnostics_crash_now), onClick = onCrashNow) }
             item {
                 val onOff = stringResource(if (state.crashOnStart) R.string.common_on else R.string.common_off)
                 SettingRow(stringResource(R.string.diagnostics_crash_on_start), onOff, onToggleCrashOnStart)
@@ -188,12 +186,12 @@ fun DiagnosticsScreen(
             title = { Text(stringResource(R.string.diagnostics_clear_confirm_title)) },
             text = { Text(stringResource(R.string.diagnostics_clear_confirm_message)) },
             confirmButton = {
-                Action(stringResource(R.string.diagnostics_clear), onClick = {
+                TextAction(stringResource(R.string.diagnostics_clear), onClick = {
                     confirmClear = false
                     onClear()
                 })
             },
-            dismissButton = { Action(stringResource(R.string.common_cancel), onClick = { confirmClear = false }) }
+            dismissButton = { TextAction(stringResource(R.string.common_cancel), onClick = { confirmClear = false }) }
         )
     }
 }
@@ -210,10 +208,10 @@ private fun EntryRow(entry: StoredLogEntry, expanded: Boolean, onClick: () -> Un
             .padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.listItemCompact)
     ) {
         val color = if (entry.level == LogLevel.WARN || entry.level == LogLevel.ERROR) tokens.colors.text else tokens.colors.textMuted
-        Text(text = header, color = color, fontFamily = FontFamily.Monospace, fontSize = tokens.textSizes.mono)
+        Text(text = header, color = color, fontSize = tokens.textSizes.small)
         if (expanded) {
             entry.details.forEach {
-                Text(text = it, color = tokens.colors.textMuted, fontFamily = FontFamily.Monospace, fontSize = tokens.textSizes.mono)
+                Text(text = it, color = tokens.colors.textMuted, fontSize = tokens.textSizes.small)
             }
         }
     }
