@@ -2,6 +2,7 @@ package com.zeroos.feature.home
 
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,14 +26,17 @@ import java.time.ZonedDateTime
 
 /** Home screen with its ViewModel (Step 1.3). */
 @Composable
-fun HomeRoute(onSwipeUp: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeRoute(onSwipeUp: () -> Unit, onLongPress: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
     val time by viewModel.time.collectAsStateWithLifecycle()
-    HomeScreen(time = time, onSwipeUp = onSwipeUp)
+    HomeScreen(time = time, onSwipeUp = onSwipeUp, onLongPress = onLongPress)
 }
 
-/** Clock and date on pure black; swipe up anywhere opens the app list (F1.1, F1.2, F4.1; wireframe A2). */
+/**
+ * Clock and date on pure black; swipe up anywhere opens the app list (F1.1, F1.2, F4.1; wireframe A2).
+ * Long-press on empty space opens Diagnostics in Phase 1 and Settings from Step 2.11 (F1.9).
+ */
 @Composable
-fun HomeScreen(time: ZonedDateTime, onSwipeUp: () -> Unit, modifier: Modifier = Modifier) {
+fun HomeScreen(time: ZonedDateTime, onSwipeUp: () -> Unit, onLongPress: () -> Unit, modifier: Modifier = Modifier) {
     val tokens = ZeroTheme.tokens
     val context = LocalContext.current
     val locale = LocalConfiguration.current.locales[0]
@@ -49,6 +53,7 @@ fun HomeScreen(time: ZonedDateTime, onSwipeUp: () -> Unit, modifier: Modifier = 
             .fillMaxSize()
             .background(tokens.colors.background)
             .testTag(HomeTestTags.ROOT)
+            .pointerInput(Unit) { detectTapGestures(onLongPress = { onLongPress() }) }
             .pointerInput(minDistance, minVelocity) {
                 val velocity = VelocityTracker()
                 var dragY = 0f
