@@ -121,7 +121,7 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 - `.gitignore` (incl. `keystore.properties`, `*.jks`), `README.md`, `CHANGELOG.md`.
 - Optional: GitHub Actions running `./gradlew check` if the repo is pushed to GitHub later.
 
-### Step 0.7 — Signing & install workflow
+### Step 0.7 — Signing & install workflow ✅
 - Generate a release keystore **outside the repo**; reference it from a git-ignored `keystore.properties`. Back it up (NFR-S6).
 - **One key for debug and release:** both build types use the same `signingConfig` (the release keystore) and the same application ID, so either APK installs over the other and keeps settings. If `keystore.properties` is missing (e.g., on CI), fall back to the default debug key and print a Gradle warning; such APKs must not be installed on the phone.
 - Debug-only tools (LeakCanary, StrictMode) run on the phone whenever a debug APK is installed; that's expected.

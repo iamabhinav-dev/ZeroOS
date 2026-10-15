@@ -1,7 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.zeroos.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+}
+
+// Release key from the git-ignored keystore.properties (Step 0.7, D-010). Debug and release share it so
+// either APK installs over the other. Without the file, builds use the default debug key and must not
+// be installed on the phone.
+val keystoreFile = rootProject.file("keystore.properties")
+val keystore = Properties().apply { if (keystoreFile.exists()) keystoreFile.inputStream().use(::load) }
+if (!keystoreFile.exists()) {
+    logger.warn("keystore.properties not found: APKs are signed with the default debug key. Do NOT install them on the phone.")
 }
 
 android {
@@ -13,7 +24,22 @@ android {
         versionName = "0.0.1"
     }
 
+    signingConfigs {
+        if (keystoreFile.exists()) {
+            create("zeroos") {
+                storeFile = file(keystore.getProperty("storeFile"))
+                storePassword = keystore.getProperty("storePassword")
+                keyAlias = keystore.getProperty("keyAlias")
+                keyPassword = keystore.getProperty("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
+        signingConfigs.findByName("zeroos")?.let { zeroosKey ->
+            getByName("debug").signingConfig = zeroosKey
+            getByName("release").signingConfig = zeroosKey
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
