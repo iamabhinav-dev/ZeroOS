@@ -64,7 +64,7 @@ class AppsRepository(
     private fun load(): List<AppEntry> {
         val collator = Collator.getInstance(locale()).apply { strength = Collator.SECONDARY }
         return source.launchableActivities()
-            .map { AppEntry(it.key, it.label, it.isMainProfile) }
+            .map { AppEntry(it.key, it.label, it.profile) }
             .sortedWith(compareBy(collator) { entry: AppEntry -> entry.label }.thenBy { it.key.asString() })
     }
 

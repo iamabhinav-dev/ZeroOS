@@ -9,6 +9,7 @@ import android.os.UserManager
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.ProfileType
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
@@ -23,7 +24,13 @@ class AndroidLauncherAppsSourceTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val launcherApps = context.getSystemService(LauncherApps::class.java)
     private val userManager = context.getSystemService(UserManager::class.java)
-    private val source = AndroidLauncherAppsSource(launcherApps, userManager)
+    private val source = AndroidLauncherAppsSource(
+        launcherApps,
+        userManager,
+        object : com.zeroos.core.logging.Logger {
+            override fun log(level: com.zeroos.core.logging.LogLevel, tag: String, message: String, throwable: Throwable?) = Unit
+        }
+    )
 
     private fun info(pkg: String, label: String): LauncherActivityInfo = mockk {
         every { componentName } returns ComponentName(pkg, "$pkg.Main")
@@ -36,7 +43,7 @@ class AndroidLauncherAppsSourceTest {
 
         val serial = userManager.getSerialNumberForUser(Process.myUserHandle())
         assertEquals(
-            listOf(LaunchableActivity(AppKey("com.example.maps", "com.example.maps.Main", serial), "Maps", true)),
+            listOf(LaunchableActivity(AppKey("com.example.maps", "com.example.maps.Main", serial), "Maps", ProfileType.MAIN)),
             source.launchableActivities()
         )
     }
@@ -53,6 +60,14 @@ class AndroidLauncherAppsSourceTest {
         ShadowLooper.idleMainLooper()
 
         assertEquals(listOf("com.new"), changes)
+    }
+
+    @Test
+    fun f2_10_mapsAndroidUserTypesToProfiles() {
+        assertEquals(ProfileType.WORK, profileFromUserType("android.os.usertype.profile.MANAGED"))
+        assertEquals(ProfileType.PRIVATE, profileFromUserType("android.os.usertype.profile.PRIVATE"))
+        assertEquals(ProfileType.CLONE, profileFromUserType("android.os.usertype.profile.CLONE"))
+        assertEquals(ProfileType.CLONE, profileFromUserType(null))
     }
 
     @Test

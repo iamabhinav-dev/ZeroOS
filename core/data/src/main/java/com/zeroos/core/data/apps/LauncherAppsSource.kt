@@ -1,12 +1,13 @@
 package com.zeroos.core.data.apps
 
 import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.ProfileType
 
 /** A launchable activity as reported by the system. */
 data class LaunchableActivity(
     val key: AppKey,
     val label: String,
-    val isMainProfile: Boolean
+    val profile: ProfileType = ProfileType.MAIN
 )
 
 /** System access needed by [AppsRepository]; [AndroidLauncherAppsSource] in the app, a fake in tests. */
