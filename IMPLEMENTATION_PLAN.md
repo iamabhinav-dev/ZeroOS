@@ -5,6 +5,17 @@ Each step lists **what to build**, **key technical notes**, and a **done when** 
 
 Time estimates assume **one developer, full-time**. Scale accordingly.
 
+## Testing Policy (applies to every step)
+Tests are **required**, not a separate phase. A step is **not done** until:
+1. **Unit tests** cover all new logic: repositories, ViewModels, matching/filtering, calculations, parsers, and state reducers.
+2. **Compose UI tests** cover every new or changed user flow on a screen.
+3. **Instrumented tests** cover Android integration where feasible (services, DataStore/Room, permission fallbacks), using fakes for system services.
+4. **Regression test first** for every bug fix: write a failing test, then fix.
+5. `./gradlew assembleDebug lint test` passes locally and on CI. Instrumented tests (`connectedCheck`) pass on an emulator before merging a step.
+6. Coverage of `core/` and `feature/*` logic (excluding UI-only composables) stays **≥ 80%**, measured with Kover or JaCoCo from Phase 1 onward.
+
+Every "Done when" checklist below implicitly includes these rules.
+
 | Phase | Scope | Est. time | Outcome |
 |---|---|---|---|
 | 0 | Project setup | 3–4 days | Empty app builds, CI green |
@@ -45,10 +56,12 @@ feature/onboarding/
 
 ### Step 0.4 — Quality gates
 - ktlint/detekt, Android Lint with warnings as errors on CI.
-- GitHub Actions: build, lint, unit tests on every push/PR.
+- GitHub Actions: build, lint, unit tests on every push/PR; instrumented tests on an emulator (e.g., Gradle Managed Devices) for PRs into `main`.
+- Test stack: JUnit, MockK or fakes, Turbine (Flow), Robolectric where useful, Compose UI test, AndroidX Test; coverage via Kover/JaCoCo.
+- Add one sample unit test and one sample UI test so the pipeline is proven working.
 - `.gitignore`, `README.md`, `LICENSE`.
 
-**Done when:** `./gradlew assembleDebug test lint` passes locally and on CI.
+**Done when:** `./gradlew assembleDebug test lint` passes locally and on CI, including the sample unit and UI tests; coverage report is generated.
 
 ---
 
@@ -76,7 +89,9 @@ Behaviour:
 - Home: big clock + date (static composables, ticking via a `Flow` that emits every minute aligned to the minute boundary).
 - Swipe up → simple scrollable list of all app labels; tap launches.
 
-**Done when:** you can set ZeroOS as default launcher on a real device, see the clock, swipe up, and open any app; new installs appear without restarting.
+**Tests:** `AppsRepository` (fake `LauncherApps`: list, sort, install/uninstall updates, work profile), clock Flow (minute alignment), UI test (home → swipe up → list shows apps → tap launches intent).
+
+**Done when:** you can set ZeroOS as default launcher on a real device, see the clock, swipe up, and open any app; new installs appear without restarting; tests above pass.
 
 ---
 
@@ -136,16 +151,20 @@ Behaviour:
 ### Step 2.10 — Settings screen structure
 Home · App list · Gestures · Appearance · Hidden apps · About. (Wellbeing, Notifications, Backup, Premium sections added in later phases.)
 
-**Done when:** every F1–F6 and F14 requirement in REQUIREMENTS.md is met and manually verified on 2 devices.
+**Tests (written within each step, not after):**
+- Unit: SettingsRepository read/write/migration, search matching (substring, initials, accents, auto-launch), favorites add/remove/reorder/max/auto-remove, hide/rename/reset, gesture binding resolution, appearance settings mapping.
+- UI: home layout & alignment, app list search + no-match actions, long-press menu actions, favorites edit mode, rename/hide flows, gesture navigation, onboarding flow & skip.
+
+**Done when:** every F1–F6 and F14 requirement in REQUIREMENTS.md is met, covered by the tests above, and manually verified on 2 devices.
 
 ---
 
 ## Phase 3 — Hardening & v1.0 Release
 
-### Step 3.1 — Testing
-- Unit tests: search matching, favorites ordering, settings serialization, app-list merging.
-- Compose UI tests: home renders, swipe up opens list, search launches app, rename/hide flows.
-- Macrobenchmark + Baseline Profile: verify NFR-P1 (home ≤ 100 ms warm) and NFR-P2 (cold ≤ 500 ms).
+### Step 3.1 — Test audit & performance tests
+- Audit coverage and fill gaps against every F1–F6/F14 requirement ID (each requirement maps to at least one test).
+- End-to-end UI tests of the main journeys on a release-like build.
+- Macrobenchmark + Baseline Profile: verify NFR-P1 (home ≤ 100 ms warm) and NFR-P2 (cold ≤ 500 ms); add benchmarks to CI as a regression check.
 
 ### Step 3.2 — Accessibility & localization
 - TalkBack pass, 48dp targets, contrast check (NFR-A1–A4).
@@ -160,7 +179,7 @@ Home · App list · Gestures · Appearance · Hidden apps · About. (Wellbeing, 
 - Internal testing track → closed testing (≥ 12 testers for 14 days if a new personal developer account) → production.
 - Opt-in crash reporting only (or none) per NFR-S1.
 
-**Done when:** v1.0 is live on Play Store; crash-free rate is being monitored.
+**Done when:** all requirement IDs have tests; benchmarks meet targets; v1.0 is live on Play Store; crash-free rate is being monitored.
 
 ---
 
@@ -196,7 +215,12 @@ Build in this order:
 - Optional DND via `NotificationManager.setInterruptionFilter` (needs DND access).
 - Scheduled sessions via WorkManager / exact alarms.
 
-**Done when:** F7–F9 requirements pass; all features work with permissions denied (graceful fallback); battery stays within NFR-P5 on a 24h idle test.
+**Tests:**
+- Unit: F8 toggle logic (master off disables everything, per-part toggles, config preserved, disable friction), usage calculation from fake `UsageEvents` (incl. midnight reset, "5 more minutes" cap), notification filter rules (allow-list, never-filter categories), digest scheduling, focus timer & allow-list filtering.
+- Instrumented: Room DAOs, WorkManager jobs (`work-testing`), permission-denied fallbacks for each sensitive permission.
+- UI: pause screen, limit-reached screen, inbox, focus start/end-early flows.
+
+**Done when:** F7–F9 requirements pass and are covered by the tests above; all features work with permissions denied (graceful fallback); battery stays within NFR-P5 on a 24h idle test.
 
 ---
 
@@ -218,7 +242,11 @@ Build in this order:
 - `feature/billing/` with Play Billing Library: products, purchase flow, acknowledgement, restore, 7-day trial.
 - `PremiumGate` in `core` — single place to check entitlements; premium features show an upsell instead of hiding.
 
-**Done when:** F10–F13 and F15 requirements pass; billing tested with license testers.
+**Tests:**
+- Unit: insights aggregation (totals, unlocks, top 5, 7-day), grayscale permission detection, widget data mapping & caching, backup export/import round-trip and schema versioning, `PremiumGate` entitlement logic with a fake billing client.
+- UI: insights screen, widgets toggles, backup/restore flow, upsell screens.
+
+**Done when:** F10–F13 and F15 requirements pass and are covered by the tests above; billing tested with license testers.
 
 ---
 
@@ -244,7 +272,12 @@ Build in this order:
 - Prominent disclosure, Play Accessibility declaration form, reviewer demo video, `isAccessibilityTool=false`.
 - Build flag to strip F16 if the Play review fails.
 
-**Done when:** F16 requirements pass; performance budget met (≤ 2% battery/day, ≤ 300 ms overlay latency); Play review approved.
+**Tests:**
+- Unit: rules JSON parsing & versioning, signature verification (valid/invalid/tampered), detection matching against recorded node-tree fixtures for each target app, throttling, limit-mode time accumulation & midnight reset, focus-mode override.
+- Instrumented: overlay shows/dismisses, "Go back" action, remote-update fallback to bundled rules.
+- Fixture check: re-run detection tests against fresh `uiautomator dump` fixtures whenever a target app updates.
+
+**Done when:** F16 requirements pass and are covered by the tests above; performance budget met (≤ 2% battery/day, ≤ 300 ms overlay latency); Play review approved.
 
 ---
 
