@@ -227,7 +227,7 @@ Behaviour:
 - From now on, every step that adds settings extends the backup format (F13.4).
 
 ### Step 2.11 — Settings structure
-Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7).
+Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7), with free-text values redacted (F17.8).
 
 **Tests (written within each step):**
 - Unit: SettingsRepository (defaults from Appendix A, read/write), search matching + benchmark, favorites rules, hide/rename/reset, gesture resolution, appearance mapping, onboarding state machine, battery-optimization detection logic (fake `PowerManager`), backup round-trip (export → import gives identical settings) and older-schema import.
