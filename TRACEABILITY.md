@@ -9,7 +9,8 @@ Update this file in the same commit as the code and tests.
 |---|---|---|---|
 | F1.1 | 🟡 | ClockFormatTest › f1_1_*, TimeTicksTest › f1_1_*, HomeScreenTest › f1_1_f1_2_showsClockAndDate (tap → alarms in Step 2.3) | Clock updates each minute |
 | F1.2 | 🟡 | ClockFormatTest › f1_2_formatsWeekdayDayAndMonth, HomeScreenTest › f1_1_f1_2_showsClockAndDate (tap → calendar in Step 2.3) | |
-| F1.3–F1.9 | ⬜ | | |
+| F1.3–F1.8 | ⬜ | | |
+| F1.9 | 🟡 | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_* (opens Diagnostics until Settings exists) | |
 | F2.1, F2.3–F2.8 | ⬜ | | |
 | F2.11 | 🟡 | AppListScreenTest › f2_11_backClosesList, MainActivityTest › f2_11_backFromListReturnsHome (swipe down in Phase 2) | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
@@ -40,7 +41,9 @@ Update this file in the same commit as the code and tests.
 | F17.6 | 🟡 | ExitReasonLoggerTest › f17_6_*, AndroidDiagnosticsTest › f17_6_mapsAndroidExitReasons | |
 | F17.7 | 🟡 | AppStartLoggingTest › f17_7_logsAppStartWithVersionAndDevice (app start only; other events as features land) | |
 | F17.8 | 🟡 | LogEntryTest › f17_8_redactedKeepsOnlyLength (helper; usage checked per feature) | |
-| F17.9–F17.11 | ⬜ | Step 1.4 | Export logs |
+| F17.9 | 🟡 | DiagnosticsPiecesTest › f17_9_*, DiagnosticsViewModelTest › f17_9_*, DiagnosticsScreenTest › f17_9_*, MainActivityTest › f1_9_* | Export logs on the phone |
+| F17.10 | 🟡 | DiagnosticsPiecesTest › f17_10_*, LauncherViewModelTest › f17_10_*, DiagnosticsScreenTest › f17_10_crashBannerButtons | Banner after a forced crash |
+| F17.11 | 🟡 | DiagnosticsPiecesTest › f17_11_*, DiagnosticsViewModelTest › f17_11_* | |
 | F17.12 | 🟡 | FileLoggerTest › f17_12_neverThrowsWhenStorageFails, ExitReasonLoggerTest › f17_12_* | |
 | F18.1–F18.7 | ⬜ | | Debug crash-on-start → safe mode; switch to the stock launcher |
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
