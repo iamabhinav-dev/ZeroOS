@@ -9,6 +9,9 @@ Approved phase by phase (D-016). Agents build screens to match **approved** wire
 | B | App list | 0.4 | ✅ Approved 2026-10-15 |
 | C | Diagnostics | 0.4 | ✅ Approved 2026-10-15 |
 | D | Safe mode | 0.4 | ✅ Approved 2026-10-15 |
+| E | App actions: long-press menu, rename, favorites edit, hidden apps | 2.0 | 🟡 Awaiting approval |
+| F | Settings (home, app list, gestures, appearance, backup, about) | 2.0 | 🟡 Awaiting approval |
+| G | Onboarding | 2.0 | 🟡 Awaiting approval |
 
 Legend: `[ text ]` = button · `▁▃▅` = chart · `‹…›` = placeholder value · *italic notes* = behavior.
 
@@ -256,3 +259,232 @@ Shown after 3 crashes within 60 s of starting. Reads no settings and starts no s
 └────────────────────────────────────┘
 ```
 Note: because safe mode doesn't read settings, hidden apps appear and renamed apps show their original names.
+
+---
+
+## E. App actions (F2.8, F3, F5)
+
+### E1. Long-press menu on an app (bottom sheet, F2.8)
+Opened by long-pressing an app in the app list, or a favorite on home.
+```
+┌────────────────────────────────────┐
+│  …app list dimmed behind…          │
+├────────────────────────────────────┤
+│  Instagram                         │  app name (custom name if renamed)
+│  ────────────────────────────────  │
+│  Add to favorites                  │  "Remove from favorites" if already one
+│  Rename                            │  → E2
+│  Hide                              │  hides from list and search (F5.1)
+│  App info                          │  opens Android's app info page
+│  Uninstall                         │  opens Android's uninstall dialog
+└────────────────────────────────────┘
+```
+*"Set limit" is added here in Phase 4 (F8). Swipe down or Back closes the sheet.*
+
+### E2. Rename (F5.4, F5.5)
+```
+┌────────────────────────────────────┐
+│  Rename Instagram                  │
+│                                    │
+│  Time Sink▏                        │  text field, keyboard open
+│  ────────────────────────────────  │
+│                                    │
+│  [ Reset to original ]             │  only shown if renamed
+│                  [ Cancel ] [ Save ]│
+└────────────────────────────────────┘
+```
+*Empty name isn't allowed (Save disabled). Max 40 characters.*
+
+### E3. Favorites edit mode (F3.1–F3.3)
+Settings → Home → Edit favorites.
+```
+┌────────────────────────────────────┐
+│  ← Favorites            4 / 6      │  count / max (F3.3)
+│                                    │
+│  ≡  Phone                     ✕    │  ≡ drag handle: hold and drag to reorder
+│  ≡  Messages                  ✕    │  ✕ removes from favorites
+│  ≡  Camera                    ✕    │
+│  ≡  Maps                      ✕    │
+│                                    │
+│  + Add app                         │  → app list in "pick" mode
+└────────────────────────────────────┘
+```
+*"+ Add app" is hidden when the maximum is reached.*
+
+### E4. Hidden apps (F5.2, F5.3)
+Settings → App list → Hidden apps.
+```
+┌────────────────────────────────────┐
+│  ← Hidden apps                     │
+│                                    │
+│  Instagram               [ Unhide ]│
+│  YouTube                 [ Unhide ]│
+│                                    │
+│  Hidden apps are not shown in the  │
+│  app list or search.               │
+└────────────────────────────────────┘
+```
+*If "Hidden apps confirmation" is set (F5.3): before this list opens, either a confirm dialog
+("Show hidden apps?" [Cancel] [Show]) or a 5-second countdown screen ("Opening in 5…", [Cancel]).*
+
+---
+
+## F. Settings (F6, F2/F3/F4/F5 options, F13)
+
+Opened by long-pressing empty space on home (F1.9). Plain text rows; tap a row to change it.
+Values in `‹…›` show the current setting (defaults from REQUIREMENTS.md Appendix A).
+
+### F1. Settings main
+```
+┌────────────────────────────────────┐
+│  ← Settings                        │
+│                                    │
+│  Home                            › │
+│  App list                        › │
+│  Gestures                        › │
+│  Appearance                      › │
+│  Backup                          › │
+│  Diagnostics                     › │  → C1 (existing)
+│  About                           › │
+└────────────────────────────────────┘
+```
+*Wellbeing, Notifications, Short-form blocker and Grayscale sections are added in later phases.*
+
+### F2. Home
+```
+│  ← Home                            │
+│  Edit favorites                  › │  → E3
+│  Maximum favorites          ‹6›    │  1–10
+│  Alignment              ‹Left›     │  left / center / right (F1.7)
+│  Show battery %            ‹on›    │  (F1.3)
+│  Show next alarm           ‹off›   │  (F1.8)
+│  Show "swipe up for apps" hint ‹on›│  see open question Q1
+```
+
+### F3. App list
+```
+│  ← App list                        │
+│  Open keyboard automatically ‹on›  │  (F2.3)
+│  Open single match automatically ‹off›│ (F2.5)
+│  Alphabet scroller         ‹off›   │  (F2.7)
+│  Hidden apps (2)                 › │  → E4
+│  Hidden apps confirmation  ‹off›   │  off / confirm / 5 s delay (F5.3)
+```
+
+### F4. Gestures
+```
+│  ← Gestures                        │
+│  Swipe left          ‹Camera›    › │  → pick: an app / None (F4.2, F4.6)
+│  Swipe right         ‹Phone›     › │  (F4.3)
+│  Swipe down          ‹Search›    › │  Search / None; "Notification shade" appears
+│                                    │  only when Accessibility is on (Phase 4) (F4.4)
+│  Double-tap to lock  ‹needs Accessibility (v1.1)› │  disabled until Phase 4 (F4.5)
+```
+*Swipe up is always "App list" (F4.1) and isn't shown here.*
+
+### F5. Appearance
+```
+│  ← Appearance                      │
+│  Theme               ‹Dark›        │  dark (pure black) / light / system (F6.1)
+│  Wallpaper           ‹Black›       │  black / system wallpaper (dimmed) (F6.2)
+│  Font                ‹Inter›       │  3–5 bundled fonts + system (F6.3); clock always Doto
+│  Text size           ‹Medium›      │  S / M / L / XL (F6.4)
+│  Show clock          ‹on›          │  (F6.5)
+│  Show date           ‹on›          │
+│  Show status bar     ‹on›          │
+│                                    │
+│   10:42                            │  live preview of home with the current settings
+│   Thursday, 15 October · 82%       │
+│   Phone                            │
+```
+
+### F6. Backup (F13)
+```
+│  ← Backup                          │
+│  Export settings                 › │  → Android "save file" (zeroos-settings-<date>.json)
+│  Import settings                 › │  → Android "open file", then confirm:
+│                                    │    "Replace all settings with this backup?" [Cancel] [Import]
+│  Last export: 15 Oct, 10:42        │
+```
+*Import shows an error line if the file isn't a ZeroOS backup or is from a newer version.*
+
+### F7. About
+```
+│  ← About                           │
+│  ZeroOS 0.1.0 (12)                 │  versionName (versionCode)
+│  Open-source licenses            › │  fonts (OFL) and libraries
+```
+
+---
+
+## G. Onboarding (F14)
+Shown once on first start; "Skip" on every page goes straight to home (F14.5).
+
+### G1–G3. Intro (F14.1)
+```
+┌────────────────────────────────────┐
+│                          [ Skip ]  │
+│                                    │
+│   ●○○                              │  page dots (Doto style)
+│                                    │
+│   Less phone.                      │  G1: "Less phone. More life."
+│   More life.                       │  G2: "Just words. No icons, no badges, no noise."
+│                                    │  G3: "Swipe up for apps. Long-press for settings."
+│                                    │
+│                         [ Next ]   │
+└────────────────────────────────────┘
+```
+
+### G4. Set as default (F14.2, F18.7)
+```
+│   Make ZeroOS your home screen     │
+│                                    │
+│   Press Home anytime to come back  │
+│   here.                            │
+│                                    │
+│   Keep the stock launcher installed:  │
+│   it's your fallback if anything   │
+│   goes wrong.                      │
+│                                    │
+│   [ Set as default ]   [ Later ]   │  Android's "default home app" dialog (RoleManager)
+```
+*If ZeroOS is already the default, this page shows "ZeroOS is your home screen ✓" and [ Next ].*
+
+### G5. Pick favorites (F14.3)
+```
+│   Pick your favorites   3 / 6      │
+│                                    │
+│   ☑ Phone                          │  pre-selected suggestions
+│   ☑ Messages                       │
+│   ☑ Camera                         │
+│   ☐ Maps                           │
+│   ☐ Calculator                     │  then all other apps, alphabetical
+│   …                                │
+│                         [ Next ]   │
+```
+
+### G6. Keep ZeroOS running (F14.6)
+```
+│   Keep ZeroOS running              │
+│                                    │
+│   Your phone may stop apps in the  │
+│   background to save battery.      │
+│                                    │
+│   Battery optimization: ‹on›       │
+│   [ Turn off for ZeroOS ]          │  Android's "ignore battery optimization" dialog
+│                                    │
+│   On some phones, also allow background   │  plain-text tip, no device-specific code
+│   activity for ZeroOS in its app   │
+│   settings.                        │
+│                                    │
+│                         [ Done ]   │
+```
+
+---
+
+## Open questions for Phase 2 approval
+- **Q1. "Swipe up for apps" hint on home.** Wireframe A1 shows a faint "︿ swipe up: apps" line at the bottom of
+  home; the Phase 1 build left it out, which made the app list hard to discover. Proposal: show it by default,
+  with a setting to hide it (F2 above). Needs a requirement line (F1.10) if approved.
+- **Q2. Text font list (F5 "Font").** Proposal: Inter (default), JetBrains Mono, Lora, plus system font. All OFL.
+
