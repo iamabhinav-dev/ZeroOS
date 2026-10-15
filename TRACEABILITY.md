@@ -30,7 +30,7 @@ Update this file in the same commit as the code and tests.
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
 | NFR-P3 | ⬜ | | |
 | NFR-P6 | ⬜ | | APK size check |
-| NFR-S1–S6 | ⬜ | | |
+| NFR-S1–S7 | ⬜ | | |
 | NFR-A1–A4 | ⬜ | | |
 | NFR-R1–R8 | ⬜ | | |
 | NFR-L1–L8 | ⬜ | | |

@@ -43,7 +43,7 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
   Types: `feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `build`, `ci`, `perf`.
 - **Branches:** one branch per plan step, e.g. `step-2.4-app-search`; merge into `main` when the step is done.
 - **Never** commit secrets, keystores (`*.jks`), `keystore.properties`, `local.properties`, APKs, or build output.
-- **Never** push, force-push, rewrite history, or open PRs without the user's approval.
+- **Pushing:** after a step is merged into `main`, ask me before pushing to the private GitHub repo. **Never** force-push, rewrite history, or open PRs without my approval.
 - A step is finished only when the **Definition of Done** in IMPLEMENTATION_PLAN.md is met. Then mark it ✅ in IMPLEMENTATION_PLAN.md in its own `docs:` commit.
 
 ## 4. Technical Conventions

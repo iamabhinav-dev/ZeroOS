@@ -124,7 +124,12 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
   3. Open it on the phone and install over the previous version
   4. Run the manual check
 
-**Done when:** `./gradlew check` passes with sample tests; wireframes are approved; spike results are recorded with no blockers; a signed release APK installs on the test phone.
+### Step 0.8 — Off-machine backups
+- **Code:** create a **private** GitHub repository and push `main` (I approve the first push). After that, push `main` whenever a step is merged.
+- **Keystore:** store the release keystore and its passwords **outside the repo and off this computer** (e.g., password manager or encrypted cloud drive). Never in the GitHub repo, not even private.
+- Note both locations (not the secrets) in README.
+
+**Done when:** `./gradlew check` passes with sample tests; wireframes are approved; spike results are recorded with no blockers; a signed release APK installs on the test phone; code is on the private GitHub repo and the keystore backup is verified (restore it to a temp folder and build with it).
 
 ---
 

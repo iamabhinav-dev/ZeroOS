@@ -322,7 +322,8 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | NFR-S3 | The app never requests the `INTERNET` permission; it works fully offline. |
 | NFR-S4 | Every sensitive permission (Notification access, Usage access, Accessibility, DND) has a short in-app explanation and a working fallback if denied. |
 | NFR-S5 | Logs stay on the device in private storage and are only shared when I export them. They never contain the private content listed in F17.8. |
-| NFR-S6 | The release signing keystore is kept outside the repo and backed up; losing it means reinstalling and losing settings. |
+| NFR-S6 | The release signing keystore is kept outside the repo and backed up **off this computer** (password manager / encrypted cloud); losing it means reinstalling and losing settings. |
+| NFR-S7 | Source code is backed up to a **private** GitHub repository; `main` is pushed after every completed step. |
 
 ### 4.3 Accessibility
 | ID | Requirement |

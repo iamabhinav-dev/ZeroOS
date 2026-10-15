@@ -56,6 +56,10 @@ F17: rotating on-device log files, crash reports, previous-exit reasons, and a D
 All text lives in `core/resources` (`strings.xml`, `plurals.xml`), reused across screens and enforced by Lint/detekt; colors and sizes come from `core/ui` tokens.
 *Why:* Change text once and it updates everywhere; no duplicated or inconsistent wording.
 
+**D-013 — Off-machine backups for code and keystore** · 2026-10-15 · Accepted
+Code goes to a private GitHub repo (push `main` after each step, with approval); the keystore is backed up separately off this computer, never in git.
+*Why:* Losing this computer would otherwise lose the code and the only key that can update the installed app.
+
 ---
 
 ## Pending (to be decided during the plan)
