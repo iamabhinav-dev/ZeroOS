@@ -44,5 +44,18 @@ detekt-rules/     custom detekt rules (hardcoded text/values, direct logging)
 config/           detekt config, permission allowlists, Robolectric settings
 ```
 
+## Signing (Step 0.7, D-010)
+- Release key: `~/zeroos-keys/zeroos-release.jks` (alias `zeroos`), referenced by the git-ignored `keystore.properties`.
+- Debug and release APKs are signed with this same key, so either installs over the other and keeps settings.
+- Without `keystore.properties`, Gradle warns and signs with the default debug key; **never install those APKs on the phone**.
+- Backups: the keystore and its password are kept off this computer (D-013). Never commit them.
+
 ## Installing on the phone
-Signing and the install workflow are set up in Step 0.7 and documented here then.
+1. `./gradlew check assembleRelease`
+2. Copy `app/build/outputs/apk/release/app-release.apk` to the phone (USB file transfer, Drive or Telegram).
+3. Open it on the phone and install over the previous version.
+   From v1.1 on (notification filter / Accessibility), Play Protect may block it: Play Store → profile → Play Protect → ⚙ →
+   turn off "Scan apps with Play Protect", install, then **turn it back on** (D-018).
+4. Run the manual check for the step, then follow the Install Checklist in IMPLEMENTATION_PLAN.md.
+
+Rules: bump `versionCode` for every install; never install an APK built from older code than what's on the phone.
