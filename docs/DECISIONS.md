@@ -48,6 +48,10 @@ Debug and release use the release keystore and the same application ID, so eithe
 *Consequences:* A buggy debug build can affect real settings (back up first, once F13 exists); never install APKs built from older code (schemas only migrate forward); `keystore.properties` must exist on any machine that builds APKs for the phone.
 *Alternative rejected:* `applicationIdSuffix ".debug"` (separate apps side by side).
 
+**D-011 — Local diagnostics log from the first build** · 2026-10-15 · Accepted
+F17: rotating on-device log files, crash reports, previous-exit reasons, and a Diagnostics screen with export. Built in Phase 0–1. No crash-reporting service and no network.
+*Why:* So crashes and unexpected behaviour during early testing can be understood afterwards, including the phone killing background services.
+
 ---
 
 ## Pending (to be decided during the plan)

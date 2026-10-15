@@ -54,6 +54,7 @@ Default launchers are designed for engagement: bright icons, notification badges
 | F12 | Minimal widgets (calendar, to-do) | P2 | v1.2 |
 | F13 | Backup & restore settings | P2 | v1.2 |
 | F16 | Short-form content blocker (Reels, Shorts) | P2 | v1.3 |
+| F17 | Diagnostics: event log & crash log | P0 | M0 (from the first build) |
 | ~~F15~~ | ~~Premium / monetization~~ | Removed | Not needed for personal use |
 
 Priority: **P0** = must have, **P1** = should have, **P2** = nice to have.
@@ -265,6 +266,24 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) *
 | Overlay appearance latency after detection | ≤ 300 ms |
 | APK size increase | ≤ 100 KB |
 
+### F17 — Diagnostics: Event Log & Crash Log
+A local, on-device log of what the app is doing, so that when something breaks or crashes I can see what happened. Built **first** (Phase 0–1) and used in every version. Logs never leave the phone unless I export them.
+
+| ID | Requirement |
+|---|---|
+| F17.1 | All logging goes through one `Logger` API with levels **DEBUG, INFO, WARN, ERROR**. No direct `android.util.Log` or `println` calls in app code. |
+| F17.2 | Log entries are written to **rotating files in the app's private storage** (`filesDir/logs/`): each line has timestamp, level, tag/module, message, and stack trace for errors. |
+| F17.3 | Size and age limits: max **3 files × 1 MB**, entries older than **7 days** deleted. Logging can never fill storage. |
+| F17.4 | Writes happen on a background thread with buffering; logging never blocks the main thread or slows the UI (NFR-P1). |
+| F17.5 | **Crash log:** an uncaught-exception handler synchronously writes the crash (thread, exception, full stack trace, app version, last 50 log entries) to a separate `crash-<timestamp>.txt` file, then passes the crash to the system's default handler. |
+| F17.6 | **Previous exit reason:** on every start, read `ActivityManager.getHistoricalProcessExitReasons` (Android 11+) and log why the app or its services last stopped: crash, ANR, low memory, killed by the system/OEM, or user. Especially useful to see the phone killing background services. |
+| F17.7 | **Events logged** (at minimum): app start (version, build type, Android version, device model); screen opened; app launched from launcher (package name); setting changed (key + new value); permission granted/denied/revoked; services connected/disconnected/killed (Notification listener, Accessibility); WorkManager job start/finish/fail; F8 pause/limit/block events; F9 focus start/end; F16 detection and block events (package + rule ID); every caught exception. |
+| F17.8 | **Never logged:** notification titles/text, intention text (F8.2), typed search queries, to-do text, or any content read from other apps' screens. Package names and app labels are allowed. |
+| F17.9 | **Diagnostics screen** (Settings → Diagnostics): view recent logs (newest first, filter by level), view crash reports, **Export/Share** (zip of all log files via the Android share sheet or save-to-file), and **Clear logs**. |
+| F17.10 | After a crash, the next app start shows a small one-time message "ZeroOS crashed last time. View report?" that opens the crash report. |
+| F17.11 | Settings toggle **Diagnostics logging** (on by default) and **log level**: DEBUG in debug builds, INFO in release builds by default. Crash logging (F17.5) and exit reasons (F17.6) are always on. |
+| F17.12 | Logging must not crash the app: any failure inside the logger is swallowed. |
+
 ---
 
 ## 4. Non-Functional Requirements
@@ -288,7 +307,7 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | NFR-S2 | All usage data, notifications, and settings stored locally only. |
 | NFR-S3 | The app never requests the `INTERNET` permission; it works fully offline. |
 | NFR-S4 | Every sensitive permission (Notification access, Usage access, Accessibility, DND) has a short in-app explanation and a working fallback if denied. |
-| NFR-S5 | No user data (notification text, app usage, intentions) is ever written to logs. |
+| NFR-S5 | Logs stay on the device in private storage and are only shared when I export them. They never contain the private content listed in F17.8. |
 | NFR-S6 | The release signing keystore is kept outside the repo and backed up; losing it means reinstalling and losing settings. |
 
 ### 4.3 Accessibility
@@ -347,6 +366,7 @@ core/model/            – plain data models
 core/ui/               – theme, typography, shared composables
 core/data/             – DataStore, Room, repositories
 core/testing/          – fakes and test utilities (test-only)
+core/logging/          – F17 Logger, file writer, crash handler, exit reasons
 feature/home/          – F1, F3, F4
 feature/applist/       – F2, F5
 feature/settings/      – F6, F11, F13
@@ -371,6 +391,7 @@ feature/shortsblock/   – F16
 8. **Settings**: Home, App list, Gestures, Appearance, Notifications, Wellbeing, Short-form blocker, Grayscale, Hidden apps, Backup, About.
 9. **Onboarding**: intro, set default, pick favorites, background reliability.
 10. **Short-form block overlay**: black screen + message + "Go back".
+11. **Diagnostics**: log viewer, crash reports, export, clear.
 
 Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in Step 0.4) and must be approved before the screen is built.
 
@@ -469,3 +490,8 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Compare with yesterday (F10.8) | Off | on/off |
 | To-do items (F12.3) | 3 max | — |
 | Daily reset time (F8.6, F16.8) | Local midnight | — |
+| Diagnostics logging (F17.11) | On | on/off |
+| Log level (F17.11) | DEBUG (debug build) / INFO (release build) | DEBUG / INFO / WARN / ERROR |
+| Log size limit (F17.3) | 3 files × 1 MB | — |
+| Log retention (F17.3) | 7 days | 1–30 days |
+| Crash entries attached to crash report (F17.5) | Last 50 log entries | — |

@@ -25,6 +25,7 @@ Update this file in the same commit as the code and tests.
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |
 | F16.13 | ❌ | Removed (D-006) | |
+| F17.1–F17.12 | ⬜ | | Forced crash → report on next start; export logs |
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
 | NFR-P3 | ⬜ | | |
 | NFR-P6 | ⬜ | | APK size check |

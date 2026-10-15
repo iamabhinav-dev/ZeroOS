@@ -54,7 +54,7 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **Performance:** no polling loops, no work on the main thread, and use system callbacks (NFR-P1–P6).
 - **Time:** never call `System.currentTimeMillis()` or `LocalDate.now()` directly in logic; inject a `Clock`/`TimeSource` so tests can control time.
 - **State:** survive process death and config changes (`SavedStateHandle`, persisted settings) (NFR-R7).
-- **Logging:** only through the `Logger` wrapper, debug builds only, and **never log user data** such as notification text, usage, or intentions (NFR-S5).
+- **Logging (F17):** use only the `Logger` from `core/logging`; never `android.util.Log` or `println`. Every new feature must log its key events (F17.7) and every caught exception at WARN/ERROR. **Never log** the private content in F17.8 (notification text, intention text, search queries, to-do text, other apps' screen content). Logs stay on the device (NFR-S5).
 
 ## 5. Privacy & Permissions (non-negotiable)
 - No analytics, ads, crash-reporting services, or trackers. **No network access at all**: never add the `INTERNET` permission (NFR-S3).

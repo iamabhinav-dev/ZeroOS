@@ -99,7 +99,12 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 - Test stack: JUnit, MockK or hand-written fakes (`core/testing`), Turbine, Robolectric, Compose UI test, Roborazzi; Kover with an 80% verification rule.
 - Permission allowlist test (Testing Policy #8), starting with an empty allowlist.
 - Debug builds only: LeakCanary and StrictMode (`detectAll().penaltyLog()`).
-- Logging: one `Logger` wrapper; logs only in debug builds; never log user data (NFR-S5).
+- **Diagnostics core (F17.1–F17.8, F17.12)** in `core/logging`, built now so every later step can use it:
+  - `Logger` API with levels; file writer to `filesDir/logs/` on a background thread with buffering; rotation (3 × 1 MB) and 7-day cleanup.
+  - Uncaught-exception handler writing `crash-<timestamp>.txt` with the last 50 entries, then calling the default handler.
+  - Previous exit reasons read on start (Android 11+).
+  - Debug builds also mirror logs to Logcat.
+  - A detekt/lint rule that forbids `android.util.Log` and `println` outside `core/logging`.
 - One sample unit test, one Robolectric UI test, one screenshot test to prove the setup.
 - `.gitignore` (incl. `keystore.properties`, `*.jks`), `README.md`, `CHANGELOG.md`.
 - Optional: GitHub Actions running `./gradlew check` if the repo is pushed to GitHub later.
@@ -144,9 +149,15 @@ Behaviour:
 - Home: big clock + date via a `Flow` that ticks each minute, aligned to the minute boundary (injected `Clock`).
 - Swipe up → scrollable list of app labels; tap launches.
 
-**Tests:** `AppsRepository` with a fake `LauncherApps` (list, sort, install/uninstall updates, extra profiles); clock Flow (minute alignment, time-zone change); Robolectric UI test (home → swipe up → list → tap fires launch); screenshots of home and list.
+### Step 1.4 — Diagnostics screen (F17.9–F17.11)
+- Minimal screen: recent logs (filter by level), crash reports, Export/Share (zip via share sheet or save-to-file), Clear.
+- Until Settings exists (Phase 2), open it by long-pressing empty space on home; in Step 2.10 it moves to Settings → Diagnostics and long-press opens Settings (F1.9).
+- One-time "crashed last time" message on the next start after a crash.
+- Log the Phase 1 events: app start, home/list shown, app launched, package changes.
 
-**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the test phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart.
+**Tests:** `AppsRepository` with a fake `LauncherApps` (list, sort, install/uninstall updates, extra profiles); clock Flow (minute alignment, time-zone change); Robolectric UI test (home → swipe up → list → tap fires launch); screenshots of home and list; logger (format, levels, rotation at 1 MB, 7-day cleanup, background writing, failure swallowed, forbidden content not logged), crash handler (writes file with last 50 entries, then delegates), exit-reason mapping with fakes, diagnostics screen UI + export intent.
+
+**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the test phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart; a forced test crash (debug-only button) produces a crash report visible on the next start, and logs can be exported.
 
 ---
 
@@ -195,7 +206,7 @@ Behaviour:
 - Intro (3–4 pages) → set as default (`RoleManager` / home settings) → pick favorites → background reliability (F14.6). Skippable; shown once.
 
 ### Step 2.10 — Settings structure
-Home · App list · Gestures · Appearance · Hidden apps · About. Later phases add sections.
+Home · App list · Gestures · Appearance · Hidden apps · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7).
 
 **Tests (written within each step):**
 - Unit: SettingsRepository (defaults from Appendix A, read/write), search matching + benchmark, favorites rules, hide/rename/reset, gesture resolution, appearance mapping, onboarding state machine, battery-optimization detection logic (fake `PowerManager`).
