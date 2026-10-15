@@ -118,7 +118,11 @@ Swipe left/right on home are optional and off by default; swipe down (search) is
 The swipe-up gesture is taught in the onboarding intro (G3) only; home stays clean.
 *Why:* User's choice (wireframe question Q1).
 
+**D-028 — Phase 2 starts with the spike mostly done** · 2026-10-16 · Accepted
+Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usage stats similar to the phone's, services surviving a day of use and reconnecting after a restart. Remaining checks are due before the step that needs them: app clones before Step 2.4; overnight survival and Play Protect before Phase 4; Instagram Reels and a Shorts capture before Phase 6. Replaces the "finish Step 0.5 before Phase 2" rule of D-024.
+*Why:* The confirmed results cover all Phase 2 risks except clone tags in the app list.
+
 ---
 
 ## Pending (to be decided during the plan)
-- Feasibility spike results (Step 0.5), partial in `docs/spike/RESULTS.md`: YouTube Shorts detection, overlay and same-day service survival confirmed; still open: app clones, usage-stats accuracy, overnight + reboot survival, Instagram Reels, Play Protect.
+- Remaining spike checks (D-028), see `docs/spike/RESULTS.md`: app clones (before Step 2.4), overnight survival and Play Protect (before Phase 4), Instagram Reels + a Shorts screen capture (before Phase 6).
