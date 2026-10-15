@@ -50,7 +50,7 @@ The home screen never scrolls (F1.6). It is built in Phase 2 with **empty slots*
 └────────────────────────────────────┘
 ```
 *Gestures (anywhere on empty space):*
-- *swipe up → app list (F4.1) · swipe left → Camera (F4.2) · swipe right → Phone (F4.3)*
+- *swipe up → app list (F4.1) · swipe left / right → an app, only if turned on (off by default, F4.2, F4.3, D-026)*
 - *swipe down → search, or notification shade when Accessibility is on (F4.4)*
 - *double-tap → lock (only when Accessibility is on, F4.5)*
 - *long-press empty space → Settings (F1.9)*
@@ -358,7 +358,6 @@ Values in `‹…›` show the current setting (defaults from REQUIREMENTS.md Ap
 │  Alignment              ‹Left›     │  left / center / right (F1.7)
 │  Show battery %            ‹on›    │  (F1.3)
 │  Show next alarm           ‹off›   │  (F1.8)
-│  Show "swipe up for apps" hint ‹on›│  see open question Q1
 ```
 
 ### F3. App list
@@ -374,20 +373,21 @@ Values in `‹…›` show the current setting (defaults from REQUIREMENTS.md Ap
 ### F4. Gestures
 ```
 │  ← Gestures                        │
-│  Swipe left          ‹Camera›    › │  → pick: an app / None (F4.2, F4.6)
-│  Swipe right         ‹Phone›     › │  (F4.3)
-│  Swipe down          ‹Search›    › │  Search / None; "Notification shade" appears
-│                                    │  only when Accessibility is on (Phase 4) (F4.4)
+│  Swipe left          ‹off›       › │  off / pick an app (F4.2, F4.6); off by default (D-026)
+│  Swipe right         ‹off›       › │  off / pick an app (F4.3)
+│  Swipe down          ‹on›          │  on/off; opens search (F4.4)
+│  Swipe down action   ‹Search›    › │  Search; "Notification shade" appears only when
+│                                    │  Accessibility is on (Phase 4)
 │  Double-tap to lock  ‹needs Accessibility (v1.1)› │  disabled until Phase 4 (F4.5)
 ```
-*Swipe up is always "App list" (F4.1) and isn't shown here.*
+*Swipe up is always "App list" (F4.1) and isn't shown here. Side swipes start away from the screen edges so the
+system Back gesture still works.*
 
 ### F5. Appearance
 ```
 │  ← Appearance                      │
 │  Theme               ‹Dark›        │  dark (pure black) / light / system (F6.1)
 │  Wallpaper           ‹Black›       │  black / system wallpaper (dimmed) (F6.2)
-│  Font                ‹Inter›       │  3–5 bundled fonts + system (F6.3); clock always Doto
 │  Text size           ‹Medium›      │  S / M / L / XL (F6.4)
 │  Show clock          ‹on›          │  (F6.5)
 │  Show date           ‹on›          │
@@ -482,9 +482,8 @@ Shown once on first start; "Skip" on every page goes straight to home (F14.5).
 
 ---
 
-## Open questions for Phase 2 approval
-- **Q1. "Swipe up for apps" hint on home.** Wireframe A1 shows a faint "︿ swipe up: apps" line at the bottom of
-  home; the Phase 1 build left it out, which made the app list hard to discover. Proposal: show it by default,
-  with a setting to hide it (F2 above). Needs a requirement line (F1.10) if approved.
-- **Q2. Text font list (F5 "Font").** Proposal: Inter (default), JetBrains Mono, Lora, plus system font. All OFL.
+## Answered questions
+- **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
+- **Q2. Fonts:** Doto for all text, no font picker (D-020).
+- **Gestures:** swipe left/right off by default; swipe down on by default with a switch (D-026).
 

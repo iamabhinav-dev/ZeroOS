@@ -197,7 +197,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 
 ### Step 2.2 — Design system (`core/ui`)
 - Theme tokens: pure black / light / system; monochrome palette; optional accent.
-- Typography: **Doto** (OFL dot-matrix) for clock, date and numbers; 3–5 bundled OFL-licensed text fonts (e.g., Inter, JetBrains Mono, Lora) for everything else (F6.3); size scale S/M/L/XL × system font scale. Screenshot tests check the clock at the largest font size.
+- Typography: **Doto** (OFL dot-matrix) for **all** text (F6.3, D-020); no font picker; size scale S/M/L/XL × system font scale with body text ≥ 14 sp. Screenshot tests check readability at default and largest sizes.
 - Shared composables: `AppLabel`, `MinimalListItem`, `MinimalBottomSheet`, `SettingRow`, `ToggleRow`.
 - Edge-to-edge with insets for gesture and 3-button navigation.
 
