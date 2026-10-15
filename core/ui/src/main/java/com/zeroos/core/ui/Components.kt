@@ -14,14 +14,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment as UiAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.resources.R
 
 // Shared building blocks (Step 2.2): plain text, monochrome, at least 48 dp tall when tappable (NFR-A2).
@@ -74,7 +76,8 @@ fun MinimalListItem(
     onLongClick: (() -> Unit)? = null,
     muted: Boolean = false,
     trailing: String? = null,
-    large: Boolean = false
+    large: Boolean = false,
+    alignment: Alignment = Alignment.LEFT
 ) {
     val tokens = ZeroTheme.tokens
     Row(
@@ -83,12 +86,17 @@ fun MinimalListItem(
             .heightIn(min = tokens.spacing.minTouchTarget)
             .combinedClickable(onClick = onClick, onLongClick = onLongClick)
             .padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.listItemCompact),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = UiAlignment.CenterVertically
     ) {
         Text(
             text = text,
             color = if (muted) tokens.colors.textMuted else tokens.colors.text,
             fontSize = if (large) tokens.textSizes.appLabel else tokens.textSizes.body,
+            textAlign = when (alignment) {
+                Alignment.LEFT -> TextAlign.Start
+                Alignment.CENTER -> TextAlign.Center
+                Alignment.RIGHT -> TextAlign.End
+            },
             modifier = Modifier.weight(1f)
         )
         trailing?.let { Text(text = it, color = tokens.colors.textMuted, fontSize = tokens.textSizes.body) }
@@ -124,7 +132,7 @@ fun TextAction(text: String, onClick: () -> Unit, modifier: Modifier = Modifier,
             .heightIn(min = tokens.spacing.minTouchTarget)
             .combinedClickable(onClick = onClick)
             .padding(horizontal = if (compact) tokens.spacing.sectionGap else tokens.spacing.screenGutter),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = UiAlignment.CenterStart
     ) {
         Text(text = text, color = if (muted) tokens.colors.textMuted else tokens.colors.text, fontSize = tokens.textSizes.body)
     }
