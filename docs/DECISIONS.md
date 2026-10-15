@@ -45,7 +45,7 @@ F10 home-screen stats (text, progress bar, weekly bars, or hourly timeline) are 
 **D-010 — Debug and release signed with the same key** · 2026-10-15 · Accepted
 Debug and release use the release keystore and the same application ID, so either installs over the other and keeps settings. They share one `versionCode` sequence.
 *Why:* User wants to switch between debug and release builds without reinstalling or losing settings.
-*Consequences:* A buggy debug build can affect real settings (back up first, once F13 exists); never install APKs built from older code (schemas only migrate forward); `keystore.properties` must exist on any machine that builds APKs for the phone.
+*Consequences:* A buggy debug build can affect real settings (back up first with F13, available from v1.0); never install APKs built from older code (schemas only migrate forward); `keystore.properties` must exist on any machine that builds APKs for the phone.
 *Alternative rejected:* `applicationIdSuffix ".debug"` (separate apps side by side).
 
 **D-011 — Local diagnostics log from the first build** · 2026-10-15 · Accepted
@@ -59,6 +59,10 @@ All text lives in `core/resources` (`strings.xml`, `plurals.xml`), reused across
 **D-013 — Off-machine backups for code and keystore** · 2026-10-15 · Accepted
 Code goes to a private GitHub repo (push `main` after each step, with approval); the keystore is backed up separately off this computer, never in git.
 *Why:* Losing this computer would otherwise lose the code and the only key that can update the installed app.
+
+**D-014 — Settings backup in v1.0** · 2026-10-15 · Accepted
+F13 export/import moves from v1.2 to v1.0 (Step 2.10); each later feature adds its settings to the backup format.
+*Why:* Debug builds install over the everyday app (D-010), so a backup must exist from the start.
 
 ---
 

@@ -20,7 +20,7 @@ Update this file in the same commit as the code and tests.
 | F11.1–F11.3 | ⬜ | | |
 | F12.2–F12.4 | ⬜ | | |
 | F12.1 | ❌ | Removed (D-008) | |
-| F13.1–F13.3 | ⬜ | | |
+| F13.1–F13.5 | ⬜ | | Export → reinstall → import |
 | F14.1–F14.6 | ⬜ | | |
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |

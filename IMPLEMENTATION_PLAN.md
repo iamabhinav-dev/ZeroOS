@@ -11,10 +11,10 @@ Time estimates are **full-time-equivalent for one developer**; scale to your own
 |---|---|---|---|
 | 0 | Setup, wireframes, feasibility spikes | 1–1.5 weeks | Project builds; risky APIs proven on the phone |
 | 1 | Prototype (M0) | 1 week | Usable as default launcher |
-| 2 | v1.0 features | 3–4 weeks | F1–F6, F14 complete |
+| 2 | v1.0 features | 3–4 weeks | F1–F6, F13, F14 complete |
 | 3 | Daily-driver hardening | 1 week | v1.0 installed as my default launcher |
 | 4 | v1.1 Wellbeing & insights | 5–6 weeks | F7, F8, F9, F10 |
-| 5 | v1.2 Extras | 1–2 weeks | F11–F13 |
+| 5 | v1.2 Extras | 1 week | F11, F12 |
 | 6 | v1.3 Short-form blocker | 2–3 weeks | F16 |
 | **Total** | | **~4 months** | |
 
@@ -159,7 +159,7 @@ Behaviour:
 
 ### Step 1.4 — Diagnostics screen (F17.9–F17.11)
 - Minimal screen: recent logs (filter by level), crash reports, Export/Share (zip via share sheet or save-to-file), Clear.
-- Until Settings exists (Phase 2), open it by long-pressing empty space on home; in Step 2.10 it moves to Settings → Diagnostics and long-press opens Settings (F1.9).
+- Until Settings exists (Phase 2), open it by long-pressing empty space on home; in Step 2.11 it moves to Settings → Diagnostics and long-press opens Settings (F1.9).
 - One-time "crashed last time" message on the next start after a crash.
 - Log the Phase 1 events: app start, home/list shown, app launched, package changes.
 
@@ -174,7 +174,7 @@ Behaviour:
 
 ---
 
-## Phase 2 — v1.0 Features (F1–F6, F14)
+## Phase 2 — v1.0 Features (F1–F6, F13, F14)
 
 ### Step 2.1 — Settings storage
 - Add DataStore. `core/data/SettingsRepository` on **Proto DataStore** (typed).
@@ -219,23 +219,27 @@ Behaviour:
 - Intro (3–4 pages) → set as default (`RoleManager` / home settings) → pick favorites → background reliability (F14.6). Skippable; shown once.
 - The set-as-default page says: keep the stock launcher installed and enabled as a fallback (F18.7).
 
-### Step 2.10 — Settings structure
-Home · App list · Gestures · Appearance · Hidden apps · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7).
+### Step 2.10 — Backup & restore (F13)
+- Export/import JSON via Storage Access Framework (`CreateDocument`/`OpenDocument`); schema version field; import confirmation; Auto Backup rules for DataStore (and Room once it exists).
+- From now on, every step that adds settings extends the backup format (F13.4).
+
+### Step 2.11 — Settings structure
+Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7).
 
 **Tests (written within each step):**
-- Unit: SettingsRepository (defaults from Appendix A, read/write), search matching + benchmark, favorites rules, hide/rename/reset, gesture resolution, appearance mapping, onboarding state machine, battery-optimization detection logic (fake `PowerManager`).
-- UI (Robolectric): home & alignment, search + no-match actions, long-press actions, favorites edit mode, rename/hide flows, gestures, onboarding flow & skip.
+- Unit: SettingsRepository (defaults from Appendix A, read/write), search matching + benchmark, favorites rules, hide/rename/reset, gesture resolution, appearance mapping, onboarding state machine, battery-optimization detection logic (fake `PowerManager`), backup round-trip (export → import gives identical settings) and older-schema import.
+- UI (Robolectric): home & alignment, search + no-match actions, long-press actions, favorites edit mode, rename/hide flows, gestures, onboarding flow & skip, backup export/import flow.
 - Screenshots: every screen, dark/light, default/largest font.
 - Process death / config change: ViewModel state restored via `SavedStateHandle` (NFR-R7).
 
-**Done when:** every F1–F6 and F14 requirement is met and traced to tests; manual check on the test phone passes for each step.
+**Done when:** every F1–F6, F13 and F14 requirement is met and traced to tests; manual check on the test phone passes for each step, including export → uninstall → reinstall → import restoring all settings.
 
 ---
 
 ## Phase 3 — Daily-Driver Hardening (v1.0)
 
 ### Step 3.1 — Test audit
-- Every F1–F6/F14 ID in TRACEABILITY.md has at least one test; fill gaps.
+- Every F1–F6/F13/F14 ID in TRACEABILITY.md has at least one test; fill gaps.
 
 ### Step 3.2 — Manual performance & stability check on the test phone
 - Home appears instantly after Home press (NFR-P1); cold start feels ≤ 0.5 s (NFR-P2).
@@ -289,7 +293,7 @@ Reuses the usage calculation from Step 4.3.
 - Must fit the non-scrolling home layout (F1.6) at the largest font scale.
 
 **Tests:**
-- Unit: F8 toggles (master off disables all, per-part, config kept, friction), usage calculation from fake `UsageEvents` (midnight, time-zone, DST, clock change, "5 more minutes" cap), notification filter rules, digest scheduling, focus timer & allow-list, permission helper states (granted/denied/revoked), F10 aggregation (screen time, unlocks, hourly buckets, 7-day, yesterday %, goal exceeded, Android 8 no-unlock fallback), chart data mapping and content descriptions.
+- Unit: F8 toggles (master off disables all, per-part, config kept, friction), usage calculation from fake `UsageEvents` (midnight, time-zone, DST, clock change, "5 more minutes" cap), notification filter rules, digest scheduling, focus timer & allow-list, permission helper states (granted/denied/revoked), backup round-trip for all new F7–F10 settings (F13.4), F10 aggregation (screen time, unlocks, hourly buckets, 7-day, yesterday %, goal exceeded, Android 8 no-unlock fallback), chart data mapping and content descriptions.
 - Robolectric: Room DAOs + migration tests, WorkManager jobs (`work-testing`), notification listener logic with fake `StatusBarNotification`s, accessibility event handling with fake events.
 - UI + screenshots: pause, limit-reached, inbox, focus start/end, permission explanation screens, Insights screen, home with each stats style (dark/light, default/largest font, permission not granted).
 
@@ -297,7 +301,7 @@ Reuses the usage calculation from Step 4.3.
 
 ---
 
-## Phase 5 — v1.2 Extras (F11–F13)
+## Phase 5 — v1.2 Extras (F11, F12)
 
 ### Step 5.1 — Grayscale shortcut (F11)
 - Settings entry opening the system accessibility/color-correction screen + accessibility-shortcut tip. No `WRITE_SECURE_SETTINGS`.
@@ -305,15 +309,12 @@ Reuses the usage calculation from Step 4.3.
 ### Step 5.2 — Minimal widgets (F12)
 - Next calendar event (`READ_CALENDAR`) and 3-item to-do in Room. All off by default. No weather.
 
-### Step 5.3 — Backup & restore (F13)
-- Export/import JSON via Storage Access Framework; schema version field; Auto Backup rules for DataStore/Room.
-
 **Tests:**
-- Unit: calendar mapping, to-do rules, backup round-trip + older-schema import.
-- UI + screenshots: widgets, grayscale screen, backup/restore flow.
+- Unit: calendar mapping, to-do rules, backup round-trip including to-do items (F13.4).
+- UI + screenshots: widgets, grayscale screen.
 - Permission allowlist updated for `READ_CALENDAR` with its ID.
 
-**Done when:** F11–F13 met and traced; manual check on the test phone.
+**Done when:** F11–F12 met and traced; manual check on the test phone.
 
 ---
 
@@ -332,7 +333,7 @@ Reuses the usage calculation from Step 4.3.
 - Explanation screen with restricted-settings instructions (F16.2); killed-service warning (F16.15).
 
 **Tests:**
-- Unit: rules parsing & versioning (valid/invalid/unknown version), detection against **recorded node-tree fixtures** per app (Shorts → detected; normal video/feed → not detected), throttling, limit accumulation (midnight/time-zone/DST), focus override, bypass cap.
+- Unit: backup round-trip for F16 settings (F13.4), rules parsing & versioning (valid/invalid/unknown version), detection against **recorded node-tree fixtures** per app (Shorts → detected; normal video/feed → not detected), throttling, limit accumulation (midnight/time-zone/DST), focus override, bypass cap.
 - Robolectric: service event handling with fake events; overlay show/dismiss logic.
 - Screenshots: overlay, settings, explanation screen.
 
@@ -344,7 +345,7 @@ Reuses the usage calculation from Step 4.3.
 1. `./gradlew check` passes.
 2. Bump `versionCode`; update `versionName` if a milestone changed.
 3. Move "Unreleased" entries in CHANGELOG.md under the new version.
-4. Export a settings backup on the phone (once F13 exists).
+4. Export a settings backup on the phone (F13).
 5. `./gradlew assembleRelease` (signed with the backed-up keystore).
 6. Install over the existing app; confirm settings retained.
 7. Quick smoke test: Home, search, launch, gestures, plus any enabled wellbeing/F16 features.

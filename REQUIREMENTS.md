@@ -46,13 +46,13 @@ Default launchers are designed for engagement: bright icons, notification badges
 | F5 | Hide & rename apps | P0 | v1.0 |
 | F6 | Appearance customization | P1 | v1.0 |
 | F14 | Onboarding | P0 | v1.0 |
+| F13 | Backup & restore settings | P0 | v1.0 |
 | F7 | Notification filter / inbox | P1 | v1.1 |
 | F8 | App usage limits & mindful pause (toggleable) | P1 | v1.1 |
 | F9 | Focus mode | P1 | v1.1 |
 | F10 | Screen-time insights & home-screen stats | P1 | v1.1 |
 | F11 | Grayscale shortcut | P2 | v1.2 |
 | F12 | Minimal widgets (calendar, to-do) | P2 | v1.2 |
-| F13 | Backup & restore settings | P2 | v1.2 |
 | F16 | Short-form content blocker (Reels, Shorts) | P2 | v1.3 |
 | F17 | Diagnostics: event log & crash log | P0 | M0 (from the first build) |
 | F18 | Safe mode (crash-loop protection) | P0 | M0 (from the first build) |
@@ -220,6 +220,8 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 | F13.1 | Export all settings (favorites, hidden, renames, limits, gestures, F16 settings) to a JSON file. |
 | F13.2 | Import from file with confirmation. |
 | F13.3 | Support Android Auto Backup for settings. |
+| F13.4 | Available from v1.0. Every later feature that adds settings must add them to the export/import format in the same step, with a round-trip test. |
+| F13.5 | The backup file has a schema version; importing a file from an older version works (missing fields get Appendix A defaults). |
 
 ### F14 — Onboarding
 
@@ -449,9 +451,9 @@ Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in
 | Milestone | Scope |
 |---|---|
 | **M0 – Prototype** | Home screen + app list + set as default launcher. |
-| **v1.0 – Daily driver** | F1–F6, F14; installed on my phone as the default launcher. |
+| **v1.0 – Daily driver** | F1–F6, F13, F14; installed on my phone as the default launcher. |
 | **v1.1** | F7 Notification filter, F8 Usage limits, F9 Focus mode, F10 Insights & home-screen stats. |
-| **v1.2** | F11 Grayscale shortcut, F12 Widgets (calendar, to-do), F13 Backup. |
+| **v1.2** | F11 Grayscale shortcut, F12 Widgets (calendar, to-do). |
 | **v1.3** | F16 Short-form content blocker (YouTube Shorts + Instagram Reels). |
 
 ---
