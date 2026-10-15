@@ -156,7 +156,7 @@ Behaviour:
 - Pressing Home while already on the launcher → `onNewIntent` closes the drawer and returns to home.
 - Back on home → does nothing.
 
-### Step 1.2 — Load installed apps
+### Step 1.2 — Load installed apps ✅
 - `core/model`: `AppEntry(packageName, activityName, user: UserHandle, label, customLabel?, isHidden)`; unique key = component + user serial.
 - `core/data/AppsRepository`:
   - `LauncherApps.getActivityList(null, user)` for every profile in `UserManager.userProfiles`.

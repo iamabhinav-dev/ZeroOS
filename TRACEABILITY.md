@@ -8,7 +8,10 @@ Update this file in the same commit as the code and tests.
 | ID | Status | Automated tests (class › test) | Manual check |
 |---|---|---|---|
 | F1.1–F1.9 | ⬜ | | |
-| F2.1–F2.11 | ⬜ | | |
+| F2.1, F2.3–F2.8, F2.11 | ⬜ | | |
+| F2.2 | 🟡 | AppsRepositoryTest › f2_2_listsAppsAlphabeticallyIgnoringCase (data; UI in Step 1.3) | |
+| F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
+| F2.10 | 🟡 | AppsRepositoryTest › f2_10_marksAppsFromOtherProfilesAndKeepsBothCopies (data; tag in Phase 2) | App clones on the phone (spike) |
 | F3.1–F3.4 | ⬜ | | |
 | F4.1–F4.6 | ⬜ | | |
 | F5.1–F5.5 | ⬜ | | |

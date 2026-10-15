@@ -1,0 +1,32 @@
+package com.zeroos.launcher
+
+import android.content.Context
+import android.content.pm.LauncherApps
+import android.os.UserManager
+import com.zeroos.core.data.apps.AndroidLauncherAppsSource
+import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.logging.Logger
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+import kotlinx.coroutines.Dispatchers
+
+/** Provides repositories from core/data (Step 1.2). */
+@Module
+@InstallIn(SingletonComponent::class)
+object DataModule {
+
+    @Provides
+    @Singleton
+    fun appsRepository(@ApplicationContext context: Context, logger: Logger): AppsRepository = AppsRepository(
+        source = AndroidLauncherAppsSource(
+            context.getSystemService(LauncherApps::class.java),
+            context.getSystemService(UserManager::class.java)
+        ),
+        logger = logger,
+        ioDispatcher = Dispatchers.IO
+    )
+}
