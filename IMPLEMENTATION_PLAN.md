@@ -58,8 +58,14 @@ Tests are **required**, not a separate phase. For now, **all automated tests run
 
 ## Phase 0 — Setup, Wireframes & Feasibility
 
-### Step 0.1 — Tooling
-- Install latest stable Android Studio and JDK 17+; Android SDK with latest stable target SDK, min SDK 26.
+### Step 0.1 — Tooling ✅
+- **No Android Studio** (needs too much RAM for this 8 GB machine; D-017). Command-line setup instead:
+  - JDK 17 (Temurin 17.0.20.1) in `~/.local/jdk-17`
+  - Android SDK in `~/Android/Sdk`: cmdline-tools (latest), platform-tools, `platforms;android-37.0`, `build-tools;37.0.0`
+  - `JAVA_HOME`, `ANDROID_HOME`, and `PATH` set in `~/.bashrc`
+- Editor: VS Code (Kotlin extension optional). Screens are reviewed via Roborazzi screenshot PNGs instead of Studio previews.
+- Gradle memory capped in `gradle.properties` (Step 0.2): Gradle ≤ 2 GB, Kotlin daemon ≤ 1 GB, limited workers, Robolectric tests in one fork with capped heap.
+- compileSdk/targetSdk 37, min SDK 26.
 - On the phone: nothing yet. Later, allow "Install unknown apps" for the app used to open the APK (Files/Drive). No Developer options.
 
 ### Step 0.2 — Create the project

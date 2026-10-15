@@ -72,6 +72,10 @@ A text button "focus" on home starts Focus mode; it shows remaining time while a
 Each phase starts with a wireframe step (0.4, 2.0, 4.0, 5.0, 6.0); the home screen is drawn in its final form up front.
 *Why:* Less review up front, and later screens benefit from using earlier versions. The home screen is the exception because it can't scroll and must fit everything.
 
+**D-017 — Command-line toolchain, no Android Studio** · 2026-10-15 · Accepted
+JDK 17 + Android SDK command-line tools in the home folder; build with Gradle from the terminal; edit in VS Code; review UI through screenshot-test PNGs. Gradle memory is capped.
+*Why:* The development machine has 8 GB RAM; Android Studio alone needs about that much.
+
 ---
 
 ## Pending (to be decided during the plan)
