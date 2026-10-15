@@ -72,7 +72,7 @@ The default screen shown when I press Home.
 |---|---|
 | F1.1 | Display current **time** in large text; tapping it opens the default Clock/Alarm app. |
 | F1.2 | Display **date** (e.g., "Thursday, 15 October"); tapping it opens the default Calendar app. |
-| F1.3 | Optionally display **battery percentage** as plain text. |
+| F1.3 | Optionally display **battery percentage** as plain text. While charging (or full and plugged in), a small dot-matrix lightning bolt in Doto style appears after the percentage (D-031). |
 | F1.4 | Display a vertical list of **0–10 favorite apps** as text labels (no icons). |
 | F1.5 | No notification badges, dots, or counters on the home screen. |
 | F1.6 | Home screen must not scroll; all content fits within one viewport. The layout is designed from v1.0 for **all** home elements that come later (screen-time stats F10, focus button/timer F9, calendar/to-do F12), so adding them never pushes favorites off-screen at the largest font size. |

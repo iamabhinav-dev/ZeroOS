@@ -13,6 +13,7 @@
     <string name="home_next_alarm">alarm %1$s</string>
     <string name="home_open_alarms">Open alarms</string>
     <string name="home_open_calendar">Open calendar</string>
+    <string name="home_charging">charging</string>
 
     <!-- App list (F2, wireframe B) -->
     <string name="app_list_search_hint">search…</string>

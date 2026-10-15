@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.DotIcons
+import com.zeroos.core.ui.DotMatrixIcon
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ZeroTheme
 
@@ -179,16 +182,32 @@ private fun DateLine(
     val tokens = ZeroTheme.tokens
     val date = format.date(state.time)
     Column(modifier, horizontalAlignment = horizontal) {
-        Text(
-            text = state.batteryPercent?.let { stringResource(R.string.home_date_with_battery, date, it) } ?: date,
-            color = tokens.colors.text,
-            fontSize = tokens.textSizes.date,
+        Row(
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
             modifier = Modifier
                 .clickable(onClickLabel = stringResource(R.string.home_open_calendar), role = Role.Button, onClick = onClick)
                 .padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.listItemCompact)
-        )
+        ) {
+            Text(
+                text = state.batteryPercent?.let { stringResource(R.string.home_date_with_battery, date, it) } ?: date,
+                color = tokens.colors.text,
+                fontSize = tokens.textSizes.date
+            )
+            if (state.charging) {
+                val height = with(LocalDensity.current) { (tokens.textSizes.date * BOLT_HEIGHT_OF_TEXT).toDp() }
+                DotMatrixIcon(
+                    pattern = DotIcons.Bolt,
+                    height = height,
+                    contentDescription = stringResource(R.string.home_charging),
+                    modifier = Modifier.padding(start = tokens.spacing.listItemCompact).testTag(HomeTestTags.CHARGING)
+                )
+            }
+        }
     }
 }
+
+/** The bolt matches Doto's capital-letter height, about 70% of the font size. */
+private const val BOLT_HEIGHT_OF_TEXT = 0.7f
 
 @Composable
 private fun AlarmLine(time: String, horizontal: Horizontal, modifier: Modifier) {
@@ -206,4 +225,5 @@ private fun AlarmLine(time: String, horizontal: Horizontal, modifier: Modifier) 
 object HomeTestTags {
     const val ROOT = "home"
     const val FAVORITES = "home_favorites"
+    const val CHARGING = "home_charging"
 }

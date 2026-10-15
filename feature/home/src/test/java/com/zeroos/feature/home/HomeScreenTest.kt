@@ -5,6 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.longClick
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -79,6 +80,26 @@ class HomeScreenTest {
         show()
         compose.onNodeWithText("Maps").assertIsDisplayed().performClick()
         assertEquals(listOf("Maps"), calls)
+    }
+
+    @Test
+    fun f1_3_boltShownOnlyWhileCharging() {
+        show(HomeUiState(time, batteryPercent = 82, charging = true))
+        // The bolt is merged into the tappable date row for screen readers, so look in the unmerged tree.
+        compose.onNodeWithTag(HomeTestTags.CHARGING, useUnmergedTree = true).assertIsDisplayed()
+        compose.onNodeWithContentDescription("charging").assertExists()
+    }
+
+    @Test
+    fun f1_3_noBoltWhenNotCharging() {
+        show(HomeUiState(time, batteryPercent = 82, charging = false))
+        compose.onNodeWithTag(HomeTestTags.CHARGING, useUnmergedTree = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun f1_3_chargingScreenshot() {
+        show(HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82, charging = true))
+        compose.onRoot().captureRoboImage()
     }
 
     @Test

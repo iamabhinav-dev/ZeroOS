@@ -20,8 +20,24 @@ import org.robolectric.shadows.ShadowLooper
 class HomeSourcesTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
 
-    private fun batteryIntent(level: Int, scale: Int) =
-        Intent(Intent.ACTION_BATTERY_CHANGED).putExtra(BatteryManager.EXTRA_LEVEL, level).putExtra(BatteryManager.EXTRA_SCALE, scale)
+    private fun batteryIntent(level: Int, scale: Int, status: Int = BatteryManager.BATTERY_STATUS_DISCHARGING, plugged: Int = 0) =
+        Intent(Intent.ACTION_BATTERY_CHANGED)
+            .putExtra(BatteryManager.EXTRA_LEVEL, level)
+            .putExtra(BatteryManager.EXTRA_SCALE, scale)
+            .putExtra(BatteryManager.EXTRA_STATUS, status)
+            .putExtra(BatteryManager.EXTRA_PLUGGED, plugged)
+
+    @Test
+    fun f1_3_chargingWhenChargingOrFullAndPlugged() {
+        val charging = batteryIntent(50, 100, BatteryManager.BATTERY_STATUS_CHARGING, BatteryManager.BATTERY_PLUGGED_USB)
+        val fullPlugged = batteryIntent(100, 100, BatteryManager.BATTERY_STATUS_FULL, BatteryManager.BATTERY_PLUGGED_AC)
+        val fullUnplugged = batteryIntent(100, 100, BatteryManager.BATTERY_STATUS_FULL, 0)
+        val discharging = batteryIntent(50, 100)
+        assertEquals(BatteryStatus(50, true), BatteryLevel.statusOf(charging))
+        assertEquals(true, BatteryLevel.isCharging(fullPlugged))
+        assertEquals(false, BatteryLevel.isCharging(fullUnplugged))
+        assertEquals(false, BatteryLevel.isCharging(discharging))
+    }
 
     @Test
     fun f1_3_batteryPercentFromIntent() {
@@ -32,11 +48,11 @@ class HomeSourcesTest {
 
     @Test
     fun f1_3_batteryFlowFollowsBroadcasts() = runTest {
-        BatteryLevel(context).percent.test {
+        BatteryLevel(context).status.test {
             skipItems(if (context.registerReceiver(null, android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED)) != null) 1 else 0)
             context.sendStickyBroadcast(batteryIntent(41, 100))
             ShadowLooper.idleMainLooper()
-            assertEquals(41, awaitItem())
+            assertEquals(41, awaitItem()?.percent)
             cancelAndIgnoreRemainingEvents()
         }
     }

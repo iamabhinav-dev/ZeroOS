@@ -12,6 +12,8 @@ data class HomeUiState(
     val favorites: List<AppEntry> = emptyList(),
     val alignment: Alignment = Alignment.LEFT,
     val batteryPercent: Int? = null,
+    /** Shows the dot-matrix bolt next to the battery (D-031). */
+    val charging: Boolean = false,
     val nextAlarm: ZonedDateTime? = null,
     val showClock: Boolean = true,
     val showDate: Boolean = true
@@ -25,7 +27,7 @@ fun homeUiState(
     time: ZonedDateTime,
     settings: LauncherSettings,
     apps: List<AppEntry>,
-    batteryPercent: Int?,
+    battery: BatteryStatus?,
     nextAlarm: Instant?
 ): HomeUiState {
     val byKey = apps.associateBy { it.key.asString() }
@@ -36,7 +38,8 @@ fun homeUiState(
         time = time,
         favorites = favorites,
         alignment = settings.home.alignment,
-        batteryPercent = batteryPercent.takeIf { settings.home.showBattery },
+        batteryPercent = battery?.percent?.takeIf { settings.home.showBattery },
+        charging = settings.home.showBattery && battery?.charging == true,
         nextAlarm = nextAlarm?.takeIf { settings.home.showNextAlarm }?.atZone(time.zone),
         showClock = settings.appearance.showClock,
         showDate = settings.appearance.showDate
