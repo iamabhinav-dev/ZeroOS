@@ -20,7 +20,9 @@ Update this file in the same commit as the code and tests.
 | F4.1 | 🟡 | SwipeUpTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
 | F4.2–F4.6 | ⬜ | | |
 | F5.1–F5.5 | ⬜ | | |
-| F6.1–F6.6 | ⬜ | | |
+| F6.1, F6.2, F6.5, F6.6 | ⬜ | (tokens ready in Step 2.2; settings in Step 2.8) | |
+| F6.3 | 🟡 | ComponentsTest › step2_2_gallery* screenshots (Doto everywhere) | Doto readable on the phone |
+| F6.4 | 🟡 | ZeroThemeTest › f6_4_textSizeScaleAndMinimum (setting in Step 2.8) | |
 | F7.1–F7.6 | ⬜ | | |
 | F8.1–F8.12 | ⬜ | | |
 | F9.1–F9.7 | ⬜ | | |
@@ -54,7 +56,10 @@ Update this file in the same commit as the code and tests.
 | NFR-P6 | ⬜ | | APK size check |
 | NFR-S1–S7 | ⬜ | | |
 | Testing Policy #8 (permissions) | ✅ | PermissionAllowlistTest › nfrS_requestedPermissionsMatchAllowlist | |
-| NFR-A1–A4 | ⬜ | | |
+| NFR-A1 | 🟡 | ComponentsTest › nfrA1_toggleRowIsAnnouncedAsSwitchWithState | TalkBack pass (Step 3.2) |
+| NFR-A2 | 🟡 | ComponentsTest › nfrA2_listItemsAreAtLeast48dpAndClickable | |
+| NFR-A3 | 🟡 | ZeroThemeTest › nfrA3_textMeetsWcagAaInBothThemes | Light theme dotted text legibility |
+| NFR-A4 | ⬜ | | |
 | NFR-R1–R8 | ⬜ | | |
 | NFR-L1–L3, L5, L6 | ⬜ | | |
 | NFR-L4, L7, L8 | 🟡 | ZeroRulesTest › nfrL4_*, nfrL8_* (detekt rules); Lint HardcodedText as error | |

@@ -195,7 +195,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Stores favorites (ordered keys), hidden set, renames map, gesture bindings, appearance, onboarding flag.
 - Default values come from REQUIREMENTS.md **Appendix A**.
 
-### Step 2.2 — Design system (`core/ui`)
+### Step 2.2 — Design system (`core/ui`) ✅
 - Theme tokens: pure black / light / system; monochrome palette; optional accent.
 - Typography: **Doto** (OFL dot-matrix) for **all** text (F6.3, D-020); no font picker; size scale S/M/L/XL × system font scale with body text ≥ 14 sp. Screenshot tests check readability at default and largest sizes.
 - Shared composables: `AppLabel`, `MinimalListItem`, `MinimalBottomSheet`, `SettingRow`, `ToggleRow`.
