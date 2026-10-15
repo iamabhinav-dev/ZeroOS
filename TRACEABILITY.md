@@ -25,14 +25,25 @@ Update this file in the same commit as the code and tests.
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |
 | F16.13 | ❌ | Removed (D-006) | |
-| F17.1–F17.12 | ⬜ | | Forced crash → report on next start; export logs |
+| F17.1 | 🟡 | FileLoggerTest › f17_1_*, AndroidDiagnosticsTest › f17_1_logcatMirrorUsesMatchingPriority, ZeroRulesTest › f17_1_flagsDirectLogging | |
+| F17.2 | 🟡 | LogEntryTest › f17_2_*, LogFileStoreTest › f17_2_*, FileLoggerTest › f17_2_* | |
+| F17.3 | 🟡 | LogFileStoreTest › f17_3_* | |
+| F17.4 | 🟡 | FileLoggerTest › f17_4_backgroundWriterFlushesOnRequest | |
+| F17.5 | 🟡 | CrashHandlerTest › f17_5_*, LogFileStoreTest › f17_5_*, FileLoggerTest › f17_5_*, AppStartLoggingTest › f17_5_crashHandlerIsInstalled | Forced crash → report on next start (Step 1.4) |
+| F17.6 | 🟡 | ExitReasonLoggerTest › f17_6_*, AndroidDiagnosticsTest › f17_6_mapsAndroidExitReasons | |
+| F17.7 | 🟡 | AppStartLoggingTest › f17_7_logsAppStartWithVersionAndDevice (app start only; other events as features land) | |
+| F17.8 | 🟡 | LogEntryTest › f17_8_redactedKeepsOnlyLength (helper; usage checked per feature) | |
+| F17.9–F17.11 | ⬜ | Step 1.4 | Export logs |
+| F17.12 | 🟡 | FileLoggerTest › f17_12_neverThrowsWhenStorageFails, ExitReasonLoggerTest › f17_12_* | |
 | F18.1–F18.7 | ⬜ | | Debug crash-on-start → safe mode; switch to the stock launcher |
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
 | NFR-P3 | ⬜ | | |
 | NFR-P6 | ⬜ | | APK size check |
 | NFR-S1–S7 | ⬜ | | |
+| Testing Policy #8 (permissions) | ✅ | PermissionAllowlistTest › nfrS_requestedPermissionsMatchAllowlist | |
 | NFR-A1–A4 | ⬜ | | |
 | NFR-R1–R8 | ⬜ | | |
-| NFR-L1–L8 | ⬜ | | |
+| NFR-L1–L3, L5, L6 | ⬜ | | |
+| NFR-L4, L7, L8 | 🟡 | ZeroRulesTest › nfrL4_*, nfrL8_* (detekt rules); Lint HardcodedText as error | |
 
 When a feature's work starts, split its row into one row per requirement ID (e.g., F2.4) and list the tests.
