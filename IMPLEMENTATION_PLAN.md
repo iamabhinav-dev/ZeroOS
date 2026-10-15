@@ -68,13 +68,13 @@ Tests are **required**, not a separate phase. For now, **all automated tests run
 - compileSdk/targetSdk 37, min SDK 26.
 - On the phone: nothing yet. Later, allow "Install unknown apps" for the app used to open the APK (Files/Drive). No Developer options.
 
-### Step 0.2 — Create the project
+### Step 0.2 — Create the project ✅
 - New project → *Empty Activity (Compose)*, package `com.zeroos.launcher`.
 - Gradle Kotlin DSL + version catalog (`gradle/libs.versions.toml`).
 - Add only what Phase 0–1 needs: Compose BOM, Material 3, Lifecycle, Coroutines, Hilt. Add DataStore in Phase 2, Room/WorkManager in Phase 4.
 - Enable R8/minify for release builds.
 
-### Step 0.3 — Module structure
+### Step 0.3 — Module structure ✅
 Start with modules needed now; add feature modules when their phase begins.
 ```
 app/
