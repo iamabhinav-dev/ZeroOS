@@ -1,0 +1,4 @@
+# Permissions the app may request in ALL build types (merged manifest). Testing Policy #8.
+# Add a line only when a requirement needs it, with the requirement ID, in the same commit.
+# Format: <permission>  # <requirement ID / reason>
+com.zeroos.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION  # androidx.core internal, signature-level, for non-exported receivers
