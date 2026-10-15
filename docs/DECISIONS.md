@@ -122,6 +122,10 @@ The swipe-up gesture is taught in the onboarding intro (G3) only; home stays cle
 Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usage stats similar to the phone's, services surviving a day of use and reconnecting after a restart. Remaining checks are due before the step that needs them: app clones before Step 2.4; overnight survival and Play Protect before Phase 4; Instagram Reels and a Shorts capture before Phase 6. Replaces the "finish Step 0.5 before Phase 2" rule of D-024.
 *Why:* The confirmed results cover all Phase 2 risks except clone tags in the app list.
 
+**D-029 — Settings stored as JSON in DataStore** · 2026-10-16 · Accepted
+`LauncherSettings` is a kotlinx-serialization data class saved by DataStore as JSON (not Proto DataStore). Unknown fields are ignored, missing ones get Appendix A defaults, unknown enum values fall back to defaults, and a corrupted file is reset to defaults and logged.
+*Why:* Same type safety as Proto DataStore without a protobuf code generator in the build; the settings backup (F13) is JSON anyway and can reuse the serializer.
+
 ---
 
 ## Pending (to be decided during the plan)
