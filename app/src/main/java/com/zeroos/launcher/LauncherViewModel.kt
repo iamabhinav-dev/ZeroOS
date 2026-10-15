@@ -1,15 +1,19 @@
 package com.zeroos.launcher
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.zeroos.core.logging.CrashNotice
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /** Screens shown by [LauncherRoot]. */
 enum class LauncherScreen(val logName: String) {
@@ -22,11 +26,20 @@ enum class LauncherScreen(val logName: String) {
 @HiltViewModel
 class LauncherViewModel @Inject constructor(
     private val crashNotice: CrashNotice,
-    private val logger: Logger
+    private val logger: Logger,
+    private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-    private val unseenReport: File? = crashNotice.unseenReport()
-    private val mutableCrashReport = MutableStateFlow(unseenReport?.name)
+    private var unseenReport: File? = null
+    private val mutableCrashReport = MutableStateFlow<String?>(null)
+
+    init {
+        // Listing crash reports reads the disk: never on the main thread (NFR-P1, StrictMode).
+        viewModelScope.launch {
+            unseenReport = withContext(ioDispatcher) { crashNotice.unseenReport() }
+            mutableCrashReport.value = unseenReport?.name
+        }
+    }
 
     /** File name of a crash report I haven't seen yet, or null once seen or dismissed. */
     val crashReport: StateFlow<String?> = mutableCrashReport.asStateFlow()
