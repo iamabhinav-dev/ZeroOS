@@ -85,9 +85,10 @@ From v1.1 (when the manifest declares a notification listener and an Accessibili
 The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears as soon as Shorts/Reels is detected again (only a ~1 s transition pause).
 *Why:* Spike testing showed one Back press often stays on the Shorts tab; apps can't force-close other apps; a grace period would be a loophole.
 
-**D-020 — Doto dot-matrix font for clock and numbers** · 2026-10-15 · Accepted (final)
-Clock, date, stats numbers, focus timer and stop-screen puns use Doto (OFL, from Google Fonts); other text uses a readable bundled font.
-*Why:* User wanted the Nothing Ndot 57 look; Ndot is proprietary. Bundling Ndot was briefly chosen, then replaced by Doto, so no proprietary font is in the app or repo.
+**D-020 — Doto font for all text** · 2026-10-16 · Accepted (final)
+Every piece of text in the launcher uses Doto (OFL, Google Fonts): clock, numbers, app names, lists, settings, dialogs, onboarding and stop screens. No font picker.
+*Why:* User wants the Nothing Ndot 57 look everywhere; Ndot is proprietary, Doto is the free look-alike.
+*Consequences:* Dot fonts are harder to read when small, so body text stays ≥ 14 sp and the text-size setting remains (NFR-A3/A4).
 
 **D-021 — Random puns on stop screens** · 2026-10-15 · Accepted
 The F16 black screen, the F8 mindful pause and the F8 limit-reached screen each show a random pun from their own built-in list by default (F16.9, F8.13); custom message (F16) or plain text (F8.14) optional.
@@ -109,8 +110,15 @@ Phase 1 (home, app list, diagnostics, safe mode) starts while Step 0.5 phone tes
 Logging on/off, log level and the last-seen crash report are stored in SharedPreferences, not DataStore.
 *Why:* The logger reads them on every call and they're needed from Phase 1, before DataStore arrives in Phase 2. They're included in the settings backup (F13) when it's built.
 
+**D-026 — Side swipes off by default; swipe down switchable** · 2026-10-16 · Accepted
+Swipe left/right on home are optional and off by default; swipe down (search) is on by default with an on/off switch.
+*Why:* The user uses side swipes for system Back and swipe-up-and-hold for Recents; home side swipes would clash.
+
+**D-027 — No "swipe up" hint on home** · 2026-10-16 · Accepted
+The swipe-up gesture is taught in the onboarding intro (G3) only; home stays clean.
+*Why:* User's choice (wireframe question Q1).
+
 ---
 
 ## Pending (to be decided during the plan)
 - Feasibility spike results (Step 0.5), partial in `docs/spike/RESULTS.md`: YouTube Shorts detection, overlay and same-day service survival confirmed; still open: app clones, usage-stats accuracy, overnight + reboot survival, Instagram Reels, Play Protect.
-- Text fonts besides Doto (Step 2.2): OFL-licensed only.

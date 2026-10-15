@@ -110,8 +110,8 @@ The default screen shown when I press Home.
 | ID | Requirement |
 |---|---|
 | F4.1 | **Swipe up** → app list (default). |
-| F4.2 | **Swipe left** → assigned app (default: Camera). |
-| F4.3 | **Swipe right** → assigned app (default: Phone/Dialer). |
+| F4.2 | **Swipe left** → assigned app. **Optional, off by default** (side swipes clash with the system back gesture). |
+| F4.3 | **Swipe right** → assigned app. **Optional, off by default.** |
 | F4.4 | **Swipe down** → open search (default) or expand the notification shade. The shade option is available only while the optional Accessibility Service is enabled (`GLOBAL_ACTION_NOTIFICATIONS`); if the service is turned off, the gesture falls back to search. |
 | F4.5 | **Double-tap** → lock screen (uses the optional Accessibility Service; off by default). |
 | F4.6 | Each gesture can be set to: an app, a launcher action, or "None". |
@@ -132,8 +132,8 @@ The default screen shown when I press Home.
 |---|---|
 | F6.1 | Themes: **Dark** (default, pure black for OLED), **Light**, **System**. |
 | F6.2 | Wallpaper: solid color (default black), or system wallpaper with dim overlay. |
-| F6.3 | Font: choice of 3–5 bundled OFL-licensed fonts + system font for text (app names, lists, settings). The **clock, date and numbers** (screen-time stats, focus timer, stop-screen puns) use the dot-matrix font **Doto** (OFL; free look-alike of Nothing's Ndot 57, which is proprietary and not used). |
-| F6.4 | Text size: small / medium / large / extra-large; respects system font scale. |
+| F6.3 | Font: **Doto** (OFL dot-matrix, look-alike of Nothing's Ndot 57) for **all text in the launcher**: clock, date, numbers, app names, lists, settings, dialogs, onboarding and stop screens. No font choice. |
+| F6.4 | Text size: small / medium / large / extra-large; respects system font scale. Sizes are kept large enough for Doto to stay readable (minimum 14 sp for body text). |
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
 | F6.6 | Accent color is monochrome by default; optional single accent color. |
 
@@ -486,8 +486,8 @@ Agents must use these values instead of guessing. Change them here only with my 
 |---|---|---|
 | Max favorites (F3.3) | 6 | 1–10 |
 | Default favorites (F14.3) | Phone, Messages, Camera, Maps | any |
-| Swipe left / right (F4.2, F4.3) | Camera / Phone | app, action, none |
-| Swipe down (F4.4) | Search | search, none; shade only when Accessibility Service is on |
+| Swipe left / right (F4.2, F4.3) | Off | off / an app |
+| Swipe down (F4.4) | On: search | on/off; action search, or shade only when Accessibility Service is on |
 | Swipe distance threshold | 48 dp | 32–96 dp |
 | Swipe velocity threshold | 300 dp/s | — |
 | Double-tap to lock (F4.5) | Off | on/off |
