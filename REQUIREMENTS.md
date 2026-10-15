@@ -164,7 +164,7 @@ The default screen shown when I press Home.
 | F8.10 | Turning the feature off **keeps the configuration** (flagged apps, limits, pause duration) so it's restored when turned back on. |
 | F8.11 | Permissions (Usage Access, Accessibility) are requested only when the related toggle is first switched on; switching off stops the related background work immediately. |
 | F8.12 | Optional friction when turning off during an active limit (e.g., mindful pause or "hold for 3 s"), configurable, to prevent impulsive disabling. |
-| F8.13 | **Puns on stop screens:** the mindful pause (F8.1) shows a random line from a "pause" list (e.g. "Is this a want, or a habit?"); the limit-reached block (F8.4, F8.7) shows a random line from a "limit" list (e.g. "That's a wrap for today."). Lists are string-arrays in `core/resources`; a different line each time. |
+| F8.13 | **Puns on stop screens:** the mindful pause (F8.1) shows a random line from a "pause" list (e.g. "Is this a want, or a habit?"); the limit-reached block (F8.4, F8.7) shows a random line from a "limit" list (e.g. "That's a wrap for today."). Lists of ~20 lines each (approved text in `docs/puns.md`) become string-arrays in `core/resources`. **Shuffle-bag order:** every line once before any repeat, never the same line twice in a row; the position survives restarts. |
 | F8.14 | Puns can be turned off in Settings → Wellbeing; then a plain message is shown (e.g. "Daily limit reached"). |
 
 ### F9 — Focus Mode
@@ -254,7 +254,7 @@ Blocks or time-limits short-form video feeds (YouTube Shorts, Instagram Reels) *
 | F16.6 | Detection uses targeted lookups (`findAccessibilityNodeInfosByViewId`) on window-state/content-change events, **throttled to ≤ 1 check per 300–500 ms**; no full-tree traversal. |
 | F16.7 | **Block mode:** on detection, immediately show a full-screen black overlay (`TYPE_ACCESSIBILITY_OVERLAY`) with the block message (F16.9) and a **"Go home"** button. |
 | F16.8 | **Limit mode:** track time spent in short-form content per day; show the block overlay once the daily allowance (e.g., 15 min) is used up. Allowance resets at local midnight. |
-| F16.9 | **Block message:** by default a **random pun** from a built-in list (string-array in `core/resources`, e.g. "This Short has been cut short."), a different one each time the screen appears. Option: use my own custom message instead (editable, max 120 chars). |
+| F16.9 | **Block message:** by default a **random pun** from a built-in list of ~20 lines (`docs/puns.md`, list A → string-array in `core/resources`), in the same shuffle-bag order as F8.13. Option: use my own custom message instead (editable, max 120 chars). |
 | F16.10 | **"Go home"** performs `GLOBAL_ACTION_HOME` (leaves the app for the ZeroOS home screen; Android doesn't let apps force-close other apps) and dismisses the overlay. Optionally go home automatically after N seconds. **No grace period:** the overlay shows again as soon as short-form content is detected; the only pause is ~1 s while going home, to avoid flicker. A single Back press is not used because it often stays on the Shorts tab. |
 | F16.11 | Optional friction to bypass: "Allow 5 minutes" after a mindful pause (reuses the F8.1 screen; works even if F8 is toggled off), limited to N times/day. |
 | F16.12 | Detection rules (package → view IDs) are stored as **versioned data in a bundled asset file**, not hard-coded in logic. Updating rules = edit the file + rebuild. |
