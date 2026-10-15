@@ -106,7 +106,9 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 
 ### Step 0.7 — Signing & install workflow
 - Generate a release keystore **outside the repo**; reference it from a git-ignored `keystore.properties`. Back it up (NFR-S6).
-- **Debug and release install side by side:** debug build uses `applicationIdSuffix = ".debug"`, `versionNameSuffix = "-debug"`, and app label "ZeroOS Debug". Debug installs never touch the release app or its settings. Release builds are always signed with the same backed-up release keystore.
+- **One key for debug and release:** both build types use the same `signingConfig` (the release keystore) and the same application ID, so either APK installs over the other and keeps settings. If `keystore.properties` is missing (e.g., on CI), fall back to the default debug key and print a Gradle warning; such APKs must not be installed on the phone.
+- Debug-only tools (LeakCanary, StrictMode) run on the phone whenever a debug APK is installed; that's expected.
+- Database/DataStore schemas only migrate forward. Never install an APK built from **older code** than what's on the phone: it can fail to start or need a reset. Debug and release share one `versionCode` sequence.
 - Versioning: `versionCode` +1 per install; `versionName` = milestone (e.g., `1.0.3`). Android refuses to install a lower `versionCode` over a higher one, so a rollback = rebuild old code with a **higher** `versionCode`.
 - Document the install workflow in `README.md`:
   1. `./gradlew check assembleRelease`
@@ -322,7 +324,7 @@ Reuses the usage calculation from Step 4.3.
 6. Install over the existing app; confirm settings retained.
 7. Quick smoke test: Home, search, launch, gestures, plus any enabled wellbeing/F16 features.
 8. If something is broken: rebuild the last good commit with a higher `versionCode` and install it (keep the last 2 APKs in a local `releases/` folder, git-ignored, for reference).
-9. To try the debug build with real settings: export a backup from the release app (F13) and import it into "ZeroOS Debug".
+9. Before installing a debug APK over the everyday app, export a settings backup (F13) in case the debug build breaks settings.
 
 ---
 
