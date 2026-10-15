@@ -84,6 +84,7 @@ feature/applist/
 
 ### Step 0.4 — Wireframes
 - Create `docs/wireframes.md` with ASCII/low-fi wireframes for every screen in REQUIREMENTS.md §6.
+- The **home wireframe shows its final layout**: clock, date, battery, screen-time stats (each F10.5 style), focus timer, calendar/to-do lines, and favorites. It also shows which areas collapse when a feature is off, and how it fits at the largest font size.
 - **I review and approve them before Phase 1.** Agents build screens to match the wireframes; differences need my approval.
 
 ### Step 0.5 — Feasibility spikes (throwaway, on a `spike/` branch, not merged)
@@ -191,6 +192,8 @@ Behaviour:
 - Clock tap → `AlarmClock.ACTION_SHOW_ALARMS`; date tap → `CATEGORY_APP_CALENDAR`; battery % from the `ACTION_BATTERY_CHANGED` sticky broadcast as a Flow.
 - Favorites joined with apps (missing apps dropped → F3.4).
 - Alignment; no scroll; long-press empty area → Settings; optional next alarm.
+- Build the home layout from the final wireframe with **slots** for later elements (stats, focus timer, widgets) that take no space while empty, so Phase 4–5 only fill slots and don't rework the layout.
+- Screenshot test: home at the largest font with all slots filled by placeholder content still fits without scrolling.
 
 ### Step 2.4 — App list & search (F2)
 - Search with auto-focus + keyboard (toggle); substring + initials + accent-insensitive matching; auto-launch single match (toggle).

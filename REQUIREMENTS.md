@@ -75,7 +75,7 @@ The default screen shown when I press Home.
 | F1.3 | Optionally display **battery percentage** as plain text. |
 | F1.4 | Display a vertical list of **0–10 favorite apps** as text labels (no icons). |
 | F1.5 | No notification badges, dots, or counters on the home screen. |
-| F1.6 | Home screen must not scroll; all content fits within one viewport. |
+| F1.6 | Home screen must not scroll; all content fits within one viewport. The layout is designed from v1.0 for **all** home elements that come later (screen-time stats F10, focus timer F9, calendar/to-do F12), so adding them never pushes favorites off-screen at the largest font size. |
 | F1.7 | Support configurable alignment of the favorites list: left, center, right. |
 | F1.8 | Optional: show the next upcoming alarm in small text. |
 | F1.9 | Long-press on empty space opens launcher settings. |
