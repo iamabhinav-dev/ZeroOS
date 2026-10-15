@@ -1,0 +1,30 @@
+package: com.google.android.youtube
+candidates found: [com.google.android.youtube:id/reel_recycler, com.google.android.youtube:id/reel_player_page_container, com.google.android.youtube:id/reel_watch_player]
+
+FrameLayout - [0,0][1080,2400]
+  DrawerLayout com.google.android.youtube:id/more_drawer_container [0,0][1080,2400]
+    FrameLayout com.google.android.youtube:id/slim_status_bar_player_container [0,0][1080,2400]
+      FrameLayout com.google.android.youtube:id/accessibility_layer_container [0,0][1080,2400]
+        ViewGroup com.google.android.youtube:id/watch_while_layout_coordinator_layout [0,0][1080,2400]
+          ScrollView com.google.android.youtube:id/browse_fragment_layout_coordinator_layout [0,0][1080,2227]
+            FrameLayout com.google.android.youtube:id/nerd_stats_container [0,126][1080,2227]
+            RecyclerView com.google.android.youtube:id/reel_recycler [0,126][1080,2400]
+              FrameLayout com.google.android.youtube:id/reel_player_page_container [0,126][1080,2227]
+                View com.google.android.youtube:id/reel_progress_bar [21,147][1059,152] has-text
+            ProgressBar com.google.android.youtube:id/reel_playback_loading_spinner [477,1113][603,1239] has-text
+            FrameLayout com.google.android.youtube:id/toolbar_container [0,0][1080,252]
+              FrameLayout com.google.android.youtube:id/collapsing_header_container [0,126][1080,126]
+              ViewGroup com.google.android.youtube:id/toolbar [0,126][1080,252]
+        HorizontalScrollView com.google.android.youtube:id/pivot_bar [0,2227][1080,2400]
+          LinearLayout - [0,2227][1080,2353]
+            Button - [0,2227][216,2353] clickable has-text
+              TextView com.google.android.youtube:id/text [70,2309][147,2339] has-text
+            Button - [216,2227][432,2353] clickable has-text
+              TextView com.google.android.youtube:id/text [283,2309][365,2339] has-text
+            Button - [432,2227][648,2353] clickable has-text
+            Button - [648,2227][864,2353] clickable has-text
+              View com.google.android.youtube:id/new_content_dot [762,2236][794,2268] has-text
+              TextView com.google.android.youtube:id/text [674,2309][838,2339] has-text
+            Button - [864,2227][1080,2353] clickable has-text
+              TextView com.google.android.youtube:id/text [947,2309][998,2339] has-text
+  ViewGroup com.google.android.youtube:id/reel_time_bar [0,0][1080,2400]
