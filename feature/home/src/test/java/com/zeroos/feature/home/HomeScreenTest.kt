@@ -1,15 +1,25 @@
 package com.zeroos.feature.home
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.core.model.AppEntry
+import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.settings.Alignment
+import com.zeroos.core.model.settings.TextSize
+import com.zeroos.core.model.settings.ThemeMode
+import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ZeroTheme
 import java.time.ZonedDateTime
 import org.junit.Assert.assertEquals
@@ -21,51 +31,115 @@ import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
-@Config(qualifiers = "en-rGB")
+@Config(qualifiers = "en-rGB-w392dp-h872dp-xxhdpi")
 class HomeScreenTest {
     @get:Rule
     val compose = createComposeRule()
 
     private val time = ZonedDateTime.parse("2026-10-15T10:42:00+05:30[Asia/Kolkata]")
-    private var swipes = 0
-    private var longPresses = 0
+    private val favorites = listOf("Phone", "Messages", "Camera", "Maps", "WhatsApp", "Spotify")
+        .map { AppEntry(AppKey("pkg.$it", "Main", 0), it, true) }
+    private val calls = mutableListOf<String>()
 
-    private fun show() = compose.setContent {
-        ZeroTheme { HomeScreen(time = time, onSwipeUp = { swipes++ }, onLongPress = { longPresses++ }) }
+    private fun show(
+        state: HomeUiState = HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82),
+        slots: HomeSlots = HomeSlots(),
+        textSize: TextSize = TextSize.MEDIUM
+    ) = compose.setContent {
+        ZeroTheme(ThemeMode.DARK, textSize) {
+            HomeScreen(
+                state = state,
+                onSwipeUp = { calls += "swipeUp" },
+                onLongPress = { calls += "longPress" },
+                onFavoriteClick = { calls += it.label },
+                onClockClick = { calls += "clock" },
+                onDateClick = { calls += "date" },
+                slots = slots
+            )
+        }
     }
 
     @Test
-    fun f1_1_f1_2_showsClockAndDate() {
+    fun f1_1_f1_2_f1_3_showsClockDateAndBattery() {
         show()
         compose.onNodeWithText("10:42").assertExists()
-        compose.onNodeWithText("Thursday 15 October").assertExists()
+        compose.onNodeWithText("Thursday 15 October · 82%").assertExists()
+    }
+
+    @Test
+    fun f1_1_f1_2_tapClockAndDate() {
+        show()
+        compose.onNodeWithText("10:42").performClick()
+        compose.onNodeWithText("Thursday 15 October · 82%").performClick()
+        assertEquals(listOf("clock", "date"), calls)
+    }
+
+    @Test
+    fun f1_4_favoritesAreShownAndLaunch() {
+        show()
+        compose.onNodeWithText("Maps").assertIsDisplayed().performClick()
+        assertEquals(listOf("Maps"), calls)
+    }
+
+    @Test
+    fun f1_8_showsNextAlarmWhenSet() {
+        show(HomeUiState(time, nextAlarm = time.withHour(6).withMinute(30)))
+        compose.onNodeWithText("alarm 06:30").assertExists()
     }
 
     @Test
     fun f4_1_swipeUpOpensAppList() {
         show()
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeUp() }
-        assertEquals(1, swipes)
-    }
-
-    @Test
-    fun f4_1_swipeDownDoesNotOpenAppList() {
-        show()
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeDown() }
-        assertEquals(0, swipes)
+        assertEquals(listOf("swipeUp"), calls)
     }
 
     @Test
     fun f1_9_longPressOnEmptySpaceOpensMenu() {
         show()
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { longClick(center) }
-        assertEquals(1, longPresses)
-        assertEquals(0, swipes)
+        assertEquals(listOf("longPress"), calls)
     }
 
     @Test
-    fun step1_3_homeScreenshot() {
+    fun step2_3_homeScreenshot() {
         show()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f1_7_centeredScreenshot() {
+        show(HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82, alignment = Alignment.CENTER))
+        compose.onRoot().captureRoboImage()
+    }
+
+    /**
+     * Wireframe A5: largest text with every slot filled on a short screen still shows all favorites and the
+     * clock; the to-do slot is dropped first.
+     */
+    @Test
+    @Config(qualifiers = "en-rGB-w392dp-h640dp-xxhdpi", fontScale = 1.3f)
+    fun f1_6_largestTextKeepsFavoritesVisible() {
+        val line: (String) -> (@androidx.compose.runtime.Composable () -> Unit) = { text -> { BodyText(text) } }
+        show(
+            state = HomeUiState(time, favorites = favorites, batteryPercent = 82, nextAlarm = time.withHour(6).withMinute(30)),
+            slots = HomeSlots(
+                stats = line("2h 14m · 38 unlocks"),
+                focus = line("focus"),
+                calendar = line("○ Dentist 4:30 pm"),
+                todo = {
+                    Column {
+                        BodyText("☐ buy milk")
+                        BodyText("☐ call mom")
+                    }
+                }
+            ),
+            textSize = TextSize.EXTRA_LARGE
+        )
+        favorites.forEach { compose.onNodeWithText(it.label).assertIsDisplayed() }
+        compose.onNodeWithText("10:42").assertIsDisplayed()
+        compose.onNodeWithText("☐ buy milk").assertIsNotDisplayed()
         compose.onRoot().captureRoboImage()
     }
 }
