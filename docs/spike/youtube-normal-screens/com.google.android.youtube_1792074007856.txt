@@ -1,0 +1,74 @@
+package: com.google.android.youtube
+candidates found: []
+
+FrameLayout - [0,0][1080,2400]
+  DrawerLayout com.google.android.youtube:id/more_drawer_container [0,0][1080,2400]
+    FrameLayout com.google.android.youtube:id/slim_status_bar_player_container [0,0][1080,2400]
+      FrameLayout com.google.android.youtube:id/accessibility_layer_container [0,0][1080,2400]
+        ViewGroup com.google.android.youtube:id/next_gen_watch_layout_no_player_fragment_container [0,0][1080,2400]
+          FrameLayout com.google.android.youtube:id/miniplayer_chevron_container [0,0][0,0] clickable has-text
+          ViewGroup com.google.android.youtube:id/watch_while_time_bar_view [540,147][1059,484]
+          ViewGroup com.google.android.youtube:id/floaty_bar_time_bar_view [540,147][1059,484]
+          FrameLayout com.google.android.youtube:id/floaty_bar_controls_view [540,147][1059,439] clickable has-text
+          ViewGroup - [540,147][1059,439]
+          ViewGroup - [540,147][1059,439]
+          ViewGroup - [540,147][1059,439]
+          ViewGroup - [540,147][1059,439]
+          ViewGroup - [540,147][1059,439] has-text
+            ImageView com.google.android.youtube:id/modern_miniplayer_overlay_action_button [540,147][666,273] clickable has-text
+            ImageView com.google.android.youtube:id/modern_miniplayer_close [933,147][1059,273] clickable has-text
+            TextView com.google.android.youtube:id/modern_miniplayer_subtitle_text [561,370][583,418]
+        ViewGroup com.google.android.youtube:id/watch_while_layout_coordinator_layout [0,0][1080,2400]
+          ScrollView com.google.android.youtube:id/browse_fragment_layout_coordinator_layout [0,126][1080,2400]
+            FrameLayout com.google.android.youtube:id/toolbar_container [0,126][1080,252]
+              FrameLayout com.google.android.youtube:id/collapsing_header_container [0,126][1080,126]
+              ViewGroup com.google.android.youtube:id/toolbar [0,126][1080,252]
+                ImageButton - [0,126][147,252] clickable has-text
+                TextView com.google.android.youtube:id/search_query [147,147][723,231] clickable has-text
+                ImageView com.google.android.youtube:id/search_clear [723,126][849,252] clickable has-text
+                ImageView com.google.android.youtube:id/voice_search [849,126][975,252] clickable has-text
+                ImageView - [975,126][1080,252] clickable has-text
+            RecyclerView - [0,252][1080,378] scrollable has-text
+              LinearLayout - [42,273][146,357] clickable
+                TextView com.google.android.youtube:id/chip_cloud_chip_modern_text [42,273][146,357] has-text
+              LinearLayout - [167,273][336,357] clickable
+                TextView com.google.android.youtube:id/chip_cloud_chip_modern_text [167,273][336,357] has-text
+              LinearLayout - [357,273][599,357] clickable
+                TextView com.google.android.youtube:id/chip_cloud_chip_modern_text [357,273][599,357] has-text
+              LinearLayout - [620,273][823,357] clickable
+                TextView com.google.android.youtube:id/chip_cloud_chip_modern_text [620,273][823,357] has-text
+              LinearLayout - [844,273][1016,357] clickable
+                TextView com.google.android.youtube:id/chip_cloud_chip_modern_text [844,273][1016,357] has-text
+              LinearLayout - [1037,273][1080,357] clickable
+                TextView com.google.android.youtube:id/chip_cloud_chip_modern_text [1037,273][1080,357] has-text
+            RecyclerView com.google.android.youtube:id/results [0,378][1080,2400] scrollable
+              ViewGroup - [0,378][1080,978]
+                xzr - [0,378][539,977]
+                  Button - [32,378][529,917] clickable has-text
+                  Button - [455,53][518,116] clickable has-text
+                  Button - [32,799][127,894] clickable has-text
+                xzr - [541,378][1080,977]
+                  Button - [550,378][1047,917] clickable has-text
+                  Button - [973,53][1036,116] clickable has-text
+                  Button - [550,799][645,894] clickable has-text
+              xzr - [0,978][1080,999]
+              xzr - [0,999][1080,1806]
+                Button - [0,996][1080,1740] clickable has-text
+                Button - [32,1638][127,1733] clickable has-text
+                Button - [954,1638][1017,1701] clickable has-text
+              xzr - [0,1803][1080,2400]
+                Button - [0,1803][1080,2400] clickable has-text
+                Button - [32,2442][127,2537] clickable has-text
+                Button - [954,2442][1017,2505] clickable has-text
+        HorizontalScrollView com.google.android.youtube:id/pivot_bar [0,2227][1080,2400]
+          LinearLayout - [0,2227][1080,2353]
+            Button - [0,2227][216,2353] clickable has-text
+              TextView com.google.android.youtube:id/text [70,2309][147,2339] has-text
+            Button - [216,2227][432,2353] clickable has-text
+              TextView com.google.android.youtube:id/text [283,2309][365,2339] has-text
+            Button - [432,2227][648,2353] clickable has-text
+            Button - [648,2227][864,2353] clickable has-text
+              View com.google.android.youtube:id/new_content_dot [762,2236][794,2268] has-text
+              TextView com.google.android.youtube:id/text [674,2309][838,2339] has-text
+            Button - [864,2227][1080,2353] clickable has-text
+              TextView com.google.android.youtube:id/text [947,2309][998,2339] has-text

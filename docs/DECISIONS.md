@@ -112,5 +112,5 @@ Logging on/off, log level and the last-seen crash report are stored in SharedPre
 ---
 
 ## Pending (to be decided during the plan)
-- Feasibility spike results (Step 0.5): app-clone visibility, usage-stats accuracy, service survival on the phone, F16 detection.
+- Feasibility spike results (Step 0.5), partial in `docs/spike/RESULTS.md`: YouTube Shorts detection, overlay and same-day service survival confirmed; still open: app clones, usage-stats accuracy, overnight + reboot survival, Instagram Reels, Play Protect.
 - Text fonts besides Doto (Step 2.2): OFL-licensed only.
