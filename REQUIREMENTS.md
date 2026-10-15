@@ -419,7 +419,7 @@ feature/shortsblock/   – F16
 11. **Diagnostics**: log viewer, crash reports, export, clear.
 12. **Safe mode**: plain app list, crash banner, crash report, home settings, exit.
 
-Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in Step 0.4) and must be approved before the screen is built.
+Low-fidelity wireframes live in `docs/wireframes.md`. They are approved **phase by phase** (Step 0.4, 2.0, 4.0, 5.0, 6.0) before that phase's screens are built; the home screen is drawn in its final form in Step 0.4.
 
 ---
 

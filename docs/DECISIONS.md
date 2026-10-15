@@ -64,6 +64,14 @@ Code goes to a private GitHub repo (push `main` after each step, with approval);
 F13 export/import moves from v1.2 to v1.0 (Step 2.10); each later feature adds its settings to the backup format.
 *Why:* Debug builds install over the everyday app (D-010), so a backup must exist from the start.
 
+**D-015 — Focus starts from a home button** · 2026-10-15 · Accepted
+A text button "focus" on home starts Focus mode; it shows remaining time while active.
+*Why:* User's choice; one tap is quicker than Settings or a hidden long-press.
+
+**D-016 — Wireframes approved phase by phase** · 2026-10-15 · Accepted
+Each phase starts with a wireframe step (0.4, 2.0, 4.0, 5.0, 6.0); the home screen is drawn in its final form up front.
+*Why:* Less review up front, and later screens benefit from using earlier versions. The home screen is the exception because it can't scroll and must fit everything.
+
 ---
 
 ## Pending (to be decided during the plan)

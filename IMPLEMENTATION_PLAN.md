@@ -83,9 +83,10 @@ feature/applist/
 ```
 
 ### Step 0.4 — Wireframes
-- Create `docs/wireframes.md` with ASCII/low-fi wireframes for every screen in REQUIREMENTS.md §6.
+- Create `docs/wireframes.md` with ASCII/low-fi wireframes. **Wireframes are approved phase by phase:** each phase starts with a *Wireframes* step for its new screens, and I approve them before any screen in that phase is built.
+- In this step: wireframes for the Phase 1 screens (app list, diagnostics, safe mode) and the **final home screen** (below).
 - The **home wireframe shows its final layout**: clock, date, battery, screen-time stats (each F10.5 style), focus button / focus timer, calendar/to-do lines, and favorites. It also shows which areas collapse when a feature is off, and how it fits at the largest font size.
-- **I review and approve them before Phase 1.** Agents build screens to match the wireframes; differences need my approval.
+- **I review and approve them before Phase 1.** Agents build screens to match approved wireframes; differences need my approval.
 
 ### Step 0.5 — Feasibility spikes (throwaway, on a `spike/` branch, not merged)
 A small debug APK installed on the test phone to check the risky parts **before** building on them:
@@ -177,6 +178,9 @@ Behaviour:
 
 ## Phase 2 — v1.0 Features (F1–F6, F13, F14)
 
+### Step 2.0 — Wireframes for Phase 2
+App context menu, rename dialog, favorites edit mode, hidden apps, all Settings screens (home, app list, gestures, appearance, backup, diagnostics, about), onboarding pages. **Approved by me before Step 2.1.**
+
 ### Step 2.1 — Settings storage
 - Add DataStore. `core/data/SettingsRepository` on **Proto DataStore** (typed).
 - Stores favorites (ordered keys), hidden set, renames map, gesture bindings, appearance, onboarding flag.
@@ -262,6 +266,9 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 
 ## Phase 4 — v1.1 Wellbeing & Insights (F7, F8, F9, F10)
 
+### Step 4.0 — Wireframes for Phase 4
+Permission explanation screens, mindful pause, limit reached, wellbeing settings (F8 toggles), notification inbox and filter settings, focus picker, Insights, and the home screen-time stats in each style. **Approved by me before Step 4.1.**
+
 ### Step 4.1 — Infrastructure
 - Add **Room** (limits, inbox, usage cache, focus schedules) with exported schemas for migration tests.
 - Add **WorkManager**: midnight reset, digests, scheduled focus.
@@ -306,6 +313,9 @@ Reuses the usage calculation from Step 4.3.
 
 ## Phase 5 — v1.2 Extras (F11, F12)
 
+### Step 5.0 — Wireframes for Phase 5
+Grayscale screen, widget settings, and home calendar/to-do lines. **Approved by me before Step 5.1.**
+
 ### Step 5.1 — Grayscale shortcut (F11)
 - Settings entry opening the system accessibility/color-correction screen + accessibility-shortcut tip. No `WRITE_SECURE_SETTINGS`.
 
@@ -322,6 +332,9 @@ Reuses the usage calculation from Step 4.3.
 ---
 
 ## Phase 6 — v1.3 Short-Form Content Blocker (F16)
+
+### Step 6.0 — Wireframes for Phase 6
+Block overlay, short-form blocker settings, explanation screen. **Approved by me before Step 6.1.**
 
 ### Step 6.1 — Detection rules as data
 - `assets/shortform_rules.json`: `{ version, apps: [{ package, viewIds: [...], minAppVersion? }] }`.

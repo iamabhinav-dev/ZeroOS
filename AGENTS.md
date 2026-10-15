@@ -11,7 +11,7 @@ Rules for any AI agent (or human) working in this repository. **Read this file b
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | *In what order* to build it. Phases and steps (e.g., Step 2.4). |
 | [TRACEABILITY.md](TRACEABILITY.md) | Which tests cover each requirement ID. |
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Decisions already made. Don't reopen them; ask if one seems wrong. |
-| docs/wireframes.md | Approved screen layouts (from Step 0.4). Build screens to match. |
+| docs/wireframes.md | Approved screen layouts, added phase by phase. **Never build a screen without an approved wireframe.** |
 | AGENTS.md (this file) | *How* to work. |
 
 If these files conflict, **stop and ask the user**. Do not resolve it yourself.
