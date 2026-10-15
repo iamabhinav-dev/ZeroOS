@@ -89,8 +89,8 @@ The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears 
 Clock, date, stats numbers, focus timer and block-screen title use Doto (OFL); other text uses a readable bundled font.
 *Why:* User wanted the Nothing Ndot 57 look; Ndot is proprietary, Doto is a free look-alike; dot fonts are hard to read at small sizes.
 
-**D-021 — Random puns on the block screen** · 2026-10-15 · Accepted
-The F16 black screen shows a random pun from a built-in list by default; a custom message is optional.
+**D-021 — Random puns on stop screens** · 2026-10-15 · Accepted
+The F16 black screen, the F8 mindful pause and the F8 limit-reached screen each show a random pun from their own built-in list by default (F16.9, F8.13); custom message (F16) or plain text (F8.14) optional.
 *Why:* User's request; keeps the block screen light instead of preachy.
 
 ---

@@ -164,6 +164,8 @@ The default screen shown when I press Home.
 | F8.10 | Turning the feature off **keeps the configuration** (flagged apps, limits, pause duration) so it's restored when turned back on. |
 | F8.11 | Permissions (Usage Access, Accessibility) are requested only when the related toggle is first switched on; switching off stops the related background work immediately. |
 | F8.12 | Optional friction when turning off during an active limit (e.g., mindful pause or "hold for 3 s"), configurable, to prevent impulsive disabling. |
+| F8.13 | **Puns on stop screens:** the mindful pause (F8.1) shows a random line from a "pause" list (e.g. "Is this a want, or a habit?"); the limit-reached block (F8.4, F8.7) shows a random line from a "limit" list (e.g. "That's a wrap for today."). Lists are string-arrays in `core/resources`; a different line each time. |
+| F8.14 | Puns can be turned off in Settings → Wellbeing; then a plain message is shown (e.g. "Daily limit reached"). |
 
 ### F9 — Focus Mode
 
@@ -509,6 +511,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | F16 mode (F16.7/F16.8) | Block | block / limit |
 | F16 daily allowance (F16.8) | 15 min | 0–120 min |
 | F16 block message (F16.9) | Random pun | random pun / custom (≤ 120 chars) |
+| Puns on pause / limit screens (F8.13, F8.14) | On | on/off |
 | F16 auto-home after (F16.10) | Off | off / 3–10 s |
 | F16 pause after "Go home" before blocking again (F16.10) | 1 s | fixed |
 | F16 "Allow 5 minutes" uses/day (F16.11) | 1 | 0–5 |
