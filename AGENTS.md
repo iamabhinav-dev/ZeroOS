@@ -2,11 +2,16 @@
 
 Rules for any AI agent (or human) working in this repository. **Read this file before making changes.**
 
+**Project context:** a personal launcher for one user. Primary device is the primary phone, but code must work on any Android phone. The app is installed by sideloading a signed APK. **No app store, no monetization, no ADB, no Developer options.** Don't propose or build anything that needs these.
+
 ## 1. Sources of Truth
 | File | Purpose |
 |---|---|
 | [REQUIREMENTS.md](REQUIREMENTS.md) | *What* to build. Feature IDs (F1–F16) and requirement IDs (e.g., F8.3, NFR-P1). |
 | [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md) | *In what order* to build it. Phases and steps (e.g., Step 2.4). |
+| [TRACEABILITY.md](TRACEABILITY.md) | Which tests cover each requirement ID. |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | Decisions already made. Don't reopen them; ask if one seems wrong. |
+| docs/wireframes.md | Approved screen layouts (from Step 0.4). Build screens to match. |
 | AGENTS.md (this file) | *How* to work. |
 
 If these files conflict, **stop and ask the user**. Do not resolve it yourself.
@@ -19,12 +24,15 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 5. **Ask when it's unclear.** If a requirement is ambiguous or seems impossible on Android, ask before guessing. Note any assumption you make in the commit message.
 6. **No unrelated refactors.** Only touch code needed for the current step. Report other problems you notice; don't fix them silently.
 7. **Every change must map to an ID.** If you can't name the requirement (e.g., F2.4) or plan step (e.g., Step 2.4) a change serves, don't make it.
+8. **Use the defaults in REQUIREMENTS.md Appendix A.** Don't invent default values, thresholds, or limits.
+9. **Removed or deferred items stay out:** F15 (premium), F16.13 (remote rules), ADB-based features, store/release work, translations/RTL, and device/emulator tests, unless I ask for them.
+10. **Only public Android APIs.** No OEM-private APIs, reflection into hidden APIs, root, or device-specific code paths.
 
 ## 3. Commits — Small and Incremental
 - **Commit after each logical unit of work**, not at the end of a phase. One step usually means several commits.
   - Good: "add AppsRepository with LauncherApps callback", then "add app list screen", then "add search matching".
   - Bad: one commit containing a whole phase.
-- **Before each commit:** the project builds, lint passes, new code has tests, and all tests pass (`./gradlew assembleDebug lint test` once the Android project exists).
+- **Before each commit:** new code has tests and `./gradlew check` passes (build, lint, detekt/ktlint, all JVM tests, coverage), once the Android project exists.
 - **Message format** ([Conventional Commits](https://www.conventionalcommits.org/)) with the requirement/step ID:
   ```
   feat(applist): add initials-based search matching
@@ -33,36 +41,43 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
   ```
   Types: `feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `build`, `ci`, `perf`.
 - **Branches:** one branch per plan step, e.g. `step-2.4-app-search`; merge into `main` when the step is done.
-- **Never** commit secrets, keystores, `local.properties`, or build output.
+- **Never** commit secrets, keystores (`*.jks`), `keystore.properties`, `local.properties`, APKs, or build output.
 - **Never** push, force-push, rewrite history, or open PRs without the user's approval.
-- After finishing a step, mark it done in IMPLEMENTATION_PLAN.md by adding ✅ to the step heading, in its own `docs:` commit.
+- A step is finished only when the **Definition of Done** in IMPLEMENTATION_PLAN.md is met. Then mark it ✅ in IMPLEMENTATION_PLAN.md in its own `docs:` commit.
 
 ## 4. Technical Conventions
-- **Stack:** Kotlin, Jetpack Compose (Material 3, restyled to minimal), MVVM + unidirectional data flow, single activity, Hilt, DataStore, Room (from Phase 4), Coroutines/Flow, WorkManager.
+- **Stack:** Kotlin, Jetpack Compose (Material 3, restyled to minimal), MVVM + unidirectional data flow, single activity, Hilt, DataStore (from Phase 2), Room and WorkManager (from Phase 4), Coroutines/Flow.
 - **Module placement** follows IMPLEMENTATION_PLAN.md (`core/*`, `feature/*`). Feature modules must not depend on each other; shared code goes in `core/`.
 - **Dependencies:** add a library only if the current step needs it; use the version catalog (`gradle/libs.versions.toml`); prefer AndroidX and Jetpack. Mention every new dependency in the commit message.
 - **UI:** no app icons, badges, or colorful elements, which goes against the product's purpose. Use theme tokens from `core/ui` (no hardcoded colors or sizes) and keep all user-facing text in `strings.xml`.
 - **Accessibility:** content descriptions, 48dp touch targets, WCAG AA contrast (NFR-A1–A4).
 - **Performance:** no polling loops, no work on the main thread, and use system callbacks (NFR-P1–P6).
+- **Time:** never call `System.currentTimeMillis()` or `LocalDate.now()` directly in logic; inject a `Clock`/`TimeSource` so tests can control time.
+- **State:** survive process death and config changes (`SavedStateHandle`, persisted settings) (NFR-R7).
+- **Logging:** only through the `Logger` wrapper, debug builds only, and **never log user data** such as notification text, usage, or intentions (NFR-S5).
 
 ## 5. Privacy & Permissions (non-negotiable)
-- No analytics, ads, or trackers. No network calls except those REQUIREMENTS.md allows (weather, billing, signed F16 rules).
-- **Do not add a permission to the manifest** unless the current step's requirement needs it.
-- Sensitive permissions (Usage Access, Notification Access, Accessibility, Device Admin, DND) must be opt-in, have an explanation screen, be requested only when needed, and have a working fallback if denied.
+- No analytics, ads, crash-reporting services, or trackers. No network access except weather (F12.1, Phase 5).
+- **Do not add a permission to the manifest** unless the current step's requirement needs it. Update `config/permissions-allowlist.txt` in the same commit with the requirement ID; the allowlist test enforces this.
+- Sensitive permissions (Usage Access, Notification Access, Accessibility, DND) must be opt-in, have an explanation screen (including the Android 13+ "Allow restricted settings" instructions where relevant), be requested only when needed, and have a working fallback if denied.
 - All user data stays on the device.
 
 ## 6. Testing (mandatory)
 - **No step is done without tests.** Follow the *Testing Policy* in IMPLEMENTATION_PLAN.md and the step's **Tests** list.
-- Write tests **in the same branch and alongside the code**, ideally in the same commit as the logic they cover. Tests are not a later phase.
-- Unit tests for all logic; Compose UI tests for every new/changed user flow; instrumented tests for services, Room/DataStore, and permission fallbacks.
+- **JVM only for now:** unit tests, Compose UI tests on Robolectric, Roborazzi screenshot tests, and Robolectric persistence/WorkManager tests. Don't add instrumented, emulator, or benchmark tests unless I ask.
+- Write tests **alongside the code**, ideally in the same commit as the logic they cover.
 - Bug fixes start with a failing regression test.
-- Every requirement ID you implement must be covered by at least one test; name or annotate tests with the ID (e.g., `fun f2_4_matchesInitials()`).
-- Keep logic coverage ≥ 80% (Kover/JaCoCo).
+- Every schema change (DataStore proto, Room) gets a migration test.
+- Time-dependent logic is tested at midnight, time-zone change, DST change, and manual clock change.
+- Name tests after the requirement ID (e.g., `fun f2_4_matchesInitials()`) and update TRACEABILITY.md.
+- Keep logic coverage ≥ 80% (Kover).
 - Don't delete, skip, or weaken existing tests to make a build pass. Fix the cause or ask.
+- If a step needs a manual phone check, say so in the report. Don't claim it passed: I do it on the phone.
 
 ## 7. When You Finish a Task
 Report briefly:
 1. Which step and requirement IDs were done, and which tests cover them.
 2. What was committed (list of commits).
 3. Anything skipped, assumed, or blocked, and open questions.
-4. The next step in the plan, without starting it unless asked.
+4. What I need to check manually on the phone, if anything.
+5. The next step in the plan, without starting it unless asked.
