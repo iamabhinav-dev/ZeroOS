@@ -5,10 +5,10 @@ Approved phase by phase (D-016). Agents build screens to match **approved** wire
 
 | Section | Screens | Phase | Status |
 |---|---|---|---|
-| A | Home (final layout) | 0.4 | 🟡 Awaiting approval |
-| B | App list | 0.4 | 🟡 Awaiting approval |
-| C | Diagnostics | 0.4 | 🟡 Awaiting approval |
-| D | Safe mode | 0.4 | 🟡 Awaiting approval |
+| A | Home (final layout) | 0.4 | ✅ Approved 2026-10-15 |
+| B | App list | 0.4 | ✅ Approved 2026-10-15 |
+| C | Diagnostics | 0.4 | ✅ Approved 2026-10-15 |
+| D | Safe mode | 0.4 | ✅ Approved 2026-10-15 |
 
 Legend: `[ text ]` = button · `▁▃▅` = chart · `‹…›` = placeholder value · *italic notes* = behavior.
 
