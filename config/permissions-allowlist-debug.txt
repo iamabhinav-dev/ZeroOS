@@ -1,0 +1,4 @@
+# Extra permissions allowed ONLY in debug builds (debug-only tools). Never needed by release.
+android.permission.POST_NOTIFICATIONS  # LeakCanary leak notifications (Step 0.6)
+android.permission.READ_EXTERNAL_STORAGE  # LeakCanary heap dumps (Step 0.6)
+android.permission.WRITE_EXTERNAL_STORAGE  # LeakCanary heap dumps (Step 0.6)

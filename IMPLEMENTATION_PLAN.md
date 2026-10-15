@@ -30,7 +30,7 @@ Tests are **required**, not a separate phase. For now, **all automated tests run
 5. **Persistence tests** (Robolectric): DataStore/Room read/write, and a **migration test** for every schema change.
 6. **Time-dependent logic** uses an injected `Clock`/`TimeSource` and is tested for: local midnight, time-zone change, DST change, and manual clock change.
 7. **Regression test first** for every bug fix: write a failing test, then fix.
-8. **Permission allowlist test**: a unit test compares the merged manifest's permissions to an allowlist in `config/permissions-allowlist.txt`. Adding a permission means updating the allowlist in the same commit, with the requirement ID.
+8. **Permission allowlist test**: a unit test compares the merged manifest's permissions to `config/permissions-allowlist.txt` (all builds) plus `config/permissions-allowlist-debug.txt` (debug-only tools, e.g. LeakCanary). Adding a permission means updating the allowlist in the same commit, with the requirement ID.
 9. `./gradlew check` (build, lint, detekt/ktlint, all JVM tests, coverage verification) passes locally before every commit.
 10. Coverage of `core/` and `feature/*` logic (excluding UI-only composables) stays **≥ 80%** (Kover) from Phase 1 onward.
 11. [TRACEABILITY.md](TRACEABILITY.md) maps each implemented requirement ID to its tests.
@@ -60,7 +60,7 @@ Tests are **required**, not a separate phase. For now, **all automated tests run
 
 ### Step 0.1 — Tooling ✅
 - **No Android Studio** (needs too much RAM for this 8 GB machine; D-017). Command-line setup instead:
-  - JDK 17 (Temurin 17.0.20.1) in `~/.local/jdk-17`
+  - JDK 21 (Temurin 21.0.12.1) in `~/.local/jdk-21`. Originally JDK 17; switched in Step 0.6 because Robolectric needs Java 21 for API 37. Bytecode still targets Java 17.
   - Android SDK in `~/Android/Sdk`: cmdline-tools (latest), platform-tools, `platforms;android-37.0`, `build-tools;37.0.0`
   - `JAVA_HOME`, `ANDROID_HOME`, and `PATH` set in `~/.bashrc`
 - Editor: VS Code (Kotlin extension optional). Screens are reviewed via Roborazzi screenshot PNGs instead of Studio previews.
@@ -105,7 +105,7 @@ A small debug APK installed on the test phone to check the risky parts **before*
 
 Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss** before continuing the plan.
 
-### Step 0.6 — Quality gates & test setup
+### Step 0.6 — Quality gates & test setup ✅
 - ktlint + detekt; Android Lint with warnings as errors.
 - **Text and token checks (NFR-L3–L8):** Lint `HardcodedText` as error; a custom detekt rule that fails on string literals passed to `Text()`, `contentDescription`, `label`, `placeholder`, and similar UI parameters, and on hardcoded `Color(…)`/`.dp` values outside `core/ui`. `core/resources` holds `strings.xml`/`plurals.xml` with the `common_*` / `<screen>_*` naming convention.
 - Test stack: JUnit, MockK or hand-written fakes (`core/testing`), Turbine, Robolectric, Compose UI test, Roborazzi; Kover with an 80% verification rule.
