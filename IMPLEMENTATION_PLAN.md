@@ -158,9 +158,14 @@ Behaviour:
 - One-time "crashed last time" message on the next start after a crash.
 - Log the Phase 1 events: app start, home/list shown, app launched, package changes.
 
-**Tests:** `AppsRepository` with a fake `LauncherApps` (list, sort, install/uninstall updates, extra profiles); clock Flow (minute alignment, time-zone change); Robolectric UI test (home → swipe up → list → tap fires launch); screenshots of home and list; logger (format, levels, rotation at 1 MB, 7-day cleanup, background writing, failure swallowed, forbidden content not logged), crash handler (writes file with last 50 entries, then delegates), exit-reason mapping with fakes, diagnostics screen UI + export intent.
+### Step 1.5 — Safe mode (F18)
+- Start/crash counter in a small synchronous file; crash handler (F17.5) increments it.
+- Trigger at 3 crashes within 60 s of start; minimal safe-mode screen in `app/` with plain app list and the F18.3 buttons.
+- README: "Never disable or uninstall the stock launcher" and how to switch back (Settings → Apps → Default apps → Home app).
 
-**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the test phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart; a forced test crash (debug-only button) produces a crash report visible on the next start, and logs can be exported.
+**Tests:** `AppsRepository` with a fake `LauncherApps` (list, sort, install/uninstall updates, extra profiles); clock Flow (minute alignment, time-zone change); Robolectric UI test (home → swipe up → list → tap fires launch); screenshots of home and list; logger (format, levels, rotation at 1 MB, 7-day cleanup, background writing, failure swallowed, forbidden content not logged), crash handler (writes file with last 50 entries, then delegates), exit-reason mapping with fakes, diagnostics screen UI + export intent; safe-mode trigger logic (2 crashes → normal, 3 within 60 s → safe, 3 spread out → normal, reset after 60 s stable and on exit), safe-mode screen UI with no DataStore access.
+
+**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the test phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart; a forced test crash (debug-only button) produces a crash report visible on the next start, and logs can be exported; a debug-only "crash on start" switch triggers safe mode after 3 starts, and "Open Home settings" lets me switch to the stock launcher.
 
 ---
 
@@ -207,6 +212,7 @@ Behaviour:
 
 ### Step 2.9 — Onboarding (F14)
 - Intro (3–4 pages) → set as default (`RoleManager` / home settings) → pick favorites → background reliability (F14.6). Skippable; shown once.
+- The set-as-default page says: keep the stock launcher installed and enabled as a fallback (F18.7).
 
 ### Step 2.10 — Settings structure
 Home · App list · Gestures · Appearance · Hidden apps · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7).

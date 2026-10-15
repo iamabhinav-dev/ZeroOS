@@ -55,6 +55,7 @@ Default launchers are designed for engagement: bright icons, notification badges
 | F13 | Backup & restore settings | P2 | v1.2 |
 | F16 | Short-form content blocker (Reels, Shorts) | P2 | v1.3 |
 | F17 | Diagnostics: event log & crash log | P0 | M0 (from the first build) |
+| F18 | Safe mode (crash-loop protection) | P0 | M0 (from the first build) |
 | ~~F15~~ | ~~Premium / monetization~~ | Removed | Not needed for personal use |
 
 Priority: **P0** = must have, **P1** = should have, **P2** = nice to have.
@@ -284,6 +285,19 @@ A local, on-device log of what the app is doing, so that when something breaks o
 | F17.11 | Settings toggle **Diagnostics logging** (on by default) and **log level**: DEBUG in debug builds, INFO in release builds by default. Crash logging (F17.5) and exit reasons (F17.6) are always on. |
 | F17.12 | Logging must not crash the app: any failure inside the logger is swallowed. |
 
+### F18 — Safe Mode (Crash-Loop Protection)
+As the default home app, a crash on start would repeat on every Home press and make the phone hard to use. Safe mode keeps the phone usable.
+
+| ID | Requirement |
+|---|---|
+| F18.1 | Record each app start and each crash (time stamps in a tiny file written synchronously, separate from DataStore). |
+| F18.2 | If the app crashes **3 times within 60 seconds of starting**, the next start enters **Safe mode**. |
+| F18.3 | Safe mode shows only: a plain alphabetical app list (tap to launch, no search ranking, no gestures), a banner "Safe mode: ZeroOS crashed repeatedly", and buttons **View crash report** (F17), **Open Home settings** (`Settings.ACTION_HOME_SETTINGS`, to switch to the stock launcher), and **Exit safe mode**. |
+| F18.4 | Safe mode does not read DataStore/Room, start services, or apply any feature (limits, focus, F16, stats), so corrupted settings or a buggy feature cannot crash it. |
+| F18.5 | Safe mode depends only on `LauncherApps`, `core/logging` and `core/resources`; it lives in `app/` and is kept minimal. |
+| F18.6 | "Exit safe mode" resets the crash counter and restarts normally. A start without a crash for 60 s also resets the counter. |
+| F18.7 | **Never disable or uninstall the phone's stock launcher** (the stock launcher): it is the fallback if ZeroOS is unusable. Documented in README and onboarding. |
+
 ---
 
 ## 4. Non-Functional Requirements
@@ -328,6 +342,7 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | NFR-R5 | Handle work-profile / app-clone apps. |
 | NFR-R6 | Settings and data survive app updates (installing a new APK over the old one). |
 | NFR-R7 | Survive process death and configuration changes (rotation, dark-mode switch, font-size change) without losing state. |
+| NFR-R8 | A crash loop never locks me out of the phone (F18). |
 
 ### 4.5 Language, Text & Formats
 | ID | Requirement |
@@ -399,6 +414,7 @@ feature/shortsblock/   – F16
 9. **Onboarding**: intro, set default, pick favorites, background reliability.
 10. **Short-form block overlay**: black screen + message + "Go back".
 11. **Diagnostics**: log viewer, crash reports, export, clear.
+12. **Safe mode**: plain app list, crash banner, crash report, home settings, exit.
 
 Low-fidelity wireframes for each screen live in `docs/wireframes.md` (created in Step 0.4) and must be approved before the screen is built.
 
@@ -502,3 +518,4 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Log size limit (F17.3) | 3 files × 1 MB | — |
 | Log retention (F17.3) | 7 days | 1–30 days |
 | Crash entries attached to crash report (F17.5) | Last 50 log entries | — |
+| Safe mode trigger (F18.2) | 3 crashes within 60 s of start | — |

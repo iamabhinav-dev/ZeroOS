@@ -26,12 +26,13 @@ Update this file in the same commit as the code and tests.
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |
 | F16.13 | ❌ | Removed (D-006) | |
 | F17.1–F17.12 | ⬜ | | Forced crash → report on next start; export logs |
+| F18.1–F18.7 | ⬜ | | Debug crash-on-start → safe mode; switch to the stock launcher |
 | NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
 | NFR-P3 | ⬜ | | |
 | NFR-P6 | ⬜ | | APK size check |
 | NFR-S1–S6 | ⬜ | | |
 | NFR-A1–A4 | ⬜ | | |
-| NFR-R1–R7 | ⬜ | | |
+| NFR-R1–R8 | ⬜ | | |
 | NFR-L1–L8 | ⬜ | | |
 
 When a feature's work starts, split its row into one row per requirement ID (e.g., F2.4) and list the tests.

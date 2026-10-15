@@ -27,6 +27,7 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 8. **Use the defaults in REQUIREMENTS.md Appendix A.** Don't invent default values, thresholds, or limits.
 9. **Removed or deferred items stay out:** F15 (premium), F12.1 (weather), F16.13 (remote rules), ADB-based features, store/release work, translations/RTL, and device/emulator tests, unless I ask for them.
 10. **Only public Android APIs.** No OEM-private APIs, reflection into hidden APIs, root, or device-specific code paths.
+11. **Keep safe mode (F18) minimal and independent.** Never make it depend on DataStore, Room, services, or feature modules.
 
 ## 3. Commits — Small and Incremental
 - **Commit after each logical unit of work**, not at the end of a phase. One step usually means several commits.
