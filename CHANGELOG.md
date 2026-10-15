@@ -4,6 +4,11 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.5 (versionCode 5)
+- Dot-matrix lightning bolt after the battery % while charging (F1.3, D-031)
+- New app icon: Doto's "0" as 12 dots (D-032)
+- Fix: no disk reads on the main thread when home opens; StrictMode log no longer flooded by the phone's theme loader
+
 ## 0.0.4 (versionCode 4)
 - Fix: tapping the clock crashed ZeroOS (the Clock app requires the SET_ALARM permission); clock and date taps
   can no longer crash, failures are logged (Step 2.3)
