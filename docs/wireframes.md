@@ -9,9 +9,9 @@ Approved phase by phase (D-016). Agents build screens to match **approved** wire
 | B | App list | 0.4 | ✅ Approved 2026-10-15 |
 | C | Diagnostics | 0.4 | ✅ Approved 2026-10-15 |
 | D | Safe mode | 0.4 | ✅ Approved 2026-10-15 |
-| E | App actions: long-press menu, rename, favorites edit, hidden apps | 2.0 | 🟡 Awaiting approval |
-| F | Settings (home, app list, gestures, appearance, backup, about) | 2.0 | 🟡 Awaiting approval |
-| G | Onboarding | 2.0 | 🟡 Awaiting approval |
+| E | App actions: long-press menu, rename, favorites edit, hidden apps | 2.0 | ✅ Approved 2026-10-16 |
+| F | Settings (home, app list, gestures, appearance, backup, about) | 2.0 | ✅ Approved 2026-10-16 |
+| G | Onboarding | 2.0 | ✅ Approved 2026-10-16 |
 
 Legend: `[ text ]` = button · `▁▃▅` = chart · `‹…›` = placeholder value · *italic notes* = behavior.
 

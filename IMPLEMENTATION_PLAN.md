@@ -187,7 +187,7 @@ Behaviour:
 
 ## Phase 2 — v1.0 Features (F1–F6, F13, F14)
 
-### Step 2.0 — Wireframes for Phase 2
+### Step 2.0 — Wireframes for Phase 2 ✅
 App context menu, rename dialog, favorites edit mode, hidden apps, all Settings screens (home, app list, gestures, appearance, backup, diagnostics, about), onboarding pages. **Approved by me before Step 2.1.**
 
 ### Step 2.1 — Settings storage
