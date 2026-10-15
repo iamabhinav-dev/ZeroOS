@@ -132,7 +132,7 @@ The default screen shown when I press Home.
 |---|---|
 | F6.1 | Themes: **Dark** (default, pure black for OLED), **Light**, **System**. |
 | F6.2 | Wallpaper: solid color (default black), or system wallpaper with dim overlay. |
-| F6.3 | Font: choice of 3–5 bundled OFL-licensed fonts + system font for text (app names, lists, settings). The **clock, date and numbers** (screen-time stats, focus timer, stop-screen puns) use **Ndot 57** (Nothing's dot-matrix font), bundled in the app from a font file I provide. **Doto** (OFL look-alike) is the fallback if the Ndot file is absent from the build. |
+| F6.3 | Font: choice of 3–5 bundled OFL-licensed fonts + system font for text (app names, lists, settings). The **clock, date and numbers** (screen-time stats, focus timer, stop-screen puns) use the dot-matrix font **Doto** (OFL; free look-alike of Nothing's Ndot 57, which is proprietary and not used). |
 | F6.4 | Text size: small / medium / large / extra-large; respects system font scale. |
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
 | F6.6 | Accent color is monochrome by default; optional single accent color. |

@@ -85,10 +85,9 @@ From v1.1 (when the manifest declares a notification listener and an Accessibili
 The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears as soon as Shorts/Reels is detected again (only a ~1 s transition pause).
 *Why:* Spike testing showed one Back press often stays on the Shorts tab; apps can't force-close other apps; a grace period would be a loophole.
 
-**D-020 — Ndot 57 bundled for clock and numbers** · 2026-10-15 · Accepted (revised)
-Clock, date, stats numbers, focus timer and stop-screen puns use Ndot 57, bundled from a font file the user provides; Doto (OFL) is the fallback if the file is missing. Other text uses a readable bundled font.
-*Why:* User's explicit choice (over an import-your-own-font option).
-*Consequences:* Ndot 57 is Nothing's proprietary font. It's acceptable here only because the app is personal, unpublished, and the repo is private. If the app or repo is ever shared or published, remove Ndot and use Doto. Agents must not download Ndot from the internet; the user supplies the file.
+**D-020 — Doto dot-matrix font for clock and numbers** · 2026-10-15 · Accepted (final)
+Clock, date, stats numbers, focus timer and stop-screen puns use Doto (OFL, from Google Fonts); other text uses a readable bundled font.
+*Why:* User wanted the Nothing Ndot 57 look; Ndot is proprietary. Bundling Ndot was briefly chosen, then replaced by Doto, so no proprietary font is in the app or repo.
 
 **D-021 — Random puns on stop screens** · 2026-10-15 · Accepted
 The F16 black screen, the F8 mindful pause and the F8 limit-reached screen each show a random pun from their own built-in list by default (F16.9, F8.13); custom message (F16) or plain text (F8.14) optional.
