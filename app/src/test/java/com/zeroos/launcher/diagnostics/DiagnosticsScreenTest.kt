@@ -56,6 +56,7 @@ class DiagnosticsScreenTest {
                 onToggleLogging = { calls += "toggle" },
                 onCycleLevel = { calls += "level" },
                 onCrashNow = { calls += "crash" },
+                onToggleCrashOnStart = { calls += "crashOnStart" },
                 onBack = { calls += "back" }
             )
         }
@@ -122,6 +123,13 @@ class DiagnosticsScreenTest {
     fun step1_4_crashButtonShownInDebug() {
         show(debug = true)
         assertShown("Crash now (debug only)")
+    }
+
+    @Test
+    fun step1_5_crashOnStartToggleInDebug() {
+        show(debug = true)
+        tap("Crash on start (debug only)")
+        assertEquals(listOf("crashOnStart"), calls)
     }
 
     @Test

@@ -95,6 +95,7 @@ fun DiagnosticsRoute(
             onToggleLogging = { viewModel.setLoggingEnabled(!state.loggingEnabled) },
             onCycleLevel = viewModel::cycleLevel,
             onCrashNow = { throw DebugTestCrash() },
+            onToggleCrashOnStart = { viewModel.setCrashOnStart(!state.crashOnStart) },
             onBack = onClose
         )
     }
@@ -124,6 +125,7 @@ fun DiagnosticsScreen(
     onToggleLogging: () -> Unit,
     onCycleLevel: () -> Unit,
     onCrashNow: () -> Unit,
+    onToggleCrashOnStart: () -> Unit,
     onBack: () -> Unit
 ) {
     val tokens = ZeroTheme.tokens
@@ -171,7 +173,13 @@ fun DiagnosticsScreen(
             SettingRow(stringResource(R.string.diagnostics_logging), onOff, onToggleLogging)
         }
         item { SettingRow(stringResource(R.string.diagnostics_level), stringResource(state.level.label()), onCycleLevel) }
-        if (showDebugTools) item { Action(stringResource(R.string.diagnostics_crash_now), onClick = onCrashNow) }
+        if (showDebugTools) {
+            item { Action(stringResource(R.string.diagnostics_crash_now), onClick = onCrashNow) }
+            item {
+                val onOff = stringResource(if (state.crashOnStart) R.string.common_on else R.string.common_off)
+                SettingRow(stringResource(R.string.diagnostics_crash_on_start), onOff, onToggleCrashOnStart)
+            }
+        }
     }
 
     if (confirmClear) {

@@ -9,6 +9,7 @@ import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.LogcatMirror
 import com.zeroos.core.logging.Logger
+import com.zeroos.launcher.safemode.CrashLoopGuard
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,6 +53,11 @@ object DiagnosticsModule {
     @Provides
     fun logExporter(@ApplicationContext context: Context, store: LogFileStore, clock: Clock): LogExporter =
         LogExporter(store, File(context.cacheDir, "log_export"), clock)
+
+    @Provides
+    @Singleton
+    fun crashLoopGuard(@ApplicationContext context: Context, clock: Clock): CrashLoopGuard =
+        CrashLoopGuard(File(context.filesDir, "safe_mode/crashes.txt"), clock)
 
     @Provides
     fun crashNotice(store: LogFileStore, settings: DiagnosticsSettings): CrashNotice = CrashNotice(store, settings)

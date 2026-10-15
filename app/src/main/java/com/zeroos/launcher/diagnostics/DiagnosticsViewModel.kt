@@ -42,7 +42,9 @@ data class DiagnosticsUiState(
     /** Description of the last process stop, e.g. "killed by the system or phone maker". */
     val lastStop: String? = null,
     val loggingEnabled: Boolean = true,
-    val level: LogLevel = LogLevel.INFO
+    val level: LogLevel = LogLevel.INFO,
+    /** Debug builds only (Step 1.5). */
+    val crashOnStart: Boolean = false
 ) {
     val visibleEntries: List<StoredLogEntry>
         get() = entries.filter { (it.level ?: LogLevel.DEBUG) >= filter.minLevel }
@@ -76,7 +78,8 @@ class DiagnosticsViewModel @Inject constructor(
                     crashReports = reports,
                     lastStop = entries.firstOrNull { it.tag == ExitReasonLogger.TAG }?.message?.removePrefix(EXIT_PREFIX),
                     loggingEnabled = settings.isLoggingEnabled,
-                    level = settings.minLevel
+                    level = settings.minLevel,
+                    crashOnStart = settings.crashOnStart
                 )
             }
         }
@@ -96,6 +99,13 @@ class DiagnosticsViewModel @Inject constructor(
         settings.minLevel = next
         logger.info(TAG, "setting changed: logging_level=$next")
         mutableState.update { it.copy(level = next) }
+    }
+
+    /** Debug builds only: crash on every start to test safe mode (Step 1.5). */
+    fun setCrashOnStart(enabled: Boolean) {
+        logger.info(TAG, "setting changed: debug_crash_on_start=$enabled")
+        settings.crashOnStart = enabled
+        mutableState.update { it.copy(crashOnStart = enabled) }
     }
 
     fun clear() {

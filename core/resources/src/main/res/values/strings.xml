@@ -30,6 +30,7 @@
     <string name="diagnostics_level_warn">WARN</string>
     <string name="diagnostics_level_error">ERROR</string>
     <string name="diagnostics_crash_now">Crash now (debug only)</string>
+    <string name="diagnostics_crash_on_start">Crash on start (debug only)</string>
 
     <!-- Crash reports (wireframe C2) -->
     <string name="crash_reports_title">Crash reports</string>
@@ -38,4 +39,11 @@
     <!-- Crash banner on home (F17.10, wireframe C3) -->
     <string name="crash_banner_message">ZeroOS crashed last time.</string>
     <string name="crash_banner_view">View report</string>
+
+    <!-- Safe mode (F18.3, wireframe D) -->
+    <string name="safe_mode_title">Safe mode</string>
+    <string name="safe_mode_message">ZeroOS crashed repeatedly.</string>
+    <string name="safe_mode_view_report">View crash report</string>
+    <string name="safe_mode_home_settings">Open Home settings</string>
+    <string name="safe_mode_exit">Exit safe mode</string>
 </resources>
