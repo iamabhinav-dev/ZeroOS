@@ -144,6 +144,8 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 
 ## Phase 1 — Prototype (M0): A Working Launcher
 
+> **Exception (D-024):** Phase 1 may start before Step 0.5 phone results arrive; Step 0.5 must be finished before Phase 2 starts.
+
 ### Step 1.1 — Register as a home app
 In `AndroidManifest.xml`, declare `MainActivity` with:
 - intent filter: `MAIN` + `HOME` + `DEFAULT` categories

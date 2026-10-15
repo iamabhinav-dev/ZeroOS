@@ -101,6 +101,10 @@ Breathing dots (pause), draining battery (limit reached), closing shutter (Short
 The Accessibility service receives window changes from all apps (app name only) and reads content only from YouTube/Instagram; the overlay stays up through gaps under 1 s.
 *Why:* Spike-2 testing: the overlay reappeared over Recents (it never learned the user had left YouTube) and blinked while Shorts loaded.
 
+**D-024 — Phase 1 starts before spike results** · 2026-10-15 · Accepted
+Phase 1 (home, app list, diagnostics, safe mode) starts while Step 0.5 phone testing is still running; Step 0.5 must be finished before Phase 2.
+*Why:* None of the spike's open questions affect Phase 1; app-clone visibility (F2.10) is the earliest dependency, in Phase 2.
+
 ---
 
 ## Pending (to be decided during the plan)
