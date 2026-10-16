@@ -1,12 +1,14 @@
 package com.zeroos.launcher.safemode
 
 import androidx.compose.ui.test.junit4.v2.createEmptyComposeRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zeroos.feature.home.HomeTestTags
 import com.zeroos.launcher.MainActivity
+import com.zeroos.launcher.OnboardingDoneRule
 import com.zeroos.launcher.ZeroApplication
 import com.zeroos.launcher.diagnostics.DebugTestCrash
 import java.io.File
@@ -22,6 +24,9 @@ import org.junit.runner.RunWith
 class SafeModeActivityTest {
     @get:Rule
     val compose = createEmptyComposeRule()
+
+    @get:Rule
+    val onboardingDone = OnboardingDoneRule()
 
     private val app = ApplicationProvider.getApplicationContext<ZeroApplication>()
 
@@ -50,7 +55,8 @@ class SafeModeActivityTest {
     @Test
     fun f18_6_normalStartWithoutCrashes() {
         ActivityScenario.launch(MainActivity::class.java).use {
-            compose.onNodeWithTag(HomeTestTags.ROOT).assertExists()
+            // Home appears once settings have loaded (onboarding gate, F14).
+            compose.waitUntil(WAIT_MS) { compose.onAllNodesWithTag(HomeTestTags.ROOT).fetchSemanticsNodes().isNotEmpty() }
         }
     }
 
@@ -67,5 +73,9 @@ class SafeModeActivityTest {
         recordThreeEarlyCrashes()
         app.onCreate()
         assertFalse(app.diagnosticsSettings.crashOnStart)
+    }
+
+    private companion object {
+        const val WAIT_MS = 5_000L
     }
 }

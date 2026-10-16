@@ -54,7 +54,13 @@ Update this file in the same commit as the code and tests.
 | F13.1 | ✅ | BackupTest › f13_1_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_rowsAndNeverExported | Export to Downloads on the phone |
 | F13.2 | ✅ | BackupTest › f13_2_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_2_* | Export → reinstall → import |
 | F13.3–F13.5 | ✅ | BackupTest › f13_*, BackupScreenTest › f13_5_* | Android auto-backup (system) |
-| F14.1–F14.6 | ⬜ | | |
+| F14.1 | ✅ | OnboardingViewModelTest › f14_1_*, OnboardingScreenTest › f14_1_*, step2_9_* screenshots | Read the intro on the phone |
+| F14.2 | ✅ | OnboardingViewModelTest › f14_2_*, OnboardingScreenTest › f14_2_*, AndroidOnboardingSystemTest › f14_2_* | "Set as default" shows Android's home-app dialog |
+| F14.3 | ✅ | OnboardingViewModelTest › f14_3_*, OnboardingScreenTest › f14_3_*, AndroidOnboardingSystemTest › f14_3_* | Suggestions match the test phone's default apps |
+| F14.4 | ✅ | By design: no permission is requested during onboarding; dialogs open only from their buttons | |
+| F14.5 | ✅ | OnboardingViewModelTest › f14_5_*, OnboardingScreenTest › f14_1_f14_5_*, OnboardingGateTest › f14_5_* | |
+| F14.6 | ✅ | OnboardingViewModelTest › f14_2_f14_6_*, OnboardingScreenTest › f14_6_*, AndroidOnboardingSystemTest › f14_6_* | Battery dialog on the test phone |
+| F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |
 | F16.13 | ❌ | Removed (D-006) | |

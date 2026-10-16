@@ -41,6 +41,10 @@ class LauncherViewModel @Inject constructor(
     val appearance: StateFlow<AppearanceSettings> = settingsRepository.settings.map { it.appearance }
         .stateIn(viewModelScope, SharingStarted.Eagerly, AppearanceSettings())
 
+    /** Whether onboarding is done (F14); null until settings have loaded, so it never flashes up by mistake. */
+    val onboardingCompleted: StateFlow<Boolean?> = settingsRepository.settings.map<_, Boolean?> { it.onboardingCompleted }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
     private var unseenReport: File? = null
     private val mutableCrashReport = MutableStateFlow<String?>(null)
 
