@@ -235,7 +235,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Intro (3–4 pages) → set as default (`RoleManager` / home settings) → pick favorites → background reliability (F14.6). Skippable; shown once.
 - The set-as-default page says: keep the stock launcher installed and enabled as a fallback (F18.7).
 
-### Step 2.10 — Backup & restore (F13)
+### Step 2.10 — Backup & restore (F13) ✅
 - Export/import JSON via Storage Access Framework (`CreateDocument`/`OpenDocument`); schema version field; import confirmation; Auto Backup rules for DataStore (and Room once it exists).
 - From now on, every step that adds settings extends the backup format (F13.4).
 
