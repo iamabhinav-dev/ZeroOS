@@ -6,16 +6,19 @@ import android.os.UserManager
 import com.zeroos.core.data.apps.AndroidLauncherAppsSource
 import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.backup.BackupRepository
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.createSettingsDataStore
+import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.Logger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.time.Clock
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +50,22 @@ object DataModule {
         customization: AppCustomizationRepository,
         apps: AppsRepository
     ): AppActions = AppActions(settings, favorites, customization, apps)
+
+    @Provides
+    @Singleton
+    fun backupRepository(
+        @ApplicationContext context: Context,
+        settings: SettingsRepository,
+        diagnostics: DiagnosticsSettings,
+        clock: Clock,
+        logger: Logger
+    ): BackupRepository = BackupRepository(
+        settings,
+        diagnostics,
+        context.getSharedPreferences("backup", Context.MODE_PRIVATE),
+        clock,
+        logger
+    )
 
     /** Dispatcher for disk and system-service work. */
     @Provides
