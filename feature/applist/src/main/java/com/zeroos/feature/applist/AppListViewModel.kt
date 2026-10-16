@@ -94,6 +94,11 @@ class AppListViewModel @Inject constructor(
         actions.openAppInfo(app)
     }
 
+    /** Android's uninstall dialog, for the app's own profile (F2.8). */
+    fun uninstall(app: AppEntry) {
+        actions.uninstall(app)
+    }
+
     /**
      * Updates the search. With "open single match automatically" on, a query matching exactly one app opens it
      * (F2.5); returns true when that happened so the list can close.

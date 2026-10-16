@@ -7,7 +7,9 @@ import com.zeroos.core.model.ProfileType
 data class LaunchableActivity(
     val key: AppKey,
     val label: String,
-    val profile: ProfileType = ProfileType.MAIN
+    val profile: ProfileType = ProfileType.MAIN,
+    /** False for system apps, which can't be uninstalled (F2.8). */
+    val removable: Boolean = true
 )
 
 /** System access needed by [AppsRepository]; [AndroidLauncherAppsSource] in the app, a fake in tests. */
@@ -23,6 +25,9 @@ interface LauncherAppsSource {
 
     /** Opens Android's app info page for the app (F2.8); throws if it can't. */
     fun openAppInfo(key: AppKey)
+
+    /** Opens Android's uninstall dialog for the app in its own profile (F2.8); throws if it can't. */
+    fun uninstall(key: AppKey)
 
     fun interface ChangeListenerHandle {
         fun unregister()

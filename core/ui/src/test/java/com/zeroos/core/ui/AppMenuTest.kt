@@ -57,6 +57,20 @@ class AppMenuTest {
     }
 
     @Test
+    fun f2_8_uninstallCallsAction() {
+        show(AppMenuTarget("Instagram", isFavorite = false, isRenamed = false))
+        compose.onNodeWithText("Uninstall").performClick()
+        assertEquals(listOf("uninstall", "dismiss"), calls)
+    }
+
+    @Test
+    fun f2_8_systemAppsHaveNoUninstall() {
+        show(AppMenuTarget("Contacts", isFavorite = false, isRenamed = false, canUninstall = false))
+        compose.onNodeWithText("App info").assertExists()
+        compose.onNodeWithText("Uninstall").assertDoesNotExist()
+    }
+
+    @Test
     fun f5_4_renameSavesNewName() {
         show(AppMenuTarget("Instagram", isFavorite = false, isRenamed = false))
         compose.onNodeWithText("Rename").performClick()

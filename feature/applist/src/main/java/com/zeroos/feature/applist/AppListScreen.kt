@@ -97,13 +97,13 @@ fun AppListRoute(onClose: () -> Unit, viewModel: AppListViewModel = hiltViewMode
     menuFor?.let { app ->
         val key = app.key.asString()
         AppMenu(
-            target = AppMenuTarget(app.displayName(), key in state.favoriteKeys, key in state.renamedKeys),
+            target = AppMenuTarget(app.displayName(), key in state.favoriteKeys, key in state.renamedKeys, canUninstall = app.canUninstall),
             actions = AppMenuActions(
                 onToggleFavorite = { viewModel.toggleFavorite(app) { Toast.makeText(context, fullMessage, Toast.LENGTH_SHORT).show() } },
                 onRename = { viewModel.rename(app, it) },
                 onHide = { viewModel.hide(app) },
                 onAppInfo = { viewModel.openAppInfo(app) },
-                onUninstall = { external("uninstall", Intent(Intent.ACTION_DELETE, "package:${app.key.packageName}".toUri())) }
+                onUninstall = { viewModel.uninstall(app) }
             ),
             onDismiss = { menuFor = null }
         )

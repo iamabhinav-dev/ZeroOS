@@ -56,6 +56,19 @@ class AppsRepository(
         launchFailed(key, e)
     }
 
+    /** Opens Android's uninstall dialog. Returns false (and logs) if it can't be opened. */
+    fun uninstall(key: AppKey): Boolean = try {
+        source.uninstall(key)
+        logger.info(TAG, "uninstall dialog opened for ${key.packageName}")
+        true
+    } catch (e: ActivityNotFoundException) {
+        launchFailed(key, e)
+    } catch (e: SecurityException) {
+        launchFailed(key, e)
+    } catch (e: IllegalStateException) {
+        launchFailed(key, e)
+    }
+
     /** Opens the app's info page. Returns false (and logs) if it can't be opened. */
     fun openAppInfo(key: AppKey): Boolean = try {
         source.openAppInfo(key)
@@ -77,7 +90,7 @@ class AppsRepository(
     private fun load(): List<AppEntry> {
         val collator = Collator.getInstance(locale()).apply { strength = Collator.SECONDARY }
         return source.launchableActivities()
-            .map { AppEntry(it.key, it.label, it.profile) }
+            .map { AppEntry(it.key, it.label, it.profile, canUninstall = it.removable) }
             .sortedWith(compareBy(collator) { entry: AppEntry -> entry.label }.thenBy { it.key.asString() })
             .numberSameNames()
     }

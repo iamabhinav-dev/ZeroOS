@@ -22,7 +22,7 @@ Update this file in the same commit as the code and tests.
 | F2.5 | ✅ | AppListViewModelTest › f2_5_* | |
 | F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_* | |
 | F2.7 | ✅ | AppListScreenTest › f2_7_* (jump, slide, highlight screenshots) | Current letter grows and brightens on the phone |
-| F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_* | App info and uninstall open on the phone |
+| F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_*, AndroidLauncherAppsSourceTest › f2_8_* | App info and uninstall dialog open on the phone (incl. a clone); no Uninstall on system apps |
 | F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
 | F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |

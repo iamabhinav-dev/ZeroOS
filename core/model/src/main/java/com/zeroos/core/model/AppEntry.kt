@@ -29,7 +29,9 @@ data class AppEntry(
     val key: AppKey,
     val label: String,
     val profile: ProfileType = ProfileType.MAIN,
-    val copyNumber: Int? = null
+    val copyNumber: Int? = null,
+    /** False for system apps, so the menu doesn't offer "Uninstall" (F2.8). */
+    val canUninstall: Boolean = true
 ) {
     val isMainProfile: Boolean get() = profile == ProfileType.MAIN
 }

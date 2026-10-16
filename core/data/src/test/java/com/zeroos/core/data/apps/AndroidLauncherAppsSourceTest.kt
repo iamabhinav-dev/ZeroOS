@@ -2,6 +2,8 @@ package com.zeroos.core.data.apps
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
 import android.os.Process
@@ -25,6 +27,7 @@ class AndroidLauncherAppsSourceTest {
     private val launcherApps = context.getSystemService(LauncherApps::class.java)
     private val userManager = context.getSystemService(UserManager::class.java)
     private val source = AndroidLauncherAppsSource(
+        context,
         launcherApps,
         userManager,
         object : com.zeroos.core.logging.Logger {
@@ -32,9 +35,27 @@ class AndroidLauncherAppsSourceTest {
         }
     )
 
-    private fun info(pkg: String, label: String): LauncherActivityInfo = mockk {
+    private fun info(pkg: String, label: String, system: Boolean = false): LauncherActivityInfo = mockk {
         every { componentName } returns ComponentName(pkg, "$pkg.Main")
         every { this@mockk.label } returns label
+        every { applicationInfo } returns ApplicationInfo().apply { flags = if (system) ApplicationInfo.FLAG_SYSTEM else 0 }
+    }
+
+    @Test
+    fun f2_8_systemAppsAreNotRemovable() {
+        shadowOf(launcherApps).addActivity(Process.myUserHandle(), info("com.android.contacts", "Contacts", system = true))
+        shadowOf(launcherApps).addActivity(Process.myUserHandle(), info("com.instagram.android", "Instagram"))
+        assertEquals(listOf(false, true), source.launchableActivities().map { it.removable })
+    }
+
+    @Test
+    fun f2_8_uninstallOpensAndroidsDialogForTheAppsProfile() {
+        val user = Process.myUserHandle()
+        source.uninstall(AppKey("com.instagram.android", "com.instagram.android.Main", userManager.getSerialNumberForUser(user)))
+        val intent = shadowOf(context as android.app.Application).nextStartedActivity
+        assertEquals(Intent.ACTION_DELETE, intent.action)
+        assertEquals("package:com.instagram.android", intent.dataString)
+        assertEquals(user, intent.getParcelableExtra(Intent.EXTRA_USER, android.os.UserHandle::class.java))
     }
 
     @Test
