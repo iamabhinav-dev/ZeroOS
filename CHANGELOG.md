@@ -4,6 +4,10 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.8 (versionCode 8)
+- Fix: "Uninstall" in the app menu did nothing (Android 9+ needs the REQUEST_DELETE_PACKAGES permission);
+  it now opens Android's uninstall dialog, for the right copy of a cloned app (F2.8)
+- System apps (e.g. Contacts) no longer offer "Uninstall" (F2.8)
 ## 0.0.7 (versionCode 7)
 - Apps with the same name are numbered everywhere, e.g. "I-WhatsApp" and "II-WhatsApp" for an App Clone
   (D-034). Replaces the "· clone" tag, which home didn't show
