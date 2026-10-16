@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android Auto Backup up to Android 11 (F13.3): only settings; logs and crash reports stay on the device (NFR-S5). -->
+<full-backup-content>
+    <include domain="file" path="datastore/launcher_settings.json" />
+    <include domain="sharedpref" path="diagnostics.xml" />
+</full-backup-content>

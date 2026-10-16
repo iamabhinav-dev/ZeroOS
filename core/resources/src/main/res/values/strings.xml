@@ -7,6 +7,7 @@
     <string name="common_dismiss">Dismiss</string>
     <string name="common_on">on</string>
     <string name="common_off">off</string>
+    <string name="common_date_time">%1$s, %2$s</string>
 
     <!-- Home (F1, wireframe A) -->
     <string name="home_date_with_battery">%1$s · %2$d%%</string>
@@ -64,6 +65,20 @@
     <string name="appearance_show_date">Show date</string>
     <string name="appearance_show_status_bar">Show status bar</string>
     <string name="appearance_preview_app">Phone</string>
+
+    <!-- Backup (F13, wireframe F6) -->
+    <string name="backup_title">Backup</string>
+    <string name="backup_export">Export settings</string>
+    <string name="backup_import">Import settings</string>
+    <string name="backup_last_export">Last export: %1$s</string>
+    <string name="backup_never_exported">Not exported yet</string>
+    <string name="backup_confirm_title">Replace all settings with this backup?</string>
+    <string name="backup_confirm_import">Import</string>
+    <string name="backup_exported">Settings exported</string>
+    <string name="backup_imported">Settings imported</string>
+    <string name="backup_not_a_backup">This isn\'t a ZeroOS settings backup</string>
+    <string name="backup_too_new">This backup is from a newer ZeroOS (version %1$d)</string>
+    <string name="backup_failed">Couldn\'t read or write the file</string>
 
     <!-- Favorites editor (F3, wireframe E3) -->
     <string name="favorites_title">Favorites</string>
