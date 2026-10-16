@@ -30,12 +30,17 @@ private val GrayOnWhite = Color(0xFF5F5F5F)
 private val DividerOnBlack = Color(0xFF333333)
 private val DividerOnWhite = Color(0xFFDDDDDD)
 
+/** Dims the phone wallpaper behind home so text stays readable (F6.2). */
+private val WallpaperScrim = Color(0x99000000)
+
 @Immutable
 data class ZeroColors(
     val background: Color,
     val text: Color,
     val textMuted: Color,
-    val divider: Color
+    val divider: Color,
+    /** Drawn over the phone wallpaper on home (F6.2). */
+    val wallpaperScrim: Color = WallpaperScrim
 ) {
     companion object {
         /** Pure black for OLED (F6.1 default). */
@@ -50,7 +55,9 @@ data class ZeroSpacing(
     val listItemVertical: Dp = 12.dp,
     val listItemCompact: Dp = 4.dp,
     val sectionGap: Dp = 8.dp,
-    val minTouchTarget: Dp = 48.dp
+    val minTouchTarget: Dp = 48.dp,
+    /** Thin borders, e.g. around the appearance preview. */
+    val hairline: Dp = 1.dp
 )
 
 /** Text sizes at "Medium"; [scaled] applies the S/M/L/XL setting (F6.4). The system font scale applies on top via sp. */
