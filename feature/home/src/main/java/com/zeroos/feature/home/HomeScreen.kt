@@ -68,13 +68,18 @@ fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () ->
     var menuFor by remember { mutableStateOf<AppEntry?>(null) }
     menuFor?.let { app ->
         AppMenu(
-            target = AppMenuTarget(app.displayName(), isFavorite = true, isRenamed = app.key.asString() in state.renamedKeys),
+            target = AppMenuTarget(
+                app.displayName(),
+                isFavorite = true,
+                isRenamed = app.key.asString() in state.renamedKeys,
+                canUninstall = app.canUninstall
+            ),
             actions = AppMenuActions(
                 onToggleFavorite = { viewModel.removeFavorite(app) },
                 onRename = { viewModel.rename(app, it) },
                 onHide = { viewModel.hide(app) },
                 onAppInfo = { viewModel.openAppInfo(app) },
-                onUninstall = { open("uninstall", Intent(Intent.ACTION_DELETE, "package:${app.key.packageName}".toUri())) }
+                onUninstall = { viewModel.uninstall(app) }
             ),
             onDismiss = { menuFor = null }
         )

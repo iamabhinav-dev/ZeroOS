@@ -41,6 +41,13 @@ class AppsRepositoryTest {
             if (failLaunch) throw ActivityNotFoundExceptionForTest()
             infoOpened += key
         }
+
+        val uninstallsOpened = mutableListOf<AppKey>()
+
+        override fun uninstall(key: AppKey) {
+            if (failLaunch) throw ActivityNotFoundExceptionForTest()
+            uninstallsOpened += key
+        }
     }
 
     private class RecordingLogger : Logger {
@@ -134,6 +141,26 @@ class AppsRepositoryTest {
         assertEquals(listOf(key), source.infoOpened)
         source.failLaunch = true
         assertFalse(repository.openAppInfo(key))
+    }
+
+    @Test
+    fun f2_8_opensUninstallAndReportsFailure() {
+        val repository = AppsRepository(source, logger, StandardTestDispatcher())
+        val key = AppKey("com.example", "com.example.Main", 10)
+        assertTrue(repository.uninstall(key))
+        assertEquals(listOf(key), source.uninstallsOpened)
+        assertEquals(LogLevel.INFO to "uninstall dialog opened for com.example", logger.lines.last())
+        source.failLaunch = true
+        assertFalse(repository.uninstall(key))
+    }
+
+    @Test
+    fun f2_8_systemAppsCantBeUninstalled() = runTest {
+        source.activities += listOf(app("Contacts").copy(removable = false), app("Instagram"))
+        repository(StandardTestDispatcher(testScheduler)).apps.test {
+            assertEquals(listOf(false, true), awaitItem().map { it.canUninstall })
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @Test

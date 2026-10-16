@@ -75,6 +75,7 @@ object DataModule {
     @Singleton
     fun appsRepository(@ApplicationContext context: Context, logger: Logger, io: CoroutineDispatcher): AppsRepository = AppsRepository(
         source = AndroidLauncherAppsSource(
+            context,
             context.getSystemService(LauncherApps::class.java),
             context.getSystemService(UserManager::class.java),
             logger

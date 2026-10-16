@@ -31,4 +31,6 @@ class AppActions(
     suspend fun hide(app: AppEntry) = customization.hide(app.key)
 
     fun openAppInfo(app: AppEntry): Boolean = apps.openAppInfo(app.key)
+
+    fun uninstall(app: AppEntry): Boolean = apps.uninstall(app.key)
 }

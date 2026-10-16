@@ -1,7 +1,11 @@
 package com.zeroos.core.data.apps
 
 import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherApps
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +20,7 @@ import com.zeroos.core.model.ProfileType
 
 /** [LauncherAppsSource] backed by `LauncherApps` and `UserManager` (Step 1.2). Thin wrapper; logic lives in [AppsRepository]. */
 class AndroidLauncherAppsSource(
+    private val context: Context,
     private val launcherApps: LauncherApps,
     private val userManager: UserManager,
     private val logger: Logger
@@ -30,7 +35,8 @@ class AndroidLauncherAppsSource(
             LaunchableActivity(
                 key = AppKey(info.componentName.packageName, info.componentName.className, serial),
                 label = info.label.toString(),
-                profile = profile
+                profile = profile,
+                removable = info.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0
             )
         }
     }
@@ -80,6 +86,18 @@ class AndroidLauncherAppsSource(
         launcherApps.startAppDetailsActivity(ComponentName(key.packageName, key.activityName), user, null, null)
     }
 
+    /**
+     * Android's uninstall dialog. Needs REQUEST_DELETE_PACKAGES (Android 9+), or it silently does nothing.
+     * [Intent.EXTRA_USER] makes it remove the copy in the app's own profile, e.g. an App Clone.
+     */
+    override fun uninstall(key: AppKey) {
+        val user = userManager.getUserForSerialNumber(key.userSerial) ?: error("profile ${key.userSerial} no longer exists")
+        val intent = Intent(Intent.ACTION_DELETE, Uri.fromParts(PACKAGE_SCHEME, key.packageName, null))
+            .putExtra(Intent.EXTRA_USER, user)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
     override fun launch(key: AppKey) {
         val user = userManager.getUserForSerialNumber(key.userSerial)
             ?: error("profile ${key.userSerial} no longer exists")
@@ -95,3 +113,4 @@ internal fun profileFromUserType(userType: String?): ProfileType = when (userTyp
 }
 
 private const val TAG = "apps"
+private const val PACKAGE_SCHEME = "package"

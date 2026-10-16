@@ -59,6 +59,11 @@ class HomeViewModel @Inject constructor(
         actions.openAppInfo(app)
     }
 
+    /** Android's uninstall dialog, for the app's own profile (F2.8). */
+    fun uninstall(app: AppEntry) {
+        actions.uninstall(app)
+    }
+
     /** Clock or date tapped but no Clock/Calendar app could open (F1.1, F1.2). */
     fun onShortcutFailed(name: String, e: Exception) = logger.warn(TAG, "could not open $name", e)
 

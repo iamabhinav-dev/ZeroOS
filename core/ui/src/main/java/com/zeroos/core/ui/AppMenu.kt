@@ -27,7 +27,13 @@ import androidx.compose.ui.text.input.ImeAction
 import com.zeroos.core.resources.R
 
 /** What the app menu needs to know about the app (wireframe E1). */
-data class AppMenuTarget(val label: String, val isFavorite: Boolean, val isRenamed: Boolean)
+data class AppMenuTarget(
+    val label: String,
+    val isFavorite: Boolean,
+    val isRenamed: Boolean,
+    /** System apps can't be uninstalled, so "Uninstall" is left out (F2.8). */
+    val canUninstall: Boolean = true
+)
 
 /** Callbacks of the app menu. */
 data class AppMenuActions(
@@ -66,7 +72,9 @@ fun AppMenu(target: AppMenuTarget, actions: AppMenuActions, onDismiss: () -> Uni
             MinimalListItem(stringResource(R.string.app_menu_rename), onClick = { renaming = true })
             MinimalListItem(stringResource(R.string.app_menu_hide), onClick = { actions.onHide().also { onDismiss() } })
             MinimalListItem(stringResource(R.string.app_menu_app_info), onClick = { actions.onAppInfo().also { onDismiss() } })
-            MinimalListItem(stringResource(R.string.app_menu_uninstall), onClick = { actions.onUninstall().also { onDismiss() } })
+            if (target.canUninstall) {
+                MinimalListItem(stringResource(R.string.app_menu_uninstall), onClick = { actions.onUninstall().also { onDismiss() } })
+            }
         }
     }
 }

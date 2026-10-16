@@ -53,6 +53,8 @@ class AppListViewModelTest {
 
         override fun openAppInfo(key: AppKey) = Unit
 
+        override fun uninstall(key: AppKey) = Unit
+
         override fun launch(key: AppKey) {
             launched += key
         }

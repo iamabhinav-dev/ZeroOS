@@ -44,6 +44,8 @@ class OnboardingViewModelTest {
 
         override fun openAppInfo(key: AppKey) = Unit
 
+        override fun uninstall(key: AppKey) = Unit
+
         override fun launch(key: AppKey) = Unit
     }
     private val system = object : OnboardingSystem {
