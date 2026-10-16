@@ -179,7 +179,7 @@ fun ZeroTheme(
 }
 
 /** Material typography with Doto in every style, so dialogs and fields use it too. */
-private fun dotoTypography(sizes: ZeroTextSizes): Typography {
+internal fun dotoTypography(sizes: ZeroTextSizes): Typography {
     // Bold by default: Doto dots grow with weight, and thin dots are hard to read (F6.4).
     val base = TextStyle(fontFamily = DotoFamily, fontWeight = FontWeight.Bold)
     val defaults = Typography()

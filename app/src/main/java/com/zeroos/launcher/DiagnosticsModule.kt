@@ -36,7 +36,7 @@ object DiagnosticsModule {
     @Provides
     @Singleton
     fun diagnosticsSettings(@ApplicationContext context: Context): DiagnosticsSettings = DiagnosticsSettings(
-        prefs = context.getSharedPreferences("diagnostics", Context.MODE_PRIVATE),
+        prefs = context.getSharedPreferences(DIAGNOSTICS_PREFS, Context.MODE_PRIVATE),
         defaultLevel = if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.INFO
     )
 
@@ -66,3 +66,6 @@ object DiagnosticsModule {
     @Singleton
     fun logger(fileLogger: FileLogger): Logger = fileLogger
 }
+
+/** SharedPreferences file of the diagnostics settings (D-025); included in Android Auto Backup (F13.3). */
+internal const val DIAGNOSTICS_PREFS = "diagnostics"
