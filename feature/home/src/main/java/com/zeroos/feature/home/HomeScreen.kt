@@ -144,8 +144,7 @@ fun HomeScreen(
                         velocity.resetTracking()
                     },
                     onDragEnd = {
-                        val v = velocity.calculateVelocity()
-                        swipeOf(drag.x, drag.y, v.x, v.y, minDistance, minVelocity)?.let(onSwipe)
+                        swipeOf(drag, velocity.calculateVelocity(), minDistance, minVelocity)?.let(onSwipe)
                     }
                 ) { change, dragAmount ->
                     drag += dragAmount

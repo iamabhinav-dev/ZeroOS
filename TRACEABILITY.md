@@ -29,9 +29,9 @@ Update this file in the same commit as the code and tests.
 | F2.10 | ✅ | AppsRepositoryTest › f2_10_*, AndroidLauncherAppsSourceTest › f2_10_*, AppListScreenTest › f2_10_* | Clone tag on the test phone |
 | F3.1, F3.2 | ✅ | FavoritesTest › f3_1_*, f3_2_*, FavoritesEditorTest › f3_*, FavoritesEditorViewModelTest › f3_1_f3_2_* | Reorder by dragging on the phone |
 | F3.3, F3.4 | ✅ | FavoritesTest › f3_3_*, f3_4_*, HomeUiStateTest › f3_3_*, f3_4_*, FavoritesEditorTest › f3_3_* | Uninstall a favorite app |
-| F4.1 | ✅ | SwipesTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
-| F4.2, F4.3 | ✅ | SwipesTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (choosing apps in Settings, Step 2.11) | |
-| F4.4 | 🟡 | SwipesTest › f4_4_*, MainActivityTest › f4_4_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (notification shade option in Phase 4) | |
+| F4.1 | ✅ | SwipeTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
+| F4.2, F4.3 | ✅ | SwipeTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (choosing apps in Settings, Step 2.11) | |
+| F4.4 | 🟡 | SwipeTest › f4_4_*, MainActivityTest › f4_4_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (notification shade option in Phase 4) | |
 | F4.5 | ⬜ | (needs the Accessibility service, Phase 4) | |
 | F4.6 | 🟡 | HomeUiStateTest › f4_2_f4_3_f4_4_* (app / none; settings UI in Step 2.11) | |
 | F5.1 | ✅ | AppCustomizationTest › f5_1_*, AppListViewModelTest › f2_8_* | |
