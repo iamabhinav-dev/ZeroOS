@@ -64,6 +64,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":feature:home"))
     implementation(project(":feature:applist"))
+    implementation(project(":feature:settings"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

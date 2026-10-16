@@ -4,6 +4,8 @@ import android.app.ActivityManager
 import android.app.Application
 import android.os.Build
 import android.os.StrictMode
+import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.logging.AndroidExitInfoSource
 import com.zeroos.core.logging.CrashHandler
 import com.zeroos.core.logging.DiagnosticsSettings
@@ -19,6 +21,10 @@ import java.time.Clock
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 @HiltAndroidApp
 class ZeroApplication : Application() {
@@ -32,6 +38,13 @@ class ZeroApplication : Application() {
     @Inject lateinit var crashLoopGuard: CrashLoopGuard
 
     @Inject lateinit var diagnosticsSettings: DiagnosticsSettings
+
+    @Inject lateinit var appsRepository: AppsRepository
+
+    @Inject lateinit var favoritesRepository: FavoritesRepository
+
+    /** Work that lives as long as the app process. */
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     override fun onCreate() {
         super.onCreate()
@@ -53,6 +66,10 @@ class ZeroApplication : Application() {
         Executors.newSingleThreadExecutor().execute {
             logStore.deleteExpired()
             logPreviousExit()
+        }
+        // Uninstalled apps drop out of favorites (F3.4).
+        appScope.launch {
+            appsRepository.apps.collect { apps -> favoritesRepository.pruneUninstalled(apps.map { it.key.packageName }.toSet()) }
         }
         if (BuildConfig.DEBUG) enableStrictMode()
     }

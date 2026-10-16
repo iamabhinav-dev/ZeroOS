@@ -5,6 +5,7 @@ import android.content.pm.LauncherApps
 import android.os.UserManager
 import com.zeroos.core.data.apps.AndroidLauncherAppsSource
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.createSettingsDataStore
 import com.zeroos.core.logging.Logger
@@ -28,6 +29,10 @@ object DataModule {
     @Singleton
     fun settingsRepository(@ApplicationContext context: Context, logger: Logger, io: CoroutineDispatcher): SettingsRepository =
         SettingsRepository(createSettingsDataStore(context, logger, CoroutineScope(SupervisorJob() + io)), logger)
+
+    @Provides
+    @Singleton
+    fun favoritesRepository(settings: SettingsRepository): FavoritesRepository = FavoritesRepository(settings)
 
     /** Dispatcher for disk and system-service work. */
     @Provides

@@ -27,6 +27,7 @@ dependencies {
         ":core:testing",
         ":feature:home",
         ":feature:applist",
+        ":feature:settings",
     ).forEach { kover(project(it)) }
 }
 
