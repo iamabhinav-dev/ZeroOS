@@ -6,6 +6,7 @@ import com.zeroos.core.logging.Logger
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.ProfileType
 import java.util.Locale
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -64,7 +65,7 @@ class AppsRepositoryTest {
     private val source = FakeSource()
     private val logger = RecordingLogger()
 
-    private fun repository(dispatcher: TestDispatcher) = AppsRepository(source, logger, dispatcher) { Locale.ENGLISH }
+    private fun repository(dispatcher: TestDispatcher) = AppsRepository(source, logger, dispatcher, locale = { Locale.ENGLISH })
 
     @Test
     fun f2_2_listsAppsAlphabeticallyIgnoringCase() = runTest {
@@ -159,6 +160,20 @@ class AppsRepositoryTest {
         source.activities += listOf(app("Contacts").copy(removable = false), app("Instagram"))
         repository(StandardTestDispatcher(testScheduler)).apps.test {
             assertEquals(listOf(false, true), awaitItem().map { it.canUninstall })
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun nfrP2_logsHowLongTheAppListTookToLoad() = runTest {
+        source.activities += app("Camera")
+        val time = kotlin.time.TestTimeSource()
+        val slowSource = object : LauncherAppsSource by source {
+            override fun launchableActivities(): List<LaunchableActivity> = source.launchableActivities().also { time += 120.milliseconds }
+        }
+        AppsRepository(slowSource, logger, StandardTestDispatcher(testScheduler), timeSource = time).apps.test {
+            awaitItem()
+            assertEquals(LogLevel.INFO to "apps loaded: 1 in 120 ms", logger.lines.last())
             cancelAndIgnoreRemainingEvents()
         }
     }

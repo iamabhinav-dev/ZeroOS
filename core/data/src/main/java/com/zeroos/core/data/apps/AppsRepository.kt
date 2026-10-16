@@ -8,6 +8,7 @@ import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import java.text.Collator
 import java.util.Locale
+import kotlin.time.TimeSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +25,8 @@ class AppsRepository(
     private val source: LauncherAppsSource,
     private val logger: Logger,
     private val ioDispatcher: CoroutineDispatcher,
-    private val locale: () -> Locale = Locale::getDefault
+    private val locale: () -> Locale = Locale::getDefault,
+    private val timeSource: TimeSource = TimeSource.Monotonic
 ) {
 
     /**
@@ -88,11 +90,15 @@ class AppsRepository(
     }
 
     private fun load(): List<AppEntry> {
+        val start = timeSource.markNow()
         val collator = Collator.getInstance(locale()).apply { strength = Collator.SECONDARY }
-        return source.launchableActivities()
+        val apps = source.launchableActivities()
             .map { AppEntry(it.key, it.label, it.profile, canUninstall = it.removable) }
             .sortedWith(compareBy(collator) { entry: AppEntry -> entry.label }.thenBy { it.key.asString() })
             .numberSameNames()
+        // Shows how long a cold start waits for the app list (NFR-P2).
+        logger.info(TAG, "apps loaded: ${apps.size} in ${start.elapsedNow().inWholeMilliseconds} ms")
+        return apps
     }
 
     private companion object {

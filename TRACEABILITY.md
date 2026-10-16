@@ -83,7 +83,7 @@ Update this file in the same commit as the code and tests.
 | F18.3 | 🟡 | SafeModeScreenTest › f18_3_*, SafeModeAppsTest › f18_3_* | "Open Home settings" switches to the stock launcher |
 | F18.4, F18.5 | 🟡 | By design: SafeModeRoot only gets SafeModeApps (LauncherApps) and crash-report text; reviewed in code | |
 | F18.7 | ✅ | README "If ZeroOS breaks" | |
-| NFR-P1, P2, P4, P5 | ⬜ | | Manual (Step 3.2) |
+| NFR-P1, P2, P4, P5 | 🟡 | HomeAppsTest › nfrP2_*, HomeAppsCacheTest › nfrP2_*, AppsRepositoryTest › nfrP2_* (favorites shown from cache on cold start; load time logged) | Manual (Step 3.2): Home instant; cold start ≤ 0.5 s incl. favorites |
 | NFR-P3 | ✅ | AppSearchTest › nfrP3_searchOver300AppsIsFast | |
 | NFR-P6 | ⬜ | | APK size check |
 | NFR-S1–S7 | ⬜ | | |
