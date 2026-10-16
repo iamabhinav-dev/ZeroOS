@@ -3,6 +3,7 @@ package com.zeroos.feature.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -15,6 +16,7 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
 import androidx.compose.ui.test.swipeUp
+import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.model.AppEntry
@@ -26,6 +28,7 @@ import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ZeroTheme
 import java.time.ZonedDateTime
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -186,6 +189,20 @@ class HomeScreenTest {
     @Test
     fun f6_1_homeLightScreenshot() {
         show(theme = ThemeMode.LIGHT)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "en-rGB-w872dp-h392dp-land-xxhdpi")
+    fun nfrR4_landscapePutsFavoritesBesideTheClock() {
+        show(HomeUiState(time, favorites = favorites, batteryPercent = 82, nextAlarm = time.withHour(6).withMinute(30)))
+        val clock = compose.onNodeWithText("10:42").getBoundsInRoot()
+        val list = compose.onNodeWithTag(HomeTestTags.FAVORITES).getBoundsInRoot()
+        val middle = compose.onRoot().getBoundsInRoot().right / 2
+        assertTrue("favorites on the right half", list.left >= middle - 1.dp)
+        assertTrue("clock on the left half", clock.right <= middle + 1.dp)
+        favorites.forEach { compose.onNodeWithText(it.label).assertIsDisplayed() }
+        compose.onNodeWithText("alarm", substring = true).assertIsDisplayed()
         compose.onRoot().captureRoboImage()
     }
 }

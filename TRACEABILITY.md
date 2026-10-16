@@ -91,6 +91,7 @@ Update this file in the same commit as the code and tests.
 | NFR-A2 | 🟡 | ComponentsTest › nfrA2_listItemsAreAtLeast48dpAndClickable | |
 | NFR-A3 | 🟡 | ZeroThemeTest › nfrA3_textMeetsWcagAaInBothThemes | Light theme dotted text legibility |
 | NFR-A4 | ⬜ | | |
+| NFR-R4 | 🟡 | HomeScreenTest › nfrR4_landscapePutsFavoritesBesideTheClock | Rotate home on the phone |
 | NFR-R1–R8 | ⬜ | | |
 | NFR-L1–L3, L5, L6 | ⬜ | | |
 | NFR-L4, L7, L8 | 🟡 | ZeroRulesTest › nfrL4_*, nfrL8_* (detekt rules); Lint HardcodedText as error | |
