@@ -254,7 +254,7 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 
 ## Phase 3 — Daily-Driver Hardening (v1.0)
 
-### Step 3.1 — Test audit
+### Step 3.1 — Test audit ✅
 - Every F1–F6/F13/F14 ID in TRACEABILITY.md has at least one test; fill gaps.
 
 ### Step 3.2 — Manual performance & stability check on the test phone
