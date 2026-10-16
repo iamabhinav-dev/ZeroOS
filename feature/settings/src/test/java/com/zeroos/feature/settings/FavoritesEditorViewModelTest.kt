@@ -38,6 +38,8 @@ class FavoritesEditorViewModelTest {
 
         override fun registerChangeListener(onChange: (String) -> Unit) = LauncherAppsSource.ChangeListenerHandle {}
 
+        override fun openAppInfo(key: AppKey) = Unit
+
         override fun launch(key: AppKey) = Unit
     }
     private val logger = object : Logger {

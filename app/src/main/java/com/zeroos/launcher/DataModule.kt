@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.pm.LauncherApps
 import android.os.UserManager
 import com.zeroos.core.data.apps.AndroidLauncherAppsSource
+import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.createSettingsDataStore
@@ -33,6 +35,18 @@ object DataModule {
     @Provides
     @Singleton
     fun favoritesRepository(settings: SettingsRepository): FavoritesRepository = FavoritesRepository(settings)
+
+    @Provides
+    @Singleton
+    fun appCustomizationRepository(settings: SettingsRepository): AppCustomizationRepository = AppCustomizationRepository(settings)
+
+    @Provides
+    fun appActions(
+        settings: SettingsRepository,
+        favorites: FavoritesRepository,
+        customization: AppCustomizationRepository,
+        apps: AppsRepository
+    ): AppActions = AppActions(settings, favorites, customization, apps)
 
     /** Dispatcher for disk and system-service work. */
     @Provides
