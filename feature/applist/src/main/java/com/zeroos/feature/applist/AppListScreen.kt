@@ -55,10 +55,12 @@ import androidx.compose.ui.unit.Velocity
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zeroos.core.data.apps.AppSearchIndex
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.ProfileType
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.MinimalListItem
+import com.zeroos.core.ui.SearchField
 import com.zeroos.core.ui.ZeroTheme
 import kotlinx.coroutines.launch
 
@@ -116,7 +118,13 @@ fun AppListScreen(
             .safeDrawingPadding()
             .imePadding()
     ) {
-        SearchField(state.query, state.options.keyboardAutoOpen, onQueryChange, onGo = { state.results.firstOrNull()?.let(onAppClick) })
+        SearchField(
+            query = state.query,
+            autoOpenKeyboard = state.options.keyboardAutoOpen,
+            onQueryChange = onQueryChange,
+            onGo = { state.results.firstOrNull()?.let(onAppClick) },
+            modifier = Modifier.testTag(AppListTestTags.SEARCH)
+        )
         HorizontalDivider(color = tokens.colors.divider, modifier = Modifier.padding(horizontal = tokens.spacing.screenGutter))
         Row(Modifier.fillMaxSize()) {
             LazyColumn(
@@ -157,47 +165,6 @@ private fun labelWithTag(app: AppEntry): String {
         ProfileType.PRIVATE -> R.string.profile_private
     }
     return stringResource(R.string.app_list_profile_tag, app.label, stringResource(tag))
-}
-
-@Composable
-private fun SearchField(query: String, autoOpenKeyboard: Boolean, onQueryChange: (String) -> Unit, onGo: () -> Unit) {
-    val tokens = ZeroTheme.tokens
-    val focus = remember { FocusRequester() }
-    val keyboard = LocalSoftwareKeyboardController.current
-    LaunchedEffect(autoOpenKeyboard) {
-        if (autoOpenKeyboard) {
-            focus.requestFocus()
-            keyboard?.show()
-        }
-    }
-    val style = MaterialTheme.typography.bodyLarge.copy(color = tokens.colors.text, fontSize = tokens.textSizes.appLabel)
-    val label = stringResource(R.string.app_list_search_label)
-    BasicTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        singleLine = true,
-        textStyle = style,
-        cursorBrush = SolidColor(tokens.colors.text),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
-        keyboardActions = KeyboardActions(onGo = { onGo() }),
-        modifier = Modifier
-            .fillMaxWidth()
-            .focusRequester(focus)
-            .semantics { contentDescription = label }
-            .testTag(AppListTestTags.SEARCH)
-            .padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.listItemVertical),
-        decorationBox = { field ->
-            Box {
-                if (query.isEmpty()) {
-                    Text(
-                        stringResource(R.string.app_list_search_hint),
-                        style = style.copy(color = tokens.colors.textMuted)
-                    )
-                }
-                field()
-            }
-        }
-    )
 }
 
 /**

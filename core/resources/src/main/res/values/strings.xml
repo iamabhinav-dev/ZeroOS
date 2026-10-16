@@ -25,6 +25,17 @@
     <string name="profile_work">work</string>
     <string name="profile_private">private</string>
 
+    <!-- Favorites editor (F3, wireframe E3) -->
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_count">%1$d / %2$d</string>
+    <string name="favorites_add">+ Add app</string>
+    <string name="favorites_empty">No favorites yet</string>
+    <string name="favorites_remove">Remove %1$s</string>
+    <string name="favorites_drag">Drag to reorder %1$s</string>
+    <string name="favorites_move_up">Move up</string>
+    <string name="favorites_move_down">Move down</string>
+    <string name="favorites_pick_title">Add a favorite</string>
+
     <!-- Diagnostics (F17.9–F17.11, wireframe C) -->
     <string name="diagnostics_title">Diagnostics</string>
     <string name="diagnostics_filter_all">All</string>
