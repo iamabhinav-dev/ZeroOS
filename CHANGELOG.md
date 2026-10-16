@@ -4,6 +4,12 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.7 (versionCode 7)
+- Apps with the same name are numbered everywhere, e.g. "I-WhatsApp" and "II-WhatsApp" for an App Clone
+  (D-034). Replaces the "· clone" tag, which home didn't show
+- Alphabet scroller: the current letter is larger and brighter; while sliding, the other letters fade (F2.7)
+- Swipe down always opens search (notification shade comes with the Accessibility service in v1.1); its
+  switch is removed from Settings → Gestures (D-033)
 ## 0.0.6 (versionCode 6)
 - Onboarding on first start: intro, set as default home, pick favorites, battery optimization (Step 2.9).
   Shown once, including after this update
