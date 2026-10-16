@@ -126,5 +126,7 @@ class AppListViewModel @Inject constructor(
 }
 
 /** Letters for the fast scroller (F2.7): first letter of each visible app, in list order. */
-fun scrollerLetters(apps: List<AppEntry>): List<Char> =
-    apps.mapNotNull { AppSearchIndex.normalize(it.label).firstOrNull()?.uppercaseChar() }.distinct()
+fun scrollerLetters(apps: List<AppEntry>): List<Char> = apps.mapNotNull(::scrollerLetter).distinct()
+
+/** The scroller letter an app is listed under. */
+fun scrollerLetter(app: AppEntry): Char? = AppSearchIndex.normalize(app.label).firstOrNull()?.uppercaseChar()

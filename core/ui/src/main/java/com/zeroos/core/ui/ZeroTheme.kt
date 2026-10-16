@@ -29,6 +29,8 @@ private val GrayOnBlack = Color(0xFF9E9E9E)
 private val GrayOnWhite = Color(0xFF5F5F5F)
 private val DividerOnBlack = Color(0xFF333333)
 private val DividerOnWhite = Color(0xFFDDDDDD)
+private val FaintOnBlack = Color(0xFF555555)
+private val FaintOnWhite = Color(0xFFB5B5B5)
 
 /** Dims the phone wallpaper behind home so text stays readable (F6.2). */
 private val WallpaperScrim = Color(0x99000000)
@@ -39,13 +41,20 @@ data class ZeroColors(
     val text: Color,
     val textMuted: Color,
     val divider: Color,
+    /**
+     * Pushed into the background while something else is in focus, e.g. the other letters while sliding along the
+     * alphabet scroller (F2.7). Below WCAG AA on purpose, so never for text that must be read at rest.
+     */
+    val textFaint: Color,
     /** Drawn over the phone wallpaper on home (F6.2). */
     val wallpaperScrim: Color = WallpaperScrim
 ) {
     companion object {
         /** Pure black for OLED (F6.1 default). */
-        val Dark = ZeroColors(background = PureBlack, text = White, textMuted = GrayOnBlack, divider = DividerOnBlack)
-        val Light = ZeroColors(background = White, text = PureBlack, textMuted = GrayOnWhite, divider = DividerOnWhite)
+        val Dark =
+            ZeroColors(background = PureBlack, text = White, textMuted = GrayOnBlack, divider = DividerOnBlack, textFaint = FaintOnBlack)
+        val Light =
+            ZeroColors(background = White, text = PureBlack, textMuted = GrayOnWhite, divider = DividerOnWhite, textFaint = FaintOnWhite)
     }
 }
 

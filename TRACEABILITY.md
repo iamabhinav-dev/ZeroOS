@@ -21,7 +21,7 @@ Update this file in the same commit as the code and tests.
 | F2.4 | ✅ | AppSearchTest › f2_4_*, AppListViewModelTest › f2_4_*, AppListScreenTest › f2_4_* | |
 | F2.5 | ✅ | AppListViewModelTest › f2_5_* | |
 | F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_* | |
-| F2.7 | ✅ | AppListScreenTest › f2_7_* | |
+| F2.7 | ✅ | AppListScreenTest › f2_7_* (jump, slide, highlight screenshots) | Current letter grows and brightens on the phone |
 | F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_* | App info and uninstall open on the phone |
 | F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |

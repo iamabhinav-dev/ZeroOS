@@ -115,6 +115,32 @@ class AppListScreenTest {
     }
 
     @Test
+    fun f2_7_slidingAlongTheScrollerJumpsThroughLetters() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput {
+            down(topCenter.copy(y = 2f))
+            moveTo(bottomCenter.copy(y = bottom - 2f))
+        }
+        compose.onNodeWithText("Zoom").assertExists()
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { up() }
+    }
+
+    @Test
+    fun f2_7_scrollerHighlightsCurrentLetterScreenshot() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f2_7_scrollerWhileSlidingScreenshot() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        // Hold a finger on "G" (Gmail): G stands out, the other letters fade.
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { down(center.copy(y = height * 0.55f)) }
+        compose.onRoot().captureRoboImage()
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { up() }
+    }
+
+    @Test
     fun f2_11_backAndPullDownClose() {
         show(listState())
         compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
