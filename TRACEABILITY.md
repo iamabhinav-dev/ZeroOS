@@ -13,9 +13,9 @@ Update this file in the same commit as the code and tests.
 | F1.4 | ✅ | HomeUiStateTest › f1_4_*, HomeScreenTest › f1_4_* | |
 | F1.5 | ✅ | By design: home shows no badges or counters (screenshots) | |
 | F1.6 | ✅ | HomeScreenTest › f1_6_largestTextKeepsFavoritesVisible | |
-| F1.7 | 🟡 | HomeScreenTest › f1_7_centeredScreenshot (setting UI in Step 2.11) | |
+| F1.7 | ✅ | HomeScreenTest › f1_7_centeredScreenshot, SettingsViewModelTest › f1_3_f1_7_*, SettingsScreensTest › f1_3_f1_7_* | |
 | F1.8 | ✅ | HomeSourcesTest › f1_8_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_8_* | |
-| F1.9 | 🟡 | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_* (opens Diagnostics until Settings exists) | |
+| F1.9 | ✅ | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_longPressOpensSettingsAndBackReturnsHome | |
 | F2.1 | ✅ | MainActivityTest (swipe up opens list) | |
 | F2.3 | ✅ | AppListScreenTest › f2_2_f2_3_* | Keyboard opens on the phone |
 | F2.4 | ✅ | AppSearchTest › f2_4_*, AppListViewModelTest › f2_4_*, AppListScreenTest › f2_4_* | |
@@ -30,16 +30,17 @@ Update this file in the same commit as the code and tests.
 | F3.1, F3.2 | ✅ | FavoritesTest › f3_1_*, f3_2_*, FavoritesEditorTest › f3_*, FavoritesEditorViewModelTest › f3_1_f3_2_* | Reorder by dragging on the phone |
 | F3.3, F3.4 | ✅ | FavoritesTest › f3_3_*, f3_4_*, HomeUiStateTest › f3_3_*, f3_4_*, FavoritesEditorTest › f3_3_* | Uninstall a favorite app |
 | F4.1 | ✅ | SwipeTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
-| F4.2, F4.3 | ✅ | SwipeTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (choosing apps in Settings, Step 2.11) | |
+| F4.2, F4.3 | ✅ | SwipeTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_f4_4_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_2_* | Choose a swipe app on the phone |
 | F4.4 | 🟡 | SwipeTest › f4_4_*, MainActivityTest › f4_4_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (notification shade option in Phase 4) | |
 | F4.5 | ⬜ | (needs the Accessibility service, Phase 4) | |
-| F4.6 | 🟡 | HomeUiStateTest › f4_2_f4_3_f4_4_* (app / none; settings UI in Step 2.11) | |
+| F4.6 | ✅ | HomeUiStateTest › f4_2_f4_3_f4_4_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_6_* | |
 | F5.1 | ✅ | AppCustomizationTest › f5_1_*, AppListViewModelTest › f2_8_* | |
-| F5.2 | ✅ | HiddenAppsTest › f5_2_* (entry from Settings in Step 2.11) | |
+| F5.2 | ✅ | HiddenAppsTest › f5_2_*, SettingsScreensTest › f2_3_f2_5_f2_7_f5_2_f5_3_* | |
 | F5.3 | ✅ | HiddenAppsTest › f5_3_* | |
 | F5.4, F5.5 | ✅ | AppCustomizationTest › f5_4_*, f5_5_*, AppMenuTest › f5_4_*, f5_5_* | |
 | F17.8 (renames) | ✅ | AppCustomizationTest › f17_8_customNamesAreNeverLogged | |
 | F6.1, F6.2, F6.5 | ✅ | AppearanceTest › f6_*, AppearanceViewModelTest › f6_*, HomeUiStateTest › f6_2_f6_5_*, ZeroThemeTest › f6_1_* | Wallpaper and status bar on the phone |
+| Step 2.11 (settings structure) | ✅ | SettingsScreensTest › step2_11_*, SettingsViewModelTest › f17_7_logsPages | Walk through every Settings page |
 | F6.6 | ⬜ | Not built: accent color isn't in the approved wireframe F5 (ask) | |
 | F6.3 | 🟡 | ComponentsTest › step2_2_gallery* screenshots (Doto everywhere) | Doto readable on the phone |
 | F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
