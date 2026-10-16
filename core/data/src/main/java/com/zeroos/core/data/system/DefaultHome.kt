@@ -1,4 +1,4 @@
-package com.zeroos.launcher
+package com.zeroos.core.data.system
 
 import android.content.Intent
 import android.content.pm.PackageManager

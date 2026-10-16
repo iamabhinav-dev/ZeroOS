@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.zeroos.core.data.system.isDefaultHome
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
