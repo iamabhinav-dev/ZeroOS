@@ -8,6 +8,8 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.core.model.AppEntry
+import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.AppListSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
@@ -123,7 +125,7 @@ class SettingsScreensTest {
 
     @Test
     fun f4_2_f4_3_f4_5_gestureRows() {
-        showGestures(SettingsUiState(swipeLeftLabel = "Camera"))
+        showGestures(SettingsUiState(swipeLeftApp = AppEntry(AppKey("pkg.camera", "Main", 0), "Camera")))
         compose.onNodeWithText("Camera").assertExists()
         compose.onNodeWithText("Swipe left").performClick()
         compose.onNodeWithText("Swipe right").performClick()

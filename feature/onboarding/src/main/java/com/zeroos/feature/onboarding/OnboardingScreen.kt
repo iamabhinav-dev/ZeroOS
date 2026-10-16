@@ -50,6 +50,7 @@ import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.TextAction
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.displayName
 
 /**
  * Onboarding with its ViewModel and the two system dialogs it may open (F14.2, F14.6). Lint's BatteryLife
@@ -222,7 +223,7 @@ private fun FavoritesPage(state: OnboardingState, onToggle: (AppEntry) -> Unit) 
             val checked = position >= 0
             // Doto has no ☑/☐: a picked app shows its place on home instead, others are dimmed.
             MinimalListItem(
-                text = app.label,
+                text = app.displayName(),
                 onClick = { onToggle(app) },
                 muted = !checked,
                 trailing = if (checked) (position + 1).toString() else null,

@@ -13,6 +13,7 @@ import com.zeroos.core.resources.R
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.SettingRow
 import com.zeroos.core.ui.ToggleRow
+import com.zeroos.core.ui.displayName
 
 data class HomeSettingsActions(
     val onEditFavorites: () -> Unit,
@@ -71,8 +72,8 @@ data class GesturesActions(val onSwipeLeft: () -> Unit, val onSwipeRight: () -> 
 fun GesturesScreen(state: SettingsUiState, actions: GesturesActions, onBack: () -> Unit) {
     val off = stringResource(R.string.common_off)
     SettingsPageScaffold(stringResource(R.string.settings_gestures), SettingsTestTags.GESTURES, onBack) {
-        item { SettingRow(stringResource(R.string.gestures_swipe_left), state.swipeLeftLabel ?: off, actions.onSwipeLeft) }
-        item { SettingRow(stringResource(R.string.gestures_swipe_right), state.swipeRightLabel ?: off, actions.onSwipeRight) }
+        item { SettingRow(stringResource(R.string.gestures_swipe_left), state.swipeLeftApp?.displayName() ?: off, actions.onSwipeLeft) }
+        item { SettingRow(stringResource(R.string.gestures_swipe_right), state.swipeRightApp?.displayName() ?: off, actions.onSwipeRight) }
         item { UnavailableRow(stringResource(R.string.gestures_double_tap), stringResource(R.string.gestures_needs_accessibility)) }
     }
 }

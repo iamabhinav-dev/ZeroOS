@@ -22,7 +22,20 @@
     <string name="app_list_search_web">Search the web for \"%1$s\"</string>
     <string name="app_list_search_play_store">Search Play Store for \"%1$s\"</string>
     <string name="app_list_profile_tag">%1$s · %2$s</string>
-    <string name="profile_clone">clone</string>
+    <!-- Apps sharing a name, e.g. "II-WhatsApp" (D-034). -->
+    <string name="app_copy_name">%1$s-%2$s</string>
+    <string-array name="app_copy_numerals">
+        <item>I</item>
+        <item>II</item>
+        <item>III</item>
+        <item>IV</item>
+        <item>V</item>
+        <item>VI</item>
+        <item>VII</item>
+        <item>VIII</item>
+        <item>IX</item>
+        <item>X</item>
+    </string-array>
     <string name="profile_work">work</string>
     <string name="profile_private">private</string>
 

@@ -47,6 +47,7 @@ import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.SearchField
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.displayName
 import kotlin.math.roundToInt
 
 /** Favorites editor with its "+ Add app" picker (Step 2.5). */
@@ -130,7 +131,7 @@ fun FavoritesEditorScreen(
                 DotMatrixIcon(
                     pattern = DotIcons.DragHandle,
                     height = tokens.spacing.sectionGap * 2,
-                    contentDescription = stringResource(R.string.favorites_drag, app.label),
+                    contentDescription = stringResource(R.string.favorites_drag, app.displayName()),
                     color = tokens.colors.textMuted,
                     modifier = Modifier
                         .size(tokens.spacing.minTouchTarget)
@@ -158,12 +159,12 @@ fun FavoritesEditorScreen(
                         }
                         .testTag(FavoritesTestTags.handle(index))
                 )
-                AppLabel(app.label, Modifier.weight(1f), muted = dragging == index)
+                AppLabel(app.displayName(), Modifier.weight(1f), muted = dragging == index)
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(tokens.spacing.minTouchTarget)
-                        .clickable(onClickLabel = stringResource(R.string.favorites_remove, app.label), role = Role.Button) {
+                        .clickable(onClickLabel = stringResource(R.string.favorites_remove, app.displayName()), role = Role.Button) {
                             onRemove(app)
                         }
                 ) {
@@ -212,7 +213,7 @@ fun AppPickerScreen(
             onNone?.let { item { MinimalListItem(stringResource(R.string.common_off), onClick = it, large = true) } }
             items(apps, key = {
                 it.key.asString()
-            }) { app -> MinimalListItem(app.label, onClick = { onPick(app) }, large = true) }
+            }) { app -> MinimalListItem(app.displayName(), onClick = { onPick(app) }, large = true) }
         }
     }
 }

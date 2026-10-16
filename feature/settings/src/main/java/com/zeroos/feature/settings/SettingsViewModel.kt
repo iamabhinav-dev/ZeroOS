@@ -30,9 +30,9 @@ data class SettingsUiState(
     val settings: LauncherSettings = LauncherSettings(),
     /** Hidden apps that are still installed (wireframe F3 "Hidden apps (2)"). */
     val hiddenCount: Int = 0,
-    /** Names of the apps chosen for side swipes, or null when off or no longer installed. */
-    val swipeLeftLabel: String? = null,
-    val swipeRightLabel: String? = null,
+    /** Apps chosen for side swipes, or null when off or no longer installed. */
+    val swipeLeftApp: AppEntry? = null,
+    val swipeRightApp: AppEntry? = null,
     /** Apps for the swipe-app picker, filtered by [query]. */
     val pickerApps: List<AppEntry> = emptyList(),
     val query: String = ""
@@ -56,12 +56,12 @@ class SettingsViewModel @Inject constructor(
         savedState.getStateFlow(KEY_QUERY, "")
     ) { apps, current, query ->
         val visible = visibleApps(apps, current)
-        val labels = visible.associate { it.key.asString() to it.label }
+        val byKey = visible.associateBy { it.key.asString() }
         SettingsUiState(
             settings = current,
             hiddenCount = apps.count { it.key.asString() in current.hiddenApps },
-            swipeLeftLabel = current.gestures.swipeLeftApp?.let(labels::get),
-            swipeRightLabel = current.gestures.swipeRightApp?.let(labels::get),
+            swipeLeftApp = current.gestures.swipeLeftApp?.let(byKey::get),
+            swipeRightApp = current.gestures.swipeRightApp?.let(byKey::get),
             pickerApps = AppSearchIndex(visible).search(query),
             query = query
         )

@@ -76,6 +76,7 @@ class AppsRepositoryTest {
             assertEquals(2, entries.size)
             assertEquals(listOf(true, false), entries.map { it.isMainProfile })
             assertEquals(listOf(0L, 10L), entries.map { it.key.userSerial })
+            assertEquals("same names are numbered (D-034)", listOf(1, 2), entries.map { it.copyNumber })
             cancelAndIgnoreRemainingEvents()
         }
     }

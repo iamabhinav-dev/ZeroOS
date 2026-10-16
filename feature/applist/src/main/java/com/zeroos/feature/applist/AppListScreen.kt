@@ -68,6 +68,7 @@ import com.zeroos.core.ui.AppMenuTarget
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.SearchField
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.displayName
 import kotlinx.coroutines.launch
 
 /** App list with its ViewModel (Step 2.4). Closes after an app starts. */
@@ -93,7 +94,7 @@ fun AppListRoute(onClose: () -> Unit, viewModel: AppListViewModel = hiltViewMode
     menuFor?.let { app ->
         val key = app.key.asString()
         AppMenu(
-            target = AppMenuTarget(app.label, key in state.favoriteKeys, key in state.renamedKeys),
+            target = AppMenuTarget(app.displayName(), key in state.favoriteKeys, key in state.renamedKeys),
             actions = AppMenuActions(
                 onToggleFavorite = { viewModel.toggleFavorite(app) { Toast.makeText(context, fullMessage, Toast.LENGTH_SHORT).show() } },
                 onRename = { viewModel.rename(app, it) },
@@ -181,16 +182,16 @@ fun AppListScreen(
     }
 }
 
-/** "WhatsApp · clone" for apps outside the main profile (F2.10). */
+/** "II-WhatsApp" when names are shared (D-034); work and private-space apps also get a tag, e.g. "Slack · work" (F2.10). */
 @Composable
 private fun labelWithTag(app: AppEntry): String {
+    val name = app.displayName()
     val tag = when (app.profile) {
-        ProfileType.MAIN -> return app.label
-        ProfileType.CLONE -> R.string.profile_clone
+        ProfileType.MAIN, ProfileType.CLONE -> return name
         ProfileType.WORK -> R.string.profile_work
         ProfileType.PRIVATE -> R.string.profile_private
     }
-    return stringResource(R.string.app_list_profile_tag, app.label, stringResource(tag))
+    return stringResource(R.string.app_list_profile_tag, name, stringResource(tag))
 }
 
 /**

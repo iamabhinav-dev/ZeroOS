@@ -1,5 +1,6 @@
 package com.zeroos.feature.home
 
+import com.zeroos.core.data.apps.renamedTo
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.LauncherSettings
@@ -41,7 +42,7 @@ fun homeUiState(
     val byKey = apps.associateBy { it.key.asString() }
     val favorites = settings.favorites
         .take(settings.home.maxFavorites)
-        .mapNotNull { key -> byKey[key]?.let { app -> app.copy(label = settings.renamedApps[key] ?: app.label) } }
+        .mapNotNull { key -> byKey[key]?.renamedTo(settings.renamedApps[key]) }
     return HomeUiState(
         time = time,
         favorites = favorites,

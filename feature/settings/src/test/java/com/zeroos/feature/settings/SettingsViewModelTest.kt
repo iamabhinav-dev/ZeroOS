@@ -115,11 +115,11 @@ class SettingsViewModelTest {
         vm.onPickerQueryChange("gm")
         assertEquals(listOf("Gmail"), vm.state.first { it.query == "gm" }.pickerApps.map { it.label })
         vm.setSwipeApp(SwipeSide.LEFT, vm.state.value.pickerApps.single())
-        vm.state.first { it.swipeLeftLabel != null }
+        vm.state.first { it.swipeLeftApp != null }
         vm.setSwipeApp(SwipeSide.RIGHT, vm.state.first { it.query.isEmpty() }.pickerApps.first { it.label == "Navigate" })
-        val state = vm.state.first { it.swipeRightLabel != null && it.swipeLeftLabel != null }
-        assertEquals("Gmail", state.swipeLeftLabel)
-        assertEquals("Navigate", state.swipeRightLabel)
+        val state = vm.state.first { it.swipeRightApp != null && it.swipeLeftApp != null }
+        assertEquals("Gmail", state.swipeLeftApp?.label)
+        assertEquals("Navigate", state.swipeRightApp?.label)
 
         vm.setSwipeApp(SwipeSide.LEFT, null)
         assertNull(settings.settings.first { it.gestures.swipeLeftApp == null }.gestures.swipeLeftApp)

@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.core.data.apps.numberSameNames
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.ProfileType
@@ -98,10 +99,11 @@ class AppListScreenTest {
     }
 
     @Test
-    fun f2_10_otherProfilesAreTagged() {
-        show(listState(results = listOf(app("WhatsApp"), app("WhatsApp", ProfileType.CLONE), app("Gmail", ProfileType.WORK))))
-        compose.onNodeWithText("WhatsApp").assertExists()
-        compose.onNodeWithText("WhatsApp · clone").assertExists()
+    fun f2_10_d034_sameNamesAreNumberedAndWorkAppsTagged() {
+        val apps = listOf(app("WhatsApp"), app("WhatsApp", ProfileType.CLONE), app("Gmail", ProfileType.WORK)).numberSameNames()
+        show(listState(results = apps))
+        compose.onNodeWithText("I-WhatsApp").assertExists()
+        compose.onNodeWithText("II-WhatsApp").assertExists()
         compose.onNodeWithText("Gmail · work").assertExists()
     }
 

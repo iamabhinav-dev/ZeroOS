@@ -34,6 +34,7 @@ import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.TextAction
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.displayName
 import kotlinx.coroutines.delay
 
 /** Hidden apps behind the optional confirmation or delay (F5.2, F5.3). */
@@ -63,7 +64,7 @@ fun HiddenAppsScreen(apps: List<AppEntry>, onUnhide: (AppEntry) -> Unit, onBack:
                     min = tokens.spacing.minTouchTarget
                 ).padding(start = tokens.spacing.screenGutter)
             ) {
-                AppLabel(app.label, Modifier.weight(1f))
+                AppLabel(app.displayName(), Modifier.weight(1f))
                 TextAction(stringResource(R.string.hidden_apps_unhide), onClick = { onUnhide(app) })
             }
         }
