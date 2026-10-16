@@ -47,9 +47,10 @@ class HomeScreenTest {
     private fun show(
         state: HomeUiState = HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82),
         slots: HomeSlots = HomeSlots(),
-        textSize: TextSize = TextSize.MEDIUM
+        textSize: TextSize = TextSize.MEDIUM,
+        theme: ThemeMode = ThemeMode.DARK
     ) = compose.setContent {
-        ZeroTheme(ThemeMode.DARK, textSize) {
+        ZeroTheme(theme, textSize) {
             HomeScreen(
                 state = state,
                 onSwipe = { calls += "swipe:$it" },
@@ -179,6 +180,12 @@ class HomeScreenTest {
         favorites.forEach { compose.onNodeWithText(it.label).assertIsDisplayed() }
         compose.onNodeWithText("10:42").assertIsDisplayed()
         compose.onNodeWithText("☐ buy milk").assertIsNotDisplayed()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_1_homeLightScreenshot() {
+        show(theme = ThemeMode.LIGHT)
         compose.onRoot().captureRoboImage()
     }
 }

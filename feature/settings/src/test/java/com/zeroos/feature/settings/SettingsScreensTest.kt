@@ -13,6 +13,8 @@ import com.zeroos.core.model.settings.GestureSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.model.settings.LauncherSettings
+import com.zeroos.core.model.settings.TextSize
+import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.ui.ZeroTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -30,8 +32,8 @@ class SettingsScreensTest {
 
     private val calls = mutableListOf<String>()
 
-    private fun showMain() = compose.setContent {
-        ZeroTheme { SettingsMainScreen(onOpen = { calls += it.name }, onOpenDiagnostics = { calls += "diagnostics" }, onBack = {}) }
+    private fun showMain(theme: ThemeMode = ThemeMode.DARK) = compose.setContent {
+        ZeroTheme(theme) { SettingsMainScreen(onOpen = { calls += it.name }, onOpenDiagnostics = { calls += "diagnostics" }, onBack = {}) }
     }
 
     private fun showHome(state: HomeSettings = HomeSettings()) = compose.setContent {
@@ -50,8 +52,8 @@ class SettingsScreensTest {
         }
     }
 
-    private fun showAppList(state: AppListSettings = AppListSettings()) = compose.setContent {
-        ZeroTheme {
+    private fun showAppList(state: AppListSettings = AppListSettings(), textSize: TextSize = TextSize.MEDIUM) = compose.setContent {
+        ZeroTheme(textSize = textSize) {
             AppListSettingsScreen(
                 state,
                 hiddenCount = 2,
@@ -180,6 +182,18 @@ class SettingsScreensTest {
     @Test
     fun step2_11_gesturesScreenshot() {
         showGestures()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_1_settingsMainLightScreenshot() {
+        showMain(ThemeMode.LIGHT)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_4_appListSettingsLargestTextScreenshot() {
+        showAppList(AppListSettings(hiddenAppsConfirmation = HiddenAppsConfirmation.DELAY), TextSize.EXTRA_LARGE)
         compose.onRoot().captureRoboImage()
     }
 }
