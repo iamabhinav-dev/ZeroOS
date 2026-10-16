@@ -9,9 +9,12 @@ import java.time.Clock
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.merge
 
 /**
  * Current time, re-emitted on every minute tick and when the time or time zone changes (F1.1, Step 1.3).
@@ -40,4 +43,23 @@ class TimeTicks(
         ContextCompat.registerReceiver(context, receiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         awaitClose { context.unregisterReceiver(receiver) }
     }.conflate()
+
+    /**
+     * Like [ticks], but also every second, on the second (F6.7). Only collected while home is visible with
+     * seconds on, so the phone isn't woken for it (NFR-P5).
+     */
+    val secondTicks: Flow<ZonedDateTime> = merge(
+        ticks,
+        flow {
+            while (true) {
+                delay(MILLIS_PER_SECOND - clock.instant().nano / NANOS_PER_MILLI % MILLIS_PER_SECOND)
+                emit(now())
+            }
+        }
+    ).conflate()
+
+    private companion object {
+        const val MILLIS_PER_SECOND = 1_000L
+        const val NANOS_PER_MILLI = 1_000_000L
+    }
 }

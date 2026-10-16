@@ -18,6 +18,8 @@ data class HomeUiState(
     val charging: Boolean = false,
     val nextAlarm: ZonedDateTime? = null,
     val showClock: Boolean = true,
+    /** hh:mm:ss (F6.7). */
+    val showSeconds: Boolean = false,
     val showDate: Boolean = true,
     /** For the favorite long-press menu (F2.8). */
     val renamedKeys: Set<String> = emptySet(),
@@ -51,6 +53,7 @@ fun homeUiState(
         charging = settings.home.showBattery && battery?.charging == true,
         nextAlarm = nextAlarm?.takeIf { settings.home.showNextAlarm }?.atZone(time.zone),
         showClock = settings.appearance.showClock,
+        showSeconds = settings.appearance.showSeconds,
         showDate = settings.appearance.showDate,
         renamedKeys = settings.renamedApps.keys,
         swipeLeftApp = settings.gestures.swipeLeftApp?.let(byKey::get),

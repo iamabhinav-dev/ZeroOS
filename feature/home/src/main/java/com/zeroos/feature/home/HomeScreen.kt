@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -196,10 +197,12 @@ private fun ClockLine(
 ) {
     val tokens = ZeroTheme.tokens
     Column(modifier, horizontalAlignment = horizontal) {
+        // Shrinks to fit when the line is too wide, e.g. hh:mm:ss at the largest text size (F6.7).
         Text(
-            text = format.time(state.time),
+            text = format.time(state.time, state.showSeconds),
             color = tokens.colors.text,
-            fontSize = tokens.textSizes.clock,
+            maxLines = 1,
+            autoSize = TextAutoSize.StepBased(minFontSize = tokens.textSizes.date, maxFontSize = tokens.textSizes.clock),
             modifier = Modifier
                 .clickable(onClickLabel = stringResource(R.string.home_open_alarms), role = Role.Button, onClick = onClick)
                 .padding(horizontal = tokens.spacing.screenGutter)

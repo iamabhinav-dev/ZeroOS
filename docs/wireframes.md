@@ -388,6 +388,7 @@ system Back gesture still works.*
 │  Wallpaper           ‹Black›       │  black / system wallpaper (dimmed) (F6.2)
 │  Text size           ‹Medium›      │  S / M / L / XL (F6.4)
 │  Show clock          ‹on›          │  (F6.5)
+│  Show seconds        ‹off›         │  hh:mm:ss; only while the clock is shown (F6.7)
 │  Show date           ‹on›          │
 │  Show status bar     ‹on›          │
 │                                    │

@@ -136,6 +136,7 @@ The default screen shown when I press Home.
 | F6.4 | Text size: small / medium / large / extra-large; respects system font scale. Sizes are kept large enough for Doto to stay readable (minimum 14 sp for body text). |
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
 | ~~F6.6~~ | ~~Optional single accent color~~ (removed: ZeroOS stays black and white, D-035). |
+| F6.7 | Clock shows **hh:mm** or **hh:mm:ss** (show seconds on/off); it shrinks to fit one line if needed (D-036). |
 
 ### F7 — Notification Filter
 
@@ -496,6 +497,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Fast-scroller (F2.7) | Off | on/off |
 | Hidden apps confirmation (F5.3) | Off | off / confirm / 5 s delay |
 | Theme (F6.1) | Dark (pure black) | dark, light, system |
+| Clock seconds (F6.7) | Off (hh:mm) | on/off |
 | Text size (F6.4) | Medium | S / M / L / XL |
 | Favorites alignment (F1.7) | Left | left, center, right |
 | Battery % / next alarm (F1.3, F1.8) | On / Off | on/off |

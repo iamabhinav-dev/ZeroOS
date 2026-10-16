@@ -10,9 +10,11 @@ import java.util.Locale
  */
 class ClockFormat(locale: Locale, is24Hour: Boolean, datePattern: String) {
     private val time = DateTimeFormatter.ofPattern(if (is24Hour) "HH:mm" else "h:mm", locale)
+    private val timeWithSeconds = DateTimeFormatter.ofPattern(if (is24Hour) "HH:mm:ss" else "h:mm:ss", locale)
     private val date = DateTimeFormatter.ofPattern(datePattern, locale)
 
-    fun time(value: ZonedDateTime): String = time.format(value)
+    /** "10:42", or "10:42:07" with [seconds] (F6.7). */
+    fun time(value: ZonedDateTime, seconds: Boolean = false): String = (if (seconds) timeWithSeconds else time).format(value)
 
     fun date(value: ZonedDateTime): String = date.format(value)
 

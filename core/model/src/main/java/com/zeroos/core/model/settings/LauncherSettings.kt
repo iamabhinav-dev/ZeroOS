@@ -58,6 +58,8 @@ data class AppearanceSettings(
     val wallpaper: Wallpaper = Wallpaper.BLACK,
     val textSize: TextSize = TextSize.MEDIUM,
     val showClock: Boolean = true,
+    /** Clock as hh:mm:ss instead of hh:mm (F6.7, D-036). */
+    val showSeconds: Boolean = false,
     val showDate: Boolean = true,
     val showStatusBar: Boolean = true
 )

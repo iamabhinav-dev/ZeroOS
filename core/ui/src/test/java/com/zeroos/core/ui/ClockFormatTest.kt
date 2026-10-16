@@ -22,4 +22,10 @@ class ClockFormatTest {
     fun f1_2_formatsWeekdayDayAndMonth() {
         assertEquals("Thursday, 15 October", ClockFormat(Locale.ENGLISH, true, "EEEE, d MMMM").date(time))
     }
+
+    @Test
+    fun f6_7_showsSecondsWhenAsked() {
+        assertEquals("16:05:00", ClockFormat(Locale.ENGLISH, is24Hour = true, "EEEE, d MMMM").time(time, seconds = true))
+        assertEquals("4:05:00", ClockFormat(Locale.ENGLISH, is24Hour = false, "EEEE, d MMMM").time(time, seconds = true))
+    }
 }

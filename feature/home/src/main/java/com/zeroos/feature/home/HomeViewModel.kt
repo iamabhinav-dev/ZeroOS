@@ -10,14 +10,19 @@ import com.zeroos.core.logging.warn
 import com.zeroos.core.model.AppEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 /** Home screen state (Step 2.3): time, favorites, battery and next alarm. */
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     timeTicks: TimeTicks,
@@ -29,8 +34,12 @@ class HomeViewModel @Inject constructor(
     private val logger: Logger
 ) : ViewModel() {
 
+    /** Minute ticks, or second ticks while the clock shows seconds (F6.7). */
+    private val time = settingsRepository.settings.map { it.appearance.showSeconds }.distinctUntilChanged()
+        .flatMapLatest { seconds -> if (seconds) timeTicks.secondTicks else timeTicks.ticks }
+
     val state: StateFlow<HomeUiState> = combine(
-        timeTicks.ticks,
+        time,
         settingsRepository.settings,
         appsRepository.apps.onStart { emit(emptyList()) },
         batteryLevel.status.onStart { emit(null) },
