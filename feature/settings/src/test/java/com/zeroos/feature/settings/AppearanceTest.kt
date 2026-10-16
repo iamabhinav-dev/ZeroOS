@@ -1,11 +1,15 @@
 package com.zeroos.feature.settings
 
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.datastore.core.DataStoreFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -81,6 +85,19 @@ class AppearanceTest {
             compose.onNodeWithText(it).performClick()
         }
         assertEquals(listOf("theme", "wallpaper", "size", "seconds:true", "date:false", "status:false", "clock:false"), calls)
+    }
+
+    @Test
+    fun f6_7_previewClockWithSecondsIsOneLineAtLargestText() {
+        show(AppearanceSettings(showSeconds = true, textSize = TextSize.EXTRA_LARGE))
+        val clock = SemanticsMatcher("clock text") { node ->
+            node.config.getOrElseNullable(SemanticsProperties.Text) { null }?.any { Regex("""\d{1,2}:\d{2}:\d{2}""").matches(it.text) } ==
+                true
+        }
+        val results = mutableListOf<TextLayoutResult>()
+        compose.onNode(clock).fetchSemanticsNode().config[SemanticsActions.GetTextLayoutResult].action?.invoke(results)
+        assertEquals(1, results.single().lineCount)
+        compose.onRoot().captureRoboImage()
     }
 
     @Test

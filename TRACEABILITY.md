@@ -12,7 +12,7 @@ Update this file in the same commit as the code and tests.
 | F1.3 | ✅ | HomeSourcesTest › f1_3_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_1_f1_2_f1_3_* | |
 | F1.4 | ✅ | HomeUiStateTest › f1_4_*, HomeScreenTest › f1_4_* | |
 | F1.5 | ✅ | By design: home shows no badges or counters (screenshots) | |
-| F1.6 | ✅ | HomeScreenTest › f1_6_largestTextKeepsFavoritesVisible | |
+| F1.6 | ✅ | HomeScreenTest › f1_6_largestTextKeepsFavoritesVisible, f1_6_favoritesScrollOnlyWhenTheyDontFit, f1_6_favoritesThatFitDontScroll | Many favorites / XL text scroll on the phone |
 | F1.7 | ✅ | HomeScreenTest › f1_7_centeredScreenshot, SettingsViewModelTest › f1_3_f1_7_*, SettingsScreensTest › f1_3_f1_7_* | |
 | F1.8 | ✅ | HomeSourcesTest › f1_8_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_8_* | |
 | F1.9 | ✅ | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_longPressOpensSettingsAndBackReturnsHome | |
@@ -42,7 +42,7 @@ Update this file in the same commit as the code and tests.
 | F6.1, F6.2, F6.5 | ✅ | AppearanceTest › f6_*, AppearanceViewModelTest › f6_*, HomeUiStateTest › f6_2_f6_5_*, ZeroThemeTest › f6_1_* | Wallpaper and status bar on the phone |
 | Step 2.11 (settings structure) | ✅ | SettingsScreensTest › step2_11_*, SettingsViewModelTest › f17_7_logsPages | Walk through every Settings page |
 | F6.6 | ❌ | Removed (D-035) | |
-| F6.7 | ✅ | ClockFormatTest › f6_7_*, TimeTicksTest › f6_7_*, HomeUiStateTest › f6_7_*, HomeScreenTest › f6_7_*, AppearanceTest › f6_7_*, f6_1_f6_2_f6_4_f6_5_changesAreSaved | Seconds tick smoothly on the phone |
+| F6.7 | ✅ | ClockFormatTest › f6_7_*, TimeTicksTest › f6_7_*, HomeUiStateTest › f6_7_*, HomeScreenTest › f6_7_* (one line at XL), AppearanceTest › f6_7_* (preview one line at XL), f6_1_f6_2_f6_4_f6_5_changesAreSaved | Seconds tick smoothly on the phone |
 | F6.3 | ✅ | ZeroThemeTest › f6_3_everyTextStyleUsesDoto, ComponentsTest › step2_2_gallery* screenshots | Doto readable on the phone |
 | F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
 | F7.1–F7.6 | ⬜ | | |
@@ -92,7 +92,7 @@ Update this file in the same commit as the code and tests.
 | NFR-A2 | 🟡 | ComponentsTest › nfrA2_listItemsAreAtLeast48dpAndClickable | |
 | NFR-A3 | 🟡 | ZeroThemeTest › nfrA3_textMeetsWcagAaInBothThemes | Light theme dotted text legibility |
 | NFR-A4 | ⬜ | | |
-| NFR-R4 | 🟡 | HomeScreenTest › nfrR4_landscapePutsFavoritesBesideTheClock | Rotate home on the phone |
+| NFR-R4 | 🟡 | HomeScreenTest › nfrR4_* (side by side; favorites scroll if needed) | Rotate home on the phone |
 | NFR-R1–R8 | ⬜ | | |
 | NFR-L1–L3, L5, L6 | ⬜ | | |
 | NFR-L4, L7, L8 | 🟡 | ZeroRulesTest › nfrL4_*, nfrL8_* (detekt rules); Lint HardcodedText as error | |

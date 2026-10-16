@@ -1,9 +1,13 @@
 package com.zeroos.feature.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.getBoundsInRoot
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -11,11 +15,13 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
 import androidx.compose.ui.test.swipeUp
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.unit.dp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -211,5 +217,42 @@ class HomeScreenTest {
         show(HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82, showSeconds = true), textSize = TextSize.EXTRA_LARGE)
         compose.onNodeWithText("10:42:00").assertIsDisplayed()
         compose.onRoot().captureRoboImage()
+    }
+
+    private val many = (1..10).map { AppEntry(AppKey("pkg.app$it", "Main", 0), "Favorite $it") }
+
+    private fun lines(text: String): Int {
+        val results = mutableListOf<TextLayoutResult>()
+        compose.onNodeWithText(text).fetchSemanticsNode().config[SemanticsActions.GetTextLayoutResult].action?.invoke(results)
+        return results.single().lineCount
+    }
+
+    @Test
+    fun f6_7_clockWithSecondsIsOneLineAtLargestText() {
+        show(HomeUiState(time, favorites = favorites.take(4), showSeconds = true), textSize = TextSize.EXTRA_LARGE)
+        assertEquals(1, lines("10:42:00"))
+    }
+
+    @Test
+    @Config(qualifiers = "en-rGB-w360dp-h640dp-xxhdpi")
+    fun f1_6_favoritesScrollOnlyWhenTheyDontFit() {
+        show(HomeUiState(time, favorites = many, batteryPercent = 82), textSize = TextSize.EXTRA_LARGE)
+        compose.onNodeWithTag(HomeTestTags.FAVORITES).performScrollToNode(hasText("Favorite 10"))
+        compose.onNodeWithText("Favorite 10").assertIsDisplayed()
+        compose.onNodeWithText("10:42").assertIsDisplayed()
+    }
+
+    @Test
+    fun f1_6_favoritesThatFitDontScroll() {
+        show(HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82))
+        compose.onNodeWithTag(HomeTestTags.FAVORITES).assert(SemanticsMatcher.keyNotDefined(SemanticsActions.ScrollBy))
+    }
+
+    @Test
+    @Config(qualifiers = "en-rGB-w872dp-h392dp-land-xxhdpi")
+    fun nfrR4_landscapeFavoritesScrollWhenTheyDontFit() {
+        show(HomeUiState(time, favorites = many, batteryPercent = 82))
+        compose.onNodeWithTag(HomeTestTags.FAVORITES).performScrollToNode(hasText("Favorite 10"))
+        compose.onNodeWithText("Favorite 10").assertIsDisplayed()
     }
 }

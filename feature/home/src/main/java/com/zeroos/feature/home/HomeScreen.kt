@@ -13,7 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.text.TextAutoSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,6 +45,7 @@ import com.zeroos.core.ui.AppMenu
 import com.zeroos.core.ui.AppMenuActions
 import com.zeroos.core.ui.AppMenuTarget
 import com.zeroos.core.ui.ClockFormat
+import com.zeroos.core.ui.ClockText
 import com.zeroos.core.ui.DotIcons
 import com.zeroos.core.ui.DotMatrixIcon
 import com.zeroos.core.ui.MinimalListItem
@@ -172,7 +174,15 @@ fun HomeScreen(
             content?.let { Column(line.homeSlot(slot), horizontalAlignment = horizontal) { it() } }
         }
 
-        Column(line.homeFavorites().testTag(HomeTestTags.FAVORITES), horizontalAlignment = horizontal) {
+        // Scrolls only when the favorites don't fit (many favorites, large text, landscape); otherwise swipes
+        // on them still reach the home gestures.
+        val favoritesScroll = rememberScrollState()
+        Column(
+            line.homeFavorites()
+                .verticalScroll(favoritesScroll, enabled = favoritesScroll.maxValue > 0)
+                .testTag(HomeTestTags.FAVORITES),
+            horizontalAlignment = horizontal
+        ) {
             state.favorites.forEach { app ->
                 MinimalListItem(
                     text = app.displayName(),
@@ -197,12 +207,8 @@ private fun ClockLine(
 ) {
     val tokens = ZeroTheme.tokens
     Column(modifier, horizontalAlignment = horizontal) {
-        // Shrinks to fit when the line is too wide, e.g. hh:mm:ss at the largest text size (F6.7).
-        Text(
+        ClockText(
             text = format.time(state.time, state.showSeconds),
-            color = tokens.colors.text,
-            maxLines = 1,
-            autoSize = TextAutoSize.StepBased(minFontSize = tokens.textSizes.date, maxFontSize = tokens.textSizes.clock),
             modifier = Modifier
                 .clickable(onClickLabel = stringResource(R.string.home_open_alarms), role = Role.Button, onClick = onClick)
                 .padding(horizontal = tokens.spacing.screenGutter)
