@@ -17,6 +17,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.settings.TextSize
+import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.ui.ZeroTheme
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -39,8 +41,8 @@ class OnboardingScreenTest {
     private fun app(name: String) = AppEntry(AppKey("pkg.$name", "Main", 0), name)
     private val apps = listOf("Phone", "Messages", "Camera", "Maps", "Calculator", "Clock").map(::app)
 
-    private fun show(state: OnboardingState) = compose.setContent {
-        ZeroTheme {
+    private fun show(state: OnboardingState, theme: ThemeMode = ThemeMode.DARK, textSize: TextSize = TextSize.MEDIUM) = compose.setContent {
+        ZeroTheme(theme, textSize) {
             OnboardingScreen(
                 state,
                 OnboardingActions(
@@ -134,6 +136,18 @@ class OnboardingScreenTest {
     @Test
     fun step2_9_backgroundScreenshot() {
         show(OnboardingState(page = OnboardingPage.BACKGROUND, batteryOptimized = true))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_1_introLightScreenshot() {
+        show(OnboardingState(), theme = ThemeMode.LIGHT)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_4_favoritesLargestTextScreenshot() {
+        show(favorites, textSize = TextSize.EXTRA_LARGE)
         compose.onRoot().captureRoboImage()
     }
 }

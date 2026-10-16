@@ -17,6 +17,8 @@ import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.ProfileType
 import com.zeroos.core.model.settings.AppListSettings
+import com.zeroos.core.model.settings.TextSize
+import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.ui.ZeroTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -42,8 +44,8 @@ class AppListScreenTest {
     )
     private val calls = mutableListOf<String>()
 
-    private fun show(state: AppListUiState) = compose.setContent {
-        ZeroTheme {
+    private fun show(state: AppListUiState, theme: ThemeMode = ThemeMode.DARK, textSize: TextSize = TextSize.MEDIUM) = compose.setContent {
+        ZeroTheme(theme, textSize) {
             AppListScreen(
                 state = state,
                 onQueryChange = { calls += "query:$it" },
@@ -133,6 +135,18 @@ class AppListScreenTest {
     @Test
     fun step2_4_noMatchScreenshot() {
         show(listState(query = "xyzq", results = emptyList()))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_1_listLightScreenshot() {
+        show(listState(), theme = ThemeMode.LIGHT)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_4_listLargestTextScreenshot() {
+        show(listState(), textSize = TextSize.EXTRA_LARGE)
         compose.onRoot().captureRoboImage()
     }
 }
