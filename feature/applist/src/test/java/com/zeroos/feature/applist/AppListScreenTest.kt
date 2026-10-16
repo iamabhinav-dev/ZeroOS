@@ -3,6 +3,7 @@ package com.zeroos.feature.applist
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -49,7 +50,8 @@ class AppListScreenTest {
                 onAppClick = { calls += it.label },
                 onSearchWeb = { calls += "web:$it" },
                 onSearchPlayStore = { calls += "play:$it" },
-                onClose = { calls += "close" }
+                onClose = { calls += "close" },
+                onAppLongClick = { calls += "menu:${it.label}" }
             )
         }
     }
@@ -69,6 +71,13 @@ class AppListScreenTest {
         compose.onNodeWithText("search…").assertExists()
         compose.onNodeWithText("Camera").performClick()
         assertEquals(listOf("Camera"), calls)
+    }
+
+    @Test
+    fun f2_8_longPressOpensMenu() {
+        show(listState())
+        compose.onNodeWithText("Gmail").performTouchInput { longClick() }
+        assertEquals(listOf("menu:Gmail"), calls)
     }
 
     @Test

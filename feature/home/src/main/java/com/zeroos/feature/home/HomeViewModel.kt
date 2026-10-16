@@ -2,6 +2,7 @@ package com.zeroos.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.logging.Logger
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /** Home screen state (Step 2.3): time, favorites, battery and next alarm. */
 @HiltViewModel
@@ -23,6 +25,7 @@ class HomeViewModel @Inject constructor(
     private val appsRepository: AppsRepository,
     batteryLevel: BatteryLevel,
     nextAlarm: NextAlarm,
+    private val actions: AppActions,
     private val logger: Logger
 ) : ViewModel() {
 
@@ -37,6 +40,23 @@ class HomeViewModel @Inject constructor(
 
     fun launch(app: AppEntry) {
         appsRepository.launch(app.key)
+    }
+
+    /** Favorite long-press menu (F2.8): every app here is already a favorite. */
+    fun removeFavorite(app: AppEntry) {
+        viewModelScope.launch { actions.removeFavorite(app) }
+    }
+
+    fun rename(app: AppEntry, name: String?) {
+        viewModelScope.launch { actions.rename(app.key, name) }
+    }
+
+    fun hide(app: AppEntry) {
+        viewModelScope.launch { actions.hide(app) }
+    }
+
+    fun openAppInfo(app: AppEntry) {
+        actions.openAppInfo(app)
     }
 
     /** Clock or date tapped but no Clock/Calendar app could open (F1.1, F1.2). */

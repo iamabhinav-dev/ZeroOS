@@ -55,7 +55,8 @@ class HomeScreenTest {
                 onFavoriteClick = { calls += it.label },
                 onClockClick = { calls += "clock" },
                 onDateClick = { calls += "date" },
-                slots = slots
+                slots = slots,
+                onFavoriteLongClick = { calls += "menu:${it.label}" }
             )
         }
     }
@@ -100,6 +101,13 @@ class HomeScreenTest {
     fun f1_3_chargingScreenshot() {
         show(HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82, charging = true))
         compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f2_8_longPressFavoriteOpensMenu() {
+        show()
+        compose.onNodeWithText("Camera").performTouchInput { longClick() }
+        assertEquals(listOf("menu:Camera"), calls)
     }
 
     @Test

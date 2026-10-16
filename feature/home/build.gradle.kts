@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":core:logging"))
     implementation(project(":core:data"))
 
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
