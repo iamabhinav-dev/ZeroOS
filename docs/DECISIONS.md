@@ -136,9 +136,9 @@ Apps from a profile Android reports as managed are tagged "work", private space 
 While charging, a lightning bolt drawn as dots on Doto's 5 × 7 grid follows the battery %. Drawn by a reusable `DotMatrixIcon` (also for the Phase 4/6 dot animations).
 *Why:* User's request. Doto has no bolt glyph, and the ⚡ character would fall back to a colored emoji.
 
-**D-032 — App icon is Doto's "0"** · 2026-10-16 · Accepted
-The launcher icon is Doto's "0" glyph drawn as 12 white dots on black (positions read from the font), centred in the adaptive-icon safe zone, with a monochrome layer for themed icons.
-*Why:* User's request to match the Doto style.
+**D-032 — App icon: a round, dotted "0"** · 2026-10-16 · Accepted (revised)
+The launcher icon is a "0" made of 14 white dots spaced evenly along an oval, on black, centred in the adaptive-icon safe zone, with a monochrome layer for themed icons.
+*Why:* User wanted the Doto look; the first version used Doto's own 5 × 7 grid "0", which looked like a heptagon, so the dots now follow a smooth oval.
 
 ---
 
