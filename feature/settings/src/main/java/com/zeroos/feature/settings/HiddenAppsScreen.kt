@@ -88,7 +88,7 @@ fun HiddenAppsGate(mode: HiddenAppsConfirmation, onOpen: () -> Unit, onCancel: (
         )
 
         HiddenAppsConfirmation.DELAY -> {
-            var seconds by rememberSaveable { mutableIntStateOf(DELAY_SECONDS) }
+            var seconds by rememberSaveable { mutableIntStateOf(HIDDEN_APPS_DELAY_SECONDS) }
             LaunchedEffect(Unit) {
                 while (seconds > 0) {
                     delay(ONE_SECOND_MS)
@@ -108,7 +108,7 @@ fun HiddenAppsGate(mode: HiddenAppsConfirmation, onOpen: () -> Unit, onCancel: (
 }
 
 /** Appendix A: 5-second delay option for F5.3. */
-private const val DELAY_SECONDS = 5
+internal const val HIDDEN_APPS_DELAY_SECONDS = 5
 private const val ONE_SECOND_MS = 1_000L
 
 object HiddenAppsTestTags {

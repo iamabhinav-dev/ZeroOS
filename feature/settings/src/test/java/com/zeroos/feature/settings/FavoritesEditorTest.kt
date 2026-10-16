@@ -99,7 +99,9 @@ class FavoritesEditorTest {
         compose.setContent {
             ZeroTheme {
                 AppPickerScreen(
-                    state = FavoritesEditorState(favorites, 6, candidates = listOf(app("Gmail"), app("Google Maps")), query = ""),
+                    title = "Add a favorite",
+                    query = "",
+                    apps = listOf(app("Gmail"), app("Google Maps")),
                     onQueryChange = { calls += "query:$it" },
                     onPick = { calls += "pick:${it.label}" },
                     onBack = { calls += "back" }

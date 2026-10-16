@@ -68,6 +68,38 @@
 
     <!-- Backup (F13, wireframe F6) -->
     <string name="backup_title">Backup</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_home">Home</string>
+    <string name="settings_app_list">App list</string>
+    <string name="settings_gestures">Gestures</string>
+    <string name="settings_about">About</string>
+    <string name="settings_label_value">%1$s: %2$s</string>
+    <string name="home_settings_edit_favorites">Edit favorites</string>
+    <string name="home_settings_max_favorites">Maximum favorites</string>
+    <string name="home_settings_alignment">Alignment</string>
+    <string name="alignment_left">Left</string>
+    <string name="alignment_center">Center</string>
+    <string name="alignment_right">Right</string>
+    <string name="home_settings_show_battery" formatted="false">Show battery %</string>
+    <string name="home_settings_show_next_alarm">Show next alarm</string>
+    <string name="app_list_settings_keyboard">Open keyboard automatically</string>
+    <string name="app_list_settings_auto_launch">Open single match automatically</string>
+    <string name="app_list_settings_scroller">Alphabet scroller</string>
+    <string name="app_list_settings_hidden">Hidden apps (%1$d)</string>
+    <string name="app_list_settings_confirmation">Hidden apps confirmation</string>
+    <string name="hidden_confirmation_confirm">confirm</string>
+    <string name="hidden_confirmation_delay">%1$d s delay</string>
+    <string name="gestures_swipe_left">Swipe left</string>
+    <string name="gestures_swipe_right">Swipe right</string>
+    <string name="gestures_swipe_down">Swipe down</string>
+    <string name="gestures_swipe_down_action">Swipe down action</string>
+    <string name="gestures_action_search">Search</string>
+    <string name="gestures_double_tap">Double-tap to lock</string>
+    <string name="gestures_needs_accessibility">needs Accessibility (v1.1)</string>
+    <string name="about_version">%1$s %2$s (%3$d)</string>
+    <string name="about_licenses">Open-source licenses</string>
+    <string name="licenses_libraries">AndroidX, Jetpack Compose, Kotlin, kotlinx and Dagger Hilt: Apache License 2.0</string>
+    <string name="licenses_doto">Doto font: SIL Open Font License 1.1</string>
     <string name="backup_export">Export settings</string>
     <string name="backup_import">Import settings</string>
     <string name="backup_last_export">Last export: %1$s</string>
