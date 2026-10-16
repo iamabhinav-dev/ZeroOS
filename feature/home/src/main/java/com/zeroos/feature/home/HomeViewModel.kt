@@ -3,7 +3,6 @@ package com.zeroos.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeroos.core.data.apps.AppActions
-import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.warn
@@ -27,12 +26,14 @@ import kotlinx.coroutines.launch
 class HomeViewModel @Inject constructor(
     timeTicks: TimeTicks,
     settingsRepository: SettingsRepository,
-    private val appsRepository: AppsRepository,
     batteryLevel: BatteryLevel,
     nextAlarm: NextAlarm,
     private val actions: AppActions,
-    private val logger: Logger
+    private val logger: Logger,
+    private val homeApps: HomeApps
 ) : ViewModel() {
+
+    private val saver = homeApps.saver(viewModelScope)
 
     /** Minute ticks, or second ticks while the clock shows seconds (F6.7). */
     private val time = settingsRepository.settings.map { it.appearance.showSeconds }.distinctUntilChanged()
@@ -41,14 +42,18 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeUiState> = combine(
         time,
         settingsRepository.settings,
-        appsRepository.apps.onStart { emit(emptyList()) },
+        // Favorites from last time first, so they show at once on a cold start (NFR-P2).
+        homeApps.snapshots(),
         batteryLevel.status.onStart { emit(null) },
         nextAlarm.time
-    ) { time, settings, apps, battery, alarm -> homeUiState(time, settings, apps, battery, alarm) }
+    ) { time, settings, apps, battery, alarm ->
+        saver.onShown(apps, settings)
+        homeUiState(time, settings, apps.apps, battery, alarm)
+    }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState(timeTicks.now()))
 
     fun launch(app: AppEntry) {
-        appsRepository.launch(app.key)
+        homeApps.launch(app)
     }
 
     /** Favorite long-press menu (F2.8): every app here is already a favorite. */

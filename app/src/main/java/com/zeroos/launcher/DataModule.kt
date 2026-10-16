@@ -6,6 +6,7 @@ import android.os.UserManager
 import com.zeroos.core.data.apps.AndroidLauncherAppsSource
 import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.apps.HomeAppsCache
 import com.zeroos.core.data.backup.BackupRepository
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
@@ -18,6 +19,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.io.File
 import java.time.Clock
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
@@ -66,6 +68,11 @@ object DataModule {
         clock,
         logger
     )
+
+    @Provides
+    @Singleton
+    fun homeAppsCache(@ApplicationContext context: Context, logger: Logger): HomeAppsCache =
+        HomeAppsCache(File(context.cacheDir, "home_apps.json"), logger)
 
     /** Dispatcher for disk and system-service work. */
     @Provides
