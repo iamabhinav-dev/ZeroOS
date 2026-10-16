@@ -20,6 +20,13 @@ class SettingsRepository(private val dataStore: DataStore<LauncherSettings>, pri
         logger.info(TAG, "setting changed: $change")
     }
 
+    /** Like [update], but writes and logs only if [transform] actually changes something. */
+    suspend fun updateIfChanged(change: String, transform: (LauncherSettings) -> LauncherSettings) {
+        var changed = false
+        dataStore.updateData { current -> transform(current).also { changed = it != current } }
+        if (changed) logger.info(TAG, "setting changed: $change")
+    }
+
     private companion object {
         const val TAG = "settings"
     }

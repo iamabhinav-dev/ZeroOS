@@ -1,4 +1,4 @@
-package com.zeroos.feature.applist
+package com.zeroos.core.data.apps
 
 import com.zeroos.core.model.AppEntry
 import java.text.Normalizer
