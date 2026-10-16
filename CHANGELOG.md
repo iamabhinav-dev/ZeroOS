@@ -4,6 +4,10 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.10 (versionCode 10)
+- Fix: with seconds on, the Appearance preview clock wrapped and its digits overlapped; the clock now always
+  stays on one line and shrinks to fit (F6.7)
+- Home favorites scroll when they don't fit (many favorites, large text, landscape); otherwise nothing changes (F1.6)
 ## 0.0.9 (versionCode 9)
 - Landscape: home shows clock, date and battery on the left and favorites on the right, no more overlap (NFR-R4)
 - Optional seconds on the home clock (hh:mm:ss): Settings → Appearance → Show seconds, off by default (F6.7)
