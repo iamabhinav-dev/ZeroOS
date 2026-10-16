@@ -21,6 +21,9 @@ interface LauncherAppsSource {
     /** Starts the app's main activity; throws if it can't be started. */
     fun launch(key: AppKey)
 
+    /** Opens Android's app info page for the app (F2.8); throws if it can't. */
+    fun openAppInfo(key: AppKey)
+
     fun interface ChangeListenerHandle {
         fun unregister()
     }

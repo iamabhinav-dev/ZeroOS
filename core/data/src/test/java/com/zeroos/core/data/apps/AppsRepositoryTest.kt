@@ -34,6 +34,13 @@ class AppsRepositoryTest {
             if (failLaunch) throw SecurityException("gone")
             launched += key
         }
+
+        val infoOpened = mutableListOf<AppKey>()
+
+        override fun openAppInfo(key: AppKey) {
+            if (failLaunch) throw ActivityNotFoundExceptionForTest()
+            infoOpened += key
+        }
     }
 
     private class RecordingLogger : Logger {
@@ -119,7 +126,19 @@ class AppsRepositoryTest {
     }
 
     @Test
+    fun f2_8_opensAppInfoAndReportsFailure() {
+        val repository = AppsRepository(source, logger, StandardTestDispatcher())
+        val key = AppKey("com.example", "com.example.Main", 0)
+        assertTrue(repository.openAppInfo(key))
+        assertEquals(listOf(key), source.infoOpened)
+        source.failLaunch = true
+        assertFalse(repository.openAppInfo(key))
+    }
+
+    @Test
     fun step1_2_appKeyStringIsStable() {
         assertEquals("com.a/com.a.Main#10", AppKey("com.a", "com.a.Main", 10).asString())
     }
 }
+
+private class ActivityNotFoundExceptionForTest : android.content.ActivityNotFoundException("no app info")
