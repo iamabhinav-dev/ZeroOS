@@ -4,6 +4,9 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.9 (versionCode 9)
+- Landscape: home shows clock, date and battery on the left and favorites on the right, no more overlap (NFR-R4)
+- Optional seconds on the home clock (hh:mm:ss): Settings → Appearance → Show seconds, off by default (F6.7)
 ## 0.0.8 (versionCode 8)
 - Fix: "Uninstall" in the app menu did nothing (Android 9+ needs the REQUEST_DELETE_PACKAGES permission);
   it now opens Android's uninstall dialog, for the right copy of a cloned app (F2.8)
