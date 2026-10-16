@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
+import com.zeroos.core.data.apps.visibleApps
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
 import com.zeroos.core.logging.LogLevel

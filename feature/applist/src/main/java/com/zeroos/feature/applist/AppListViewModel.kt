@@ -3,7 +3,9 @@ package com.zeroos.feature.applist
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.apps.AppSearchIndex
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.apps.visibleApps
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
@@ -28,11 +30,6 @@ data class AppListUiState(
 ) {
     val showNoMatch: Boolean get() = !loading && query.isNotBlank() && results.isEmpty()
 }
-
-/** Visible apps: hidden ones removed (F5.1), custom names applied (F5.4). */
-fun visibleApps(apps: List<AppEntry>, settings: LauncherSettings): List<AppEntry> = apps
-    .filterNot { it.key.asString() in settings.hiddenApps }
-    .map { app -> settings.renamedApps[app.key.asString()]?.let { app.copy(label = it) } ?: app }
 
 /** App list with search (Step 2.4). The query is never logged (F17.8). */
 @HiltViewModel

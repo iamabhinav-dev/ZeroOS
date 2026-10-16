@@ -11,6 +11,11 @@ data class AppKey(
 ) {
     /** Stable string form for storage, e.g. favorites and renames (Phase 2). */
     fun asString(): String = "$packageName/$activityName#$userSerial"
+
+    companion object {
+        /** Package name from a stored key string, e.g. "com.whatsapp" from "com.whatsapp/com.whatsapp.Main#0". */
+        fun packageOf(key: String): String = key.substringBefore('/')
+    }
 }
 
 /** Which profile an app belongs to (F2.10). Apps outside [MAIN] are tagged in the app list, e.g. "WhatsApp · clone". */

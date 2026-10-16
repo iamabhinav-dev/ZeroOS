@@ -49,6 +49,17 @@ private const val DOT_FILL = 0.8f
 
 /** Dot-matrix icons on Doto's 5 × 7 letter grid. */
 object DotIcons {
+    /** Drag handle for reordering (F3.2): three dotted lines. Doto has no "≡". */
+    val DragHandle = listOf(
+        ".....",
+        "●●●●●",
+        ".....",
+        "●●●●●",
+        ".....",
+        "●●●●●",
+        "....."
+    )
+
     /** Lightning bolt shown while charging (F1.3). */
     val Bolt = listOf(
         "...●.",
