@@ -50,6 +50,7 @@ import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.TextAction
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.ZeroWordmark
 import com.zeroos.core.ui.displayName
 
 /**
@@ -163,6 +164,9 @@ private fun ColumnScope.IntroPage(page: OnboardingPage) {
     val tokens = ZeroTheme.tokens
     PageDots(page.ordinal, OnboardingPage.INTRO_PAGES)
     Spacer(Modifier.weight(1f))
+    if (page == OnboardingPage.INTRO_1) {
+        ZeroWordmark(Modifier.padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.sectionGap))
+    }
     Text(
         stringResource(
             when (page) {

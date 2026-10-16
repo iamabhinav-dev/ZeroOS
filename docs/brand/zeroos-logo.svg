@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1932 1932" width="1932" height="1932">
+  <title>ZeroOS</title>
+  <rect width="1932" height="1932" fill="#000000"/>
+  <g fill="#FFFFFF">
+    <!-- Z -->
+    <g>
+      <circle cx="228" cy="810" r="15"/><circle cx="264" cy="810" r="15"/><circle cx="300" cy="810" r="15"/>
+      <circle cx="337" cy="810" r="15"/><circle cx="373" cy="810" r="15"/><circle cx="410" cy="810" r="15"/>
+      <circle cx="446" cy="810" r="15"/>
+      <circle cx="418" cy="848" r="17"/><circle cx="391" cy="887" r="17"/><circle cx="362" cy="926" r="17"/>
+      <circle cx="334" cy="965" r="17"/><circle cx="306" cy="1004" r="17"/><circle cx="279" cy="1043" r="17"/>
+      <circle cx="251" cy="1082" r="17"/>
+      <circle cx="228" cy="1121" r="15"/><circle cx="264" cy="1121" r="15"/><circle cx="300" cy="1121" r="15"/>
+      <circle cx="337" cy="1121" r="15"/><circle cx="373" cy="1121" r="15"/><circle cx="410" cy="1121" r="15"/>
+      <circle cx="446" cy="1121" r="15"/>
+    </g>
+    <!-- e -->
+    <g>
+      <circle cx="606" cy="897" r="16"/><circle cx="565" cy="906" r="16"/><circle cx="648" cy="906" r="16"/>
+      <circle cx="531" cy="933" r="16"/><circle cx="682" cy="933" r="16"/>
+      <circle cx="512" cy="971" r="16"/><circle cx="701" cy="971" r="16"/>
+      <circle cx="507" cy="1011" r="16"/><circle cx="547" cy="1011" r="16"/><circle cx="587" cy="1011" r="16"/>
+      <circle cx="627" cy="1011" r="16"/><circle cx="667" cy="1011" r="16"/><circle cx="706" cy="1011" r="16"/>
+      <circle cx="512" cy="1052" r="16"/>
+      <circle cx="530" cy="1090" r="16"/><circle cx="687" cy="1090" r="16"/>
+      <circle cx="564" cy="1117" r="16"/><circle cx="607" cy="1126" r="16"/><circle cx="652" cy="1117" r="16"/>
+    </g>
+    <!-- r -->
+    <g>
+      <circle cx="785" cy="900" r="15"/><circle cx="785" cy="937" r="15"/><circle cx="785" cy="974" r="15"/>
+      <circle cx="785" cy="1011" r="15"/><circle cx="785" cy="1048" r="15"/><circle cx="785" cy="1085" r="15"/>
+      <circle cx="785" cy="1122" r="15"/>
+      <circle cx="821" cy="924" r="16"/><circle cx="855" cy="903" r="16"/><circle cx="893" cy="900" r="16"/>
+    </g>
+    <!-- o -->
+    <g>
+      <circle cx="1040" cy="898" r="16"/><circle cx="998" cy="907" r="16"/><circle cx="1082" cy="907" r="16"/>
+      <circle cx="964" cy="933" r="16"/><circle cx="1115" cy="933" r="16"/>
+      <circle cx="945" cy="971" r="16"/><circle cx="1134" cy="971" r="16"/>
+      <circle cx="939" cy="1012" r="16"/><circle cx="1140" cy="1012" r="16"/>
+      <circle cx="945" cy="1052" r="16"/><circle cx="1134" cy="1052" r="16"/>
+      <circle cx="964" cy="1090" r="16"/><circle cx="1115" cy="1090" r="16"/>
+      <circle cx="998" cy="1117" r="16"/><circle cx="1040" cy="1126" r="16"/><circle cx="1082" cy="1117" r="16"/>
+    </g>
+    <!-- O (slashed zero) -->
+    <g>
+      <circle cx="1318" cy="805" r="17"/><circle cx="1273" cy="814" r="17"/><circle cx="1363" cy="814" r="17"/>
+      <circle cx="1240" cy="844" r="17"/><circle cx="1396" cy="844" r="17"/>
+      <circle cx="1225" cy="885" r="17"/><circle cx="1410" cy="885" r="17"/>
+      <circle cx="1221" cy="926" r="17"/><circle cx="1414" cy="926" r="17"/>
+      <circle cx="1221" cy="967" r="17"/><circle cx="1414" cy="967" r="17"/>
+      <circle cx="1221" cy="1008" r="17"/><circle cx="1414" cy="1008" r="17"/>
+      <circle cx="1225" cy="1048" r="17"/><circle cx="1410" cy="1048" r="17"/>
+      <circle cx="1240" cy="1089" r="17"/><circle cx="1396" cy="1089" r="17"/>
+      <circle cx="1273" cy="1117" r="17"/><circle cx="1363" cy="1117" r="17"/>
+      <circle cx="1318" cy="1126" r="17"/>
+</g>
+    <!-- S -->
+    <g>
+      <circle cx="1599" cy="805" r="17"/><circle cx="1552" cy="814" r="17"/><circle cx="1646" cy="814" r="17"/>
+      <circle cx="1515" cy="842" r="17"/><circle cx="1685" cy="840" r="17"/>
+      <circle cx="1502" cy="885" r="17"/><circle cx="1699" cy="883" r="17"/>
+      <circle cx="1516" cy="928" r="17"/><circle cx="1556" cy="952" r="17"/><circle cx="1603" cy="966" r="17"/>
+      <circle cx="1649" cy="979" r="17"/><circle cx="1687" cy="1004" r="17"/>
+      <circle cx="1496" cy="1050" r="17"/><circle cx="1701" cy="1048" r="17"/>
+      <circle cx="1515" cy="1091" r="17"/><circle cx="1686" cy="1090" r="17"/>
+      <circle cx="1553" cy="1117" r="17"/><circle cx="1600" cy="1126" r="17"/><circle cx="1648" cy="1117" r="17"/>
+    </g>
+  </g>
+</svg>

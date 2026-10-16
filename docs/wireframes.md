@@ -410,6 +410,7 @@ system Back gesture still works.*
 ### F7. About
 ```
 │  ← About                           │
+│  ZeroOS (dotted wordmark)          │  logo, theme text color (D-037)
 │  ZeroOS 0.1.0 (12)                 │  versionName (versionCode)
 │  Open-source licenses            › │  fonts (OFL) and libraries
 ```
@@ -426,6 +427,7 @@ Shown once on first start; "Skip" on every page goes straight to home (F14.5).
 │                                    │
 │   ●○○                              │  page dots (Doto style)
 │                                    │
+│   ZeroOS (dotted wordmark)         │  G1 only (D-037)
 │   Less phone.                      │  G1: "Less phone. More life."
 │   More life.                       │  G2: "Just words. No icons, no badges, no noise."
 │                                    │  G3: "Swipe up for apps. Long-press for settings."

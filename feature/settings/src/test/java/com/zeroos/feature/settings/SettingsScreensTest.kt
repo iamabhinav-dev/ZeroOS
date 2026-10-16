@@ -3,6 +3,7 @@ package com.zeroos.feature.settings
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
@@ -148,6 +149,19 @@ class SettingsScreensTest {
         }
         compose.onNodeWithText("off").performClick()
         assertEquals(listOf("off"), calls)
+    }
+
+    @Test
+    fun d037_aboutWordmarkScreenshot() {
+        compose.setContent { ZeroTheme { AboutScreen(AboutState("0.0.12", 12), onLicenses = {}, onBack = {}) } }
+        compose.onNodeWithContentDescription("ZeroOS").assertExists()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun d037_aboutWordmarkLightScreenshot() {
+        compose.setContent { ZeroTheme(ThemeMode.LIGHT) { AboutScreen(AboutState("0.0.12", 12), onLicenses = {}, onBack = {}) } }
+        compose.onRoot().captureRoboImage()
     }
 
     @Test
