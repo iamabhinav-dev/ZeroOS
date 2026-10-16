@@ -1,4 +1,4 @@
-package com.zeroos.feature.home
+package com.zeroos.core.ui
 
 import java.time.ZonedDateTime
 import java.util.Locale

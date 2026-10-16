@@ -1,4 +1,4 @@
-package com.zeroos.feature.home
+package com.zeroos.core.ui
 
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -17,6 +17,13 @@ class ClockFormat(locale: Locale, is24Hour: Boolean, datePattern: String) {
     fun date(value: ZonedDateTime): String = date.format(value)
 
     companion object {
+        /** The device's clock format, with the locale's weekday + day + month pattern (F1.1, F1.2, NFR-L2). */
+        fun forDevice(context: android.content.Context, locale: Locale): ClockFormat = ClockFormat(
+            locale,
+            android.text.format.DateFormat.is24HourFormat(context),
+            android.text.format.DateFormat.getBestDateTimePattern(locale, DATE_SKELETON)
+        )
+
         /** Skeleton for weekday, day and month, passed to `DateFormat.getBestDateTimePattern`. */
         const val DATE_SKELETON = "EEEEdMMMM"
     }

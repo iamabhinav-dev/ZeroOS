@@ -228,7 +228,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Swipe down → search (default). The "notification shade" option is added in Step 4.2 together with the Accessibility Service, and falls back to search when the service is off. No hidden APIs (e.g., `StatusBarManager` reflection).
 - Double-tap lock: shown as "needs Accessibility (v1.1)" until Phase 4.
 
-### Step 2.8 — Appearance (F6)
+### Step 2.8 — Appearance (F6) ✅
 - Theme, wallpaper (solid / system with dim overlay), font, text size, visibility toggles.
 
 ### Step 2.9 — Onboarding (F14)

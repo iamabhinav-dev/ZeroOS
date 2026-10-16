@@ -3,6 +3,7 @@ package com.zeroos.feature.home
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.LauncherSettings
+import com.zeroos.core.model.settings.Wallpaper
 import java.time.Instant
 import java.time.ZonedDateTime
 
@@ -22,7 +23,9 @@ data class HomeUiState(
     /** Gestures (F4, D-026): apps for side swipes (null = off) and whether swipe down opens search. */
     val swipeLeftApp: AppEntry? = null,
     val swipeRightApp: AppEntry? = null,
-    val swipeDownEnabled: Boolean = true
+    val swipeDownEnabled: Boolean = true,
+    /** Phone wallpaper shows through, dimmed (F6.2). */
+    val showWallpaper: Boolean = false
 )
 
 /**
@@ -52,6 +55,7 @@ fun homeUiState(
         renamedKeys = settings.renamedApps.keys,
         swipeLeftApp = settings.gestures.swipeLeftApp?.let(byKey::get),
         swipeRightApp = settings.gestures.swipeRightApp?.let(byKey::get),
-        swipeDownEnabled = settings.gestures.swipeDownEnabled
+        swipeDownEnabled = settings.gestures.swipeDownEnabled,
+        showWallpaper = settings.appearance.wallpaper == Wallpaper.SYSTEM
     )
 }

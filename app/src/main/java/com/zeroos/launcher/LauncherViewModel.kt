@@ -2,16 +2,21 @@ package com.zeroos.launcher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.logging.CrashNotice
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
+import com.zeroos.core.model.settings.AppearanceSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -27,8 +32,13 @@ enum class LauncherScreen(val logName: String) {
 class LauncherViewModel @Inject constructor(
     private val crashNotice: CrashNotice,
     private val logger: Logger,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    settingsRepository: SettingsRepository
 ) : ViewModel() {
+
+    /** Theme, text size, wallpaper and status bar for the whole app (F6). */
+    val appearance: StateFlow<AppearanceSettings> = settingsRepository.settings.map { it.appearance }
+        .stateIn(viewModelScope, SharingStarted.Eagerly, AppearanceSettings())
 
     private var unseenReport: File? = null
     private val mutableCrashReport = MutableStateFlow<String?>(null)

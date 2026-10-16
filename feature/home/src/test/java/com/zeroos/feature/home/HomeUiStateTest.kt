@@ -66,6 +66,21 @@ class HomeUiStateTest {
     }
 
     @Test
+    fun f6_2_f6_5_wallpaperAndVisibilityFollowAppearance() {
+        val s =
+            LauncherSettings(
+                appearance = com.zeroos.core.model.settings.AppearanceSettings(
+                    wallpaper = com.zeroos.core.model.settings.Wallpaper.SYSTEM,
+                    showClock = false
+                )
+            )
+        val state = homeUiState(time, s, apps, null, null)
+        assertEquals(true, state.showWallpaper)
+        assertEquals(false, state.showClock)
+        assertEquals(false, homeUiState(time, LauncherSettings(), apps, null, null).showWallpaper)
+    }
+
+    @Test
     fun f1_3_f1_8_batteryAndAlarmFollowSettings() {
         val alarm = Instant.parse("2026-10-17T01:00:00Z")
         val shown =

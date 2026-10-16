@@ -42,6 +42,7 @@ import com.zeroos.core.resources.R
 import com.zeroos.core.ui.AppMenu
 import com.zeroos.core.ui.AppMenuActions
 import com.zeroos.core.ui.AppMenuTarget
+import com.zeroos.core.ui.ClockFormat
 import com.zeroos.core.ui.DotIcons
 import com.zeroos.core.ui.DotMatrixIcon
 import com.zeroos.core.ui.MinimalListItem
@@ -116,9 +117,7 @@ fun HomeScreen(
     val context = LocalContext.current
     val locale = LocalConfiguration.current.locales[0]
     val is24Hour = DateFormat.is24HourFormat(context)
-    val format = remember(locale, is24Hour) {
-        ClockFormat(locale, is24Hour, DateFormat.getBestDateTimePattern(locale, ClockFormat.DATE_SKELETON))
-    }
+    val format = remember(locale, is24Hour) { ClockFormat.forDevice(context, locale) }
     val density = LocalDensity.current
     val minDistance = with(density) { tokens.gestures.swipeDistance.toPx() }
     val minVelocity = with(density) { tokens.gestures.swipeVelocity.toPx() }
@@ -132,7 +131,7 @@ fun HomeScreen(
     HomeLayout(
         modifier = modifier
             .fillMaxSize()
-            .background(tokens.colors.background)
+            .background(if (state.showWallpaper) tokens.colors.wallpaperScrim else tokens.colors.background)
             .testTag(HomeTestTags.ROOT)
             .pointerInput(Unit) { detectTapGestures(onLongPress = { onLongPress() }) }
             .pointerInput(minDistance, minVelocity) {

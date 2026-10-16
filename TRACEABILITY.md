@@ -39,9 +39,10 @@ Update this file in the same commit as the code and tests.
 | F5.3 | ✅ | HiddenAppsTest › f5_3_* | |
 | F5.4, F5.5 | ✅ | AppCustomizationTest › f5_4_*, f5_5_*, AppMenuTest › f5_4_*, f5_5_* | |
 | F17.8 (renames) | ✅ | AppCustomizationTest › f17_8_customNamesAreNeverLogged | |
-| F6.1, F6.2, F6.5, F6.6 | ⬜ | (tokens ready in Step 2.2; settings in Step 2.8) | |
+| F6.1, F6.2, F6.5 | ✅ | AppearanceTest › f6_*, AppearanceViewModelTest › f6_*, HomeUiStateTest › f6_2_f6_5_*, ZeroThemeTest › f6_1_* | Wallpaper and status bar on the phone |
+| F6.6 | ⬜ | Not built: accent color isn't in the approved wireframe F5 (ask) | |
 | F6.3 | 🟡 | ComponentsTest › step2_2_gallery* screenshots (Doto everywhere) | Doto readable on the phone |
-| F6.4 | 🟡 | ZeroThemeTest › f6_4_textSizeScaleAndMinimum (setting in Step 2.8) | |
+| F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
 | F7.1–F7.6 | ⬜ | | |
 | F8.1–F8.12 | ⬜ | | |
 | F9.1–F9.7 | ⬜ | | |

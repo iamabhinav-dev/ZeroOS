@@ -2,16 +2,28 @@ package com.zeroos.launcher
 
 import android.content.Intent
 import android.content.pm.LauncherApps
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
+import com.zeroos.core.model.settings.AppearanceSettings
+import com.zeroos.core.model.settings.Wallpaper
 import com.zeroos.core.ui.ZeroTheme
 import com.zeroos.launcher.diagnostics.DebugTestCrash
 import com.zeroos.launcher.safemode.CrashLoopGuard
@@ -57,8 +69,12 @@ class MainActivity : ComponentActivity() {
         }
         if (BuildConfig.DEBUG && diagnosticsSettings.crashOnStart) throw DebugTestCrash()
         setContent {
-            ZeroTheme {
-                LauncherRoot(homePresses, showDebugTools = BuildConfig.DEBUG)
+            val launcher: LauncherViewModel = hiltViewModel()
+            val appearance by launcher.appearance.collectAsStateWithLifecycle()
+            ZeroTheme(appearance.theme, appearance.textSize) {
+                val dark = ZeroTheme.tokens.isDark
+                LaunchedEffect(appearance, dark) { applyWindowAppearance(appearance, dark) }
+                LauncherRoot(homePresses, showDebugTools = BuildConfig.DEBUG, viewModel = launcher)
             }
         }
     }
@@ -90,6 +106,26 @@ class MainActivity : ComponentActivity() {
 
     private fun updateBackBehaviour() {
         ignoreBackOnHome.isEnabled = isDefaultHome(packageManager, packageName)
+    }
+
+    /**
+     * Window-level appearance (F6.2, F6.5): show the phone wallpaper behind home (screens draw their own solid
+     * backgrounds, home draws a dim scrim), hide or show the status bar, and pick status bar icon colors.
+     */
+    private fun applyWindowAppearance(appearance: AppearanceSettings, dark: Boolean) {
+        if (appearance.wallpaper == Wallpaper.SYSTEM) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+            window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER)
+            window.setBackgroundDrawable((if (dark) Color.BLACK else Color.WHITE).toDrawable())
+        }
+        WindowCompat.getInsetsController(window, window.decorView).apply {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            if (appearance.showStatusBar) show(WindowInsetsCompat.Type.statusBars()) else hide(WindowInsetsCompat.Type.statusBars())
+            isAppearanceLightStatusBars = !dark
+            isAppearanceLightNavigationBars = !dark
+        }
     }
 
     private fun openHomeSettings() {
