@@ -44,6 +44,7 @@ fun AppearanceRoute(onBack: () -> Unit, viewModel: AppearanceViewModel = hiltVie
             onWallpaper = viewModel::nextWallpaper,
             onTextSize = viewModel::nextTextSize,
             onShowClock = viewModel::setShowClock,
+            onShowSeconds = viewModel::setShowSeconds,
             onShowDate = viewModel::setShowDate,
             onShowStatusBar = viewModel::setShowStatusBar
         ),
@@ -56,6 +57,7 @@ data class AppearanceActions(
     val onWallpaper: () -> Unit,
     val onTextSize: () -> Unit,
     val onShowClock: (Boolean) -> Unit,
+    val onShowSeconds: (Boolean) -> Unit,
     val onShowDate: (Boolean) -> Unit,
     val onShowStatusBar: (Boolean) -> Unit
 )
@@ -71,6 +73,9 @@ fun AppearanceScreen(state: AppearanceSettings, actions: AppearanceActions, onBa
         item { SettingRow(stringResource(R.string.appearance_wallpaper), stringResource(state.wallpaper.label()), actions.onWallpaper) }
         item { SettingRow(stringResource(R.string.appearance_text_size), stringResource(state.textSize.label()), actions.onTextSize) }
         item { ToggleRow(stringResource(R.string.appearance_show_clock), state.showClock, actions.onShowClock) }
+        if (state.showClock) {
+            item { ToggleRow(stringResource(R.string.appearance_show_seconds), state.showSeconds, actions.onShowSeconds) }
+        }
         item { ToggleRow(stringResource(R.string.appearance_show_date), state.showDate, actions.onShowDate) }
         item { ToggleRow(stringResource(R.string.appearance_show_status_bar), state.showStatusBar, actions.onShowStatusBar) }
         item { Preview(state, previewTime) }
@@ -99,7 +104,7 @@ private fun Preview(state: AppearanceSettings, now: Date) {
         ) {
             if (state.showClock) {
                 Text(
-                    format.time(time),
+                    format.time(time, state.showSeconds),
                     color = tokens.colors.text,
                     fontSize = tokens.textSizes.clock
                 )

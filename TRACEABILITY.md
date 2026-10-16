@@ -42,6 +42,7 @@ Update this file in the same commit as the code and tests.
 | F6.1, F6.2, F6.5 | ✅ | AppearanceTest › f6_*, AppearanceViewModelTest › f6_*, HomeUiStateTest › f6_2_f6_5_*, ZeroThemeTest › f6_1_* | Wallpaper and status bar on the phone |
 | Step 2.11 (settings structure) | ✅ | SettingsScreensTest › step2_11_*, SettingsViewModelTest › f17_7_logsPages | Walk through every Settings page |
 | F6.6 | ❌ | Removed (D-035) | |
+| F6.7 | ✅ | ClockFormatTest › f6_7_*, TimeTicksTest › f6_7_*, HomeUiStateTest › f6_7_*, HomeScreenTest › f6_7_*, AppearanceTest › f6_7_*, f6_1_f6_2_f6_4_f6_5_changesAreSaved | Seconds tick smoothly on the phone |
 | F6.3 | ✅ | ZeroThemeTest › f6_3_everyTextStyleUsesDoto, ComponentsTest › step2_2_gallery* screenshots | Doto readable on the phone |
 | F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
 | F7.1–F7.6 | ⬜ | | |

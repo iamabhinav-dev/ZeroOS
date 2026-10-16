@@ -205,4 +205,11 @@ class HomeScreenTest {
         compose.onNodeWithText("alarm", substring = true).assertIsDisplayed()
         compose.onRoot().captureRoboImage()
     }
+
+    @Test
+    fun f6_7_secondsFitOnOneLineAtLargestText() {
+        show(HomeUiState(time, favorites = favorites.take(4), batteryPercent = 82, showSeconds = true), textSize = TextSize.EXTRA_LARGE)
+        compose.onNodeWithText("10:42:00").assertIsDisplayed()
+        compose.onRoot().captureRoboImage()
+    }
 }

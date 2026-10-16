@@ -30,6 +30,8 @@ class AppearanceViewModel @Inject constructor(private val settings: SettingsRepo
 
     fun setShowClock(show: Boolean) = change { it.copy(showClock = show) }
 
+    fun setShowSeconds(show: Boolean) = change { it.copy(showSeconds = show) }
+
     fun setShowDate(show: Boolean) = change { it.copy(showDate = show) }
 
     fun setShowStatusBar(show: Boolean) = change { it.copy(showStatusBar = show) }

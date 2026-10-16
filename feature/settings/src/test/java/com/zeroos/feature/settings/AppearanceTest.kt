@@ -58,6 +58,7 @@ class AppearanceTest {
         onWallpaper = { calls += "wallpaper" },
         onTextSize = { calls += "size" },
         onShowClock = { calls += "clock:$it" },
+        onShowSeconds = { calls += "seconds:$it" },
         onShowDate = { calls += "date:$it" },
         onShowStatusBar = { calls += "status:$it" }
     )
@@ -76,10 +77,16 @@ class AppearanceTest {
     @Test
     fun f6_rowsCallActions() {
         show(AppearanceSettings())
-        listOf("Theme", "Wallpaper", "Text size", "Show clock", "Show date", "Show status bar").forEach {
+        listOf("Theme", "Wallpaper", "Text size", "Show seconds", "Show date", "Show status bar", "Show clock").forEach {
             compose.onNodeWithText(it).performClick()
         }
-        assertEquals(listOf("theme", "wallpaper", "size", "clock:false", "date:false", "status:false"), calls)
+        assertEquals(listOf("theme", "wallpaper", "size", "seconds:true", "date:false", "status:false", "clock:false"), calls)
+    }
+
+    @Test
+    fun f6_7_secondsRowOnlyWithClock() {
+        show(AppearanceSettings(showClock = false))
+        compose.onNodeWithText("Show seconds").assertDoesNotExist()
     }
 
     @Test
@@ -126,13 +133,15 @@ class AppearanceViewModelTest {
         vm.setShowClock(false)
         vm.setShowDate(false)
         vm.setShowStatusBar(false)
-        val saved = store.data.first { !it.appearance.showStatusBar }.appearance
+        vm.setShowSeconds(true)
+        val saved = store.data.first { it.appearance.showSeconds }.appearance
         assertEquals(
             AppearanceSettings(
                 ThemeMode.LIGHT,
                 Wallpaper.SYSTEM,
                 TextSize.LARGE,
                 showClock = false,
+                showSeconds = true,
                 showDate = false,
                 showStatusBar = false
             ),

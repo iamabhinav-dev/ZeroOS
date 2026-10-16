@@ -59,4 +59,19 @@ class TimeTicksTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun f6_7_secondTicksLandOnEverySecond() = runTest {
+        clock.setTo(Instant.parse("2026-10-15T10:29:07.250Z"))
+        val seconds = TimeTicks(context, clock) { zone }
+        seconds.secondTicks.test {
+            assertEquals("15:59:07.250", awaitItem().toLocalTime().toString())
+            // The next tick waits for the rest of this second (750 ms), then comes every 1 s.
+            clock.advanceBy(Duration.ofMillis(750))
+            assertEquals("15:59:08", awaitItem().toLocalTime().toString())
+            clock.advanceBy(Duration.ofSeconds(1))
+            assertEquals("15:59:09", awaitItem().toLocalTime().toString())
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

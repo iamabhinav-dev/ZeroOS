@@ -159,6 +159,12 @@ F6.6 (optional single accent color) is removed; ZeroOS stays black and white (or
 theme). Listed under Deferred Work.
 *Why:* User's choice; it matches the no-colour rule and the approved Appearance wireframe.
 
+**D-036 — Optional seconds on the home clock** · 2026-10-16 · Accepted
+Settings → Appearance → Show seconds (off by default) shows the clock as hh:mm:ss (F6.7). The clock text
+shrinks to fit one line. With seconds on, home updates once a second, but only while home is on screen;
+otherwise it keeps using Android's once-a-minute tick (NFR-P5).
+*Why:* User's request.
+
 ---
 
 ## Pending (to be decided during the plan)

@@ -104,4 +104,11 @@ class HomeUiStateTest {
         assertEquals("no bolt without battery %", false, hidden.charging)
         assertNull(hidden.nextAlarm)
     }
+
+    @Test
+    fun f6_7_secondsFollowAppearance() {
+        val on = LauncherSettings(appearance = com.zeroos.core.model.settings.AppearanceSettings(showSeconds = true))
+        assertEquals(true, homeUiState(time, on, apps, null, null).showSeconds)
+        assertEquals(false, homeUiState(time, LauncherSettings(), apps, null, null).showSeconds)
+    }
 }
