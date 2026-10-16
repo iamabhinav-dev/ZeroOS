@@ -127,7 +127,7 @@ Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usag
 `LauncherSettings` is a kotlinx-serialization data class saved by DataStore as JSON (not Proto DataStore). Unknown fields are ignored, missing ones get Appendix A defaults, unknown enum values fall back to defaults, and a corrupted file is reset to defaults and logged.
 *Why:* Same type safety as Proto DataStore without a protobuf code generator in the build; the settings backup (F13) is JSON anyway and can reuse the serializer.
 
-**D-030 — Unknown second profiles are tagged "clone"** · 2026-10-16 · Accepted
+**D-030 — Unknown second profiles are tagged "clone"** · 2026-10-16 · Superseded by D-034 for clones (work/private tags stay)
 Apps from a profile Android reports as managed are tagged "work", private space "private", and every other non-main profile "clone". The raw profile type is logged once per profile.
 *Why:* App Clone apps have the same name as the original, so they need a tag; the phone may not use Android's standard clone type, and App Clone is the only extra profile on this phone. The log shows the real type to refine this later.
 *Confirmed 2026-10-16:* the test phone reports App Clone as Android's standard `android.os.usertype.profile.CLONE`, so the tag comes from the real type, not the fallback.
@@ -139,6 +139,20 @@ While charging, a lightning bolt drawn as dots on Doto's 5 × 7 grid follows the
 **D-032 — App icon: a round, dotted "0"** · 2026-10-16 · Accepted (revised)
 The launcher icon is a "0" made of 14 white dots spaced evenly along an oval, on black, centred in the adaptive-icon safe zone, with a monochrome layer for themed icons.
 *Why:* User wanted the Doto look; the first version used Doto's own 5 × 7 grid "0", which looked like a heptagon, so the dots now follow a smooth oval.
+
+**D-033 — Swipe down: notifications later, no setting** · 2026-10-16 · Accepted
+Swipe down opens search until the Accessibility service exists (Phase 4), then it expands the notification shade
+while that service is on. The swipe-down on/off switch and action choice are removed from Settings. Updates D-026
+and F4.4.
+*Why:* Swipe up and swipe down both opened the app list. Opening the shade without Accessibility needs a hidden
+Android API, which the project rules forbid.
+
+**D-034 — Apps with the same name are numbered I, II, …** · 2026-10-16 · Accepted
+When two or more visible apps have the same name (e.g. WhatsApp and its App Clone), they're shown as
+"I-WhatsApp", "II-WhatsApp" everywhere: home, app list, pickers, onboarding, hidden apps and menus. The main
+profile's app is always I; other profiles follow in a fixed order. Sorting and search use the plain name. Apps
+with a custom name (F5.4) are shown exactly as named. Replaces the "· clone" tag of D-030.
+*Why:* User's choice; the clone tag didn't show everywhere (e.g. on home), so clones looked identical.
 
 ---
 

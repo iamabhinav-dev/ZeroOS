@@ -10,7 +10,6 @@ import com.zeroos.core.logging.Logger
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.LauncherSettings
-import com.zeroos.core.model.settings.SwipeDownAction
 import com.zeroos.core.model.settings.TextSize
 import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.model.settings.Wallpaper
@@ -57,8 +56,6 @@ class SettingsStorageTest {
         assertEquals(HiddenAppsConfirmation.OFF, s.appList.hiddenAppsConfirmation)
         assertNull(s.gestures.swipeLeftApp)
         assertNull(s.gestures.swipeRightApp)
-        assertTrue(s.gestures.swipeDownEnabled)
-        assertEquals(SwipeDownAction.SEARCH, s.gestures.swipeDownAction)
         assertEquals(ThemeMode.DARK, s.appearance.theme)
         assertEquals(Wallpaper.BLACK, s.appearance.wallpaper)
         assertEquals(TextSize.MEDIUM, s.appearance.textSize)
@@ -90,6 +87,14 @@ class SettingsStorageTest {
             writeText("""{ "version": 2, "futureFeature": { "x": 1 }, "home": { "alignment": "RIGHT", "newOption": true } }""")
         }
         assertEquals(Alignment.RIGHT, storeAt(file).data.first().home.alignment)
+    }
+
+    @Test
+    fun f4_4_removedSwipeDownSwitchInOldFilesIsIgnored() = runTest {
+        val file = File(temp.root, "old-gestures.json").apply {
+            writeText("""{ "gestures": { "swipeLeftApp": "a/a.Main#0", "swipeDownEnabled": false, "swipeDownAction": "SEARCH" } }""")
+        }
+        assertEquals("a/a.Main#0", storeAt(file).data.first().gestures.swipeLeftApp)
     }
 
     @Test

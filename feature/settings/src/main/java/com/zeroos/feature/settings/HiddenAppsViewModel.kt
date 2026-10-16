@@ -3,6 +3,7 @@ package com.zeroos.feature.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.apps.renamedTo
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.model.AppEntry
@@ -30,7 +31,7 @@ class HiddenAppsViewModel @Inject constructor(
 
     val state: StateFlow<HiddenAppsState> = combine(appsRepository.apps, settingsRepository.settings) { apps, settings ->
         val hidden = apps.filter { it.key.asString() in settings.hiddenApps }
-            .map { app -> settings.renamedApps[app.key.asString()]?.let { app.copy(label = it) } ?: app }
+            .map { app -> app.renamedTo(settings.renamedApps[app.key.asString()]) }
         HiddenAppsState(hidden, settings.appList.hiddenAppsConfirmation)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HiddenAppsState())
 

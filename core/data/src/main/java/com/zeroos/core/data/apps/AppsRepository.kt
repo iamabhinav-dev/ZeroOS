@@ -79,6 +79,7 @@ class AppsRepository(
         return source.launchableActivities()
             .map { AppEntry(it.key, it.label, it.profile) }
             .sortedWith(compareBy(collator) { entry: AppEntry -> entry.label }.thenBy { it.key.asString() })
+            .numberSameNames()
     }
 
     private companion object {

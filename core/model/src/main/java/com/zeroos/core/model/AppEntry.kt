@@ -18,14 +18,18 @@ data class AppKey(
     }
 }
 
-/** Which profile an app belongs to (F2.10). Apps outside [MAIN] are tagged in the app list, e.g. "WhatsApp · clone". */
+/** Which profile an app belongs to (F2.10). Work and private-space apps are tagged in the app list, e.g. "Slack · work". */
 enum class ProfileType { MAIN, CLONE, WORK, PRIVATE }
 
-/** An app shown by the launcher (F2.2). */
+/**
+ * An app shown by the launcher (F2.2). [copyNumber] is set when several apps share [label], e.g. WhatsApp and
+ * its App Clone: 1 for the main profile's app, then 2, 3, … (shown as "I-WhatsApp", "II-WhatsApp", D-034).
+ */
 data class AppEntry(
     val key: AppKey,
     val label: String,
-    val profile: ProfileType = ProfileType.MAIN
+    val profile: ProfileType = ProfileType.MAIN,
+    val copyNumber: Int? = null
 ) {
     val isMainProfile: Boolean get() = profile == ProfileType.MAIN
 }

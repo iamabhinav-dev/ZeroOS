@@ -47,6 +47,7 @@ import com.zeroos.core.ui.DotIcons
 import com.zeroos.core.ui.DotMatrixIcon
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.displayName
 
 /** Optional home lines that later phases fill in (wireframe A1 ④ ⑤ ⑥ ⑦). Empty slots take no space. */
 data class HomeSlots(
@@ -67,7 +68,7 @@ fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () ->
     var menuFor by remember { mutableStateOf<AppEntry?>(null) }
     menuFor?.let { app ->
         AppMenu(
-            target = AppMenuTarget(app.label, isFavorite = true, isRenamed = app.key.asString() in state.renamedKeys),
+            target = AppMenuTarget(app.displayName(), isFavorite = true, isRenamed = app.key.asString() in state.renamedKeys),
             actions = AppMenuActions(
                 onToggleFavorite = { viewModel.removeFavorite(app) },
                 onRename = { viewModel.rename(app, it) },
@@ -83,7 +84,7 @@ fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () ->
         onSwipe = { swipe ->
             when (swipe) {
                 Swipe.UP -> onSwipeUp()
-                Swipe.DOWN -> if (state.swipeDownEnabled) onSwipeDown()
+                Swipe.DOWN -> onSwipeDown()
                 Swipe.LEFT -> state.swipeLeftApp?.let(viewModel::launch)
                 Swipe.RIGHT -> state.swipeRightApp?.let(viewModel::launch)
             }
@@ -168,7 +169,7 @@ fun HomeScreen(
         Column(line.homeFavorites().testTag(HomeTestTags.FAVORITES), horizontalAlignment = horizontal) {
             state.favorites.forEach { app ->
                 MinimalListItem(
-                    text = app.label,
+                    text = app.displayName(),
                     onClick = { onFavoriteClick(app) },
                     onLongClick = { onFavoriteLongClick(app) },
                     large = true,

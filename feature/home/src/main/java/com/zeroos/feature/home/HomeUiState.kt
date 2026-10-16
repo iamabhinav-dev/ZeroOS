@@ -1,5 +1,6 @@
 package com.zeroos.feature.home
 
+import com.zeroos.core.data.apps.renamedTo
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.LauncherSettings
@@ -20,10 +21,9 @@ data class HomeUiState(
     val showDate: Boolean = true,
     /** For the favorite long-press menu (F2.8). */
     val renamedKeys: Set<String> = emptySet(),
-    /** Gestures (F4, D-026): apps for side swipes (null = off) and whether swipe down opens search. */
+    /** Side swipes open these apps; null = off (F4.2, F4.3, D-026). */
     val swipeLeftApp: AppEntry? = null,
     val swipeRightApp: AppEntry? = null,
-    val swipeDownEnabled: Boolean = true,
     /** Phone wallpaper shows through, dimmed (F6.2). */
     val showWallpaper: Boolean = false
 )
@@ -42,7 +42,7 @@ fun homeUiState(
     val byKey = apps.associateBy { it.key.asString() }
     val favorites = settings.favorites
         .take(settings.home.maxFavorites)
-        .mapNotNull { key -> byKey[key]?.let { app -> app.copy(label = settings.renamedApps[key] ?: app.label) } }
+        .mapNotNull { key -> byKey[key]?.renamedTo(settings.renamedApps[key]) }
     return HomeUiState(
         time = time,
         favorites = favorites,
@@ -55,7 +55,6 @@ fun homeUiState(
         renamedKeys = settings.renamedApps.keys,
         swipeLeftApp = settings.gestures.swipeLeftApp?.let(byKey::get),
         swipeRightApp = settings.gestures.swipeRightApp?.let(byKey::get),
-        swipeDownEnabled = settings.gestures.swipeDownEnabled,
         showWallpaper = settings.appearance.wallpaper == Wallpaper.SYSTEM
     )
 }

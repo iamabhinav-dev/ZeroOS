@@ -8,8 +8,9 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.core.model.AppEntry
+import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.AppListSettings
-import com.zeroos.core.model.settings.GestureSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.model.settings.LauncherSettings
@@ -73,9 +74,7 @@ class SettingsScreensTest {
         ZeroTheme {
             GesturesScreen(
                 state,
-                GesturesActions(onSwipeLeft = {
-                    calls += "left"
-                }, onSwipeRight = { calls += "right" }, onSwipeDown = { calls += "down:$it" }),
+                GesturesActions(onSwipeLeft = { calls += "left" }, onSwipeRight = { calls += "right" }),
                 onBack = {}
             )
         }
@@ -125,21 +124,19 @@ class SettingsScreensTest {
     }
 
     @Test
-    fun f4_2_f4_3_f4_4_f4_5_gestureRows() {
-        showGestures(SettingsUiState(swipeLeftLabel = "Camera"))
+    fun f4_2_f4_3_f4_5_gestureRows() {
+        showGestures(SettingsUiState(swipeLeftApp = AppEntry(AppKey("pkg.camera", "Main", 0), "Camera")))
         compose.onNodeWithText("Camera").assertExists()
         compose.onNodeWithText("Swipe left").performClick()
         compose.onNodeWithText("Swipe right").performClick()
-        compose.onNodeWithText("Swipe down").performClick()
         compose.onNodeWithText("Double-tap to lock: needs Accessibility (v1.1)").assertIsNotEnabled()
-        compose.onNodeWithText("Swipe down action: Search").assertIsNotEnabled()
-        assertEquals(listOf("left", "right", "down:false"), calls)
+        assertEquals(listOf("left", "right"), calls)
     }
 
     @Test
-    fun f4_4_noSwipeDownActionWhenOff() {
-        showGestures(SettingsUiState(settings = LauncherSettings(gestures = GestureSettings(swipeDownEnabled = false))))
-        compose.onNodeWithText("Swipe down action: Search").assertDoesNotExist()
+    fun f4_4_swipeDownIsNotASetting() {
+        showGestures()
+        compose.onNodeWithText("Swipe down", substring = true).assertDoesNotExist()
     }
 
     @Test

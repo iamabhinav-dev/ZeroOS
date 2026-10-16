@@ -21,19 +21,19 @@ Update this file in the same commit as the code and tests.
 | F2.4 | ✅ | AppSearchTest › f2_4_*, AppListViewModelTest › f2_4_*, AppListScreenTest › f2_4_* | |
 | F2.5 | ✅ | AppListViewModelTest › f2_5_* | |
 | F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_* | |
-| F2.7 | ✅ | AppListScreenTest › f2_7_* | |
+| F2.7 | ✅ | AppListScreenTest › f2_7_* (jump, slide, highlight screenshots) | Current letter grows and brightens on the phone |
 | F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_* | App info and uninstall open on the phone |
 | F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
 | F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
-| F2.10 | ✅ | AppsRepositoryTest › f2_10_*, AndroidLauncherAppsSourceTest › f2_10_*, AppListScreenTest › f2_10_* | Clone tag on the test phone |
+| F2.10 | ✅ | AppsRepositoryTest › f2_10_*, AndroidLauncherAppsSourceTest › f2_10_*, AppListScreenTest › f2_10_d034_*, SameNamesTest › d034_* | I-/II- names on the test phone (home, app list, pickers) |
 | F3.1, F3.2 | ✅ | FavoritesTest › f3_1_*, f3_2_*, FavoritesEditorTest › f3_*, FavoritesEditorViewModelTest › f3_1_f3_2_* | Reorder by dragging on the phone |
 | F3.3, F3.4 | ✅ | FavoritesTest › f3_3_*, f3_4_*, HomeUiStateTest › f3_3_*, f3_4_*, FavoritesEditorTest › f3_3_* | Uninstall a favorite app |
 | F4.1 | ✅ | SwipeTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
-| F4.2, F4.3 | ✅ | SwipeTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_f4_4_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_2_* | Choose a swipe app on the phone |
-| F4.4 | 🟡 | SwipeTest › f4_4_*, MainActivityTest › f4_4_*, HomeUiStateTest › f4_2_f4_3_f4_4_* (notification shade option in Phase 4) | |
+| F4.2, F4.3 | ✅ | SwipeTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_2_f4_3_f4_5_* | Choose a swipe app on the phone |
+| F4.4 | 🟡 | SwipeTest › f4_4_*, MainActivityTest › f4_4_*, SettingsScreensTest › f4_4_swipeDownIsNotASetting, SettingsStorageTest › f4_4_* (notification shade in Phase 4, D-033) | |
 | F4.5 | ⬜ | (needs the Accessibility service, Phase 4) | |
-| F4.6 | ✅ | HomeUiStateTest › f4_2_f4_3_f4_4_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_6_* | |
+| F4.6 | ✅ | HomeUiStateTest › f4_2_f4_3_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_6_* | |
 | F5.1 | ✅ | AppCustomizationTest › f5_1_*, AppListViewModelTest › f2_8_* | |
 | F5.2 | ✅ | HiddenAppsTest › f5_2_*, SettingsScreensTest › f2_3_f2_5_f2_7_f5_2_f5_3_* | |
 | F5.3 | ✅ | HiddenAppsTest › f5_3_* | |

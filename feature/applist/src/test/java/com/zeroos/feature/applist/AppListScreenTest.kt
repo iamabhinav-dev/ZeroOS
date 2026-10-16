@@ -13,6 +13,7 @@ import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.core.data.apps.numberSameNames
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.ProfileType
@@ -98,10 +99,11 @@ class AppListScreenTest {
     }
 
     @Test
-    fun f2_10_otherProfilesAreTagged() {
-        show(listState(results = listOf(app("WhatsApp"), app("WhatsApp", ProfileType.CLONE), app("Gmail", ProfileType.WORK))))
-        compose.onNodeWithText("WhatsApp").assertExists()
-        compose.onNodeWithText("WhatsApp · clone").assertExists()
+    fun f2_10_d034_sameNamesAreNumberedAndWorkAppsTagged() {
+        val apps = listOf(app("WhatsApp"), app("WhatsApp", ProfileType.CLONE), app("Gmail", ProfileType.WORK)).numberSameNames()
+        show(listState(results = apps))
+        compose.onNodeWithText("I-WhatsApp").assertExists()
+        compose.onNodeWithText("II-WhatsApp").assertExists()
         compose.onNodeWithText("Gmail · work").assertExists()
     }
 
@@ -110,6 +112,32 @@ class AppListScreenTest {
         show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
         compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { click(bottomCenter.copy(y = bottom - 2f)) }
         compose.onNodeWithText("Zoom").assertExists()
+    }
+
+    @Test
+    fun f2_7_slidingAlongTheScrollerJumpsThroughLetters() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput {
+            down(topCenter.copy(y = 2f))
+            moveTo(bottomCenter.copy(y = bottom - 2f))
+        }
+        compose.onNodeWithText("Zoom").assertExists()
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { up() }
+    }
+
+    @Test
+    fun f2_7_scrollerHighlightsCurrentLetterScreenshot() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f2_7_scrollerWhileSlidingScreenshot() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        // Hold a finger on "G" (Gmail): G stands out, the other letters fade.
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { down(center.copy(y = height * 0.55f)) }
+        compose.onRoot().captureRoboImage()
+        compose.onNodeWithTag(AppListTestTags.SCROLLER).performTouchInput { up() }
     }
 
     @Test

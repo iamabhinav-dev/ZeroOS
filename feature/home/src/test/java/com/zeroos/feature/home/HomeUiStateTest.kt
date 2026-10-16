@@ -41,19 +41,17 @@ class HomeUiStateTest {
     }
 
     @Test
-    fun f4_2_f4_3_f4_4_gesturesFollowSettings() {
+    fun f4_2_f4_3_gesturesFollowSettings() {
         val off = homeUiState(time, LauncherSettings(), apps, null, null)
         assertNull("side swipes are off by default (D-026)", off.swipeLeftApp)
         assertNull(off.swipeRightApp)
-        assertEquals(true, off.swipeDownEnabled)
 
         val on = homeUiState(
             time,
             LauncherSettings(
                 gestures = com.zeroos.core.model.settings.GestureSettings(
                     swipeLeftApp = key("Camera"),
-                    swipeRightApp = key("Gone"),
-                    swipeDownEnabled = false
+                    swipeRightApp = key("Gone")
                 )
             ),
             apps,
@@ -62,7 +60,6 @@ class HomeUiStateTest {
         )
         assertEquals("Camera", on.swipeLeftApp?.label)
         assertNull("uninstalled gesture app does nothing", on.swipeRightApp)
-        assertEquals(false, on.swipeDownEnabled)
     }
 
     @Test

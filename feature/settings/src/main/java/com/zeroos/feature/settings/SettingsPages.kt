@@ -13,6 +13,7 @@ import com.zeroos.core.resources.R
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.SettingRow
 import com.zeroos.core.ui.ToggleRow
+import com.zeroos.core.ui.displayName
 
 data class HomeSettingsActions(
     val onEditFavorites: () -> Unit,
@@ -60,25 +61,19 @@ fun AppListSettingsScreen(state: AppListSettings, hiddenCount: Int, actions: App
     }
 }
 
-data class GesturesActions(val onSwipeLeft: () -> Unit, val onSwipeRight: () -> Unit, val onSwipeDown: (Boolean) -> Unit)
+data class GesturesActions(val onSwipeLeft: () -> Unit, val onSwipeRight: () -> Unit)
 
 /**
- * Wireframe F4 (F4.2–F4.6). Swipe up is always the app list (F4.1) and isn't shown. Double-tap to lock and the
- * notification-shade action need the Accessibility service (Phase 4), so they're shown but disabled.
+ * Wireframe F4 (F4.2, F4.3, F4.6). Swipe up is always the app list (F4.1) and swipe down always opens search, or
+ * the notification shade once the Accessibility service exists (F4.4, D-033), so neither is shown. Double-tap to
+ * lock needs that service too (Phase 4), so it's shown but disabled.
  */
 @Composable
 fun GesturesScreen(state: SettingsUiState, actions: GesturesActions, onBack: () -> Unit) {
     val off = stringResource(R.string.common_off)
-    val gestures = state.settings.gestures
     SettingsPageScaffold(stringResource(R.string.settings_gestures), SettingsTestTags.GESTURES, onBack) {
-        item { SettingRow(stringResource(R.string.gestures_swipe_left), state.swipeLeftLabel ?: off, actions.onSwipeLeft) }
-        item { SettingRow(stringResource(R.string.gestures_swipe_right), state.swipeRightLabel ?: off, actions.onSwipeRight) }
-        item { ToggleRow(stringResource(R.string.gestures_swipe_down), gestures.swipeDownEnabled, actions.onSwipeDown) }
-        if (gestures.swipeDownEnabled) {
-            item {
-                UnavailableRow(stringResource(R.string.gestures_swipe_down_action), stringResource(R.string.gestures_action_search))
-            }
-        }
+        item { SettingRow(stringResource(R.string.gestures_swipe_left), state.swipeLeftApp?.displayName() ?: off, actions.onSwipeLeft) }
+        item { SettingRow(stringResource(R.string.gestures_swipe_right), state.swipeRightApp?.displayName() ?: off, actions.onSwipeRight) }
         item { UnavailableRow(stringResource(R.string.gestures_double_tap), stringResource(R.string.gestures_needs_accessibility)) }
     }
 }
