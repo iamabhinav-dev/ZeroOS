@@ -4,6 +4,9 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.11 (versionCode 11)
+- Faster cold start: favorites show at once (from what home showed last time) instead of after the app list
+  loads; the log now records how long loading the app list takes (NFR-P2)
 ## 0.0.10 (versionCode 10)
 - Fix: with seconds on, the Appearance preview clock wrapped and its digits overlapped; the clock now always
   stays on one line and shrinks to fit (F6.7)
