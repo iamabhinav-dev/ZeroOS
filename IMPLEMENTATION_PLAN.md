@@ -239,7 +239,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Export/import JSON via Storage Access Framework (`CreateDocument`/`OpenDocument`); schema version field; import confirmation; Auto Backup rules for DataStore (and Room once it exists).
 - From now on, every step that adds settings extends the backup format (F13.4).
 
-### Step 2.11 — Settings structure
+### Step 2.11 — Settings structure ✅
 Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnostics · About. Later phases add sections. Every setting change is logged (F17.7), with free-text values redacted (F17.8).
 
 **Tests (written within each step):**

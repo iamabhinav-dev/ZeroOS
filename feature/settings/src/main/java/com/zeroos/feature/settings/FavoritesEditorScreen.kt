@@ -56,7 +56,9 @@ fun FavoritesEditorRoute(onBack: () -> Unit, viewModel: FavoritesEditorViewModel
     var picking by rememberSaveable { mutableStateOf(false) }
     if (picking) {
         AppPickerScreen(
-            state = state,
+            title = stringResource(R.string.favorites_pick_title),
+            query = state.query,
+            apps = state.candidates,
             onQueryChange = viewModel::onQueryChange,
             onPick = {
                 viewModel.add(it)
@@ -184,19 +186,31 @@ private fun DropLine() {
     )
 }
 
-/** Picker for "+ Add app": searchable list of apps that aren't favorites yet. */
+/**
+ * Searchable app picker: "+ Add app" for favorites (F3.1) and the side-swipe apps (F4.2, F4.3). [onNone] adds an
+ * "off" row first.
+ */
 @Composable
-fun AppPickerScreen(state: FavoritesEditorState, onQueryChange: (String) -> Unit, onPick: (AppEntry) -> Unit, onBack: () -> Unit) {
+fun AppPickerScreen(
+    title: String,
+    query: String,
+    apps: List<AppEntry>,
+    onQueryChange: (String) -> Unit,
+    onPick: (AppEntry) -> Unit,
+    onBack: () -> Unit,
+    onNone: (() -> Unit)? = null
+) {
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
     Column(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding()) {
-        ScreenTitle(stringResource(R.string.favorites_pick_title))
-        SearchField(state.query, autoOpenKeyboard = false, onQueryChange = onQueryChange, onGo = {
-            state.candidates.firstOrNull()?.let(onPick)
+        ScreenTitle(title)
+        SearchField(query, autoOpenKeyboard = false, onQueryChange = onQueryChange, onGo = {
+            apps.firstOrNull()?.let(onPick)
         })
         HorizontalDivider(color = tokens.colors.divider, modifier = Modifier.padding(horizontal = tokens.spacing.screenGutter))
         LazyColumn(Modifier.testTag(FavoritesTestTags.PICKER)) {
-            items(state.candidates, key = {
+            onNone?.let { item { MinimalListItem(stringResource(R.string.common_off), onClick = it, large = true) } }
+            items(apps, key = {
                 it.key.asString()
             }) { app -> MinimalListItem(app.label, onClick = { onPick(app) }, large = true) }
         }

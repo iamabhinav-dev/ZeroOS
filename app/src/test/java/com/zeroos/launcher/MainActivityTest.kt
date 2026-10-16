@@ -4,12 +4,15 @@ import android.content.Intent
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zeroos.feature.applist.AppListTestTags
 import com.zeroos.feature.home.HomeTestTags
+import com.zeroos.feature.settings.SettingsTestTags
 import com.zeroos.launcher.diagnostics.DiagnosticsTestTags
 import org.junit.Rule
 import org.junit.Test
@@ -45,12 +48,18 @@ class MainActivityTest {
     }
 
     @Test
-    fun f1_9_longPressOpensDiagnosticsAndBackReturnsHome() {
+    fun f1_9_longPressOpensSettingsAndBackReturnsHome() {
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { longClick(center) }
+        compose.onNodeWithTag(SettingsTestTags.MAIN).assertExists()
+        compose.onNodeWithText("Diagnostics").performClick()
         compose.onNodeWithTag(DiagnosticsTestTags.ROOT).assertExists()
-        compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        back()
+        compose.onNodeWithTag(SettingsTestTags.MAIN).assertExists()
+        back()
         compose.onNodeWithTag(HomeTestTags.ROOT).assertExists()
     }
+
+    private fun back() = compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
 
     @Test
     fun step1_1_homePressClosesList() {
