@@ -5,8 +5,8 @@ import android.provider.AlarmClock
 import android.text.format.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Alignment.Horizontal
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.platform.LocalConfiguration
@@ -56,7 +57,7 @@ data class HomeSlots(
 
 /** Home screen with its ViewModel (Step 2.3). */
 @Composable
-fun HomeRoute(onSwipeUp: () -> Unit, onLongPress: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     fun open(name: String, intent: Intent) {
@@ -78,7 +79,14 @@ fun HomeRoute(onSwipeUp: () -> Unit, onLongPress: () -> Unit, viewModel: HomeVie
     }
     HomeScreen(
         state = state,
-        onSwipeUp = onSwipeUp,
+        onSwipe = { swipe ->
+            when (swipe) {
+                Swipe.UP -> onSwipeUp()
+                Swipe.DOWN -> if (state.swipeDownEnabled) onSwipeDown()
+                Swipe.LEFT -> state.swipeLeftApp?.let(viewModel::launch)
+                Swipe.RIGHT -> state.swipeRightApp?.let(viewModel::launch)
+            }
+        },
         onLongPress = onLongPress,
         onFavoriteClick = viewModel::launch,
         onFavoriteLongClick = { menuFor = it },
@@ -95,7 +103,7 @@ fun HomeRoute(onSwipeUp: () -> Unit, onLongPress: () -> Unit, viewModel: HomeVie
 @Composable
 fun HomeScreen(
     state: HomeUiState,
-    onSwipeUp: () -> Unit,
+    onSwipe: (Swipe) -> Unit,
     onLongPress: () -> Unit,
     onFavoriteClick: (AppEntry) -> Unit,
     onClockClick: () -> Unit,
@@ -129,17 +137,18 @@ fun HomeScreen(
             .pointerInput(Unit) { detectTapGestures(onLongPress = { onLongPress() }) }
             .pointerInput(minDistance, minVelocity) {
                 val velocity = VelocityTracker()
-                var dragY = 0f
-                detectVerticalDragGestures(
+                var drag = Offset.Zero
+                detectDragGestures(
                     onDragStart = {
-                        dragY = 0f
+                        drag = Offset.Zero
                         velocity.resetTracking()
                     },
                     onDragEnd = {
-                        if (isSwipeUp(dragY, velocity.calculateVelocity().y, minDistance, minVelocity)) onSwipeUp()
+                        val v = velocity.calculateVelocity()
+                        swipeOf(drag.x, drag.y, v.x, v.y, minDistance, minVelocity)?.let(onSwipe)
                     }
                 ) { change, dragAmount ->
-                    dragY += dragAmount
+                    drag += dragAmount
                     velocity.addPosition(change.uptimeMillis, change.position)
                 }
             }

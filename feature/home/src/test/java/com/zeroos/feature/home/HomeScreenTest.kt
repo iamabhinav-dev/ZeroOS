@@ -12,6 +12,8 @@ import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -50,7 +52,7 @@ class HomeScreenTest {
         ZeroTheme(ThemeMode.DARK, textSize) {
             HomeScreen(
                 state = state,
-                onSwipeUp = { calls += "swipeUp" },
+                onSwipe = { calls += "swipe:$it" },
                 onLongPress = { calls += "longPress" },
                 onFavoriteClick = { calls += it.label },
                 onClockClick = { calls += "clock" },
@@ -121,7 +123,15 @@ class HomeScreenTest {
         show()
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeUp() }
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeDown() }
-        assertEquals(listOf("swipeUp"), calls)
+        assertEquals(listOf("swipe:UP", "swipe:DOWN"), calls)
+    }
+
+    @Test
+    fun f4_2_f4_3_sideSwipesAreReported() {
+        show()
+        compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeLeft() }
+        compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeRight() }
+        assertEquals(listOf("swipe:LEFT", "swipe:RIGHT"), calls)
     }
 
     @Test

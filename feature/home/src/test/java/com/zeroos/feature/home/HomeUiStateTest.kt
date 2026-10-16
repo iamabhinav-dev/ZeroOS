@@ -41,6 +41,31 @@ class HomeUiStateTest {
     }
 
     @Test
+    fun f4_2_f4_3_f4_4_gesturesFollowSettings() {
+        val off = homeUiState(time, LauncherSettings(), apps, null, null)
+        assertNull("side swipes are off by default (D-026)", off.swipeLeftApp)
+        assertNull(off.swipeRightApp)
+        assertEquals(true, off.swipeDownEnabled)
+
+        val on = homeUiState(
+            time,
+            LauncherSettings(
+                gestures = com.zeroos.core.model.settings.GestureSettings(
+                    swipeLeftApp = key("Camera"),
+                    swipeRightApp = key("Gone"),
+                    swipeDownEnabled = false
+                )
+            ),
+            apps,
+            null,
+            null
+        )
+        assertEquals("Camera", on.swipeLeftApp?.label)
+        assertNull("uninstalled gesture app does nothing", on.swipeRightApp)
+        assertEquals(false, on.swipeDownEnabled)
+    }
+
+    @Test
     fun f1_3_f1_8_batteryAndAlarmFollowSettings() {
         val alarm = Instant.parse("2026-10-17T01:00:00Z")
         val shown =
