@@ -1,13 +1,15 @@
 package com.zeroos.feature.home
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.Velocity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
-class SwipesTest {
+class SwipeTest {
     private val distance = 100f
     private val velocity = 600f
-    private fun swipe(dx: Float, dy: Float, vx: Float = 0f, vy: Float = 0f) = swipeOf(dx, dy, vx, vy, distance, velocity)
+    private fun swipe(dx: Float, dy: Float, vx: Float = 0f, vy: Float = 0f) = swipeOf(Offset(dx, dy), Velocity(vx, vy), distance, velocity)
 
     @Test
     fun f4_1_longUpwardDragIsSwipeUp() = assertEquals(Swipe.UP, swipe(0f, -120f))
