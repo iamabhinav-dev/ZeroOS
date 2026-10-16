@@ -4,6 +4,8 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.12 (versionCode 12)
+- New logo: the dotted "ZeroOS" wordmark as the app icon, and on the first onboarding page and About (D-037)
 ## 0.0.11 (versionCode 11)
 - Faster cold start: favorites show at once (from what home showed last time) instead of after the app list
   loads; the log now records how long loading the app list takes (NFR-P2)
