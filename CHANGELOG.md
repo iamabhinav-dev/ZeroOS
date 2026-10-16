@@ -4,6 +4,17 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.6 (versionCode 6)
+- Onboarding on first start: intro, set as default home, pick favorites, battery optimization (Step 2.9).
+  Shown once, including after this update
+- Settings: long-press home opens Settings (Home, App list, Gestures, Appearance, Backup, Diagnostics,
+  About); Diagnostics is now inside Settings (Step 2.11)
+- Backup: export and import all settings as a JSON file; Android Auto Backup (Step 2.10)
+- Appearance: theme, wallpaper, text size, show clock/date/status bar, with a live preview (Step 2.8)
+- Gestures: swipe down opens search (switchable); optional swipe left/right to open an app, off by default (Step 2.7)
+- Hide and rename apps from the long-press menu; hidden apps list with optional confirmation (Step 2.6)
+- Favorites editor: add, remove, drag to reorder (Step 2.5)
+- Rounder app icon: 14 dots along an oval (D-032)
 ## 0.0.5 (versionCode 5)
 - Dot-matrix lightning bolt after the battery % while charging (F1.3, D-031)
 - New app icon: Doto's "0" as 12 dots (D-032)
