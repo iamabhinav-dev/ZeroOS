@@ -4,6 +4,7 @@ import android.app.SearchManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -31,8 +32,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -59,6 +62,9 @@ import com.zeroos.core.data.apps.AppSearchIndex
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.ProfileType
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.AppMenu
+import com.zeroos.core.ui.AppMenuActions
+import com.zeroos.core.ui.AppMenuTarget
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.SearchField
 import com.zeroos.core.ui.ZeroTheme
@@ -82,10 +88,27 @@ fun AppListRoute(onClose: () -> Unit, viewModel: AppListViewModel = hiltViewMode
         viewModel.clearQuery()
         onClose()
     }
+    var menuFor by remember { mutableStateOf<AppEntry?>(null) }
+    val fullMessage = stringResource(R.string.app_menu_favorites_full, state.maxFavorites)
+    menuFor?.let { app ->
+        val key = app.key.asString()
+        AppMenu(
+            target = AppMenuTarget(app.label, key in state.favoriteKeys, key in state.renamedKeys),
+            actions = AppMenuActions(
+                onToggleFavorite = { viewModel.toggleFavorite(app) { Toast.makeText(context, fullMessage, Toast.LENGTH_SHORT).show() } },
+                onRename = { viewModel.rename(app, it) },
+                onHide = { viewModel.hide(app) },
+                onAppInfo = { viewModel.openAppInfo(app) },
+                onUninstall = { external("uninstall", Intent(Intent.ACTION_DELETE, "package:${app.key.packageName}".toUri())) }
+            ),
+            onDismiss = { menuFor = null }
+        )
+    }
     AppListScreen(
         state = state,
         onQueryChange = { if (viewModel.onQueryChange(it)) close() },
         onAppClick = { if (viewModel.launch(it)) close() },
+        onAppLongClick = { menuFor = it },
         onSearchWeb = { external("web", Intent(Intent.ACTION_WEB_SEARCH).putExtra(SearchManager.QUERY, it)) },
         onSearchPlayStore = { external("play store", Intent(Intent.ACTION_VIEW, "market://search?q=${Uri.encode(it)}".toUri())) },
         onClose = close
@@ -104,7 +127,8 @@ fun AppListScreen(
     onSearchWeb: (String) -> Unit,
     onSearchPlayStore: (String) -> Unit,
     onClose: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAppLongClick: (AppEntry) -> Unit = {}
 ) {
     val tokens = ZeroTheme.tokens
     val listState = rememberLazyListState()
@@ -133,7 +157,9 @@ fun AppListScreen(
                 contentPadding = PaddingValues(vertical = tokens.spacing.sectionGap)
             ) {
                 items(state.results, key = { it.key.asString() }) { app ->
-                    MinimalListItem(text = labelWithTag(app), onClick = { onAppClick(app) }, large = true)
+                    MinimalListItem(text = labelWithTag(app), onClick = {
+                        onAppClick(app)
+                    }, onLongClick = { onAppLongClick(app) }, large = true)
                 }
                 if (state.showNoMatch) {
                     item { MinimalListItem(stringResource(R.string.app_list_search_web, state.query), { onSearchWeb(state.query) }) }

@@ -22,7 +22,7 @@ Update this file in the same commit as the code and tests.
 | F2.5 | ✅ | AppListViewModelTest › f2_5_* | |
 | F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_* | |
 | F2.7 | ✅ | AppListScreenTest › f2_7_* | |
-| F2.8 | ⬜ | (Step 2.6) | |
+| F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_* | App info and uninstall open on the phone |
 | F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
 | F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
 | F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
@@ -31,7 +31,11 @@ Update this file in the same commit as the code and tests.
 | F3.3, F3.4 | ✅ | FavoritesTest › f3_3_*, f3_4_*, HomeUiStateTest › f3_3_*, f3_4_*, FavoritesEditorTest › f3_3_* | Uninstall a favorite app |
 | F4.1 | 🟡 | SwipeUpTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
 | F4.2–F4.6 | ⬜ | | |
-| F5.1–F5.5 | ⬜ | | |
+| F5.1 | ✅ | AppCustomizationTest › f5_1_*, AppListViewModelTest › f2_8_* | |
+| F5.2 | ✅ | HiddenAppsTest › f5_2_* (entry from Settings in Step 2.11) | |
+| F5.3 | ✅ | HiddenAppsTest › f5_3_* | |
+| F5.4, F5.5 | ✅ | AppCustomizationTest › f5_4_*, f5_5_*, AppMenuTest › f5_4_*, f5_5_* | |
+| F17.8 (renames) | ✅ | AppCustomizationTest › f17_8_customNamesAreNeverLogged | |
 | F6.1, F6.2, F6.5, F6.6 | ⬜ | (tokens ready in Step 2.2; settings in Step 2.8) | |
 | F6.3 | 🟡 | ComponentsTest › step2_2_gallery* screenshots (Doto everywhere) | Doto readable on the phone |
 | F6.4 | 🟡 | ZeroThemeTest › f6_4_textSizeScaleAndMinimum (setting in Step 2.8) | |

@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Alignment.Companion.End
 import androidx.compose.ui.Alignment.Companion.Start
@@ -30,11 +32,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.AppMenu
+import com.zeroos.core.ui.AppMenuActions
+import com.zeroos.core.ui.AppMenuTarget
 import com.zeroos.core.ui.DotIcons
 import com.zeroos.core.ui.DotMatrixIcon
 import com.zeroos.core.ui.MinimalListItem
@@ -56,11 +62,26 @@ fun HomeRoute(onSwipeUp: () -> Unit, onLongPress: () -> Unit, viewModel: HomeVie
     fun open(name: String, intent: Intent) {
         startShortcut(context, intent)?.let { viewModel.onShortcutFailed(name, it) }
     }
+    var menuFor by remember { mutableStateOf<AppEntry?>(null) }
+    menuFor?.let { app ->
+        AppMenu(
+            target = AppMenuTarget(app.label, isFavorite = true, isRenamed = app.key.asString() in state.renamedKeys),
+            actions = AppMenuActions(
+                onToggleFavorite = { viewModel.removeFavorite(app) },
+                onRename = { viewModel.rename(app, it) },
+                onHide = { viewModel.hide(app) },
+                onAppInfo = { viewModel.openAppInfo(app) },
+                onUninstall = { open("uninstall", Intent(Intent.ACTION_DELETE, "package:${app.key.packageName}".toUri())) }
+            ),
+            onDismiss = { menuFor = null }
+        )
+    }
     HomeScreen(
         state = state,
         onSwipeUp = onSwipeUp,
         onLongPress = onLongPress,
         onFavoriteClick = viewModel::launch,
+        onFavoriteLongClick = { menuFor = it },
         onClockClick = { open("alarms", Intent(AlarmClock.ACTION_SHOW_ALARMS)) },
         onDateClick = { open("calendar", Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR)) }
     )
@@ -80,6 +101,7 @@ fun HomeScreen(
     onClockClick: () -> Unit,
     onDateClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onFavoriteLongClick: (AppEntry) -> Unit = {},
     slots: HomeSlots = HomeSlots()
 ) {
     val tokens = ZeroTheme.tokens
@@ -141,6 +163,7 @@ fun HomeScreen(
                 MinimalListItem(
                     text = app.label,
                     onClick = { onFavoriteClick(app) },
+                    onLongClick = { onFavoriteLongClick(app) },
                     large = true,
                     modifier = Modifier.fillMaxWidth(),
                     alignment = state.alignment

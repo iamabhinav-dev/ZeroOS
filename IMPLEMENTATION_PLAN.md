@@ -218,7 +218,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 ### Step 2.5 — Favorites (F3) ✅
 - Add/remove from long-press menu and Settings; drag-and-drop edit mode; max count.
 
-### Step 2.6 — Hide & rename (F5)
+### Step 2.6 — Hide & rename (F5) ✅
 - Long-press sheet: Add to favorites · Rename · Hide · App info · Uninstall.
 - Rename dialog with reset; Settings → Hidden apps with unhide and optional confirmation/delay.
 

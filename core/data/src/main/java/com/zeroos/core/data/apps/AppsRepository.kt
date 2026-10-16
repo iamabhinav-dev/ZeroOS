@@ -56,6 +56,19 @@ class AppsRepository(
         launchFailed(key, e)
     }
 
+    /** Opens the app's info page. Returns false (and logs) if it can't be opened. */
+    fun openAppInfo(key: AppKey): Boolean = try {
+        source.openAppInfo(key)
+        logger.info(TAG, "app info opened for ${key.packageName}")
+        true
+    } catch (e: ActivityNotFoundException) {
+        launchFailed(key, e)
+    } catch (e: SecurityException) {
+        launchFailed(key, e)
+    } catch (e: IllegalStateException) {
+        launchFailed(key, e)
+    }
+
     private fun launchFailed(key: AppKey, e: Exception): Boolean {
         logger.warn(TAG, "could not launch ${key.packageName}", e)
         return false

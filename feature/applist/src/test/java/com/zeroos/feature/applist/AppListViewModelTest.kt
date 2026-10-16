@@ -2,10 +2,13 @@ package com.zeroos.feature.applist
 
 import androidx.datastore.core.DataStoreFactory
 import androidx.lifecycle.SavedStateHandle
+import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
 import com.zeroos.core.data.apps.visibleApps
+import com.zeroos.core.data.settings.AppCustomizationRepository
+import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
 import com.zeroos.core.logging.LogLevel
@@ -16,6 +19,7 @@ import com.zeroos.core.model.settings.AppListSettings
 import com.zeroos.core.model.settings.LauncherSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
@@ -23,6 +27,8 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -45,6 +51,8 @@ class AppListViewModelTest {
 
         override fun registerChangeListener(onChange: (String) -> Unit) = LauncherAppsSource.ChangeListenerHandle {}
 
+        override fun openAppInfo(key: AppKey) = Unit
+
         override fun launch(key: AppKey) {
             launched += key
         }
@@ -66,13 +74,11 @@ class AppListViewModelTest {
             temp.newFile().apply { delete() }
         })
         store.updateData { settings }
-        val vm =
-            AppListViewModel(
-                AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler)),
-                SettingsRepository(store, logger),
-                logger,
-                SavedStateHandle()
-            )
+        val settingsRepository = SettingsRepository(store, logger)
+        val apps = AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler))
+        val actions =
+            AppActions(settingsRepository, FavoritesRepository(settingsRepository), AppCustomizationRepository(settingsRepository), apps)
+        val vm = AppListViewModel(apps, settingsRepository, actions, logger, SavedStateHandle())
         backgroundScope.launch { vm.state.collect {} }
         vm.state.first { !it.loading }
         return vm
@@ -106,12 +112,35 @@ class AppListViewModelTest {
     }
 
     @Test
+    fun f2_8_menuActionsUpdateFavoritesNamesAndHidden() = runTest {
+        val vm = viewModel(LauncherSettings(home = com.zeroos.core.model.settings.HomeSettings(maxFavorites = 1)))
+        val gmail = vm.state.value.results.first { it.label == "Gmail" }
+        val maps = vm.state.value.results.first { it.label == "Maps" }
+        var fullAt = -1
+        vm.toggleFavorite(gmail) { fullAt = it }
+        assertTrue(vm.state.first { gmail.key.asString() in it.favoriteKeys }.favoriteKeys.size == 1)
+        vm.toggleFavorite(maps) { fullAt = it }
+        // "Full" changes no state, so wait (in real time) for the callback itself.
+        withContext(Dispatchers.Default) { withTimeout(5_000) { while (fullAt < 0) delay(10) } }
+        assertEquals(1, fullAt)
+        vm.toggleFavorite(gmail) { }
+        vm.state.first { it.favoriteKeys.isEmpty() }
+
+        vm.rename(gmail, "Mail")
+        assertTrue(vm.state.first { it.results.any { r -> r.label == "Mail" } }.renamedKeys.contains(gmail.key.asString()))
+        vm.hide(maps)
+        assertTrue(vm.state.first { s -> s.results.none { it.key == maps.key } }.results.isNotEmpty())
+        vm.openAppInfo(gmail)
+        assertTrue(logged.any { it == "app info opened for pkg.Gmail" })
+    }
+
+    @Test
     fun f2_6_noMatchFlagAndExternalSearchLogging() = runTest {
         val vm = viewModel()
         vm.onQueryChange("secret plans")
         assertTrue(vm.state.first { it.query == "secret plans" && !it.loading }.showNoMatch)
         vm.onExternalSearch("web")
-        assertTrue(logged.contains("external search: web"))
+        assertTrue(logged.contains("opened: web"))
         assertTrue("query must never be logged (F17.8)", logged.none { it.contains("secret") })
     }
 }

@@ -75,6 +75,11 @@ class AndroidLauncherAppsSource(
         return LauncherAppsSource.ChangeListenerHandle { launcherApps.unregisterCallback(callback) }
     }
 
+    override fun openAppInfo(key: AppKey) {
+        val user = userManager.getUserForSerialNumber(key.userSerial) ?: error("profile ${key.userSerial} no longer exists")
+        launcherApps.startAppDetailsActivity(ComponentName(key.packageName, key.activityName), user, null, null)
+    }
+
     override fun launch(key: AppKey) {
         val user = userManager.getUserForSerialNumber(key.userSerial)
             ?: error("profile ${key.userSerial} no longer exists")

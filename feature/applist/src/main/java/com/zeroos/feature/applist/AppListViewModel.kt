@@ -3,9 +3,11 @@ package com.zeroos.feature.applist
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppSearchIndex
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.visibleApps
+import com.zeroos.core.data.settings.AddFavoriteResult
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
@@ -19,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /** What the app list shows (F2, wireframe B). */
 data class AppListUiState(
@@ -26,7 +29,11 @@ data class AppListUiState(
     val results: List<AppEntry> = emptyList(),
     val options: AppListSettings = AppListSettings(),
     /** True while loading the first list, so "no match" isn't shown too early. */
-    val loading: Boolean = true
+    val loading: Boolean = true,
+    /** For the long-press menu (F2.8): favorites, renamed apps and the favorites limit. */
+    val favoriteKeys: Set<String> = emptySet(),
+    val renamedKeys: Set<String> = emptySet(),
+    val maxFavorites: Int = 0
 ) {
     val showNoMatch: Boolean get() = !loading && query.isNotBlank() && results.isEmpty()
 }
@@ -36,21 +43,56 @@ data class AppListUiState(
 class AppListViewModel @Inject constructor(
     private val repository: AppsRepository,
     settingsRepository: SettingsRepository,
+    private val actions: AppActions,
     private val logger: Logger,
     private val savedState: SavedStateHandle
 ) : ViewModel() {
 
+    private class Indexed(val search: AppSearchIndex, val settings: LauncherSettings)
+
     private val index = combine(repository.apps, settingsRepository.settings) { apps, settings ->
-        AppSearchIndex(visibleApps(apps, settings)) to settings.appList
+        Indexed(AppSearchIndex(visibleApps(apps, settings)), settings)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
 
     val state: StateFlow<AppListUiState> = combine(index, savedState.getStateFlow(KEY_QUERY, "")) { indexed, query ->
         if (indexed == null) {
             AppListUiState(query = query)
         } else {
-            AppListUiState(query, indexed.first.search(query), indexed.second, loading = false)
+            val s = indexed.settings
+            AppListUiState(
+                query = query,
+                results = indexed.search.search(query),
+                options = s.appList,
+                loading = false,
+                favoriteKeys = s.favorites.toSet(),
+                renamedKeys = s.renamedApps.keys,
+                maxFavorites = s.home.maxFavorites
+            )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), AppListUiState())
+
+    /** Adds or removes a favorite (F3.1); [onFull] is called with the limit if there's no room (F3.3). */
+    fun toggleFavorite(app: AppEntry, onFull: (Int) -> Unit) {
+        viewModelScope.launch {
+            if (app.key.asString() in state.value.favoriteKeys) {
+                actions.removeFavorite(app)
+            } else if (actions.addFavorite(app) == AddFavoriteResult.FULL) {
+                onFull(state.value.maxFavorites)
+            }
+        }
+    }
+
+    fun rename(app: AppEntry, name: String?) {
+        viewModelScope.launch { actions.rename(app.key, name) }
+    }
+
+    fun hide(app: AppEntry) {
+        viewModelScope.launch { actions.hide(app) }
+    }
+
+    fun openAppInfo(app: AppEntry) {
+        actions.openAppInfo(app)
+    }
 
     /**
      * Updates the search. With "open single match automatically" on, a query matching exactly one app opens it
@@ -59,8 +101,8 @@ class AppListViewModel @Inject constructor(
     fun onQueryChange(query: String): Boolean {
         savedState[KEY_QUERY] = query
         val single = index.value
-            ?.takeIf { it.second.autoLaunchSingleMatch && query.isNotBlank() }
-            ?.first?.search(query)?.singleOrNull()
+            ?.takeIf { it.settings.appList.autoLaunchSingleMatch && query.isNotBlank() }
+            ?.search?.search(query)?.singleOrNull()
         return single != null && launch(single)
     }
 
@@ -71,10 +113,10 @@ class AppListViewModel @Inject constructor(
         savedState[KEY_QUERY] = ""
     }
 
-    /** Web or Play Store search opened (F2.6); the query itself isn't logged. */
-    fun onExternalSearch(target: String) = logger.info(TAG, "external search: $target")
+    /** Web search, Play Store search or the uninstall dialog opened (F2.6, F2.8); queries aren't logged. */
+    fun onExternalSearch(target: String) = logger.info(TAG, "opened: $target")
 
-    fun onExternalSearchFailed(target: String, e: Exception) = logger.warn(TAG, "could not open $target search", e)
+    fun onExternalSearchFailed(target: String, e: Exception) = logger.warn(TAG, "could not open $target", e)
 
     private companion object {
         const val TAG = "applist"
