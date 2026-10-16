@@ -2,8 +2,10 @@ package com.zeroos.feature.settings
 
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -14,6 +16,8 @@ import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.warn
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.BodyText
+import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.ZeroWordmark
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
@@ -76,6 +80,11 @@ fun AboutRoute(onLicenses: () -> Unit, onBack: () -> Unit, viewModel: AboutViewM
 @Composable
 fun AboutScreen(state: AboutState, onLicenses: () -> Unit, onBack: () -> Unit) {
     SettingsPageScaffold(stringResource(R.string.settings_about), SettingsTestTags.ABOUT, onBack) {
+        item {
+            ZeroWordmark(
+                Modifier.padding(horizontal = ZeroTheme.tokens.spacing.screenGutter, vertical = ZeroTheme.tokens.spacing.sectionGap)
+            )
+        }
         item {
             BodyText(stringResource(R.string.about_version, stringResource(R.string.app_name), state.versionName, state.versionCode))
         }

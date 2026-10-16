@@ -66,7 +66,9 @@ data class ZeroSpacing(
     val sectionGap: Dp = 8.dp,
     val minTouchTarget: Dp = 48.dp,
     /** Thin borders, e.g. around the appearance preview. */
-    val hairline: Dp = 1.dp
+    val hairline: Dp = 1.dp,
+    /** Height of the "ZeroOS" wordmark (D-037). */
+    val wordmarkHeight: Dp = 28.dp
 )
 
 /** Text sizes at "Medium"; [scaled] applies the S/M/L/XL setting (F6.4). The system font scale applies on top via sp. */

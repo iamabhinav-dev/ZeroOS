@@ -136,7 +136,7 @@ Apps from a profile Android reports as managed are tagged "work", private space 
 While charging, a lightning bolt drawn as dots on Doto's 5 × 7 grid follows the battery %. Drawn by a reusable `DotMatrixIcon` (also for the Phase 4/6 dot animations).
 *Why:* User's request. Doto has no bolt glyph, and the ⚡ character would fall back to a colored emoji.
 
-**D-032 — App icon: a round, dotted "0"** · 2026-10-16 · Accepted (revised)
+**D-032 — App icon: a round, dotted "0"** · 2026-10-16 · Superseded by D-037
 The launcher icon is a "0" made of 14 white dots spaced evenly along an oval, on black, centred in the adaptive-icon safe zone, with a monochrome layer for themed icons.
 *Why:* User wanted the Doto look; the first version used Doto's own 5 × 7 grid "0", which looked like a heptagon, so the dots now follow a smooth oval.
 
@@ -164,6 +164,13 @@ Settings → Appearance → Show seconds (off by default) shows the clock as hh:
 shrinks to fit one line. With seconds on, home updates once a second, but only while home is on screen;
 otherwise it keeps using Android's once-a-minute tick (NFR-P5).
 *Why:* User's request.
+
+**D-037 — Logo: the dotted "ZeroOS" wordmark** · 2026-10-17 · Accepted
+The user's logo (dotted "ZeroOS", slash removed from the zero) is the app icon, centred in the adaptive-icon
+safe zone with a monochrome layer, and appears as a wordmark on the first onboarding page and at the top of
+About, in the theme's text color. Source: `docs/brand/zeroos-logo.svg`, converted to Android vector drawables.
+*Why:* User's choice after comparing four options on the phone (slashed zero, wordmark with and without slash).
+Vectors stay sharp at every size. The word is small at icon size; the user accepted that.
 
 ---
 
