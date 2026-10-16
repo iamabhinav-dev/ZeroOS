@@ -25,6 +25,27 @@
     <string name="profile_work">work</string>
     <string name="profile_private">private</string>
 
+    <!-- App long-press menu and rename (F2.8, F5, wireframes E1, E2) -->
+    <string name="app_menu_add_favorite">Add to favorites</string>
+    <string name="app_menu_remove_favorite">Remove from favorites</string>
+    <string name="app_menu_rename">Rename</string>
+    <string name="app_menu_hide">Hide</string>
+    <string name="app_menu_app_info">App info</string>
+    <string name="app_menu_uninstall">Uninstall</string>
+    <string name="app_menu_favorites_full">Favorites are full (%1$d)</string>
+    <string name="rename_title">Rename %1$s</string>
+    <string name="rename_reset">Reset to original</string>
+    <string name="common_save">Save</string>
+
+    <!-- Hidden apps (F5.2, F5.3, wireframe E4) -->
+    <string name="hidden_apps_title">Hidden apps</string>
+    <string name="hidden_apps_unhide">Unhide</string>
+    <string name="hidden_apps_empty">No hidden apps</string>
+    <string name="hidden_apps_explanation">Hidden apps are not shown in the app list or search.</string>
+    <string name="hidden_apps_confirm_title">Show hidden apps?</string>
+    <string name="hidden_apps_confirm_show">Show</string>
+    <string name="hidden_apps_delay">Opening in %1$d…</string>
+
     <!-- Favorites editor (F3, wireframe E3) -->
     <string name="favorites_title">Favorites</string>
     <string name="favorites_count">%1$d / %2$d</string>
