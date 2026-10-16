@@ -83,7 +83,7 @@ fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () ->
         onSwipe = { swipe ->
             when (swipe) {
                 Swipe.UP -> onSwipeUp()
-                Swipe.DOWN -> if (state.swipeDownEnabled) onSwipeDown()
+                Swipe.DOWN -> onSwipeDown()
                 Swipe.LEFT -> state.swipeLeftApp?.let(viewModel::launch)
                 Swipe.RIGHT -> state.swipeRightApp?.let(viewModel::launch)
             }

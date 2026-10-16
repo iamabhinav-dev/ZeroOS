@@ -51,7 +51,7 @@ The home screen never scrolls (F1.6). It is built in Phase 2 with **empty slots*
 ```
 *Gestures (anywhere on empty space):*
 - *swipe up → app list (F4.1) · swipe left / right → an app, only if turned on (off by default, F4.2, F4.3, D-026)*
-- *swipe down → search, or notification shade when Accessibility is on (F4.4)*
+- *swipe down → search; notification shade when Accessibility is on (F4.4, D-033)*
 - *double-tap → lock (only when Accessibility is on, F4.5)*
 - *long-press empty space → Settings (F1.9)*
 
@@ -375,12 +375,10 @@ Values in `‹…›` show the current setting (defaults from REQUIREMENTS.md Ap
 │  ← Gestures                        │
 │  Swipe left          ‹off›       › │  off / pick an app (F4.2, F4.6); off by default (D-026)
 │  Swipe right         ‹off›       › │  off / pick an app (F4.3)
-│  Swipe down          ‹on›          │  on/off; opens search (F4.4)
-│  Swipe down action   ‹Search›    › │  Search; "Notification shade" appears only when
-│                                    │  Accessibility is on (Phase 4)
 │  Double-tap to lock  ‹needs Accessibility (v1.1)› │  disabled until Phase 4 (F4.5)
 ```
-*Swipe up is always "App list" (F4.1) and isn't shown here. Side swipes start away from the screen edges so the
+*Swipe up is always "App list" (F4.1) and swipe down is always search, or the notification shade once
+Accessibility is on (F4.4, D-033), so neither is shown here. Side swipes start away from the screen edges so the
 system Back gesture still works.*
 
 ### F5. Appearance

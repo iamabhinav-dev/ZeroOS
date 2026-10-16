@@ -107,8 +107,7 @@ fun SettingsRoute(onClose: () -> Unit, onOpenDiagnostics: () -> Unit, viewModel:
             state = state,
             actions = GesturesActions(
                 onSwipeLeft = { page = SettingsPage.PICK_SWIPE_LEFT },
-                onSwipeRight = { page = SettingsPage.PICK_SWIPE_RIGHT },
-                onSwipeDown = { viewModel.setToggle(SettingToggle.SWIPE_DOWN, it) }
+                onSwipeRight = { page = SettingsPage.PICK_SWIPE_RIGHT }
             ),
             onBack = back
         )

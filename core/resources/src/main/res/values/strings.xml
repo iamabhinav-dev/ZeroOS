@@ -110,9 +110,6 @@
     <string name="hidden_confirmation_delay">%1$d s delay</string>
     <string name="gestures_swipe_left">Swipe left</string>
     <string name="gestures_swipe_right">Swipe right</string>
-    <string name="gestures_swipe_down">Swipe down</string>
-    <string name="gestures_swipe_down_action">Swipe down action</string>
-    <string name="gestures_action_search">Search</string>
     <string name="gestures_double_tap">Double-tap to lock</string>
     <string name="gestures_needs_accessibility">needs Accessibility (v1.1)</string>
     <string name="about_version">%1$s %2$s (%3$d)</string>

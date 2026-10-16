@@ -49,9 +49,7 @@ data class GestureSettings(
     /** App key opened by swipe left, or null when off (F4.2, D-026). */
     val swipeLeftApp: String? = null,
     /** App key opened by swipe right, or null when off (F4.3, D-026). */
-    val swipeRightApp: String? = null,
-    val swipeDownEnabled: Boolean = true,
-    val swipeDownAction: SwipeDownAction = SwipeDownAction.SEARCH
+    val swipeRightApp: String? = null
 )
 
 @Serializable
@@ -69,9 +67,6 @@ enum class Alignment { LEFT, CENTER, RIGHT }
 
 @Serializable
 enum class HiddenAppsConfirmation { OFF, CONFIRM, DELAY }
-
-@Serializable
-enum class SwipeDownAction { SEARCH, NOTIFICATION_SHADE }
 
 @Serializable
 enum class ThemeMode { DARK, LIGHT, SYSTEM }

@@ -140,6 +140,20 @@ While charging, a lightning bolt drawn as dots on Doto's 5 × 7 grid follows the
 The launcher icon is a "0" made of 14 white dots spaced evenly along an oval, on black, centred in the adaptive-icon safe zone, with a monochrome layer for themed icons.
 *Why:* User wanted the Doto look; the first version used Doto's own 5 × 7 grid "0", which looked like a heptagon, so the dots now follow a smooth oval.
 
+**D-033 — Swipe down: notifications later, no setting** · 2026-10-16 · Accepted
+Swipe down opens search until the Accessibility service exists (Phase 4), then it expands the notification shade
+while that service is on. The swipe-down on/off switch and action choice are removed from Settings. Updates D-026
+and F4.4.
+*Why:* Swipe up and swipe down both opened the app list. Opening the shade without Accessibility needs a hidden
+Android API, which the project rules forbid.
+
+**D-034 — Apps with the same name are numbered I, II, …** · 2026-10-16 · Accepted
+When two or more visible apps have the same name (e.g. WhatsApp and its App Clone), they're shown as
+"I-WhatsApp", "II-WhatsApp" everywhere: home, app list, pickers, onboarding, hidden apps and menus. The main
+profile's app is always I; other profiles follow in a fixed order. Sorting and search use the plain name. Apps
+with a custom name (F5.4) are shown exactly as named. Replaces the "· clone" tag of D-030.
+*Why:* User's choice; the clone tag didn't show everywhere (e.g. on home), so clones looked identical.
+
 ---
 
 ## Pending (to be decided during the plan)

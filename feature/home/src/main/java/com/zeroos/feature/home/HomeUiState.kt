@@ -20,10 +20,9 @@ data class HomeUiState(
     val showDate: Boolean = true,
     /** For the favorite long-press menu (F2.8). */
     val renamedKeys: Set<String> = emptySet(),
-    /** Gestures (F4, D-026): apps for side swipes (null = off) and whether swipe down opens search. */
+    /** Side swipes open these apps; null = off (F4.2, F4.3, D-026). */
     val swipeLeftApp: AppEntry? = null,
     val swipeRightApp: AppEntry? = null,
-    val swipeDownEnabled: Boolean = true,
     /** Phone wallpaper shows through, dimmed (F6.2). */
     val showWallpaper: Boolean = false
 )
@@ -55,7 +54,6 @@ fun homeUiState(
         renamedKeys = settings.renamedApps.keys,
         swipeLeftApp = settings.gestures.swipeLeftApp?.let(byKey::get),
         swipeRightApp = settings.gestures.swipeRightApp?.let(byKey::get),
-        swipeDownEnabled = settings.gestures.swipeDownEnabled,
         showWallpaper = settings.appearance.wallpaper == Wallpaper.SYSTEM
     )
 }

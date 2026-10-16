@@ -129,13 +129,6 @@ class SettingsViewModelTest {
     }
 
     @Test
-    fun f4_4_swipeDownSwitch() = runTest {
-        val (vm, settings) = viewModel()
-        vm.setToggle(SettingToggle.SWIPE_DOWN, false)
-        assertFalse(settings.settings.first { !it.gestures.swipeDownEnabled }.gestures.swipeDownEnabled)
-    }
-
-    @Test
     fun f17_7_logsPages() = runTest {
         val (vm, _) = viewModel()
         vm.onPageShown(SettingsPage.GESTURES)

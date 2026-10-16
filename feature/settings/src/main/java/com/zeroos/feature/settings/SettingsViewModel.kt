@@ -112,14 +112,13 @@ class SettingsViewModel @Inject constructor(
     }
 }
 
-/** On/off settings (F1.3, F1.8, F2.3, F2.5, F2.7, F4.4). */
+/** On/off settings (F1.3, F1.8, F2.3, F2.5, F2.7). */
 enum class SettingToggle(val logName: String, val apply: (LauncherSettings, Boolean) -> LauncherSettings) {
     SHOW_BATTERY("home.showBattery", { s, on -> s.copy(home = s.home.copy(showBattery = on)) }),
     SHOW_NEXT_ALARM("home.showNextAlarm", { s, on -> s.copy(home = s.home.copy(showNextAlarm = on)) }),
     KEYBOARD_AUTO_OPEN("appList.keyboardAutoOpen", { s, on -> s.copy(appList = s.appList.copy(keyboardAutoOpen = on)) }),
     AUTO_LAUNCH_SINGLE_MATCH("appList.autoLaunchSingleMatch", { s, on -> s.copy(appList = s.appList.copy(autoLaunchSingleMatch = on)) }),
-    FAST_SCROLLER("appList.fastScroller", { s, on -> s.copy(appList = s.appList.copy(fastScroller = on)) }),
-    SWIPE_DOWN("gestures.swipeDown", { s, on -> s.copy(gestures = s.gestures.copy(swipeDownEnabled = on)) })
+    FAST_SCROLLER("appList.fastScroller", { s, on -> s.copy(appList = s.appList.copy(fastScroller = on)) })
 }
 
 /** Settings that step through options when tapped (F1.7, F3.3, F5.3). */
