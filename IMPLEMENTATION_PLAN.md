@@ -215,7 +215,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Precompute normalized labels/initials once per list change; `LazyColumn` with stable keys.
 - JVM micro-benchmark test: matching 300 apps ≤ 16 ms per query (NFR-P3).
 
-### Step 2.5 — Favorites (F3)
+### Step 2.5 — Favorites (F3) ✅
 - Add/remove from long-press menu and Settings; drag-and-drop edit mode; max count.
 
 ### Step 2.6 — Hide & rename (F5)
