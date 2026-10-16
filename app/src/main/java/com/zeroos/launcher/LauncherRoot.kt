@@ -40,6 +40,8 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
         LauncherScreen.HOME -> Box {
             HomeRoute(
                 onSwipeUp = { screen = LauncherScreen.APP_LIST },
+                // Swipe down opens search: the app list with its search field (F4.4).
+                onSwipeDown = { screen = LauncherScreen.APP_LIST },
                 onLongPress = { screen = LauncherScreen.DIAGNOSTICS }
             )
             crashReport?.let { report ->

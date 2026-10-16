@@ -5,6 +5,7 @@ import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zeroos.feature.applist.AppListTestTags
@@ -28,6 +29,12 @@ class MainActivityTest {
     @Test
     fun step1_3_startsOnHome() {
         compose.onNodeWithTag(HomeTestTags.ROOT).assertExists()
+    }
+
+    @Test
+    fun f4_4_swipeDownOpensSearch() {
+        compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { swipeDown() }
+        compose.onNodeWithTag(AppListTestTags.LIST).assertExists()
     }
 
     @Test

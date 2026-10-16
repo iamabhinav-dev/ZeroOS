@@ -222,7 +222,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 - Long-press sheet: Add to favorites · Rename · Hide · App info · Uninstall.
 - Rename dialog with reset; Settings → Hidden apps with unhide and optional confirmation/delay.
 
-### Step 2.7 — Gestures (F4)
+### Step 2.7 — Gestures (F4) ✅
 - `pointerInput` swipe detection with thresholds from Appendix A.
 - Swipe left/right/down bindings: app / action / none.
 - Swipe down → search (default). The "notification shade" option is added in Step 4.2 together with the Accessibility Service, and falls back to search when the service is off. No hidden APIs (e.g., `StatusBarManager` reflection).
