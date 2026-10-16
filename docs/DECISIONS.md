@@ -154,6 +154,11 @@ profile's app is always I; other profiles follow in a fixed order. Sorting and s
 with a custom name (F5.4) are shown exactly as named. Replaces the "· clone" tag of D-030.
 *Why:* User's choice; the clone tag didn't show everywhere (e.g. on home), so clones looked identical.
 
+**D-035 — No accent color** · 2026-10-16 · Accepted
+F6.6 (optional single accent color) is removed; ZeroOS stays black and white (or white and black in the light
+theme). Listed under Deferred Work.
+*Why:* User's choice; it matches the no-colour rule and the approved Appearance wireframe.
+
 ---
 
 ## Pending (to be decided during the plan)

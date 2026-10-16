@@ -389,3 +389,4 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 - Macrobenchmark + Baseline Profiles for startup (NFR-P1/P2 measured automatically).
 - Translations / RTL.
 - ADB-based grayscale toggle.
+- Accent color (F6.6, removed by D-035).

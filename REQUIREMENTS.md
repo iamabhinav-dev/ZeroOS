@@ -135,7 +135,7 @@ The default screen shown when I press Home.
 | F6.3 | Font: **Doto** (OFL dot-matrix, look-alike of Nothing's Ndot 57) for **all text in the launcher**: clock, date, numbers, app names, lists, settings, dialogs, onboarding and stop screens. No font choice. |
 | F6.4 | Text size: small / medium / large / extra-large; respects system font scale. Sizes are kept large enough for Doto to stay readable (minimum 14 sp for body text). |
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
-| F6.6 | Accent color is monochrome by default; optional single accent color. |
+| ~~F6.6~~ | ~~Optional single accent color~~ (removed: ZeroOS stays black and white, D-035). |
 
 ### F7 — Notification Filter
 
