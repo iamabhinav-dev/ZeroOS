@@ -37,6 +37,25 @@
     <string name="rename_title">Rename %1$s</string>
     <string name="rename_reset">Reset to original</string>
     <string name="common_save">Save</string>
+    <string name="common_next">Next</string>
+    <string name="common_done">Done</string>
+    <string name="onboarding_skip">Skip</string>
+    <string name="onboarding_page">Page %1$d of %2$d</string>
+    <string name="onboarding_intro_1">Less phone.\nMore life.</string>
+    <string name="onboarding_intro_2">Just words.\nNo icons, no badges, no noise.</string>
+    <string name="onboarding_intro_3">Swipe up for apps.\nLong-press for settings.</string>
+    <string name="onboarding_default_title">Make ZeroOS your home screen</string>
+    <string name="onboarding_default_done">ZeroOS is your home screen</string>
+    <string name="onboarding_default_body">Press Home anytime to come back here.</string>
+    <string name="onboarding_default_fallback">Keep your phone\'s own launcher installed: it\'s your fallback if anything goes wrong.</string>
+    <string name="onboarding_set_default">Set as default</string>
+    <string name="onboarding_later">Later</string>
+    <string name="onboarding_favorites_title">Pick your favorites</string>
+    <string name="onboarding_background_title">Keep ZeroOS running</string>
+    <string name="onboarding_background_body">Your phone may stop apps in the background to save battery.</string>
+    <string name="onboarding_battery_optimization">Battery optimization</string>
+    <string name="onboarding_battery_turn_off">Turn off for ZeroOS</string>
+    <string name="onboarding_oem_tip">On some phones, also allow background activity for ZeroOS in its app settings.</string>
 
     <!-- Hidden apps (F5.2, F5.3, wireframe E4) -->
     <string name="hidden_apps_title">Hidden apps</string>

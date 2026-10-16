@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zeroos.core.data.system.isDefaultHome
 import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.Logger

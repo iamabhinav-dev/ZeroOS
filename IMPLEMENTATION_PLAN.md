@@ -231,7 +231,7 @@ App context menu, rename dialog, favorites edit mode, hidden apps, all Settings 
 ### Step 2.8 — Appearance (F6) ✅
 - Theme, wallpaper (solid / system with dim overlay), font, text size, visibility toggles.
 
-### Step 2.9 — Onboarding (F14)
+### Step 2.9 — Onboarding (F14) ✅
 - Intro (3–4 pages) → set as default (`RoleManager` / home settings) → pick favorites → background reliability (F14.6). Skippable; shown once.
 - The set-as-default page says: keep the stock launcher installed and enabled as a fallback (F18.7).
 

@@ -4,6 +4,9 @@
     <!-- Opening the Clock app's alarms when the home clock is tapped requires this (F1.1). Normal permission, no prompt. -->
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
+    <!-- Onboarding's "Turn off for ZeroOS" opens Android's battery-optimization dialog (F14.6). Normal permission. -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
     <!-- Package visibility on Android 11+: see every app that has a launcher entry (Step 1.1). -->
     <queries>
         <intent>

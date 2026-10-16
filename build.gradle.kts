@@ -28,6 +28,7 @@ dependencies {
         ":feature:home",
         ":feature:applist",
         ":feature:settings",
+        ":feature:onboarding",
     ).forEach { kover(project(it)) }
 }
 

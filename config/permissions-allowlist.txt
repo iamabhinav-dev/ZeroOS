@@ -3,3 +3,4 @@
 # Format: <permission>  # <requirement ID / reason>
 com.zeroos.launcher.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION  # androidx.core internal, signature-level, for non-exported receivers
 com.android.alarm.permission.SET_ALARM  # F1.1: tap clock opens alarms (ACTION_SHOW_ALARMS requires it)
+android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS  # F14.6: background reliability step asks to ignore battery optimization

@@ -14,6 +14,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.feature.applist.AppListRoute
 import com.zeroos.feature.home.HomeRoute
+import com.zeroos.feature.onboarding.OnboardingRoute
 import com.zeroos.feature.settings.SettingsRoute
 import com.zeroos.launcher.diagnostics.CrashBanner
 import com.zeroos.launcher.diagnostics.DiagnosticsRoute
@@ -28,6 +29,7 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
     var screen by rememberSaveable { mutableStateOf(LauncherScreen.HOME) }
     var openReport by rememberSaveable { mutableStateOf<String?>(null) }
     val crashReport by viewModel.crashReport.collectAsStateWithLifecycle()
+    val onboardingCompleted by viewModel.onboardingCompleted.collectAsStateWithLifecycle()
 
     LaunchedEffect(homePresses) {
         homePresses.collect {
@@ -36,6 +38,13 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
         }
     }
     LaunchedEffect(screen) { viewModel.onScreenShown(screen) }
+
+    // Shown once, before anything else (F14); the window stays black while settings load.
+    when (onboardingCompleted) {
+        null -> return
+        false -> return OnboardingRoute()
+        true -> Unit
+    }
 
     when (screen) {
         LauncherScreen.HOME -> Box {
