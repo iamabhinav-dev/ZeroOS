@@ -39,4 +39,15 @@ class ZeroThemeTest {
         }
         assertTrue(TextSize.entries.zipWithNext().all { (a, b) -> a.factor < b.factor })
     }
+
+    @Test
+    fun f6_3_everyTextStyleUsesDoto() {
+        val t = dotoTypography(ZeroTextSizes())
+        val styles = listOf(
+            t.displayLarge, t.displayMedium, t.displaySmall, t.headlineLarge, t.headlineMedium, t.headlineSmall,
+            t.titleLarge, t.titleMedium, t.titleSmall, t.bodyLarge, t.bodyMedium, t.bodySmall,
+            t.labelLarge, t.labelMedium, t.labelSmall
+        )
+        styles.forEach { assertEquals(DotoFamily, it.fontFamily) }
+    }
 }

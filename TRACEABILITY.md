@@ -24,8 +24,8 @@ Update this file in the same commit as the code and tests.
 | F2.7 | ✅ | AppListScreenTest › f2_7_* (jump, slide, highlight screenshots) | Current letter grows and brightens on the phone |
 | F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_*, AndroidLauncherAppsSourceTest › f2_8_* | App info and uninstall dialog open on the phone (incl. a clone); no Uninstall on system apps |
 | F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
-| F2.2 | 🟡 | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, AppListScreenTest › f2_2_showsAppsAsTextList (hidden apps in Phase 2) | |
-| F2.9 | 🟡 | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (Step 1.3) |
+| F2.2 | ✅ | AppsRepositoryTest › f2_2_*, AppListViewModelTest › f2_2_exposesSortedApps, f5_1_f5_4_hiddenAppsRemovedAndCustomNamesUsed, AppListScreenTest › f2_2_showsAppsAsTextList | |
+| F2.9 | ✅ | AppsRepositoryTest › f2_9_updatesWhenAppsAreInstalledOrRemoved, AndroidLauncherAppsSourceTest › f2_9_reportsPackageChangesUntilUnregistered | New installs appear without restart (checked on the test phone) |
 | F2.10 | ✅ | AppsRepositoryTest › f2_10_*, AndroidLauncherAppsSourceTest › f2_10_*, AppListScreenTest › f2_10_d034_*, SameNamesTest › d034_* | I-/II- names on the test phone (home, app list, pickers) |
 | F3.1, F3.2 | ✅ | FavoritesTest › f3_1_*, f3_2_*, FavoritesEditorTest › f3_*, FavoritesEditorViewModelTest › f3_1_f3_2_* | Reorder by dragging on the phone |
 | F3.3, F3.4 | ✅ | FavoritesTest › f3_3_*, f3_4_*, HomeUiStateTest › f3_3_*, f3_4_*, FavoritesEditorTest › f3_3_* | Uninstall a favorite app |
@@ -41,8 +41,8 @@ Update this file in the same commit as the code and tests.
 | F17.8 (renames) | ✅ | AppCustomizationTest › f17_8_customNamesAreNeverLogged | |
 | F6.1, F6.2, F6.5 | ✅ | AppearanceTest › f6_*, AppearanceViewModelTest › f6_*, HomeUiStateTest › f6_2_f6_5_*, ZeroThemeTest › f6_1_* | Wallpaper and status bar on the phone |
 | Step 2.11 (settings structure) | ✅ | SettingsScreensTest › step2_11_*, SettingsViewModelTest › f17_7_logsPages | Walk through every Settings page |
-| F6.6 | ⬜ | Not built: accent color isn't in the approved wireframe F5 (ask) | |
-| F6.3 | 🟡 | ComponentsTest › step2_2_gallery* screenshots (Doto everywhere) | Doto readable on the phone |
+| F6.6 | ❌ | Removed (D-035) | |
+| F6.3 | ✅ | ZeroThemeTest › f6_3_everyTextStyleUsesDoto, ComponentsTest › step2_2_gallery* screenshots | Doto readable on the phone |
 | F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
 | F7.1–F7.6 | ⬜ | | |
 | F8.1–F8.12 | ⬜ | | |
@@ -53,7 +53,9 @@ Update this file in the same commit as the code and tests.
 | F12.1 | ❌ | Removed (D-008) | |
 | F13.1 | ✅ | BackupTest › f13_1_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_rowsAndNeverExported | Export to Downloads on the phone |
 | F13.2 | ✅ | BackupTest › f13_2_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_2_* | Export → reinstall → import |
-| F13.3–F13.5 | ✅ | BackupTest › f13_*, BackupScreenTest › f13_5_* | Android auto-backup (system) |
+| F13.3 | ✅ | AutoBackupRulesTest › f13_3_* | Android Auto Backup (system) |
+| F13.4 | ✅ | By design: the backup holds the whole LauncherSettings, so new settings are included automatically; BackupTest › f13_1_f13_2_* round-trips every field | |
+| F13.5 | ✅ | BackupTest › f13_5_*, f13_2_otherFilesAreNotBackups, BackupScreenTest › f13_5_* | |
 | F14.1 | ✅ | OnboardingViewModelTest › f14_1_*, OnboardingScreenTest › f14_1_*, step2_9_* screenshots | Read the intro on the phone |
 | F14.2 | ✅ | OnboardingViewModelTest › f14_2_*, OnboardingScreenTest › f14_2_*, AndroidOnboardingSystemTest › f14_2_* | "Set as default" shows Android's home-app dialog |
 | F14.3 | ✅ | OnboardingViewModelTest › f14_3_*, OnboardingScreenTest › f14_3_*, AndroidOnboardingSystemTest › f14_3_* | Suggestions match the test phone's default apps |
