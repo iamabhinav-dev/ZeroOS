@@ -39,6 +39,14 @@ class LauncherViewModelTest {
         }
     }
 
+    private fun settingsRepository() = com.zeroos.core.data.settings.SettingsRepository(
+        androidx.datastore.core.DataStoreFactory.create(
+            com.zeroos.core.data.settings.SettingsSerializer,
+            produceFile = { temp.newFile().apply { delete() } }
+        ),
+        logger
+    )
+
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
 
@@ -62,22 +70,27 @@ class LauncherViewModelTest {
     @Test
     fun f17_10_crashBannerShowsOncePerCrash() {
         val name = store.writeCrashReport("boom").name
-        val first = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined)
+        val first = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository())
         assertEquals(name, first.crashReport.value)
 
         first.markCrashSeen()
         assertNull(first.crashReport.value)
-        assertNull(LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined).crashReport.value)
+        assertNull(LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository()).crashReport.value)
     }
 
     @Test
     fun f17_10_noBannerWithoutCrash() {
-        assertNull(LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined).crashReport.value)
+        assertNull(LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository()).crashReport.value)
     }
 
     @Test
     fun f17_7_logsScreenChanges() {
-        LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined).onScreenShown(LauncherScreen.APP_LIST)
+        LauncherViewModel(
+            CrashNotice(store, settings),
+            logger,
+            Dispatchers.Unconfined,
+            settingsRepository()
+        ).onScreenShown(LauncherScreen.APP_LIST)
         assertEquals(listOf("nav: screen: app list"), logged)
     }
 }
