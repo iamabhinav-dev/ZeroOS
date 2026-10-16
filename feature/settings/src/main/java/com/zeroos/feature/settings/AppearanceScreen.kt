@@ -26,6 +26,7 @@ import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.model.settings.Wallpaper
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.ClockFormat
+import com.zeroos.core.ui.ClockText
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.SettingRow
 import com.zeroos.core.ui.ToggleRow
@@ -102,13 +103,7 @@ private fun Preview(state: AppearanceSettings, now: Date) {
                 .padding(tokens.spacing.screenGutter)
                 .testTag(AppearanceTestTags.PREVIEW)
         ) {
-            if (state.showClock) {
-                Text(
-                    format.time(time, state.showSeconds),
-                    color = tokens.colors.text,
-                    fontSize = tokens.textSizes.clock
-                )
-            }
+            if (state.showClock) ClockText(format.time(time, state.showSeconds))
             if (state.showDate) {
                 Text(
                     format.date(time),
