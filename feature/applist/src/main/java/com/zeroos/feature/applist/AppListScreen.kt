@@ -61,6 +61,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Velocity
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.ProfileType
@@ -79,13 +80,17 @@ import kotlinx.coroutines.launch
 fun AppListRoute(onClose: () -> Unit, viewModel: AppListViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    LifecycleResumeEffect(Unit) {
+        viewModel.refreshUsage()
+        onPauseOrDispose {}
+    }
     fun external(target: String, intent: Intent) {
         try {
             context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
             viewModel.onExternalSearch(target)
             onClose()
         } catch (e: ActivityNotFoundException) {
-            viewModel.onExternalSearchFailed(target, e)
+            viewModel.onExternalSearch(target, e)
         }
     }
     val close = {
@@ -161,9 +166,13 @@ fun AppListScreen(
                 contentPadding = PaddingValues(vertical = tokens.spacing.sectionGap)
             ) {
                 items(state.results, key = { it.key.asString() }) { app ->
-                    MinimalListItem(text = labelWithTag(app), onClick = {
-                        onAppClick(app)
-                    }, onLongClick = { onAppLongClick(app) }, large = true)
+                    MinimalListItem(
+                        text = labelWithTag(app),
+                        onClick = { onAppClick(app) },
+                        onLongClick = { onAppLongClick(app) },
+                        large = true,
+                        trailing = state.minutesLeft[app.key.packageName]?.let { timeLeft(it) }
+                    )
                 }
                 if (state.showNoMatch) {
                     item { MinimalListItem(stringResource(R.string.app_list_search_web, state.query), { onSearchWeb(state.query) }) }
@@ -187,6 +196,16 @@ fun AppListScreen(
         }
     }
 }
+
+/** "12m left", "1h 5m left" or "used up" (wireframe H8). */
+@Composable
+private fun timeLeft(minutes: Int): String = when {
+    minutes <= 0 -> stringResource(R.string.wellbeing_used_up)
+    minutes < MINUTES_PER_HOUR -> stringResource(R.string.wellbeing_left_minutes, minutes)
+    else -> stringResource(R.string.wellbeing_left_hours, minutes / MINUTES_PER_HOUR, minutes % MINUTES_PER_HOUR)
+}
+
+private const val MINUTES_PER_HOUR = 60
 
 /** "II-WhatsApp" when names are shared (D-034); work and private-space apps also get a tag, e.g. "Slack · work" (F2.10). */
 @Composable

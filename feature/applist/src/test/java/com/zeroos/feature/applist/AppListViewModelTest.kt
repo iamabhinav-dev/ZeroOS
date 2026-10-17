@@ -11,12 +11,24 @@ import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
+import com.zeroos.core.data.wellbeing.LaunchGate
+import com.zeroos.core.data.wellbeing.TodayUsage
+import com.zeroos.core.data.wellbeing.UsageEvent
+import com.zeroos.core.data.wellbeing.UsageEventSource
+import com.zeroos.core.data.wellbeing.WellbeingStateRepository
+import com.zeroos.core.data.wellbeing.WellbeingStateSerializer
+import com.zeroos.core.data.wellbeing.WellbeingStatus
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.AppListSettings
+import com.zeroos.core.model.settings.AppRule
 import com.zeroos.core.model.settings.LauncherSettings
+import com.zeroos.core.model.settings.WellbeingSettings
+import com.zeroos.core.testing.MutableClock
+import java.time.Duration
+import java.time.Instant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -71,6 +83,14 @@ class AppListViewModelTest {
     @After
     fun tearDown() = Dispatchers.resetMain()
 
+    private val clock = MutableClock(Instant.parse("2026-10-17T10:00:00Z"))
+    private var usageEvents = emptyList<UsageEvent>()
+    private var usageReads = 0
+    private val usageSource = UsageEventSource { _, _ ->
+        usageReads++
+        usageEvents
+    }
+
     private suspend fun TestScope.viewModel(settings: LauncherSettings = LauncherSettings()): AppListViewModel {
         val store = DataStoreFactory.create(SettingsSerializer, scope = backgroundScope, produceFile = {
             temp.newFile().apply { delete() }
@@ -80,7 +100,20 @@ class AppListViewModelTest {
         val apps = AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler))
         val actions =
             AppActions(settingsRepository, FavoritesRepository(settingsRepository), AppCustomizationRepository(settingsRepository), apps)
-        val vm = AppListViewModel(apps, settingsRepository, actions, logger, SavedStateHandle())
+        val io = UnconfinedTestDispatcher(testScheduler)
+        val wellbeingState = WellbeingStateRepository(
+            DataStoreFactory.create(
+                WellbeingStateSerializer,
+                scope = backgroundScope,
+                produceFile = { temp.newFile().apply { delete() } }
+            ),
+            clock,
+            logger,
+            zone = clock::getZone
+        )
+        val status = WellbeingStatus(TodayUsage(usageSource, clock, io, logger, clock::getZone), wellbeingState)
+        val gate = LaunchGate(apps, settingsRepository, backgroundScope, logger)
+        val vm = AppListViewModel(apps, settingsRepository, actions, logger, SavedStateHandle(), gate, status)
         backgroundScope.launch { vm.state.collect {} }
         vm.state.first { !it.loading }
         return vm
@@ -144,5 +177,30 @@ class AppListViewModelTest {
         vm.onExternalSearch("web")
         assertTrue(logged.contains("opened: web"))
         assertTrue("query must never be logged (F17.8)", logged.none { it.contains("secret") })
+    }
+
+    @Test
+    fun f8_5_minutesLeftForLimitedAppsAndRefreshedOnReturn() = runTest {
+        val limits = WellbeingSettings(enabled = true, apps = mapOf("pkg.Instagram" to AppRule(dailyLimitMinutes = 30)))
+        usageEvents = listOf(UsageEvent("pkg.Instagram", UsageEvent.Type.RESUMED, Instant.parse("2026-10-17T09:42:00Z").toEpochMilli()))
+        val vm = viewModel(LauncherSettings(wellbeing = limits))
+        assertEquals(mapOf("pkg.Instagram" to 12), vm.state.first { it.minutesLeft.isNotEmpty() }.minutesLeft)
+        clock.advanceBy(Duration.ofMinutes(12))
+        vm.refreshUsage()
+        assertEquals(mapOf("pkg.Instagram" to 0), vm.state.first { it.minutesLeft["pkg.Instagram"] == 0 }.minutesLeft)
+    }
+
+    @Test
+    fun f8_8_offReadsNoUsageAndF8_1_flaggedLaunchWaitsForStopScreen() = runTest {
+        val rules = mapOf("pkg.Instagram" to AppRule(pause = true, dailyLimitMinutes = 30))
+        val off = viewModel(LauncherSettings(wellbeing = WellbeingSettings(enabled = false, apps = rules)))
+        assertTrue(off.state.value.minutesLeft.isEmpty())
+        assertEquals(0, usageReads)
+
+        val on = viewModel(LauncherSettings(wellbeing = WellbeingSettings(enabled = true, apps = rules)))
+        val instagram = on.state.value.results.first { it.label == "Instagram" }
+        launched.clear()
+        assertTrue(on.launch(instagram))
+        assertTrue("opened only after the stop screen", launched.isEmpty())
     }
 }

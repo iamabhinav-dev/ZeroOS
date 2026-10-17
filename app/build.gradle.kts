@@ -66,6 +66,7 @@ dependencies {
     implementation(project(":feature:applist"))
     implementation(project(":feature:settings"))
     implementation(project(":feature:onboarding"))
+    implementation(project(":feature:wellbeing"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

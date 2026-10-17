@@ -1,0 +1,57 @@
+package com.zeroos.launcher
+
+import android.app.usage.UsageStatsManager
+import android.content.Context
+import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.wellbeing.AndroidUsageEventSource
+import com.zeroos.core.data.wellbeing.LaunchGate
+import com.zeroos.core.data.wellbeing.TodayUsage
+import com.zeroos.core.data.wellbeing.WellbeingStateRepository
+import com.zeroos.core.data.wellbeing.WellbeingStatus
+import com.zeroos.core.data.wellbeing.createWellbeingStateDataStore
+import com.zeroos.core.logging.Logger
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import java.time.Clock
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+
+/** Launch gate, today's usage and running state for wellbeing (Step 4.3, F8). */
+@Module
+@InstallIn(SingletonComponent::class)
+object WellbeingModule {
+    @Provides
+    @Singleton
+    fun launchGate(apps: AppsRepository, settings: SettingsRepository, logger: Logger): LaunchGate =
+        LaunchGate(apps, settings, CoroutineScope(SupervisorJob() + Dispatchers.Default), logger)
+
+    @Provides
+    @Singleton
+    fun wellbeingState(
+        @ApplicationContext context: Context,
+        clock: Clock,
+        logger: Logger,
+        io: CoroutineDispatcher
+    ): WellbeingStateRepository =
+        WellbeingStateRepository(createWellbeingStateDataStore(context, logger, CoroutineScope(SupervisorJob() + io)), clock, logger)
+
+    @Provides
+    fun wellbeingStatus(
+        @ApplicationContext context: Context,
+        state: WellbeingStateRepository,
+        clock: Clock,
+        logger: Logger,
+        io: CoroutineDispatcher
+    ) =
+        WellbeingStatus(
+            TodayUsage(AndroidUsageEventSource(context.getSystemService(UsageStatsManager::class.java)), clock, io, logger),
+            state
+        )
+}

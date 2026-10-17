@@ -188,6 +188,62 @@
     <string name="wellbeing_hold_to_turn_off">Hold to turn off</string>
     <string name="wellbeing_turn_off_in">You can turn it off in %1$d…</string>
     <string name="wellbeing_turn_off">Turn off</string>
+    <string name="wellbeing_pause_plain">Take a breath first.</string>
+    <string name="wellbeing_limit_plain">Daily limit reached</string>
+    <string name="wellbeing_go_back">Go back</string>
+    <string name="wellbeing_go_home">Go home</string>
+    <string name="wellbeing_open_app">Open %1$s</string>
+    <string name="wellbeing_intention_hint">Why are you opening it?</string>
+    <string name="wellbeing_used_today">%1$s · %2$s used today</string>
+    <string name="wellbeing_breathing">Breathing dots</string>
+    <string name="wellbeing_battery_empty">Empty battery</string>
+    <string name="wellbeing_left_minutes">%1$dm left</string>
+    <string name="wellbeing_left_hours">%1$dh %2$dm left</string>
+    <string name="wellbeing_used_up">used up</string>
+    <string-array name="wellbeing_puns_pause">
+        <item>Breathe in. Is this really the plan?</item>
+        <item>Your thumb got here first. Did you?</item>
+        <item>Is this a want, or a habit?</item>
+        <item>Opening… your better judgement.</item>
+        <item>Five seconds to change your mind.</item>
+        <item>Plot twist: you don\'t need this right now.</item>
+        <item>What were you about to do before this?</item>
+        <item>Bored, or curious? Be honest.</item>
+        <item>Quick check: will future you thank you?</item>
+        <item>This app will still be here later. Promise.</item>
+        <item>Pause. Breathe. Decide.</item>
+        <item>Muscle memory detected.</item>
+        <item>Did you mean to open this, or did your thumb?</item>
+        <item>Is it urgent, or just shiny?</item>
+        <item>Take a breath. The feed won\'t miss you.</item>
+        <item>One deep breath before the deep dive.</item>
+        <item>Reminder: you\'re the boss of this phone.</item>
+        <item>Is there something better to do? Probably.</item>
+        <item>\"Not now\" is also an answer.</item>
+        <item>Hey, you had a plan today, right?</item>
+    </string-array>
+    <string-array name="wellbeing_puns_limit">
+        <item>That\'s a wrap for today.</item>
+        <item>You\'ve spent today\'s scroll budget.</item>
+        <item>Out of minutes, not out of life.</item>
+        <item>Game over. Real life has better graphics.</item>
+        <item>Closed for today. Come back tomorrow.</item>
+        <item>Daily limit reached. Future you says thanks.</item>
+        <item>Time\'s up. Go touch some grass.</item>
+        <item>This app has clocked out. So should you.</item>
+        <item>You\'ve hit the bottom of today\'s bucket.</item>
+        <item>The meter is full. Time for real life.</item>
+        <item>Tomorrow\'s minutes aren\'t for spending today.</item>
+        <item>Enough for today. Seriously.</item>
+        <item>Session over. No extra time.</item>
+        <item>The app needs rest. So do your eyes.</item>
+        <item>You did the scrolling. Now do the living.</item>
+        <item>Limit reached. Achievement unlocked: self-control.</item>
+        <item>That\'s all, folks.</item>
+        <item>Battery for this app: 0%. Recharge tomorrow.</item>
+        <item>You win today. The app loses.</item>
+        <item>Done for the day. Go make something.</item>
+    </string-array>
     <string name="home_settings_edit_favorites">Edit favorites</string>
     <string name="home_settings_max_favorites">Maximum favorites</string>
     <string name="home_settings_alignment">Alignment</string>
