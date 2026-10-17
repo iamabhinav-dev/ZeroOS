@@ -8,11 +8,13 @@ import com.zeroos.core.logging.FileLogger
 import com.zeroos.core.logging.LogExporter
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.LogLevel
+import com.zeroos.core.logging.StoredLogEntry
 import com.zeroos.core.logging.error
 import com.zeroos.core.logging.info
 import com.zeroos.core.logging.warn
 import com.zeroos.core.testing.MutableClock
 import java.util.concurrent.Executor
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -46,9 +48,14 @@ class DiagnosticsViewModelTest {
         FileLogger(store, clock, { settings.isLoggingEnabled }, { settings.minLevel }, writer = Executor { it.run() })
     }
 
-    private fun viewModel() = DiagnosticsViewModel(store, settings, LogExporter(store, temp.newFolder("out"), clock), logger, dispatcher) {
-        42
-    }
+    private fun viewModel() = DiagnosticsViewModel(
+        store,
+        settings,
+        LogExporter(store, temp.newFolder("out"), clock),
+        logger,
+        dispatcher,
+        MemorySampler({ 42 }, logger, CoroutineScope(dispatcher))
+    )
 
     @Before
     fun setUp() = Dispatchers.setMain(dispatcher)
@@ -116,5 +123,17 @@ class DiagnosticsViewModelTest {
     @Test
     fun nfrP4_showsZeroOsMemory() {
         assertEquals(42, viewModel().state.value.memoryMb)
+    }
+
+    @Test
+    fun nfrP4_memoryTabShowsOnlyMemoryEntries() {
+        val entries = listOf(
+            StoredLogEntry("t1", LogLevel.INFO, "memory", "memory on screen: 90 MB", emptyList()),
+            StoredLogEntry("t2", LogLevel.WARN, "memory", "memory check failed (in background)", emptyList()),
+            StoredLogEntry("t3", LogLevel.INFO, "apps", "launched com.whatsapp", emptyList())
+        )
+        val state = DiagnosticsUiState(entries = entries, filter = LogFilter.MEMORY)
+        assertEquals(listOf("t1", "t2"), state.visibleEntries.map { it.time })
+        assertEquals(1, state.copy(filter = LogFilter.WARN).visibleEntries.size)
     }
 }

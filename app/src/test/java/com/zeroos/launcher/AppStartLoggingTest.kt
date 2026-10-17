@@ -26,17 +26,14 @@ class AppStartLoggingTest {
     }
 
     @Test
-    fun nfrP4_logsMemoryWhenLeavingZeroOs() {
+    fun nfrP4_memorySamplingFollowsTheHomeScreen() {
         val app = ApplicationProvider.getApplicationContext<ZeroApplication>()
-        app.onTrimMemory(android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN)
-        val deadline = System.nanoTime() + 5_000_000_000L
-        var found = false
-        while (!found && System.nanoTime() < deadline) {
-            app.logger.flushBlocking()
-            found = app.logStore.readRecentLines(50).any { Regex("""I/app: memory: \d+ MB""").containsMatchIn(it) }
-            if (!found) Thread.sleep(20)
+        org.robolectric.Robolectric.buildActivity(MainActivity::class.java).setup().use { controller ->
+            controller.pause().stop()
+            assertTrue("waiting for the background sample", app.memorySampler.waiting)
+            controller.start()
+            assertTrue("back on screen: no sample", !app.memorySampler.waiting)
         }
-        assertTrue(found)
     }
 
     @Test

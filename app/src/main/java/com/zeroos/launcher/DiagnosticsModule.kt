@@ -9,7 +9,7 @@ import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.LogcatMirror
 import com.zeroos.core.logging.Logger
-import com.zeroos.launcher.diagnostics.MemoryReader
+import com.zeroos.launcher.diagnostics.MemorySampler
 import com.zeroos.launcher.diagnostics.ProcessMemoryReader
 import com.zeroos.launcher.safemode.CrashLoopGuard
 import dagger.Module
@@ -20,6 +20,9 @@ import dagger.hilt.components.SingletonComponent
 import java.io.File
 import java.time.Clock
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 /** Provides the app-wide clock and the F17 diagnostics logger. */
 @Module
@@ -53,7 +56,9 @@ object DiagnosticsModule {
     )
 
     @Provides
-    fun memoryReader(): MemoryReader = ProcessMemoryReader()
+    @Singleton
+    fun memorySampler(logger: Logger): MemorySampler =
+        MemorySampler(ProcessMemoryReader(), logger, CoroutineScope(SupervisorJob() + Dispatchers.Default))
 
     @Provides
     fun logExporter(@ApplicationContext context: Context, store: LogFileStore, clock: Clock): LogExporter =

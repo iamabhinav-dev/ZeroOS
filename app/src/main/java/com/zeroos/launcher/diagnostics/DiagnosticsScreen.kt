@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -140,7 +142,12 @@ fun DiagnosticsScreen(
     ) {
         item { ScreenTitle(stringResource(R.string.diagnostics_title)) }
         item {
-            Row(modifier = Modifier.padding(horizontal = tokens.spacing.screenGutter - tokens.spacing.sectionGap)) {
+            // Scrolls sideways if the filters don't fit (e.g. large text), so no tab wraps onto two lines.
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = tokens.spacing.screenGutter - tokens.spacing.sectionGap)
+            ) {
                 LogFilter.entries.forEach { filter ->
                     TextAction(
                         text = stringResource(filter.label()),
@@ -223,6 +230,7 @@ private fun LogFilter.label(): Int = when (this) {
     LogFilter.INFO -> R.string.diagnostics_filter_info
     LogFilter.WARN -> R.string.diagnostics_filter_warn
     LogFilter.ERROR -> R.string.diagnostics_filter_error
+    LogFilter.MEMORY -> R.string.diagnostics_filter_memory
 }
 
 private fun LogLevel.label(): Int = when (this) {
