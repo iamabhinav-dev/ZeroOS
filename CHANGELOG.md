@@ -4,6 +4,12 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.18 (versionCode 18)
+- Wellbeing (Settings → Wellbeing, off until you turn it on, F8): pick apps for a mindful pause and/or a daily
+  limit. Opening a paused app from ZeroOS shows breathing dots, a pun and a countdown before "Open …"; an
+  app whose limit is used up shows a draining battery with "Go home" and "5 more minutes" (2 a day by
+  default). Limits reset at midnight. The app list shows "12m left" / "used up" for limited apps. Turning
+  Wellbeing off while a limit is set asks you to hold for 3 s. Needs Usage access for limits
 ## 0.0.17 (versionCode 17)
 - Diagnostics: new Memory tab with ZeroOS's memory samples; a sample is taken 10 s after you leave ZeroOS (the
   previous trigger never fired on the test phone); a failed reading is logged as "memory check failed" (NFR-P4)
