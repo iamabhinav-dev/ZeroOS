@@ -44,7 +44,9 @@ data class DiagnosticsUiState(
     val loggingEnabled: Boolean = true,
     val level: LogLevel = LogLevel.INFO,
     /** Debug builds only (Step 1.5). */
-    val crashOnStart: Boolean = false
+    val crashOnStart: Boolean = false,
+    /** ZeroOS's memory use right now, in MB (NFR-P4); null until read. */
+    val memoryMb: Int? = null
 ) {
     val visibleEntries: List<StoredLogEntry>
         get() = entries.filter { (it.level ?: LogLevel.DEBUG) >= filter.minLevel }
@@ -57,7 +59,8 @@ class DiagnosticsViewModel @Inject constructor(
     private val settings: DiagnosticsSettings,
     private val exporter: LogExporter,
     private val logger: Logger,
-    private val ioDispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher,
+    private val memory: MemoryReader
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(DiagnosticsUiState())
@@ -72,6 +75,7 @@ class DiagnosticsViewModel @Inject constructor(
         viewModelScope.launch {
             val entries = withContext(ioDispatcher) { parseLogLines(store.readAllLinesOldestFirst()).take(MAX_ENTRIES) }
             val reports = withContext(ioDispatcher) { store.crashReports().map { CrashReportItem(it.name, crashTitle(it)) } }
+            val memoryMb = withContext(ioDispatcher) { memory.megabytes() }
             mutableState.update { current ->
                 current.copy(
                     entries = entries,
@@ -79,7 +83,8 @@ class DiagnosticsViewModel @Inject constructor(
                     lastStop = entries.firstOrNull { it.tag == ExitReasonLogger.TAG }?.message?.removePrefix(EXIT_PREFIX),
                     loggingEnabled = settings.isLoggingEnabled,
                     level = settings.minLevel,
-                    crashOnStart = settings.crashOnStart
+                    crashOnStart = settings.crashOnStart,
+                    memoryMb = memoryMb
                 )
             }
         }

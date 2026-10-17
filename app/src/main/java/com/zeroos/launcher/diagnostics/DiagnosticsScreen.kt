@@ -160,6 +160,7 @@ fun DiagnosticsScreen(
         }
         item { TextAction(stringResource(R.string.diagnostics_crash_reports, state.crashReports.size), onClick = onOpenReports) }
         state.lastStop?.let { item { BodyText(stringResource(R.string.diagnostics_last_stop, it), muted = true) } }
+        state.memoryMb?.let { item { BodyText(stringResource(R.string.diagnostics_memory, it), muted = true) } }
         item {
             Row {
                 TextAction(stringResource(R.string.diagnostics_export), onClick = onExport)

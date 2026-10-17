@@ -24,4 +24,23 @@ class AppStartLoggingTest {
         ApplicationProvider.getApplicationContext<ZeroApplication>()
         assertTrue(Thread.getDefaultUncaughtExceptionHandler() is com.zeroos.core.logging.CrashHandler)
     }
+
+    @Test
+    fun nfrP4_logsMemoryWhenLeavingZeroOs() {
+        val app = ApplicationProvider.getApplicationContext<ZeroApplication>()
+        app.onTrimMemory(android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN)
+        val deadline = System.nanoTime() + 5_000_000_000L
+        var found = false
+        while (!found && System.nanoTime() < deadline) {
+            app.logger.flushBlocking()
+            found = app.logStore.readRecentLines(50).any { Regex("""I/app: memory: \d+ MB""").containsMatchIn(it) }
+            if (!found) Thread.sleep(20)
+        }
+        assertTrue(found)
+    }
+
+    @Test
+    fun nfrP4_processMemoryIsReadable() {
+        assertTrue(com.zeroos.launcher.diagnostics.ProcessMemoryReader().megabytes() >= 0)
+    }
 }

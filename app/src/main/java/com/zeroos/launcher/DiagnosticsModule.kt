@@ -9,6 +9,8 @@ import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.LogcatMirror
 import com.zeroos.core.logging.Logger
+import com.zeroos.launcher.diagnostics.MemoryReader
+import com.zeroos.launcher.diagnostics.ProcessMemoryReader
 import com.zeroos.launcher.safemode.CrashLoopGuard
 import dagger.Module
 import dagger.Provides
@@ -49,6 +51,9 @@ object DiagnosticsModule {
         minLevel = { settings.minLevel },
         mirror = if (BuildConfig.DEBUG) LogcatMirror else { _ -> }
     )
+
+    @Provides
+    fun memoryReader(): MemoryReader = ProcessMemoryReader()
 
     @Provides
     fun logExporter(@ApplicationContext context: Context, store: LogFileStore, clock: Clock): LogExporter =

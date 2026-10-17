@@ -221,6 +221,7 @@
     <string name="diagnostics_empty">No log entries</string>
     <string name="diagnostics_crash_reports">Crash reports (%1$d)</string>
     <string name="diagnostics_last_stop">Last stop: %1$s</string>
+    <string name="diagnostics_memory">Memory: %1$d MB</string>
     <string name="diagnostics_export">Export logs</string>
     <string name="diagnostics_export_chooser">Export ZeroOS logs</string>
     <string name="diagnostics_export_failed">Couldn\'t export logs</string>

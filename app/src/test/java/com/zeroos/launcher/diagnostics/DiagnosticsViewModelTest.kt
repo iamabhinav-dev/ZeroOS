@@ -46,7 +46,9 @@ class DiagnosticsViewModelTest {
         FileLogger(store, clock, { settings.isLoggingEnabled }, { settings.minLevel }, writer = Executor { it.run() })
     }
 
-    private fun viewModel() = DiagnosticsViewModel(store, settings, LogExporter(store, temp.newFolder("out"), clock), logger, dispatcher)
+    private fun viewModel() = DiagnosticsViewModel(store, settings, LogExporter(store, temp.newFolder("out"), clock), logger, dispatcher) {
+        42
+    }
 
     @Before
     fun setUp() = Dispatchers.setMain(dispatcher)
@@ -109,5 +111,10 @@ class DiagnosticsViewModelTest {
         assertTrue(vm.export()!!.name.endsWith(".zip"))
         assertEquals("full report", vm.readReport(name))
         assertEquals("", vm.readReport("missing.txt"))
+    }
+
+    @Test
+    fun nfrP4_showsZeroOsMemory() {
+        assertEquals(42, viewModel().state.value.memoryMb)
     }
 }

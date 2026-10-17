@@ -44,10 +44,10 @@ class DiagnosticsScreenTest {
     )
     private val calls = mutableListOf<String>()
 
-    private fun show(debug: Boolean = false) = compose.setContent {
+    private fun show(debug: Boolean = false, shown: DiagnosticsUiState = state) = compose.setContent {
         ZeroTheme {
             DiagnosticsScreen(
-                state = state,
+                state = shown,
                 showDebugTools = debug,
                 onFilter = { calls += "filter:$it" },
                 onOpenReports = { calls += "reports" },
@@ -160,5 +160,12 @@ class DiagnosticsScreenTest {
         }
         compose.onNodeWithText("java.lang.IllegalStateException: boom").performClick()
         assertEquals(listOf("crash-1.txt"), calls)
+    }
+
+    @Test
+    fun nfrP4_memoryLine() {
+        show(shown = state.copy(memoryMb = 38))
+        compose.onNodeWithTag(DiagnosticsTestTags.ROOT).performScrollToNode(hasText("Memory: 38 MB"))
+        compose.onNodeWithText("Memory: 38 MB").assertExists()
     }
 }
