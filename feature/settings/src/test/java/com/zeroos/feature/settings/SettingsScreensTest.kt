@@ -96,6 +96,7 @@ class SettingsScreensTest {
         assertEquals(SettingsPage.APP_LIST, SettingsPage.HIDDEN_APPS.parent)
         assertEquals(SettingsPage.GESTURES, SettingsPage.PICK_SWIPE_RIGHT.parent)
         assertEquals(SettingsPage.ABOUT, SettingsPage.LICENSES.parent)
+        assertEquals(SettingsPage.APPEARANCE, SettingsPage.PHONE_WALLPAPER.parent)
         assertEquals(SettingsPage.MAIN, SettingsPage.BACKUP.parent)
     }
 

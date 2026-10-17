@@ -133,8 +133,7 @@ class PhoneWallpapersTest {
     @Test
     fun f6_8_restoreOfARemovedImageIsReported() = runTest {
         val (wallpapers, _) = wallpapers()
-        val result = wallpapers.restorePrevious(WallpaperScreen.HOME, "gone_dark")
-        assertEquals(setOf(WallpaperScreen.HOME), result.rejected)
+        assertNull(wallpapers.restorePrevious(WallpaperScreen.HOME, "gone_dark"))
         assertTrue(system.set.isEmpty())
     }
 

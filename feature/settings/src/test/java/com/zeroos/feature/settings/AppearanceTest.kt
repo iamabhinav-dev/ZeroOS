@@ -4,7 +4,9 @@ import androidx.activity.ComponentActivity
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -60,6 +62,7 @@ class AppearanceTest {
     private val actions = AppearanceActions(
         onTheme = { calls += "theme" },
         onWallpaper = { calls += "wallpaper" },
+        onPhoneWallpaper = { calls += "phone wallpaper" },
         onTextSize = { calls += "size" },
         onShowClock = { calls += "clock:$it" },
         onShowSeconds = { calls += "seconds:$it" },
@@ -74,17 +77,31 @@ class AppearanceTest {
     @Test
     fun f6_showsCurrentValuesAndPreview() {
         show(AppearanceSettings(theme = ThemeMode.LIGHT, wallpaper = Wallpaper.SYSTEM, textSize = TextSize.LARGE))
-        listOf("Light", "Phone wallpaper", "Large").forEach { compose.onNodeWithText(it).assertExists() }
+        listOf("Light", "Large").forEach { compose.onNodeWithText(it).assertExists() }
+        // Home background's value and the Phone wallpaper row (F6.8) share the words.
+        compose.onAllNodesWithText("Phone wallpaper").assertCountEquals(2)
         compose.onNodeWithTag(AppearanceTestTags.PREVIEW).assertExists()
     }
 
     @Test
     fun f6_rowsCallActions() {
         show(AppearanceSettings())
-        listOf("Theme", "Wallpaper", "Text size", "Show seconds", "Show date", "Show status bar", "Show clock").forEach {
+        listOf(
+            "Theme",
+            "Home background",
+            "Phone wallpaper",
+            "Text size",
+            "Show seconds",
+            "Show date",
+            "Show status bar",
+            "Show clock"
+        ).forEach {
             compose.onNodeWithText(it).performClick()
         }
-        assertEquals(listOf("theme", "wallpaper", "size", "seconds:true", "date:false", "status:false", "clock:false"), calls)
+        assertEquals(
+            listOf("theme", "wallpaper", "phone wallpaper", "size", "seconds:true", "date:false", "status:false", "clock:false"),
+            calls
+        )
     }
 
     @Test

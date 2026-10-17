@@ -67,6 +67,10 @@ data class ZeroSpacing(
     val minTouchTarget: Dp = 48.dp,
     /** Thin borders, e.g. around the appearance preview. */
     val hairline: Dp = 1.dp,
+    /** Outline of the selected wallpaper in the gallery (F6.8). */
+    val selectedOutline: Dp = 3.dp,
+    /** Width of a wallpaper thumbnail; its height follows the phone's shape (F6.8). */
+    val thumbnailWidth: Dp = 96.dp,
     /** Height of the "ZeroOS" wordmark (D-037). */
     val wordmarkHeight: Dp = 28.dp
 )

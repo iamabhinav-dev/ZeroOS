@@ -1,5 +1,6 @@
 package com.zeroos.core.data.wallpaper
 
+import android.graphics.Bitmap
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
@@ -35,6 +36,9 @@ class PhoneWallpapers(
         WallpaperCatalog.forTone(system.files(), tone)
     }
 
+    /** A small preview for the gallery, made off the main thread. */
+    suspend fun thumbnail(item: WallpaperItem, width: Int, height: Int): Bitmap = withContext(io) { system.thumbnail(item, width, height) }
+
     /** The gallery item with [id], in any tone, or null if its image is gone. */
     suspend fun find(id: String): WallpaperItem? = withContext(io) { WallpaperCatalog.find(system.files(), id) }
 
@@ -55,9 +59,12 @@ class PhoneWallpapers(
         return WallpaperResult(accepted, rejected, homeBackgroundSwitched = switched)
     }
 
-    /** Sets the wallpaper ZeroOS set on [screen] before the current one; only that screen changes. */
-    suspend fun restorePrevious(screen: WallpaperScreen, previousId: String): WallpaperResult {
-        val item = find(previousId) ?: return WallpaperResult(rejected = setOf(screen)).also {
+    /**
+     * Sets the wallpaper ZeroOS set on [screen] before the current one; only that screen changes. Null if that
+     * image has since been removed from the gallery.
+     */
+    suspend fun restorePrevious(screen: WallpaperScreen, previousId: String): WallpaperResult? {
+        val item = find(previousId) ?: return null.also {
             logger.warn(TAG, "previous wallpaper $previousId no longer available")
         }
         logger.info(TAG, "restoring previous wallpaper on ${screen.name.lowercase()}")

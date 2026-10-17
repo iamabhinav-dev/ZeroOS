@@ -42,6 +42,7 @@ enum class SettingsPage(val logName: String) {
     PICK_SWIPE_LEFT("swipe left app"),
     PICK_SWIPE_RIGHT("swipe right app"),
     APPEARANCE("appearance"),
+    PHONE_WALLPAPER("phone wallpaper"),
     BACKUP("backup"),
     ABOUT("about"),
     LICENSES("licenses");
@@ -52,6 +53,7 @@ enum class SettingsPage(val logName: String) {
             HIDDEN_APPS -> APP_LIST
             PICK_SWIPE_LEFT, PICK_SWIPE_RIGHT -> GESTURES
             LICENSES -> ABOUT
+            PHONE_WALLPAPER -> APPEARANCE
             else -> MAIN
         }
 }
@@ -116,13 +118,20 @@ fun SettingsRoute(onClose: () -> Unit, onOpenDiagnostics: () -> Unit, viewModel:
 
         SettingsPage.PICK_SWIPE_RIGHT -> SwipeAppPicker(SwipeSide.RIGHT, state, viewModel, onDone = back)
 
-        SettingsPage.APPEARANCE -> AppearanceRoute(onBack = back)
+        else -> SimplePage(page, onOpen = { page = it }, onBack = back)
+    }
+}
 
-        SettingsPage.BACKUP -> BackupRoute(onBack = back)
-
-        SettingsPage.ABOUT -> AboutRoute(onLicenses = { page = SettingsPage.LICENSES }, onBack = back)
-
-        SettingsPage.LICENSES -> LicensesRoute(onBack = back)
+/** Pages that only open other pages or go back: Appearance, Phone wallpaper, Backup, About, Licenses. */
+@Composable
+private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onBack: () -> Unit) {
+    when (page) {
+        SettingsPage.APPEARANCE -> AppearanceRoute(onPhoneWallpaper = { onOpen(SettingsPage.PHONE_WALLPAPER) }, onBack = onBack)
+        SettingsPage.PHONE_WALLPAPER -> PhoneWallpaperRoute(onBack = onBack)
+        SettingsPage.BACKUP -> BackupRoute(onBack = onBack)
+        SettingsPage.ABOUT -> AboutRoute(onLicenses = { onOpen(SettingsPage.LICENSES) }, onBack = onBack)
+        SettingsPage.LICENSES -> LicensesRoute(onBack = onBack)
+        else -> Unit
     }
 }
 
@@ -186,4 +195,7 @@ object SettingsTestTags {
     const val GESTURES = "settings_gestures"
     const val ABOUT = "settings_about"
     const val LICENSES = "settings_licenses"
+    const val PHONE_WALLPAPER = "settings_phone_wallpaper"
+
+    fun wallpaper(id: String) = "wallpaper_$id"
 }
