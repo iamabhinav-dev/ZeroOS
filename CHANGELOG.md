@@ -4,6 +4,9 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.19 (versionCode 19)
+- Mindful pause: with "Intention prompt" on, "Open …" appears only once you've typed why you're opening the
+  app (D-043)
 ## 0.0.18 (versionCode 18)
 - Wellbeing (Settings → Wellbeing, off until you turn it on, F8): pick apps for a mindful pause and/or a daily
   limit. Opening a paused app from ZeroOS shows breathing dots, a pun and a countdown before "Open …"; an
