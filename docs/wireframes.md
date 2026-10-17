@@ -413,16 +413,27 @@ system Back gesture still works.*
 │                                    │  light ones only (Pure white instead of
 │                                    │  Pure black); System follows the phone
 │                                    │
-│  Set on          ‹Home and lock›   │  tap cycles: home / lock / home and lock
-│  Set wallpaper                   › │  sets it, then a result line:
-│  Wallpaper set on home and lock    │    "...set on home and lock", or the error
+│  Home: Dots · Lock: not set by ZeroOS │ muted; what ZeroOS last set on each
 │                                    │
-│  Restore previous                › │  the wallpaper ZeroOS set before the last one;
-│                                    │  hidden until ZeroOS has set two
+│  Set on home screen              › │  then asks (dialog below)
+│  Set on lock screen              › │  then asks (dialog below)
+│  Wallpaper set on home screen      │  result line, or the error
+│                                    │
+│  Restore previous home wallpaper › │  only when ZeroOS has set two on home
+│  Restore previous lock wallpaper › │  only when ZeroOS has set two on lock
+│                                    │
 │  Android doesn't let apps read the │  always shown, muted (D-038)
 │  current wallpaper, so ZeroOS can  │
 │  only restore wallpapers it set.   │
 └────────────────────────────────────┘
+```
+After "Set on home screen" (and the same for the lock screen, with the words swapped):
+```
+┌──────────────────────────────────┐
+│  Also use it on the lock screen? │
+│                                  │
+│              [ Only home ] [ Both ] │  "Only home" leaves the lock screen unchanged
+└──────────────────────────────────┘
 ```
 *When "lock" is included and the phone rejects a separate lock-screen wallpaper, the result line says so. Some
 phones (the phone's Themes app) can still override the lock screen; if it doesn't change, the line points there.

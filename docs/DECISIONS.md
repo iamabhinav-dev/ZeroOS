@@ -178,7 +178,8 @@ ZeroOS can set the phone's home and/or lock-screen wallpaper from a small monoch
 Accessibility or OEM APIs. Pure black and Pure white are generated on the device; further images come from
 `docs/brand/wallpapers/`, compressed to WebP once when added and stored in the app's assets, each named by one
 string in `core/resources`. Each image is marked dark or light by its file name, and the gallery shows only
-those matching the current theme (dark mode: dark ones; light mode: light ones; System follows the phone). "Restore previous" covers wallpapers ZeroOS set: since Android 13 apps can't read
+those matching the current theme (dark mode: dark ones; light mode: light ones; System follows the phone). The user picks home or lock; ZeroOS then always asks whether to use the same wallpaper on the other screen,
+and leaves it untouched if not. "Restore previous" (per screen) covers wallpapers ZeroOS set: since Android 13 apps can't read
 the current wallpaper without all-files access, which ZeroOS won't request.
 *Why:* User's request; keeps the phone's look minimal from one place.
 
