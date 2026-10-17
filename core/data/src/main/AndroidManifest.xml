@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Setting the phone's home/lock wallpaper from the built-in gallery (F6.8). Normal permission, no prompt. -->
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+</manifest>

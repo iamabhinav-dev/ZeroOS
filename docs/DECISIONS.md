@@ -172,6 +172,19 @@ About, in the theme's text color. Source: `docs/brand/zeroos-logo.svg`, converte
 *Why:* User's choice after comparing four options on the phone (slashed zero, wordmark with and without slash).
 Vectors stay sharp at every size. The word is small at icon size; the user accepted that.
 
+**D-038 — Minimal wallpapers set from ZeroOS** · 2026-10-17 · Accepted (wireframe approved)
+ZeroOS can set the phone's home and/or lock-screen wallpaper from a small monochrome gallery (F6.8), through
+`WallpaperManager` only, with the `SET_WALLPAPER` permission. No lock-screen replacement, overlays,
+Accessibility or OEM APIs. Pure black and Pure white are generated on the device; further images come from
+`docs/brand/wallpapers/`, converted once when added and stored in the app's assets, each named by one string
+in `core/resources`. They're stored as circles (every dot's centre and radius) and drawn at the phone's exact
+resolution: the user compared this with compressed images on the phone and chose it (sharper, about a third of
+the size). Each image is marked dark or light by its file name, and the gallery shows only
+those matching the current theme (dark mode: dark ones; light mode: light ones; System follows the phone). Tapping a wallpaper opens it full screen (back arrow at the top, Apply at the bottom); Apply asks Home screen,
+Lock screen or Both, and a screen not chosen is left untouched. "Restore previous" (per screen) covers wallpapers ZeroOS set: since Android 13 apps can't read
+the current wallpaper without all-files access, which ZeroOS won't request.
+*Why:* User's request; keeps the phone's look minimal from one place.
+
 ---
 
 ## Pending (to be decided during the plan)

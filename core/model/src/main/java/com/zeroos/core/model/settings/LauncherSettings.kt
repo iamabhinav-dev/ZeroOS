@@ -20,10 +20,41 @@ data class LauncherSettings(
     val home: HomeSettings = HomeSettings(),
     val appList: AppListSettings = AppListSettings(),
     val gestures: GestureSettings = GestureSettings(),
-    val appearance: AppearanceSettings = AppearanceSettings()
+    val appearance: AppearanceSettings = AppearanceSettings(),
+    /** Phone wallpapers ZeroOS has set, for "Restore previous" (F6.8). */
+    val phoneWallpapers: PhoneWallpaperHistory = PhoneWallpaperHistory()
 ) {
     companion object {
         const val CURRENT_VERSION = 1
+    }
+}
+
+/** The phone's home and lock screens, as targets for a wallpaper (F6.8). */
+@Serializable
+enum class WallpaperScreen { HOME, LOCK }
+
+/**
+ * Wallpapers ZeroOS set on each screen, newest first, at most [KEPT] (F6.8). Only ZeroOS's own choices: Android
+ * doesn't let apps read the current wallpaper (D-038).
+ */
+@Serializable
+data class PhoneWallpaperHistory(val home: List<String> = emptyList(), val lock: List<String> = emptyList()) {
+    fun on(screen: WallpaperScreen): List<String> = if (screen == WallpaperScreen.HOME) home else lock
+
+    /** The wallpaper ZeroOS last set on [screen], or null. */
+    fun current(screen: WallpaperScreen): String? = on(screen).firstOrNull()
+
+    /** The one before it, for "Restore previous", or null. */
+    fun previous(screen: WallpaperScreen): String? = on(screen).getOrNull(1)
+
+    /** After [id] was set on [screen]: it becomes current, the old current becomes previous. */
+    fun withSet(screen: WallpaperScreen, id: String): PhoneWallpaperHistory {
+        val list = (listOf(id) + on(screen).filter { it != id }).take(KEPT)
+        return if (screen == WallpaperScreen.HOME) copy(home = list) else copy(lock = list)
+    }
+
+    companion object {
+        const val KEPT = 2
     }
 }
 

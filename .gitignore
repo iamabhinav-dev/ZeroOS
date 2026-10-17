@@ -25,3 +25,14 @@ releases/
 
 # Editor build output (VS Code Java/Kotlin extensions)
 bin/
+
+# Personal working copy of the wallpaper prompts (the tracked one is docs/brand/wallpaper-prompts.md)
+/image_prompts.md
+
+# Wallpaper images are generated from docs/brand/wallpaper-prompts.md, not committed (D-038).
+# scripts/add-wallpapers.py turns docs/brand/wallpapers/ into the app's assets/wallpapers/.
+/docs/brand/wallpapers/
+/app/src/main/assets/wallpapers/
+
+# Python bytecode from scripts/
+__pycache__/

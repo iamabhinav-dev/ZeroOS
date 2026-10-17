@@ -385,7 +385,8 @@ system Back gesture still works.*
 ```
 │  ← Appearance                      │
 │  Theme               ‹Dark›        │  dark (pure black) / light / system (F6.1)
-│  Wallpaper           ‹Black›       │  black / system wallpaper (dimmed) (F6.2)
+│  Home background     ‹Black›       │  black / phone wallpaper (dimmed) (F6.2); was "Wallpaper"
+│  Phone wallpaper                 › │  → F5b (F6.8), proposed
 │  Text size           ‹Medium›      │  S / M / L / XL (F6.4)
 │  Show clock          ‹on›          │  (F6.5)
 │  Show seconds        ‹off›         │  hh:mm:ss; only while the clock is shown (F6.7)
@@ -396,6 +397,59 @@ system Back gesture still works.*
 │   Thursday, 15 October · 82%       │
 │   Phone                            │
 ```
+
+### F5b. Phone wallpaper (F6.8) — approved 2026-10-17 (revised: full-screen preview)
+```
+┌────────────────────────────────────┐
+│  ← Phone wallpaper                 │
+│                                    │
+│  ┌──────┐  ┌──────┐  ┌──────┐      │  thumbnails in the phone's shape,
+│  │██████│  │█·██·█│  │██████│      │  3 per row, scrolls if more;
+│  │██████│  │██··██│  │······│      │  tap one → full-screen preview (F5c)
+│  │██████│  │█·██·█│  │██████│      │
+│  └──────┘  └──────┘  └──────┘      │
+│  Pure black  Rose       Great wave │  name under each (string per image)
+│                                    │  dark mode: dark ones only; light mode:
+│                                    │  light ones only (Pure white instead of
+│                                    │  Pure black); System follows the phone
+│                                    │
+│  Home: Rose · Lock: not set by ZeroOS │ muted; what ZeroOS last set on each
+│  Wallpaper set on the home screen  │  result line after Apply, or the error
+│                                    │
+│  Restore previous home wallpaper › │  only when ZeroOS has set two on home
+│  Restore previous lock wallpaper › │  only when ZeroOS has set two on lock
+│                                    │
+│  Android doesn't let apps read the │  always shown, muted (D-038)
+│  current wallpaper, so ZeroOS can  │
+│  only restore wallpapers it set.   │
+└────────────────────────────────────┘
+```
+
+### F5c. Wallpaper preview (F6.8)
+```
+┌────────────────────────────────────┐
+│  ←                                 │  dotted back arrow (Doto has no ←);
+│                                    │  Back gesture does the same
+│                                    │
+│            (wallpaper,             │  full screen, cropped exactly as it
+│             full screen)           │  will be on the phone
+│                                    │
+│                Rose                │  name
+│               Apply                │  → dialog below
+└────────────────────────────────────┘
+
+┌──────────────────────────┐
+│  Set wallpaper on        │
+│                          │
+│  Home screen             │  only the home screen
+│  Lock screen             │  only the lock screen
+│  Both                    │  home and lock
+└──────────────────────────┘
+```
+*Tapping outside the dialog or Back closes it without changes. After a choice, the preview closes and the
+gallery shows the result line. When "lock" is included and the phone rejects a separate lock-screen wallpaper,
+the result line says so; some phones (the phone's Themes app) can still override the lock screen, so the line points
+there. Setting the home wallpaper while Home background is "Black" switches it to "Phone wallpaper" and says so.*
 
 ### F6. Backup (F13)
 ```

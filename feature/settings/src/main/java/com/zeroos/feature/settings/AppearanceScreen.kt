@@ -36,13 +36,14 @@ import java.time.ZonedDateTime
 import java.util.Date
 
 @Composable
-fun AppearanceRoute(onBack: () -> Unit, viewModel: AppearanceViewModel = hiltViewModel()) {
+fun AppearanceRoute(onPhoneWallpaper: () -> Unit, onBack: () -> Unit, viewModel: AppearanceViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     AppearanceScreen(
         state = state,
         actions = AppearanceActions(
             onTheme = viewModel::nextTheme,
             onWallpaper = viewModel::nextWallpaper,
+            onPhoneWallpaper = onPhoneWallpaper,
             onTextSize = viewModel::nextTextSize,
             onShowClock = viewModel::setShowClock,
             onShowSeconds = viewModel::setShowSeconds,
@@ -56,6 +57,7 @@ fun AppearanceRoute(onBack: () -> Unit, viewModel: AppearanceViewModel = hiltVie
 data class AppearanceActions(
     val onTheme: () -> Unit,
     val onWallpaper: () -> Unit,
+    val onPhoneWallpaper: () -> Unit,
     val onTextSize: () -> Unit,
     val onShowClock: (Boolean) -> Unit,
     val onShowSeconds: (Boolean) -> Unit,
@@ -72,6 +74,7 @@ fun AppearanceScreen(state: AppearanceSettings, actions: AppearanceActions, onBa
         item { ScreenTitle(stringResource(R.string.appearance_title)) }
         item { SettingRow(stringResource(R.string.appearance_theme), stringResource(state.theme.label()), actions.onTheme) }
         item { SettingRow(stringResource(R.string.appearance_wallpaper), stringResource(state.wallpaper.label()), actions.onWallpaper) }
+        item { NavRow(R.string.appearance_phone_wallpaper, actions.onPhoneWallpaper) }
         item { SettingRow(stringResource(R.string.appearance_text_size), stringResource(state.textSize.label()), actions.onTextSize) }
         item { ToggleRow(stringResource(R.string.appearance_show_clock), state.showClock, actions.onShowClock) }
         if (state.showClock) {
