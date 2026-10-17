@@ -385,7 +385,8 @@ system Back gesture still works.*
 ```
 │  ← Appearance                      │
 │  Theme               ‹Dark›        │  dark (pure black) / light / system (F6.1)
-│  Wallpaper           ‹Black›       │  black / system wallpaper (dimmed) (F6.2)
+│  Home background     ‹Black›       │  black / phone wallpaper (dimmed) (F6.2); was "Wallpaper"
+│  Phone wallpaper                 › │  → F5b (F6.8), proposed
 │  Text size           ‹Medium›      │  S / M / L / XL (F6.4)
 │  Show clock          ‹on›          │  (F6.5)
 │  Show seconds        ‹off›         │  hh:mm:ss; only while the clock is shown (F6.7)
@@ -396,6 +397,34 @@ system Back gesture still works.*
 │   Thursday, 15 October · 82%       │
 │   Phone                            │
 ```
+
+### F5b. Phone wallpaper (F6.8) — proposed, awaiting approval
+```
+┌────────────────────────────────────┐
+│  ← Phone wallpaper                 │
+│                                    │
+│  ┌──────┐  ┌──────┐  ┌──────┐      │  thumbnails in the phone's shape,
+│  │██████│  │      │  │ ·  · │      │  3 per row, scrolls if more;
+│  │██████│  │      │  │  ··  │      │  the selected one has a thick
+│  │██████│  │      │  │ ·  · │      │  outline (Doto has no ✓)
+│  └──────┘  └──────┘  └──────┘      │
+│  Pure black Pure white  Dots       │  name under each (string per image)
+│                                    │
+│  Set on          ‹Home and lock›   │  tap cycles: home / lock / home and lock
+│  Set wallpaper                   › │  sets it, then a result line:
+│  Wallpaper set on home and lock    │    "...set on home and lock", or the error
+│                                    │
+│  Restore previous                › │  the wallpaper ZeroOS set before the last one;
+│                                    │  hidden until ZeroOS has set two
+│  Android doesn't let apps read the │  always shown, muted (D-038)
+│  current wallpaper, so ZeroOS can  │
+│  only restore wallpapers it set.   │
+└────────────────────────────────────┘
+```
+*When "lock" is included and the phone rejects a separate lock-screen wallpaper, the result line says so. Some
+phones (the phone's Themes app) can still override the lock screen; if it doesn't change, the line points there.
+Setting the home wallpaper while Home background is "Black" also switches it to "Phone wallpaper", so the new
+wallpaper is visible behind ZeroOS (dimmed), and the result line says so.*
 
 ### F6. Backup (F13)
 ```
