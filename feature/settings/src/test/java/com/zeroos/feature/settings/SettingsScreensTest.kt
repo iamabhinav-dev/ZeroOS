@@ -12,6 +12,7 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.AppListSettings
+import com.zeroos.core.model.settings.GestureSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.model.settings.LauncherSettings
@@ -75,7 +76,12 @@ class SettingsScreensTest {
         ZeroTheme {
             GesturesScreen(
                 state,
-                GesturesActions(onSwipeLeft = { calls += "left" }, onSwipeRight = { calls += "right" }),
+                GesturesActions(
+                    onSwipeLeft = { calls += "left" },
+                    onSwipeRight = { calls += "right" },
+                    onDoubleTapLock = { calls += "doubleTap:$it" },
+                    onTurnOnAccessibility = { calls += "turnOn" }
+                ),
                 onBack = {}
             )
         }
@@ -131,8 +137,36 @@ class SettingsScreensTest {
         compose.onNodeWithText("Camera").assertExists()
         compose.onNodeWithText("Swipe left").performClick()
         compose.onNodeWithText("Swipe right").performClick()
-        compose.onNodeWithText("Double-tap to lock: needs Accessibility (v1.1)").assertIsNotEnabled()
-        assertEquals(listOf("left", "right"), calls)
+        compose.onNodeWithText("Double-tap to lock").performClick()
+        assertEquals(listOf("left", "right", "doubleTap:true"), calls)
+    }
+
+    @Test
+    fun step4_2_warnsWhenAccessibilityIsOffOrStopped() {
+        showGestures(SettingsUiState(settings = LauncherSettings(gestures = GestureSettings(doubleTapLock = true))))
+        compose.onNodeWithText("Accessibility is off for ZeroOS. Tap to turn it on.").performClick()
+        assertEquals(listOf("turnOn"), calls)
+    }
+
+    @Test
+    fun step4_2_warnsWhenThePhoneStoppedTheService() {
+        showGestures(SettingsUiState(accessibilityEnabled = true, accessibilityRunning = false))
+        compose.onNodeWithText(
+            "Accessibility is on but not running. Your phone may have stopped it: let ZeroOS run in the background (Settings → Battery)."
+        ).assertExists()
+    }
+
+    @Test
+    fun step4_2_noWarningWhileRunning() {
+        showGestures(
+            SettingsUiState(
+                settings = LauncherSettings(gestures = GestureSettings(doubleTapLock = true)),
+                accessibilityEnabled = true,
+                accessibilityRunning = true
+            )
+        )
+        compose.onNodeWithText("Accessibility is off for ZeroOS. Tap to turn it on.").assertDoesNotExist()
+        compose.onNodeWithText("Accessibility is on but not running", substring = true).assertDoesNotExist()
     }
 
     @Test

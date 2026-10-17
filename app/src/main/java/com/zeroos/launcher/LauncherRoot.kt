@@ -51,8 +51,10 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
             HomeRoute(
                 onSwipeUp = { screen = LauncherScreen.APP_LIST },
                 // Swipe down opens search: the app list with its search field (F4.4).
-                onSwipeDown = { screen = LauncherScreen.APP_LIST },
-                onLongPress = { screen = LauncherScreen.SETTINGS }
+                // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
+                onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
+                onLongPress = { screen = LauncherScreen.SETTINGS },
+                onDoubleTap = viewModel::lockScreen
             )
             crashReport?.let { report ->
                 CrashBanner(

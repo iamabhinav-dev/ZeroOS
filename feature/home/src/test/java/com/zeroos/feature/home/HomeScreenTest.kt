@@ -6,6 +6,7 @@ import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.doubleClick
 import androidx.compose.ui.test.getBoundsInRoot
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createComposeRule
@@ -64,6 +65,7 @@ class HomeScreenTest {
                 state = state,
                 onSwipe = { calls += "swipe:$it" },
                 onLongPress = { calls += "longPress" },
+                onDoubleTap = { calls += "doubleTap" },
                 onFavoriteClick = { calls += it.label },
                 onClockClick = { calls += "clock" },
                 onDateClick = { calls += "date" },
@@ -254,5 +256,21 @@ class HomeScreenTest {
         show(HomeUiState(time, favorites = many, batteryPercent = 82))
         compose.onNodeWithTag(HomeTestTags.FAVORITES).performScrollToNode(hasText("Favorite 10"))
         compose.onNodeWithText("Favorite 10").assertIsDisplayed()
+    }
+
+    @Test
+    fun f4_5_doubleTapLocksOnlyWhenTurnedOn() {
+        show(HomeUiState(time, favorites = favorites.take(2), doubleTapToLock = true))
+        compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { doubleClick(center) }
+        compose.waitForIdle()
+        assertEquals(listOf("doubleTap"), calls)
+    }
+
+    @Test
+    fun f4_5_doubleTapDoesNothingWhenOff() {
+        show(HomeUiState(time, favorites = favorites.take(2)))
+        compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { doubleClick(center) }
+        compose.waitForIdle()
+        assertEquals(emptyList<String>(), calls)
     }
 }

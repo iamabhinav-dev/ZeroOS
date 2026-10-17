@@ -31,9 +31,10 @@ Update this file in the same commit as the code and tests.
 | F3.3, F3.4 | ✅ | FavoritesTest › f3_3_*, f3_4_*, HomeUiStateTest › f3_3_*, f3_4_*, FavoritesEditorTest › f3_3_* | Uninstall a favorite app |
 | F4.1 | ✅ | SwipeTest › f4_1_*, HomeScreenTest › f4_1_*, MainActivityTest (openList) | Swipe up on the phone |
 | F4.2, F4.3 | ✅ | SwipeTest › f4_2_f4_3_*, HomeScreenTest › f4_2_f4_3_*, HomeUiStateTest › f4_2_f4_3_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_2_f4_3_f4_5_* | Choose a swipe app on the phone |
-| F4.4 | 🟡 | SwipeTest › f4_4_*, MainActivityTest › f4_4_*, SettingsScreensTest › f4_4_swipeDownIsNotASetting, SettingsStorageTest › f4_4_* (notification shade in Phase 4, D-033) | |
-| F4.5 | ⬜ | (needs the Accessibility service, Phase 4) | |
+| F4.4 | ✅ | SwipeTest › f4_4_*, MainActivityTest › f4_4_*, SettingsScreensTest › f4_4_swipeDownIsNotASetting, SettingsStorageTest › f4_4_*, LauncherViewModelTest › f4_4_f4_5_*, AccessibilityServiceTest › f4_4_f4_5_* (shade while Accessibility runs, D-033) | Swipe down opens the shade on the test phone with Accessibility on |
+| F4.5 | ✅ | HomeScreenTest › f4_5_*, HomeUiStateTest › f4_5_*, SettingsViewModelTest › f4_5_*, SettingsScreensTest › f4_2_f4_3_f4_5_*, step4_2_*, AccessibilityServiceTest › f4_4_f4_5_* | Double-tap locks on the test phone |
 | F4.6 | ✅ | HomeUiStateTest › f4_2_f4_3_*, SettingsViewModelTest › f4_2_f4_3_f4_6_*, SettingsScreensTest › f4_6_* | |
+| Step 4.2 (Accessibility service) | ✅ | AccessibilityServiceTest › step4_2_*, SettingsViewModelTest › step4_2_*, SettingsScreensTest › step4_2_* | Service survives overnight + reboot (Phase 4 check) |
 | F5.1 | ✅ | AppCustomizationTest › f5_1_*, AppListViewModelTest › f2_8_* | |
 | F5.2 | ✅ | HiddenAppsTest › f5_2_*, SettingsScreensTest › f2_3_f2_5_f2_7_f5_2_f5_3_* | |
 | F5.3 | ✅ | HiddenAppsTest › f5_3_* | |

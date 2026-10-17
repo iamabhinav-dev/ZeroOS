@@ -18,14 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.semantics
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
+import com.zeroos.core.model.SpecialPermission
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.AppListSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.MinimalListItem
+import com.zeroos.core.ui.PermissionRequest
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.SettingRow
 import com.zeroos.core.ui.ToggleRow
@@ -105,14 +108,7 @@ fun SettingsRoute(onClose: () -> Unit, onOpenDiagnostics: () -> Unit, viewModel:
 
         SettingsPage.HIDDEN_APPS -> HiddenAppsRoute(onBack = back)
 
-        SettingsPage.GESTURES -> GesturesScreen(
-            state = state,
-            actions = GesturesActions(
-                onSwipeLeft = { page = SettingsPage.PICK_SWIPE_LEFT },
-                onSwipeRight = { page = SettingsPage.PICK_SWIPE_RIGHT }
-            ),
-            onBack = back
-        )
+        SettingsPage.GESTURES -> GesturesRoute(state, viewModel, onOpen = { page = it }, onBack = back)
 
         SettingsPage.PICK_SWIPE_LEFT -> SwipeAppPicker(SwipeSide.LEFT, state, viewModel, onDone = back)
 
@@ -133,6 +129,41 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onBac
         SettingsPage.LICENSES -> LicensesRoute(onBack = onBack)
         else -> Unit
     }
+}
+
+/** Gestures page with the Accessibility explanation for double-tap to lock (F4.5, Step 4.2). */
+@Composable
+private fun GesturesRoute(state: SettingsUiState, viewModel: SettingsViewModel, onOpen: (SettingsPage) -> Unit, onBack: () -> Unit) {
+    var explaining by rememberSaveable { mutableStateOf(false) }
+    LifecycleResumeEffect(Unit) {
+        viewModel.refreshAccessibility()
+        onPauseOrDispose {}
+    }
+    if (explaining) {
+        PermissionRequest(
+            permission = SpecialPermission.ACCESSIBILITY,
+            isGranted = { viewModel.permissions.isGranted(SpecialPermission.ACCESSIBILITY) },
+            openSettings = { viewModel.permissions.openSettings(SpecialPermission.ACCESSIBILITY) },
+            openAppInfo = viewModel.permissions::openAppInfo,
+            onResult = {
+                explaining = false
+                viewModel.onAccessibilityResult(it)
+            }
+        )
+        return
+    }
+    GesturesScreen(
+        state = state,
+        actions = GesturesActions(
+            onSwipeLeft = { onOpen(SettingsPage.PICK_SWIPE_LEFT) },
+            onSwipeRight = { onOpen(SettingsPage.PICK_SWIPE_RIGHT) },
+            onDoubleTapLock = { on ->
+                if (on && !state.accessibilityEnabled) explaining = true else viewModel.setDoubleTapLock(on)
+            },
+            onTurnOnAccessibility = { explaining = true }
+        ),
+        onBack = onBack
+    )
 }
 
 /** Chooses the app a side swipe opens, or "off" (F4.2, F4.3, F4.6). */

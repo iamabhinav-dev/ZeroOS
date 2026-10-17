@@ -111,4 +111,11 @@ class HomeUiStateTest {
         assertEquals(true, homeUiState(time, on, apps, null, null).showSeconds)
         assertEquals(false, homeUiState(time, LauncherSettings(), apps, null, null).showSeconds)
     }
+
+    @Test
+    fun f4_5_doubleTapFollowsTheSetting() {
+        val on = LauncherSettings(gestures = com.zeroos.core.model.settings.GestureSettings(doubleTapLock = true))
+        assertEquals(true, homeUiState(time, on, apps, null, null).doubleTapToLock)
+        assertEquals(false, homeUiState(time, LauncherSettings(), apps, null, null).doubleTapToLock)
+    }
 }

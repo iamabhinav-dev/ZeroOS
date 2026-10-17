@@ -3,13 +3,12 @@ package com.zeroos.feature.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.disabled
-import androidx.compose.ui.semantics.semantics
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.AppListSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.SettingRow
 import com.zeroos.core.ui.ToggleRow
@@ -61,31 +60,38 @@ fun AppListSettingsScreen(state: AppListSettings, hiddenCount: Int, actions: App
     }
 }
 
-data class GesturesActions(val onSwipeLeft: () -> Unit, val onSwipeRight: () -> Unit)
+data class GesturesActions(
+    val onSwipeLeft: () -> Unit,
+    val onSwipeRight: () -> Unit,
+    val onDoubleTapLock: (Boolean) -> Unit = {},
+    /** Opens the Accessibility explanation (Step 4.1). */
+    val onTurnOnAccessibility: () -> Unit = {}
+)
 
 /**
- * Wireframe F4 (F4.2, F4.3, F4.6). Swipe up is always the app list (F4.1) and swipe down always opens search, or
- * the notification shade once the Accessibility service exists (F4.4, D-033), so neither is shown. Double-tap to
- * lock needs that service too (Phase 4), so it's shown but disabled.
+ * Wireframes F4 and H13 (F4.2–F4.6). Swipe up is always the app list (F4.1); swipe down opens the notification
+ * shade while Accessibility runs, otherwise search (F4.4, D-033), so neither is a setting. Double-tap to lock
+ * needs Accessibility; a warning shows when it's off, or on but stopped by the phone (Step 4.2).
  */
 @Composable
 fun GesturesScreen(state: SettingsUiState, actions: GesturesActions, onBack: () -> Unit) {
     val off = stringResource(R.string.common_off)
+    val doubleTap = state.settings.gestures.doubleTapLock
     SettingsPageScaffold(stringResource(R.string.settings_gestures), SettingsTestTags.GESTURES, onBack) {
         item { SettingRow(stringResource(R.string.gestures_swipe_left), state.swipeLeftApp?.displayName() ?: off, actions.onSwipeLeft) }
         item { SettingRow(stringResource(R.string.gestures_swipe_right), state.swipeRightApp?.displayName() ?: off, actions.onSwipeRight) }
-        item { UnavailableRow(stringResource(R.string.gestures_double_tap), stringResource(R.string.gestures_needs_accessibility)) }
+        item { ToggleRow(stringResource(R.string.gestures_double_tap), doubleTap, actions.onDoubleTapLock) }
+        when {
+            doubleTap && !state.accessibilityEnabled -> item {
+                MinimalListItem(stringResource(R.string.gestures_accessibility_off), onClick = actions.onTurnOnAccessibility, muted = true)
+            }
+
+            state.accessibilityEnabled && !state.accessibilityRunning -> item {
+                BodyText(stringResource(R.string.gestures_accessibility_stopped), muted = true, small = true)
+            }
+        }
     }
 }
-
-/** A row that can't be changed yet: muted and announced as disabled. */
-@Composable
-private fun UnavailableRow(label: String, value: String) = MinimalListItem(
-    text = stringResource(R.string.settings_label_value, label, value),
-    onClick = {},
-    muted = true,
-    modifier = Modifier.semantics { disabled() }
-)
 
 private fun Alignment.label() = when (this) {
     Alignment.LEFT -> R.string.alignment_left

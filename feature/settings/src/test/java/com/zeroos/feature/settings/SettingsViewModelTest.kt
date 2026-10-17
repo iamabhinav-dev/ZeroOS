@@ -5,17 +5,24 @@ import androidx.lifecycle.SavedStateHandle
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
+import com.zeroos.core.data.permissions.SpecialPermissions
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
+import com.zeroos.core.data.system.SystemActions
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.SpecialPermission
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.model.settings.LauncherSettings
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestScope
@@ -57,6 +64,13 @@ class SettingsViewModelTest {
         }
     }
 
+    private var accessibilityOn = false
+    private val permissions = mockk<SpecialPermissions>(relaxed = true) {
+        every { isGranted(SpecialPermission.ACCESSIBILITY) } answers { accessibilityOn }
+    }
+    private val running = MutableStateFlow(false)
+    private val systemActions = mockk<SystemActions> { every { this@mockk.running } returns this@SettingsViewModelTest.running }
+
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
 
@@ -70,7 +84,14 @@ class SettingsViewModelTest {
         store.updateData { initial }
         val settings = SettingsRepository(store, logger)
         val vm =
-            SettingsViewModel(AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler)), settings, logger, SavedStateHandle())
+            SettingsViewModel(
+                AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler)),
+                settings,
+                logger,
+                SavedStateHandle(),
+                permissions,
+                systemActions
+            )
         backgroundScope.launch { vm.state.collect {} }
         vm.state.first { it.pickerApps.isNotEmpty() }
         return vm to settings
@@ -135,5 +156,32 @@ class SettingsViewModelTest {
         val (vm, _) = viewModel()
         vm.onPageShown(SettingsPage.GESTURES)
         assertTrue("settings page: gestures" in logged)
+    }
+
+    @Test
+    fun f4_5_doubleTapNeedsAccessibilityAndTurnsOnWhenGranted() = runTest {
+        val (vm, settings) = viewModel()
+        assertFalse(vm.state.value.accessibilityEnabled)
+        vm.onAccessibilityResult(granted = false)
+        verify { permissions.record(SpecialPermission.ACCESSIBILITY, false) }
+        assertFalse(settings.settings.first().gestures.doubleTapLock)
+
+        accessibilityOn = true
+        vm.onAccessibilityResult(granted = true)
+        settings.settings.first { it.gestures.doubleTapLock }
+        assertTrue(vm.state.first { it.accessibilityEnabled }.accessibilityEnabled)
+        vm.setDoubleTapLock(false)
+        settings.settings.first { !it.gestures.doubleTapLock }
+    }
+
+    @Test
+    fun step4_2_knowsWhenThePhoneStoppedTheService() = runTest {
+        accessibilityOn = true
+        val (vm, _) = viewModel()
+        vm.refreshAccessibility()
+        val stopped = vm.state.first { it.accessibilityEnabled }
+        assertFalse(stopped.accessibilityRunning)
+        running.value = true
+        assertTrue(vm.state.first { it.accessibilityRunning }.accessibilityRunning)
     }
 }

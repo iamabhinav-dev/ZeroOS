@@ -184,7 +184,9 @@
     <string name="gestures_swipe_left">Swipe left</string>
     <string name="gestures_swipe_right">Swipe right</string>
     <string name="gestures_double_tap">Double-tap to lock</string>
-    <string name="gestures_needs_accessibility">needs Accessibility (v1.1)</string>
+    <string name="gestures_accessibility_off">Accessibility is off for ZeroOS. Tap to turn it on.</string>
+    <string name="gestures_accessibility_stopped">Accessibility is on but not running. Your phone may have stopped it: let ZeroOS run in the background (Settings → Battery).</string>
+    <string name="accessibility_service_description">Lets ZeroOS lock the screen with a double-tap and open notifications with a swipe down. It reads nothing on your screen.</string>
     <string name="about_version">%1$s %2$s (%3$d)</string>
     <string name="about_licenses">Open-source licenses</string>
     <string name="licenses_libraries">AndroidX, Jetpack Compose, Kotlin, kotlinx and Dagger Hilt: Apache License 2.0</string>

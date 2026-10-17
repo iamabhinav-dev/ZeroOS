@@ -80,7 +80,9 @@ data class GestureSettings(
     /** App key opened by swipe left, or null when off (F4.2, D-026). */
     val swipeLeftApp: String? = null,
     /** App key opened by swipe right, or null when off (F4.3, D-026). */
-    val swipeRightApp: String? = null
+    val swipeRightApp: String? = null,
+    /** Double-tap empty space on home locks the phone; needs the Accessibility service (F4.5). */
+    val doubleTapLock: Boolean = false
 )
 
 @Serializable

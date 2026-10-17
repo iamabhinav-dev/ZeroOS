@@ -46,6 +46,21 @@
             </intent-filter>
         </activity>
 
+        <!-- Accessibility service (Step 4.2): off until the user turns it on after the explanation screen.
+             Only the system can bind to it (BIND_ACCESSIBILITY_SERVICE). -->
+        <service
+            android:name=".accessibility.ZeroAccessibilityService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service" />
+        </service>
+
         <!-- Shares exported log zips through the Android share sheet (F17.9). -->
         <provider
             android:name="androidx.core.content.FileProvider"
