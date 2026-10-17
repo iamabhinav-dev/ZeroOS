@@ -33,3 +33,6 @@ bin/
 # scripts/add-wallpapers.py turns docs/brand/wallpapers/ into the app's assets/wallpapers/.
 /docs/brand/wallpapers/
 /app/src/main/assets/wallpapers/
+
+# Python bytecode from scripts/
+__pycache__/
