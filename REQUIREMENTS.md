@@ -318,7 +318,7 @@ As the default home app, a crash on start would repeat on every Home press and m
 | NFR-P1 | Home screen appears with no visible delay after pressing Home (target ≤ 100 ms warm). |
 | NFR-P2 | Cold start ≤ 500 ms on the primary device. |
 | NFR-P3 | App list search results update within **≤ 16 ms** per keystroke for 300 apps (verified by a JVM unit benchmark of the matching function). |
-| NFR-P4 | Idle memory footprint ≤ 60 MB. |
+| NFR-P4 | Idle memory footprint ≤ 80 MB (measured in the background; was 60 MB, D-042). |
 | NFR-P5 | No noticeable battery drain when idle (no polling loops; use system callbacks). |
 | NFR-P6 | APK size ≤ 10 MB. |
 
