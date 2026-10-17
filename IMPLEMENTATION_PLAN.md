@@ -275,7 +275,7 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 
 ## Phase 4 — v1.1 Wellbeing & Insights (F8, F9, F10; F7 deferred, D-039)
 
-### Step 4.0 — Wireframes for Phase 4
+### Step 4.0 — Wireframes for Phase 4 ✅
 Permission explanation screens, mindful pause, limit reached, wellbeing settings (F8 toggles), notification inbox and filter settings, focus picker, Insights, and the home screen-time stats in each style. **Approved by me before Step 4.1.**
 
 ### Step 4.1 — Infrastructure
