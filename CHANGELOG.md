@@ -4,6 +4,9 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.17 (versionCode 17)
+- Diagnostics: new Memory tab with ZeroOS's memory samples; a sample is taken 10 s after you leave ZeroOS (the
+  previous trigger never fired on the test phone); a failed reading is logged as "memory check failed" (NFR-P4)
 ## 0.0.16 (versionCode 16)
 - Accessibility service (off until you turn it on): double-tap empty space on home to lock the phone
   (Settings → Gestures, F4.5); while it's on, swipe down opens the notification shade instead of search (F4.4).
