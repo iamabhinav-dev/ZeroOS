@@ -398,7 +398,7 @@ system Back gesture still works.*
 │   Phone                            │
 ```
 
-### F5b. Phone wallpaper (F6.8) — proposed, awaiting approval
+### F5b. Phone wallpaper (F6.8) — approved 2026-10-17
 ```
 ┌────────────────────────────────────┐
 │  ← Phone wallpaper                 │

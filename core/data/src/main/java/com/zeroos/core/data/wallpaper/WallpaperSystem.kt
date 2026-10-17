@@ -70,7 +70,15 @@ class AndroidWallpaperSystem(
 
     private fun bitmap(item: WallpaperItem, width: Int, height: Int): Bitmap = when (val source = item.source) {
         is WallpaperSource.Solid -> Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565).apply { eraseColor(source.argb) }
+
         is WallpaperSource.Asset -> decode(source.path, width, height)
+
+        is WallpaperSource.Dots -> DotArt.parse(open(source.path).use { it.readBytes() }).render(
+            width,
+            height,
+            foreground = if (source.dark) WHITE else BLACK,
+            background = if (source.dark) BLACK else WHITE
+        )
     }
 
     private fun decode(path: String, width: Int, height: Int): Bitmap {
@@ -90,3 +98,6 @@ class AndroidWallpaperSystem(
         return scaled
     }
 }
+
+private const val BLACK = 0xFF000000.toInt()
+private const val WHITE = 0xFFFFFFFF.toInt()

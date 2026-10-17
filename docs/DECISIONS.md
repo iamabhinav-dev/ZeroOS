@@ -172,7 +172,7 @@ About, in the theme's text color. Source: `docs/brand/zeroos-logo.svg`, converte
 *Why:* User's choice after comparing four options on the phone (slashed zero, wordmark with and without slash).
 Vectors stay sharp at every size. The word is small at icon size; the user accepted that.
 
-**D-038 — Minimal wallpapers set from ZeroOS** · 2026-10-17 · Accepted (wireframe pending approval)
+**D-038 — Minimal wallpapers set from ZeroOS** · 2026-10-17 · Accepted (wireframe approved)
 ZeroOS can set the phone's home and/or lock-screen wallpaper from a small monochrome gallery (F6.8), through
 `WallpaperManager` only, with the `SET_WALLPAPER` permission. No lock-screen replacement, overlays,
 Accessibility or OEM APIs. Pure black and Pure white are generated on the device; further images come from

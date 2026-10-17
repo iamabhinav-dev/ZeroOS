@@ -10,6 +10,9 @@ sealed interface WallpaperSource {
 
     /** An image in the app's assets, added by scripts/add-wallpapers.py. */
     data class Asset(val path: String) : WallpaperSource
+
+    /** Circles found in an image (`--format dots`), drawn at the screen's exact size; [dark] = white on black. */
+    data class Dots(val path: String, val dark: Boolean) : WallpaperSource
 }
 
 /**
@@ -26,7 +29,7 @@ object WallpaperCatalog {
 
     private const val BLACK = 0xFF000000.toInt()
     private const val WHITE = 0xFFFFFFFF.toInt()
-    private val FILE = Regex("""^([a-z0-9_]+)_(dark|light)\.webp$""")
+    private val FILE = Regex("""^([a-z0-9_]+)_(dark|light)\.(webp|dots)$""")
 
     private val solids = listOf(
         WallpaperItem(PURE_BLACK, PURE_BLACK, WallpaperTone.DARK, WallpaperSource.Solid(BLACK)),
@@ -43,12 +46,14 @@ object WallpaperCatalog {
 
     private fun fromFile(file: String): WallpaperItem? {
         val match = FILE.matchEntire(file) ?: return null
-        val (name, tone) = match.destructured
+        val (name, tone, format) = match.destructured
+        val dark = tone == "dark"
+        val path = "$ASSET_DIR/$file"
         return WallpaperItem(
             id = "${name}_$tone",
             name = name,
-            tone = if (tone == "dark") WallpaperTone.DARK else WallpaperTone.LIGHT,
-            source = WallpaperSource.Asset("$ASSET_DIR/$file")
+            tone = if (dark) WallpaperTone.DARK else WallpaperTone.LIGHT,
+            source = if (format == "dots") WallpaperSource.Dots(path, dark) else WallpaperSource.Asset(path)
         )
     }
 }
