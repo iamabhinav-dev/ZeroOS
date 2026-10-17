@@ -1,6 +1,7 @@
 package com.zeroos.feature.settings
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -11,8 +12,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -27,6 +32,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalResources
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -39,6 +45,9 @@ import com.zeroos.core.data.wallpaper.WallpaperTone
 import com.zeroos.core.model.settings.WallpaperScreen
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.BodyText
+import com.zeroos.core.ui.DotIcons
+import com.zeroos.core.ui.DotMatrixIcon
+import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.TextAction
 import com.zeroos.core.ui.ZeroTheme
 
@@ -52,41 +61,48 @@ fun PhoneWallpaperRoute(onBack: () -> Unit, viewModel: PhoneWallpaperViewModel =
     PhoneWallpaperScreen(
         state = state,
         actions = PhoneWallpaperActions(
-            onSelect = viewModel::select,
-            onChooseScreen = viewModel::chooseScreen,
-            onConfirm = viewModel::confirm,
-            onCancelAsk = viewModel::cancelAsk,
+            onOpen = viewModel::open,
+            onClosePreview = viewModel::closePreview,
+            onShowApply = viewModel::showApply,
+            onDismissApply = viewModel::dismissApply,
+            onApply = viewModel::apply,
             onRestore = viewModel::restorePrevious
         ),
-        thumbnail = { item, width, height -> viewModel.thumbnail(item, width, height).asImageBitmap() },
+        image = { item, width, height -> viewModel.thumbnail(item, width, height).asImageBitmap() },
         onBack = onBack
     )
 }
 
 data class PhoneWallpaperActions(
-    val onSelect: (WallpaperItem) -> Unit,
-    val onChooseScreen: (WallpaperScreen) -> Unit,
-    /** true = both screens, false = only the chosen one. */
-    val onConfirm: (Boolean) -> Unit,
-    val onCancelAsk: () -> Unit,
+    val onOpen: (WallpaperItem) -> Unit,
+    val onClosePreview: () -> Unit,
+    val onShowApply: () -> Unit,
+    val onDismissApply: () -> Unit,
+    val onApply: (Set<WallpaperScreen>) -> Unit,
     val onRestore: (WallpaperScreen) -> Unit
 )
 
-/** Wireframe F5b. [thumbnail] makes a preview of the given pixel size (off the main thread in the app). */
+/**
+ * Wireframes F5b (gallery) and F5c (full-screen preview with Apply). [image] draws a wallpaper at the given
+ * pixel size (off the main thread in the app).
+ */
 @Composable
 fun PhoneWallpaperScreen(
     state: PhoneWallpaperState,
     actions: PhoneWallpaperActions,
-    thumbnail: suspend (WallpaperItem, Int, Int) -> ImageBitmap?,
+    image: suspend (WallpaperItem, Int, Int) -> ImageBitmap?,
     onBack: () -> Unit
 ) {
+    val previewing = state.previewing
+    if (previewing != null) {
+        WallpaperPreview(previewing, state.choosing, actions, image)
+        return
+    }
     SettingsPageScaffold(stringResource(R.string.phone_wallpaper_title), SettingsTestTags.PHONE_WALLPAPER, onBack) {
         state.items.chunked(GALLERY_COLUMNS).forEach { row ->
-            item(key = row.first().id) { GalleryRow(row, state.selected?.id, thumbnail, actions.onSelect) }
+            item(key = row.first().id) { GalleryRow(row, state.currentHomeId, image, actions.onOpen) }
         }
         item { BodyText(status(state), muted = true, small = true) }
-        item { NavRow(R.string.phone_wallpaper_set_home) { actions.onChooseScreen(WallpaperScreen.HOME) } }
-        item { NavRow(R.string.phone_wallpaper_set_lock) { actions.onChooseScreen(WallpaperScreen.LOCK) } }
         state.result?.let { outcome -> outcomeLines(outcome).forEach { line -> item { BodyText(stringResource(line)) } } }
         if (state.history.previous(WallpaperScreen.HOME) != null) {
             item { NavRow(R.string.phone_wallpaper_restore_home) { actions.onRestore(WallpaperScreen.HOME) } }
@@ -96,7 +112,70 @@ fun PhoneWallpaperScreen(
         }
         item { BodyText(stringResource(R.string.phone_wallpaper_note), muted = true, small = true) }
     }
-    state.asking?.let { AskOtherScreen(it, actions) }
+}
+
+/** Wireframe F5c: the wallpaper full screen, cropped as it will be, with a back arrow and Apply. */
+@Composable
+private fun WallpaperPreview(
+    item: WallpaperItem,
+    choosing: Boolean,
+    actions: PhoneWallpaperActions,
+    image: suspend (WallpaperItem, Int, Int) -> ImageBitmap?
+) {
+    val tokens = ZeroTheme.tokens
+    BackHandler(onBack = actions.onClosePreview)
+    val size = LocalWindowInfo.current.containerSize
+    val bitmap by produceState<ImageBitmap?>(null, item.id, size) {
+        if (size.width > 0 && size.height > 0) value = image(item, size.width, size.height)
+    }
+    Box(Modifier.fillMaxSize().background(tokens.colors.background).testTag(SettingsTestTags.WALLPAPER_PREVIEW)) {
+        bitmap?.let { Image(it, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()) }
+        Column(Modifier.fillMaxSize().safeDrawingPadding()) {
+            Box(
+                Modifier
+                    .size(tokens.spacing.minTouchTarget)
+                    .clickable(role = Role.Button, onClick = actions.onClosePreview),
+                contentAlignment = Alignment.Center
+            ) {
+                DotMatrixIcon(
+                    DotIcons.Back,
+                    height = tokens.spacing.sectionGap * 2,
+                    contentDescription = stringResource(R.string.common_back)
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            Text(
+                wallpaperLabel(item.name),
+                color = tokens.colors.text,
+                fontSize = tokens.textSizes.body,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            TextAction(
+                stringResource(R.string.phone_wallpaper_apply),
+                onClick = actions.onShowApply,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
+    }
+    if (choosing) ApplyDialog(actions)
+}
+
+/** Apply → Home screen, Lock screen or Both; a screen not chosen is left unchanged (F6.8). */
+@Composable
+private fun ApplyDialog(actions: PhoneWallpaperActions) {
+    AlertDialog(
+        onDismissRequest = actions.onDismissApply,
+        containerColor = ZeroTheme.tokens.colors.background,
+        title = { Text(stringResource(R.string.phone_wallpaper_apply_title)) },
+        text = {
+            Column {
+                MinimalListItem(stringResource(R.string.phone_wallpaper_home_screen), { actions.onApply(setOf(WallpaperScreen.HOME)) })
+                MinimalListItem(stringResource(R.string.phone_wallpaper_lock_screen), { actions.onApply(setOf(WallpaperScreen.LOCK)) })
+                MinimalListItem(stringResource(R.string.phone_wallpaper_both), { actions.onApply(WallpaperScreen.entries.toSet()) })
+            }
+        },
+        confirmButton = {}
+    )
 }
 
 @Composable
@@ -104,14 +183,14 @@ private fun GalleryRow(
     row: List<WallpaperItem>,
     selectedId: String?,
     thumbnail: suspend (WallpaperItem, Int, Int) -> ImageBitmap?,
-    onSelect: (WallpaperItem) -> Unit
+    onOpen: (WallpaperItem) -> Unit
 ) {
     val tokens = ZeroTheme.tokens
     Row(
         Modifier.fillMaxWidth().padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.sectionGap),
         horizontalArrangement = Arrangement.spacedBy(tokens.spacing.screenGutter)
     ) {
-        row.forEach { GalleryItem(it, it.id == selectedId, thumbnail, onSelect, Modifier.weight(1f)) }
+        row.forEach { GalleryItem(it, it.id == selectedId, thumbnail, onOpen, Modifier.weight(1f)) }
         repeat(GALLERY_COLUMNS - row.size) { Spacer(Modifier.weight(1f)) }
     }
 }
@@ -121,7 +200,7 @@ private fun GalleryItem(
     item: WallpaperItem,
     selected: Boolean,
     thumbnail: suspend (WallpaperItem, Int, Int) -> ImageBitmap?,
-    onSelect: (WallpaperItem) -> Unit,
+    onOpen: (WallpaperItem) -> Unit,
     modifier: Modifier
 ) {
     val tokens = ZeroTheme.tokens
@@ -131,7 +210,7 @@ private fun GalleryItem(
     val image by produceState<ImageBitmap?>(null, item.id) { value = thumbnail(item, width, width * THUMB_HEIGHT / THUMB_WIDTH) }
     Column(
         modifier
-            .clickable(onClickLabel = label, role = Role.RadioButton) { onSelect(item) }
+            .clickable(onClickLabel = label, role = Role.Button) { onOpen(item) }
             .semantics { this.selected = selected }
             .testTag(SettingsTestTags.wallpaper(item.id))
     ) {
@@ -156,26 +235,6 @@ private fun GalleryItem(
         }
         Text(label, color = if (selected) tokens.colors.text else tokens.colors.textMuted, fontSize = tokens.textSizes.small, maxLines = 1)
     }
-}
-
-@Composable
-private fun AskOtherScreen(chosen: WallpaperScreen, actions: PhoneWallpaperActions) {
-    val home = chosen == WallpaperScreen.HOME
-    AlertDialog(
-        onDismissRequest = actions.onCancelAsk,
-        containerColor = ZeroTheme.tokens.colors.background,
-        title = { Text(stringResource(if (home) R.string.phone_wallpaper_ask_lock else R.string.phone_wallpaper_ask_home)) },
-        confirmButton = {
-            TextAction(stringResource(R.string.phone_wallpaper_both), onClick = { actions.onConfirm(true) }, compact = true)
-        },
-        dismissButton = {
-            TextAction(
-                stringResource(if (home) R.string.phone_wallpaper_only_home else R.string.phone_wallpaper_only_lock),
-                onClick = { actions.onConfirm(false) },
-                compact = true
-            )
-        }
-    )
 }
 
 @Composable

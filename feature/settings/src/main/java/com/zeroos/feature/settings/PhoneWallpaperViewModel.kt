@@ -21,18 +21,20 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-/** What the phone wallpaper screen shows (F6.8, wireframe F5b). */
+/** What the phone wallpaper screens show (F6.8, wireframes F5b and F5c). */
 data class PhoneWallpaperState(
     /** Gallery of the current theme (D-038). */
     val items: List<WallpaperItem> = emptyList(),
-    val selectedId: String? = null,
+    /** The wallpaper open full screen, or null while the gallery shows. */
+    val previewing: WallpaperItem? = null,
+    /** The Apply dialog (Home screen / Lock screen / Both) is open. */
+    val choosing: Boolean = false,
     val history: PhoneWallpaperHistory = PhoneWallpaperHistory(),
-    /** Set while the "also the other screen?" question is open: the screen that was chosen. */
-    val asking: WallpaperScreen? = null,
     val result: WallpaperOutcome? = null,
     val busy: Boolean = false
 ) {
-    val selected: WallpaperItem? get() = items.firstOrNull { it.id == selectedId } ?: items.firstOrNull()
+    /** Outlined in the gallery: what ZeroOS last set on the home screen. */
+    val currentHomeId: String? get() = history.current(WallpaperScreen.HOME)
 }
 
 /** The last action's result line(s). */
@@ -56,11 +58,9 @@ class PhoneWallpaperViewModel @Inject constructor(
     val state: StateFlow<PhoneWallpaperState> = combine(
         local,
         settings.settings.map { it.phoneWallpapers },
-        savedState.getStateFlow<String?>(KEY_SELECTED, null)
-    ) { state, history, selected ->
-        val pick = selected?.takeIf { id -> state.items.any { it.id == id } }
-            ?: history.current(WallpaperScreen.HOME)?.takeIf { id -> state.items.any { it.id == id } }
-        state.copy(history = history, selectedId = pick)
+        savedState.getStateFlow<String?>(KEY_PREVIEW, null)
+    ) { state, history, previewId ->
+        state.copy(history = history, previewing = state.items.firstOrNull { it.id == previewId })
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), PhoneWallpaperState())
 
     /** The screen tells which theme is showing; the gallery follows it (D-038). */
@@ -71,24 +71,30 @@ class PhoneWallpaperViewModel @Inject constructor(
         }
     }
 
-    fun select(item: WallpaperItem) {
-        savedState[KEY_SELECTED] = item.id
+    /** Tapping a thumbnail opens it full screen (wireframe F5c). */
+    fun open(item: WallpaperItem) {
+        savedState[KEY_PREVIEW] = item.id
+        local.value = local.value.copy(result = null)
     }
 
-    /** "Set on home screen" / "Set on lock screen": first ask about the other screen. */
-    fun chooseScreen(screen: WallpaperScreen) {
-        local.value = local.value.copy(asking = screen, result = null)
+    /** Back arrow or Back gesture: return to the gallery without changes. */
+    fun closePreview() {
+        savedState[KEY_PREVIEW] = null
+        local.value = local.value.copy(choosing = false)
     }
 
-    fun cancelAsk() {
-        local.value = local.value.copy(asking = null)
+    fun showApply() {
+        local.value = local.value.copy(choosing = true)
     }
 
-    /** Answer to "Also use it on the other screen?": [both] false leaves the other screen unchanged. */
-    fun confirm(both: Boolean) {
-        val screen = local.value.asking ?: return
-        val item = state.value.selected ?: return
-        val screens = if (both) WallpaperScreen.entries.toSet() else setOf(screen)
+    fun dismissApply() {
+        local.value = local.value.copy(choosing = false)
+    }
+
+    /** Sets the previewed wallpaper on [screens] only; the gallery then shows the result line. */
+    fun apply(screens: Set<WallpaperScreen>) {
+        val item = state.value.previewing ?: return
+        closePreview()
         run { WallpaperOutcome.Set(wallpapers.apply(item, screens)) }
     }
 
@@ -101,7 +107,7 @@ class PhoneWallpaperViewModel @Inject constructor(
     suspend fun thumbnail(item: WallpaperItem, width: Int, height: Int): Bitmap = wallpapers.thumbnail(item, width, height)
 
     private fun run(block: suspend () -> WallpaperOutcome) {
-        local.value = local.value.copy(asking = null, busy = true, result = null)
+        local.value = local.value.copy(busy = true, result = null)
         viewModelScope.launch {
             val outcome = block()
             local.value = local.value.copy(busy = false, result = outcome)
@@ -109,7 +115,7 @@ class PhoneWallpaperViewModel @Inject constructor(
     }
 
     private companion object {
-        const val KEY_SELECTED = "phone_wallpaper_selected"
+        const val KEY_PREVIEW = "phone_wallpaper_preview"
         const val STOP_TIMEOUT_MS = 5_000L
     }
 }

@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -79,51 +79,63 @@ class PhoneWallpaperScreenTest {
             PhoneWallpaperScreen(
                 state = state,
                 actions = PhoneWallpaperActions(
-                    onSelect = { calls += "select:${it.id}" },
-                    onChooseScreen = { calls += "choose:$it" },
-                    onConfirm = { calls += "both:$it" },
-                    onCancelAsk = { calls += "cancel" },
+                    onOpen = { calls += "open:${it.id}" },
+                    onClosePreview = { calls += "close" },
+                    onShowApply = { calls += "apply?" },
+                    onDismissApply = { calls += "dismiss" },
+                    onApply = { calls += "apply:${it.sorted()}" },
                     onRestore = { calls += "restore:$it" }
                 ),
-                thumbnail = { item, w, h -> fakeThumbnail(item, w, h) },
+                image = { item, w, h -> fakeThumbnail(item, w, h) },
                 onBack = {}
             )
         }
     }
 
+    private fun preview(id: String, choosing: Boolean = false) =
+        PhoneWallpaperState(
+            items = gallery(WallpaperTone.DARK),
+            previewing = gallery(WallpaperTone.DARK).first {
+                it.id == id
+            },
+            choosing = choosing
+        )
+
     @Test
-    fun f6_8_galleryShowsLabelsAndSelection() {
-        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), selectedId = "rose_dark"))
+    fun f6_8_galleryShowsLabelsAndOpensAPreview() {
+        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), history = PhoneWallpaperHistory(home = listOf("rose_dark"))))
         // Labels come from strings by name ("wave" is labelled "Great wave"), Pure black first.
         listOf("Pure black", "Leaf", "Rose", "Great wave").forEach { compose.onNodeWithText(it).assertExists() }
-        compose.onNodeWithTag(SettingsTestTags.wallpaper("rose_dark")).assertIsSelected()
-        compose.onNodeWithText("Leaf").performClick()
-        assertEquals(listOf("select:leaf_dark"), calls)
-    }
-
-    @Test
-    fun f6_8_statusAndScreensToSet() {
-        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), history = PhoneWallpaperHistory(home = listOf("rose_dark"))))
         compose.onNodeWithText("Home: Rose · Lock: not set by ZeroOS").assertExists()
-        compose.onNodeWithText("Set on home screen").performClick()
-        compose.onNodeWithText("Set on lock screen").performClick()
-        assertEquals(listOf("choose:HOME", "choose:LOCK"), calls)
+        compose.onNodeWithText("Leaf").performClick()
+        assertEquals(listOf("open:leaf_dark"), calls)
     }
 
     @Test
-    fun f6_8_alwaysAsksAboutTheOtherScreen() {
-        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), asking = WallpaperScreen.HOME))
-        compose.onNodeWithText("Also use it on the lock screen?").assertExists()
-        compose.onNodeWithText("Only home").performClick()
+    fun f6_8_previewHasBackArrowAndApply() {
+        show(preview("rose_dark"))
+        compose.onNodeWithTag(SettingsTestTags.WALLPAPER_PREVIEW).assertExists()
+        compose.onNodeWithText("Rose").assertExists()
+        compose.onNodeWithContentDescription("Back").performClick()
+        compose.onNodeWithText("Apply").performClick()
+        assertEquals(listOf("close", "apply?"), calls)
+    }
+
+    @Test
+    fun f6_8_backGestureClosesThePreview() {
+        show(preview("rose_dark"))
+        compose.runOnUiThread { compose.activity.onBackPressedDispatcher.onBackPressed() }
+        assertEquals(listOf("close"), calls)
+    }
+
+    @Test
+    fun f6_8_applyOffersHomeLockOrBoth() {
+        show(preview("rose_dark", choosing = true))
+        compose.onNodeWithText("Set wallpaper on").assertExists()
+        compose.onNodeWithText("Home screen").performClick()
+        compose.onNodeWithText("Lock screen").performClick()
         compose.onNodeWithText("Both").performClick()
-        assertEquals(listOf("both:false", "both:true"), calls)
-    }
-
-    @Test
-    fun f6_8_askFromLockScreenNamesHome() {
-        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), asking = WallpaperScreen.LOCK))
-        compose.onNodeWithText("Also use it on the home screen?").assertExists()
-        compose.onNodeWithText("Only lock").assertExists()
+        assertEquals(listOf("apply:[HOME]", "apply:[LOCK]", "apply:[HOME, LOCK]"), calls)
     }
 
     @Test
@@ -170,19 +182,25 @@ class PhoneWallpaperScreenTest {
 
     @Test
     fun f6_8_phoneWallpaperDarkScreenshot() {
-        show(
-            PhoneWallpaperState(
-                items = gallery(WallpaperTone.DARK),
-                selectedId = "rose_dark",
-                history = PhoneWallpaperHistory(home = listOf("rose_dark"))
-            )
-        )
+        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), history = PhoneWallpaperHistory(home = listOf("rose_dark"))))
         compose.onRoot().captureRoboImage()
     }
 
     @Test
     fun f6_8_phoneWallpaperLightScreenshot() {
-        show(PhoneWallpaperState(items = gallery(WallpaperTone.LIGHT), selectedId = "pure_white"), ThemeMode.LIGHT)
+        show(PhoneWallpaperState(items = gallery(WallpaperTone.LIGHT)), ThemeMode.LIGHT)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_8_previewScreenshot() {
+        show(preview("rose_dark"))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f6_8_applyDialogScreenshot() {
+        show(preview("rose_dark", choosing = true))
         compose.onRoot().captureRoboImage()
     }
 }
@@ -234,25 +252,29 @@ class PhoneWallpaperViewModelTest {
     }
 
     @Test
-    fun f6_8_galleryFollowsThemeAndSelectionDefaultsToTheSolid() = runTest {
+    fun f6_8_galleryFollowsTheme() = runTest {
         val vm = viewModel()
         vm.setTone(WallpaperTone.LIGHT)
-        val state = vm.state.first { it.items.isNotEmpty() }
-        assertEquals(listOf("pure_white", "rose_light", "wave_light"), state.items.map { it.id })
-        assertEquals("pure_white", state.selected?.id)
+        assertEquals(listOf("pure_white", "rose_light", "wave_light"), vm.state.first { it.items.isNotEmpty() }.items.map { it.id })
+    }
+
+    private suspend fun PhoneWallpaperViewModel.preview(id: String) {
+        open(state.first { it.items.isNotEmpty() }.items.first { it.id == id })
+        state.first { it.previewing?.id == id }
     }
 
     @Test
-    fun f6_8_onlyHomeLeavesTheLockScreenAlone() = runTest {
+    fun f6_8_previewThenOnlyHomeLeavesTheLockScreenAlone() = runTest {
         val vm = viewModel()
         vm.setTone(WallpaperTone.DARK)
-        vm.select(vm.state.first { it.items.isNotEmpty() }.items.first { it.id == "rose_dark" })
-        vm.chooseScreen(WallpaperScreen.HOME)
-        assertEquals(WallpaperScreen.HOME, vm.state.first { it.asking != null }.asking)
-        vm.confirm(both = false)
+        vm.preview("rose_dark")
+        vm.showApply()
+        assertEquals(true, vm.state.first { it.choosing }.choosing)
+        vm.apply(setOf(WallpaperScreen.HOME))
         val done = vm.state.first { it.result != null }
         assertEquals(listOf("rose_dark" to setOf(WallpaperScreen.HOME)), system.set)
-        assertEquals(null, done.asking)
+        assertEquals(null, done.previewing)
+        assertEquals(false, done.choosing)
         assertEquals("rose_dark", done.history.current(WallpaperScreen.HOME))
     }
 
@@ -260,22 +282,32 @@ class PhoneWallpaperViewModelTest {
     fun f6_8_bothSetsBothScreens() = runTest {
         val vm = viewModel()
         vm.setTone(WallpaperTone.DARK)
-        vm.state.first { it.items.isNotEmpty() }
-        vm.chooseScreen(WallpaperScreen.LOCK)
-        vm.confirm(both = true)
+        vm.preview("pure_black")
+        vm.apply(WallpaperScreen.entries.toSet())
         vm.state.first { it.result != null }
         assertEquals(listOf("pure_black" to WallpaperScreen.entries.toSet()), system.set)
+    }
+
+    @Test
+    fun f6_8_closingThePreviewChangesNothing() = runTest {
+        val vm = viewModel()
+        vm.setTone(WallpaperTone.DARK)
+        vm.preview("rose_dark")
+        vm.showApply()
+        vm.dismissApply()
+        vm.closePreview()
+        val state = vm.state.first { it.previewing == null }
+        assertEquals(false, state.choosing)
+        assertEquals(emptyList<Pair<String, Set<WallpaperScreen>>>(), system.set)
     }
 
     @Test
     fun f6_8_restorePreviousAndGone() = runTest {
         val vm = viewModel()
         vm.setTone(WallpaperTone.DARK)
-        val items = vm.state.first { it.items.isNotEmpty() }.items
         listOf("leaf_dark", "rose_dark").forEach { id ->
-            vm.select(items.first { it.id == id })
-            vm.chooseScreen(WallpaperScreen.HOME)
-            vm.confirm(both = false)
+            vm.preview(id)
+            vm.apply(setOf(WallpaperScreen.HOME))
             vm.state.first { it.history.current(WallpaperScreen.HOME) == id }
         }
         system.set.clear()

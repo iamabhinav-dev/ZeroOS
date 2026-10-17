@@ -196,6 +196,7 @@ object SettingsTestTags {
     const val ABOUT = "settings_about"
     const val LICENSES = "settings_licenses"
     const val PHONE_WALLPAPER = "settings_phone_wallpaper"
+    const val WALLPAPER_PREVIEW = "settings_wallpaper_preview"
 
     fun wallpaper(id: String) = "wallpaper_$id"
 }

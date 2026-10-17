@@ -60,6 +60,17 @@ object DotIcons {
         "....."
     )
 
+    /** Back arrow (F6.8 wallpaper preview). Doto has no "←". */
+    val Back = listOf(
+        ".....",
+        "..●..",
+        ".●...",
+        "●●●●●",
+        ".●...",
+        "..●..",
+        "....."
+    )
+
     /** Lightning bolt shown while charging (F1.3). */
     val Bolt = listOf(
         "...●.",
