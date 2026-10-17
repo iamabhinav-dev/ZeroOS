@@ -278,10 +278,10 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 ### Step 4.0 — Wireframes for Phase 4 ✅
 Permission explanation screens, mindful pause, limit reached, wellbeing settings (F8 toggles), notification inbox and filter settings, focus picker, Insights, and the home screen-time stats in each style. **Approved by me before Step 4.1.**
 
-### Step 4.1 — Infrastructure
-- Add **Room** (limits, inbox, usage cache, focus schedules) with exported schemas for migration tests.
-- Add **WorkManager**: midnight reset, digests, scheduled focus.
-- New modules: `feature/notifications/`, `feature/wellbeing/`.
+### Step 4.1 — Infrastructure ✅
+- ~~Add **Room** (limits, inbox, usage cache, focus schedules)~~: per-app rules and focus schedules live in the settings file instead (D-041); Room only if a later step needs it, with exported schemas and migration tests then.
+- **WorkManager** arrives with scheduled focus in Step 4.5 (no midnight reset needed: limits count from midnight; digests deferred with F7) (D-040).
+- New module `feature/wellbeing/` with its first screen in Step 4.3 (`feature/notifications/` deferred, D-039).
 - **Permission helper**: one "explain → open system screen → verify on return → fallback" flow for Usage Access, Notification Access, Accessibility, DND. It includes the **restricted settings** instructions (App info → ⋮ → Allow restricted settings) for Accessibility/Notification access (F14.4, NFR-S4).
 
 ### Step 4.2 — Shared Accessibility Service

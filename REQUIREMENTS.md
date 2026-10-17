@@ -377,7 +377,7 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | UI | Jetpack Compose (Material 3, heavily restyled to minimal) |
 | Architecture | MVVM + unidirectional data flow, single-activity |
 | DI | Hilt |
-| Persistence | DataStore (preferences), Room (from v1.1: limits, inbox, usage cache) |
+| Persistence | DataStore (all settings, incl. per-app rules and focus schedules, D-041); Room only if a later step needs it (e.g. a usage cache) |
 | Async | Kotlin Coroutines + Flow |
 | Background | WorkManager (digests, daily reset, scheduled focus) |
 | Testing | JVM only for now: JUnit, Turbine, Robolectric, Compose UI tests on Robolectric, Roborazzi screenshots |

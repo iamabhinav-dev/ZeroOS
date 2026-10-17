@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Setting the phone's home/lock wallpaper from the built-in gallery (F6.8). Normal permission, no prompt. -->
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
+
+    <!-- Usage access (F8.3, F10): only declared so ZeroOS appears in Android's "Usage access" list; the user turns
+         it on there, and only after the explanation screen (Step 4.1, F14.4). -->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 </manifest>
