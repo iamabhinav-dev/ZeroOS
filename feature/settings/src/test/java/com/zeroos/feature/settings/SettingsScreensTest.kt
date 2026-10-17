@@ -90,10 +90,10 @@ class SettingsScreensTest {
     @Test
     fun step2_11_mainOpensEverySection() {
         showMain()
-        listOf("Home", "App list", "Gestures", "Appearance", "Backup", "Diagnostics", "About").forEach {
+        listOf("Home", "App list", "Gestures", "Appearance", "Wellbeing", "Backup", "Diagnostics", "About").forEach {
             compose.onNodeWithText(it).performClick()
         }
-        assertEquals(listOf("HOME", "APP_LIST", "GESTURES", "APPEARANCE", "BACKUP", "diagnostics", "ABOUT"), calls)
+        assertEquals(listOf("HOME", "APP_LIST", "GESTURES", "APPEARANCE", "WELLBEING", "BACKUP", "diagnostics", "ABOUT"), calls)
     }
 
     @Test
@@ -103,6 +103,7 @@ class SettingsScreensTest {
         assertEquals(SettingsPage.GESTURES, SettingsPage.PICK_SWIPE_RIGHT.parent)
         assertEquals(SettingsPage.ABOUT, SettingsPage.LICENSES.parent)
         assertEquals(SettingsPage.APPEARANCE, SettingsPage.PHONE_WALLPAPER.parent)
+        assertEquals(SettingsPage.WELLBEING, SettingsPage.WELLBEING_APPS.parent)
         assertEquals(SettingsPage.MAIN, SettingsPage.BACKUP.parent)
     }
 

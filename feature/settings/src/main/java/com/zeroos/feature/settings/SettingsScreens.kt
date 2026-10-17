@@ -46,6 +46,8 @@ enum class SettingsPage(val logName: String) {
     PICK_SWIPE_RIGHT("swipe right app"),
     APPEARANCE("appearance"),
     PHONE_WALLPAPER("phone wallpaper"),
+    WELLBEING("wellbeing"),
+    WELLBEING_APPS("wellbeing apps"),
     BACKUP("backup"),
     ABOUT("about"),
     LICENSES("licenses");
@@ -57,6 +59,7 @@ enum class SettingsPage(val logName: String) {
             PICK_SWIPE_LEFT, PICK_SWIPE_RIGHT -> GESTURES
             LICENSES -> ABOUT
             PHONE_WALLPAPER -> APPEARANCE
+            WELLBEING_APPS -> WELLBEING
             else -> MAIN
         }
 }
@@ -118,15 +121,25 @@ fun SettingsRoute(onClose: () -> Unit, onOpenDiagnostics: () -> Unit, viewModel:
     }
 }
 
-/** Pages that only open other pages or go back: Appearance, Phone wallpaper, Backup, About, Licenses. */
+/** Pages that only open other pages or go back: Appearance, Phone wallpaper, Wellbeing, Backup, About, Licenses. */
 @Composable
 private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onBack: () -> Unit) {
     when (page) {
         SettingsPage.APPEARANCE -> AppearanceRoute(onPhoneWallpaper = { onOpen(SettingsPage.PHONE_WALLPAPER) }, onBack = onBack)
+
         SettingsPage.PHONE_WALLPAPER -> PhoneWallpaperRoute(onBack = onBack)
+
+        SettingsPage.WELLBEING, SettingsPage.WELLBEING_APPS ->
+            WellbeingRoute(showApps = page == SettingsPage.WELLBEING_APPS, onOpenApps = {
+                onOpen(SettingsPage.WELLBEING_APPS)
+            }, onBack = onBack)
+
         SettingsPage.BACKUP -> BackupRoute(onBack = onBack)
+
         SettingsPage.ABOUT -> AboutRoute(onLicenses = { onOpen(SettingsPage.LICENSES) }, onBack = onBack)
+
         SettingsPage.LICENSES -> LicensesRoute(onBack = onBack)
+
         else -> Unit
     }
 }
@@ -207,6 +220,7 @@ fun SettingsMainScreen(onOpen: (SettingsPage) -> Unit, onOpenDiagnostics: () -> 
         item { NavRow(R.string.settings_app_list) { onOpen(SettingsPage.APP_LIST) } }
         item { NavRow(R.string.settings_gestures) { onOpen(SettingsPage.GESTURES) } }
         item { NavRow(R.string.appearance_title) { onOpen(SettingsPage.APPEARANCE) } }
+        item { NavRow(R.string.settings_wellbeing) { onOpen(SettingsPage.WELLBEING) } }
         item { NavRow(R.string.backup_title) { onOpen(SettingsPage.BACKUP) } }
         item { NavRow(R.string.diagnostics_title, onOpenDiagnostics) }
         item { NavRow(R.string.settings_about) { onOpen(SettingsPage.ABOUT) } }
@@ -228,6 +242,8 @@ object SettingsTestTags {
     const val LICENSES = "settings_licenses"
     const val PHONE_WALLPAPER = "settings_phone_wallpaper"
     const val WALLPAPER_PREVIEW = "settings_wallpaper_preview"
+    const val WELLBEING = "settings_wellbeing"
+    const val WELLBEING_APPS = "settings_wellbeing_apps"
 
     fun wallpaper(id: String) = "wallpaper_$id"
 

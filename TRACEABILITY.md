@@ -49,7 +49,8 @@ Update this file in the same commit as the code and tests.
 | F6.3 | ✅ | ZeroThemeTest › f6_3_everyTextStyleUsesDoto, ComponentsTest › step2_2_gallery* screenshots | Doto readable on the phone |
 | F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
 | F7.1–F7.6 | ⬜ | Deferred (D-039) | |
-| F8.1–F8.12 | ⬜ | | |
+| F8.8–F8.12 | 🟡 | WellbeingViewModelTest › f8_*, WellbeingScreensTest › f8_*, step4_3_*, HoldToConfirmTest › f8_12_* (settings and friction; stop screens in part 2) | Turn on/off with hold on the test phone |
+| F8.1–F8.7 | ⬜ | (Step 4.3 parts 2 and 3) | |
 | F9.1–F9.7 | ⬜ | | |
 | F10.1–F10.13 | ⬜ | | Compare with the phone's screen-time screen |
 | F11.1–F11.3 | ⬜ | | |
