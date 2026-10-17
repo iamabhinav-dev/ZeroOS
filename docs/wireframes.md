@@ -404,11 +404,14 @@ system Back gesture still works.*
 │  ← Phone wallpaper                 │
 │                                    │
 │  ┌──────┐  ┌──────┐  ┌──────┐      │  thumbnails in the phone's shape,
-│  │██████│  │      │  │ ·  · │      │  3 per row, scrolls if more;
-│  │██████│  │      │  │  ··  │      │  the selected one has a thick
-│  │██████│  │      │  │ ·  · │      │  outline (Doto has no ✓)
+│  │██████│  │█·██·█│  │██████│      │  3 per row, scrolls if more;
+│  │██████│  │██··██│  │······│      │  the selected one has a thick
+│  │██████│  │█·██·█│  │██████│      │  outline (Doto has no ✓)
 │  └──────┘  └──────┘  └──────┘      │
-│  Pure black Pure white  Dots       │  name under each (string per image)
+│  Pure black  Dots       Line       │  name under each (string per image)
+│                                    │  dark mode: dark ones only; light mode:
+│                                    │  light ones only (Pure white instead of
+│                                    │  Pure black); System follows the phone
 │                                    │
 │  Set on          ‹Home and lock›   │  tap cycles: home / lock / home and lock
 │  Set wallpaper                   › │  sets it, then a result line:

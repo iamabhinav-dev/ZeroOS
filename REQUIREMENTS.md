@@ -137,7 +137,7 @@ The default screen shown when I press Home.
 | F6.5 | Toggle visibility of clock, date, battery, status bar. |
 | ~~F6.6~~ | ~~Optional single accent color~~ (removed: ZeroOS stays black and white, D-035). |
 | F6.7 | Clock shows **hh:mm** or **hh:mm:ss** (show seconds on/off); it shrinks to fit one line if needed (D-036). |
-| F6.8 | **Phone wallpaper from ZeroOS** (Settings → Appearance): pick from a small built-in gallery (thumbnail + name) and set it on the home screen, the lock screen, or both, using only Android's public `WallpaperManager` (`FLAG_SYSTEM` / `FLAG_LOCK`). Gallery: generated **Pure black** and **Pure white**, plus monochrome images added later from `docs/brand/wallpapers/` (no code change per image). Images are centre-cropped to the phone's real screen size, never stretched, decoded off the main thread and downsampled. "Restore previous" brings back the wallpaper ZeroOS set before; the phone's own earlier wallpaper can't be read by apps, which the screen says. If the phone rejects a separate lock-screen wallpaper, the screen says so (D-038). |
+| F6.8 | **Phone wallpaper from ZeroOS** (Settings → Appearance): pick from a small built-in gallery (thumbnail + name) and set it on the home screen, the lock screen, or both, using only Android's public `WallpaperManager` (`FLAG_SYSTEM` / `FLAG_LOCK`). Gallery: generated **Pure black** and **Pure white**, plus monochrome images added later from `docs/brand/wallpapers/` (no code change per image). The gallery shows only wallpapers matching the current theme: dark ones (Pure black, dark images) in dark mode, light ones (Pure white, light images) in light mode; with theme "System" it follows the phone's dark mode. Images are centre-cropped to the phone's real screen size, never stretched, decoded off the main thread and downsampled. "Restore previous" brings back the wallpaper ZeroOS set before; the phone's own earlier wallpaper can't be read by apps, which the screen says. If the phone rejects a separate lock-screen wallpaper, the screen says so (D-038). |
 
 ### F7 — Notification Filter
 
@@ -499,7 +499,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Hidden apps confirmation (F5.3) | Off | off / confirm / 5 s delay |
 | Theme (F6.1) | Dark (pure black) | dark, light, system |
 | Clock seconds (F6.7) | Off (hh:mm) | on/off |
-| Phone wallpaper (F6.8) | Pure black selected; nothing applied until I choose; target: home and lock | gallery item; home / lock / home and lock |
+| Phone wallpaper (F6.8) | Pure black selected (Pure white in light mode); nothing applied until I choose; target: home and lock | gallery item of the current theme; home / lock / home and lock |
 | Text size (F6.4) | Medium | S / M / L / XL |
 | Favorites alignment (F1.7) | Left | left, center, right |
 | Battery % / next alarm (F1.3, F1.8) | On / Off | on/off |
