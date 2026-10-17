@@ -1,8 +1,10 @@
 package com.zeroos.launcher
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.os.Build
+import android.os.Bundle
 import android.os.StrictMode
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.settings.FavoritesRepository
@@ -14,7 +16,7 @@ import com.zeroos.core.logging.FileLogger
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.info
 import com.zeroos.core.logging.warn
-import com.zeroos.launcher.diagnostics.MemoryReader
+import com.zeroos.launcher.diagnostics.MemorySampler
 import com.zeroos.launcher.safemode.CrashLoopGuard
 import dagger.hilt.android.HiltAndroidApp
 import java.io.File
@@ -44,7 +46,7 @@ class ZeroApplication : Application() {
 
     @Inject lateinit var favoritesRepository: FavoritesRepository
 
-    @Inject lateinit var memoryReader: MemoryReader
+    @Inject lateinit var memorySampler: MemorySampler
 
     /** Work that lives as long as the app process. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -74,14 +76,35 @@ class ZeroApplication : Application() {
         appScope.launch {
             appsRepository.apps.collect { apps -> favoritesRepository.pruneUninstalled(apps.map { it.key.packageName }.toSet()) }
         }
+        followScreenForMemory()
         if (BuildConfig.DEBUG) enableStrictMode()
     }
 
-    /** Leaving ZeroOS: log its memory once, so a day of use leaves samples in the log (NFR-P4). */
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
-        if (level == TRIM_MEMORY_UI_HIDDEN) appScope.launch { logger.info(TAG, "memory: ${memoryReader.megabytes()} MB") }
-    }
+    /**
+     * Memory samples follow ZeroOS's own screen (NFR-P4): Android's background signal (onTrimMemory) didn't arrive
+     * on the test phone, but the activity always stops when another app opens.
+     */
+    private fun followScreenForMemory() = registerActivityLifecycleCallbacks(
+        object : ActivityLifecycleCallbacks {
+            override fun onActivityStarted(activity: Activity) {
+                if (activity is MainActivity) memorySampler.onScreenStarted()
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+                if (activity is MainActivity) memorySampler.onScreenStopped()
+            }
+
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+
+            override fun onActivityResumed(activity: Activity) = Unit
+
+            override fun onActivityPaused(activity: Activity) = Unit
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+            override fun onActivityDestroyed(activity: Activity) = Unit
+        }
+    )
 
     private fun appInfo() = "ZeroOS ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}, ${BuildConfig.BUILD_TYPE}), " +
         "Android ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT}), ${Build.MANUFACTURER} ${Build.MODEL}"

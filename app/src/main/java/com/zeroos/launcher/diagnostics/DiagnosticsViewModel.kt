@@ -25,11 +25,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /** Level filter chips (F17.9): each shows that level and above; ALL also shows DEBUG. */
-enum class LogFilter(val minLevel: LogLevel) {
+enum class LogFilter(val minLevel: LogLevel, private val tag: String? = null) {
     ALL(LogLevel.DEBUG),
     INFO(LogLevel.INFO),
     WARN(LogLevel.WARN),
-    ERROR(LogLevel.ERROR)
+    ERROR(LogLevel.ERROR),
+
+    /** Only memory samples and failed memory checks, any level (NFR-P4). */
+    MEMORY(LogLevel.DEBUG, MemorySampler.TAG);
+
+    fun matches(entry: StoredLogEntry): Boolean = (entry.level ?: LogLevel.DEBUG) >= minLevel && (tag == null || entry.tag == tag)
 }
 
 /** A crash report file and its exception line, e.g. "java.lang.IllegalStateException: boom". */
@@ -49,7 +54,7 @@ data class DiagnosticsUiState(
     val memoryMb: Int? = null
 ) {
     val visibleEntries: List<StoredLogEntry>
-        get() = entries.filter { (it.level ?: LogLevel.DEBUG) >= filter.minLevel }
+        get() = entries.filter(filter::matches)
 }
 
 /** Diagnostics screen (F17.9–F17.11, wireframes C1–C2). */
@@ -60,7 +65,7 @@ class DiagnosticsViewModel @Inject constructor(
     private val exporter: LogExporter,
     private val logger: Logger,
     private val ioDispatcher: CoroutineDispatcher,
-    private val memory: MemoryReader
+    private val memory: MemorySampler
 ) : ViewModel() {
 
     private val mutableState = MutableStateFlow(DiagnosticsUiState())
@@ -75,7 +80,7 @@ class DiagnosticsViewModel @Inject constructor(
         viewModelScope.launch {
             val entries = withContext(ioDispatcher) { parseLogLines(store.readAllLinesOldestFirst()).take(MAX_ENTRIES) }
             val reports = withContext(ioDispatcher) { store.crashReports().map { CrashReportItem(it.name, crashTitle(it)) } }
-            val memoryMb = withContext(ioDispatcher) { memory.megabytes() }
+            val memoryMb = withContext(ioDispatcher) { memory.sample(MemorySampler.ON_SCREEN) }
             mutableState.update { current ->
                 current.copy(
                     entries = entries,

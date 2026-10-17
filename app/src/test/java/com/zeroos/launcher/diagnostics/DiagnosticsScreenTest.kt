@@ -168,4 +168,11 @@ class DiagnosticsScreenTest {
         compose.onNodeWithTag(DiagnosticsTestTags.ROOT).performScrollToNode(hasText("Memory: 38 MB"))
         compose.onNodeWithText("Memory: 38 MB").assertExists()
     }
+
+    @Test
+    fun nfrP4_memoryTab() {
+        show()
+        compose.onNodeWithText("Memory").performClick()
+        assertEquals(listOf("filter:MEMORY"), calls)
+    }
 }
