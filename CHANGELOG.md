@@ -4,6 +4,13 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.13 (versionCode 13)
+- Phone wallpapers from ZeroOS (F6.8): Settings → Appearance → Phone wallpaper. A gallery of 17 dot-matrix
+  wallpapers plus Pure black / Pure white, showing only those of the current theme. Tap one to see it full
+  screen, then Apply → Home screen, Lock screen or Both; Restore previous per screen (D-038)
+- Wallpapers are stored as circles and drawn at the phone's exact resolution, so they stay sharp
+- Appearance: "Wallpaper" is now called "Home background"; setting a home wallpaper switches it to show the
+  phone wallpaper
 ## 0.0.12 (versionCode 12)
 - New logo: the dotted "ZeroOS" wordmark as the app icon, and on the first onboarding page and About (D-037)
 ## 0.0.11 (versionCode 11)
