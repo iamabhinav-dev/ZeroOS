@@ -4,6 +4,8 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.14 (versionCode 14)
+- Wallpaper preview: swipe left or right to the next or previous wallpaper; it stops at the first and last (F6.8)
 ## 0.0.13 (versionCode 13)
 - Phone wallpapers from ZeroOS (F6.8): Settings → Appearance → Phone wallpaper. A gallery of 17 dot-matrix
   wallpapers plus Pure black / Pure white, showing only those of the current theme. Tap one to see it full
