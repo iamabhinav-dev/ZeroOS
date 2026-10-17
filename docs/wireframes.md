@@ -539,6 +539,259 @@ Shown once on first start; "Skip" on every page goes straight to home (F14.5).
 
 ---
 
+## H. Phase 4: wellbeing, notifications, focus, insights (F7–F10) — proposed, awaiting approval
+
+Same rules as before: Doto everywhere, black and white only, no icons or badges, text rows; values in `‹…›`
+are Appendix A defaults. Everything in this phase is **opt-in** and works with every permission denied.
+Home's screen-time slot ④ and focus slot ⑤ are already drawn in A3 and A4.
+
+### H1. Settings main (additions)
+```
+│  ← Settings                        │
+│  Home                            › │
+│  App list                        › │
+│  Gestures                        › │
+│  Appearance                      › │
+│  Wellbeing                       › │  → H3 (F8)        new
+│  Screen time                     › │  → H4 (F10)       new
+│  Notifications                   › │  → H8 (F7)        new
+│  Focus                           › │  → H10 (F9)       new
+│  Backup                          › │
+│  Diagnostics                     › │
+│  About                           › │
+```
+*Screen time is its own page, not under Wellbeing: home stats are on by default (F10.3) while Wellbeing is off
+by default (F8.8), so they mustn't share one master switch.*
+
+### H2. Permission explanation (one template for all four, F14.4, NFR-S4)
+Shown only when a feature that needs it is switched on, never up front.
+```
+│  ← Usage access                    │  title = the permission
+│                                    │
+│  ZeroOS needs usage access to show │  why, in one or two lines
+│  your screen time and to know how  │
+│  long you've used an app today.    │
+│                                    │
+│  It stays on this phone. Nothing   │  privacy line (NFR-S2)
+│  is sent anywhere.                 │
+│                                    │
+│  Open settings                   › │  → Android's screen for it
+│  Not now                         › │  → back; the feature stays off (fallback)
+```
+On return ZeroOS checks again: granted → the feature turns on; still missing → "Not allowed yet" under the
+title and the feature stays off.
+
+Extra lines per permission:
+- **Notification access / Accessibility** (sideloaded app, Android 13+), numbered steps:
+```
+│  If Android says "Restricted       │
+│  setting":                         │
+│  1  Open App info for ZeroOS       │  → App info
+│  2  Tap ⋮ (top right)              │  the only symbol not drawn in Doto:
+│  3  Allow restricted settings      │  it names Android's own button
+│  4  Come back and try again        │
+```
+- **Accessibility** also says what it reads and the known side effect:
+```
+│  It sees which app is in front and │  (F8.7, later F16; D-023)
+│  reads nothing else.               │
+│                                    │
+│  Some banking/UPI apps warn while  │  spike result (docs/spike/RESULTS.md)
+│  any accessibility service is on.  │
+```
+- **Do Not Disturb** (F9.7): "Lets Focus turn on Do Not Disturb and back off."
+
+### H3. Settings → Wellbeing (F8)
+```
+│  ← Wellbeing                       │
+│  Wellbeing                 ‹off›   │  master (F8.8); off hides every row below
+│                                    │  and stops all tracking; settings are kept
+│  Mindful pause             ‹on›    │  (F8.1, F8.9)
+│  Pause length              ‹5 s›   │  3–10 s
+│  Intention prompt          ‹off›   │  (F8.2)
+│  Daily limits              ‹on›    │  needs Usage access → H2 (F8.3)
+│  Apps                            › │  → H5: which apps pause / have limits
+│  "5 more minutes"          ‹2/day› │  0–5 (F8.4)
+│  Also outside ZeroOS       ‹off›   │  needs Accessibility → H2 (F8.7)
+│  Puns on stop screens      ‹on›    │  (F8.13, F8.14)
+│  Turning off               ‹hold 3 s› │ off / hold 3 s / pause (F8.12)
+```
+*Turning Wellbeing off while a limit is active asks for the chosen friction first (H7c).*
+
+### H4. Settings → Screen time (F10)
+```
+│  ← Screen time                     │
+│  Show on home              ‹on›    │  (F10.3); needs Usage access → H2
+│  Style                     ‹Text›  │  text / progress bar / weekly bars /
+│                                    │  hourly timeline (F10.5, drawn in A3)
+│  Daily goal                ‹off›   │  off / 30 min … 8 h, step 30 min (F10.7)
+│  Compare with yesterday    ‹off›   │  (F10.8)
+│  Insights                        › │  → H12
+```
+
+### H5. Wellbeing → Apps (F8.1, F8.3)
+```
+│  ← Apps                            │
+│  search…                           │
+│  Instagram       pause · 30 min    │  tap → H5a; only apps with a rule listed
+│  YouTube         30 min            │  first, then all others (no rule) below
+│  Chrome          pause             │
+│  ────────────────────────────────  │
+│  Calculator                        │
+│  Camera                            │
+```
+**H5a. One app** (bottom sheet, like E1)
+```
+│  Instagram                         │
+│  Mindful pause             ‹on›    │
+│  Daily limit               ‹30 min› │ off / 5 … 240 min (F8.3)
+```
+
+### H6. Mindful pause (F8.1, F8.2, F8.13, F8.15)
+Full screen, shown before a flagged app opens from ZeroOS.
+```
+┌────────────────────────────────────┐
+│                                    │
+│               ·  ·  ·              │  breathing dots, grow and shrink with
+│             ·  ●  ●  ·             │  the countdown (static with reduced
+│               ·  ·  ·              │  motion, NFR-A4)
+│                                    │
+│     Is this a want, or a habit?    │  random line from the pause list
+│                                    │
+│                 4                  │  countdown (5 s default)
+│                                    │
+│  Why are you opening it?           │  only if Intention prompt is on;
+│  ________________________________  │  never saved or logged (F17.8)
+│                                    │
+│  Go back            Open Instagram │  "Open …" appears when the countdown ends
+└────────────────────────────────────┘
+```
+
+### H7. Limit reached (F8.4, F8.13, F8.15)
+```
+┌────────────────────────────────────┐
+│                                    │
+│            ┌───────────┐           │  dot battery draining to empty, once
+│            │ ● ● · · · │▌          │  (static with reduced motion)
+│            └───────────┘           │
+│                                    │
+│       That's a wrap for today.     │  random line from the limit list
+│   Instagram · 30 min used today    │  (plain "Daily limit reached" if puns off)
+│                                    │
+│  Go home        5 more minutes (1) │  (1) = uses left today; hidden at 0
+└────────────────────────────────────┘
+```
+**H7b.** The same screen appears over other apps when "Also outside ZeroOS" is on (F8.7, Accessibility).
+**H7c. Turning off during a limit** (F8.12): "Hold to turn off" button that fills over 3 s, or the pause (H6).
+
+### H8. App list with limits (F8.5)
+```
+│  Instagram                  12m left │  small muted text, only for limited apps
+│  Maps                              │
+│  YouTube                    used up │  tap → H7
+```
+
+### H9. Settings → Notifications (F7)
+```
+│  ← Notifications                   │
+│  Filter notifications      ‹off›   │  needs Notification access → H2 (F7.1)
+│  Allowed apps (4)                › │  → app picker; their notifications come
+│                                    │  through as usual (F7.2)
+│  Digest                    ‹off›   │  (F7.4)
+│  Digest times        ‹12:00, 18:00› │ tap → time picker list
+│  Inbox (12)                      › │  → H9a
+│                                    │
+│  Calls, alarms and system alerts   │  always shown, muted (F7.6)
+│  always come through.              │
+```
+**H9a. Inbox** (F7.3, F7.5)
+```
+│  ← Inbox                           │
+│  WhatsApp · 3                      │  grouped by app, newest first
+│    Rahul: on my way          10:41 │  tap → opens it (if Android still allows)
+│    Mom: call me              10:02 │  long-press → dismiss
+│  Gmail · 1                         │
+│    Your order shipped         9:15 │
+│                                    │
+│  Clear all                         │  asks to confirm
+```
+*Opened from here and from the digest notification. Home shows no badge or count (F1.5).*
+
+### H10. Settings → Focus (F9)
+```
+│  ← Focus                           │
+│  Show "focus" on home      ‹on›    │  (F9.1)
+│  Start focus                     › │  → H11
+│  Turn on Do Not Disturb    ‹off›   │  needs DND access → H2 (F9.7)
+│  Schedules                       › │  → H10a (F9.6)
+```
+**H10a. Schedules**
+```
+│  ← Schedules                       │
+│  Weekdays 09:00–12:00     ‹on›     │  tap → edit days, start, end, apps
+│  Add schedule                    › │
+```
+
+### H11. Focus picker (F9.2), opened by "focus" on home or Settings
+```
+┌────────────────────────────────────┐
+│  ← Focus                           │
+│  How long?                         │
+│  25 min     50 min     90 min      │  tap one (selected = outlined)
+│  Custom                  ‹45 min›  │  5–240 min
+│                                    │
+│  Apps you can use                  │  picked apps show a number, like
+│  Phone                          1  │  onboarding (Doto has no ☑)
+│  Messages                       2  │
+│  Maps                              │
+│  …                                 │
+│                                    │
+│  Start focus                       │
+└────────────────────────────────────┘
+```
+While active: home slot ⑤ shows "focus · 23m left" (A4); favorites and the app list show only the allowed
+apps (F9.3); all notifications except calls and alarms go to the inbox; **holding** "focus · 23m left" for
+3 s ends it early, with a filling dot line as feedback (F9.5).
+
+### H12. Insights (F10.1, F10.2), from home stats or Screen time
+```
+┌────────────────────────────────────┐
+│  ← Insights                        │
+│  Today                             │
+│  2h 14m                            │  big number
+│  38 unlocks · ↓ 12% vs yesterday   │  comparison only if turned on
+│                                    │
+│  Top apps                          │
+│  YouTube      ●●●●●●●●  52m        │  dot bars, longest = full width
+│  WhatsApp     ●●●●●     31m        │
+│  Instagram    ●●●       18m        │
+│  Chrome       ●●        12m        │
+│  Maps         ●          6m        │
+│                                    │
+│  Last 7 days                       │  dot columns, today solid,
+│  ● ●   ● ●                         │  other days hollow (outline dots)
+│  ● ● ● ● ● ●                       │
+│  ● ● ● ● ● ● ●                     │
+│  F S S M T W T                     │
+└────────────────────────────────────┘
+```
+*Every chart has a spoken description with its values (F10.13). Android 8: unlocks hidden (F10.12).*
+
+### H13. Gestures page after Phase 4
+```
+│  Double-tap to lock        ‹off›   │  enabled once Accessibility is on (F4.5);
+│                                    │  otherwise opens H2 for Accessibility
+```
+*Swipe down opens the notification shade automatically while Accessibility is on (F4.4, D-033).*
+
+### Open questions for H
+1. **Inbox entry point:** only Settings → Notifications → Inbox and the digest notification (no badge, F1.5)?
+   Or also a quiet text line on home, like "12 in inbox", that disappears when empty?
+2. **Notification text in the inbox:** show the sender and first line as on the lock screen (stored on the phone
+   only, never logged, F17.8), or only "WhatsApp · 3" without content?
+3. **Pause app list:** one Apps page for both pause and limits (H5), or separate lists?
+4. **Focus allow-list:** remember the last allow-list as the default for next time?
+
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
 - **Q2. Fonts:** Doto for all text, no font picker (D-020).
