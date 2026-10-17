@@ -62,7 +62,13 @@ data class HomeSlots(
 
 /** Home screen with its ViewModel (Step 2.3). */
 @Composable
-fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeRoute(
+    onSwipeUp: () -> Unit,
+    onSwipeDown: () -> Unit,
+    onLongPress: () -> Unit,
+    onDoubleTap: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     fun open(name: String, intent: Intent) {
@@ -98,6 +104,7 @@ fun HomeRoute(onSwipeUp: () -> Unit, onSwipeDown: () -> Unit, onLongPress: () ->
             }
         },
         onLongPress = onLongPress,
+        onDoubleTap = onDoubleTap,
         onFavoriteClick = viewModel::launch,
         onFavoriteLongClick = { menuFor = it },
         onClockClick = { open("alarms", Intent(AlarmClock.ACTION_SHOW_ALARMS)) },
@@ -119,6 +126,7 @@ fun HomeScreen(
     onClockClick: () -> Unit,
     onDateClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onDoubleTap: () -> Unit = {},
     onFavoriteLongClick: (AppEntry) -> Unit = {},
     slots: HomeSlots = HomeSlots()
 ) {
@@ -142,7 +150,10 @@ fun HomeScreen(
             .fillMaxSize()
             .background(if (state.showWallpaper) tokens.colors.wallpaperScrim else tokens.colors.background)
             .testTag(HomeTestTags.ROOT)
-            .pointerInput(Unit) { detectTapGestures(onLongPress = { onLongPress() }) }
+            // Double-tap is only listened for while it's on, so taps elsewhere aren't delayed (F4.5).
+            .pointerInput(state.doubleTapToLock) {
+                detectTapGestures(onLongPress = { onLongPress() }, onDoubleTap = if (state.doubleTapToLock) ({ onDoubleTap() }) else null)
+            }
             .pointerInput(minDistance, minVelocity) {
                 val velocity = VelocityTracker()
                 var drag = Offset.Zero

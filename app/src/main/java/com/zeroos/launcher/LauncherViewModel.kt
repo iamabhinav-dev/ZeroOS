@@ -3,6 +3,7 @@ package com.zeroos.launcher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.system.SystemActions
 import com.zeroos.core.logging.CrashNotice
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
@@ -34,7 +35,8 @@ class LauncherViewModel @Inject constructor(
     private val crashNotice: CrashNotice,
     private val logger: Logger,
     private val ioDispatcher: CoroutineDispatcher,
-    settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository,
+    private val systemActions: SystemActions
 ) : ViewModel() {
 
     /** Theme, text size, wallpaper and status bar for the whole app (F6). */
@@ -63,6 +65,14 @@ class LauncherViewModel @Inject constructor(
     fun markCrashSeen() {
         unseenReport?.let(crashNotice::markSeen)
         mutableCrashReport.value = null
+    }
+
+    /** Swipe down on home: the notification shade if Accessibility runs; false means "open search" (F4.4). */
+    fun openNotificationShade(): Boolean = systemActions.openNotificationShade()
+
+    /** Double-tap on home (F4.5); home only listens for it while the setting is on. */
+    fun lockScreen() {
+        systemActions.lockScreen()
     }
 
     fun onScreenShown(screen: LauncherScreen) = logger.info(TAG, "screen: ${screen.logName}")

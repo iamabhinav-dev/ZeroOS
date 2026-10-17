@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ZeroOS's Accessibility service (Step 4.2). Reads no screen content and only gets events from ZeroOS itself:
+     double-tap to lock (F4.5) and the notification shade (F4.4) need none. Later features widen packageNames
+     at runtime only for the apps they need (D-023). -->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/accessibility_service_description"
+    android:isAccessibilityTool="false"
+    android:notificationTimeout="100"
+    android:packageNames="com.zeroos.launcher"
+    tools:ignore="UnusedAttribute" />

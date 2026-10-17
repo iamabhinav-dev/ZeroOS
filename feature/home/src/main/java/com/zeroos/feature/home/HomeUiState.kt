@@ -26,6 +26,8 @@ data class HomeUiState(
     /** Side swipes open these apps; null = off (F4.2, F4.3, D-026). */
     val swipeLeftApp: AppEntry? = null,
     val swipeRightApp: AppEntry? = null,
+    /** Double-tap on empty space locks the phone (F4.5). */
+    val doubleTapToLock: Boolean = false,
     /** Phone wallpaper shows through, dimmed (F6.2). */
     val showWallpaper: Boolean = false
 )
@@ -58,6 +60,7 @@ fun homeUiState(
         renamedKeys = settings.renamedApps.keys,
         swipeLeftApp = settings.gestures.swipeLeftApp?.let(byKey::get),
         swipeRightApp = settings.gestures.swipeRightApp?.let(byKey::get),
+        doubleTapToLock = settings.gestures.doubleTapLock,
         showWallpaper = settings.appearance.wallpaper == Wallpaper.SYSTEM
     )
 }

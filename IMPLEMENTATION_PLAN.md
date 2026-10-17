@@ -284,7 +284,7 @@ Permission explanation screens, mindful pause, limit reached, wellbeing settings
 - New module `feature/wellbeing/` with its first screen in Step 4.3 (`feature/notifications/` deferred, D-039).
 - **Permission helper**: one "explain → open system screen → verify on return → fallback" flow for Usage Access, Notification Access, Accessibility, DND. It includes the **restricted settings** instructions (App info → ⋮ → Allow restricted settings) for Accessibility/Notification access (F14.4, NFR-S4).
 
-### Step 4.2 — Shared Accessibility Service
+### Step 4.2 — Shared Accessibility Service ✅
 - Single `ZeroAccessibilityService` for F4.4 (swipe down → notification shade via `GLOBAL_ACTION_NOTIFICATIONS`), F4.5 (double-tap lock via `GLOBAL_ACTION_LOCK_SCREEN`, API 28+), F8.7, and later F16.
 - Off by default; `serviceInfo.packageNames` updated at runtime to only the packages enabled features need.
 - Detect disabled/killed state and show a warning in Settings.

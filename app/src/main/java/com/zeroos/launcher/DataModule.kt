@@ -8,7 +8,6 @@ import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.HomeAppsCache
 import com.zeroos.core.data.backup.BackupRepository
-import com.zeroos.core.data.permissions.SpecialPermissions
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
@@ -86,10 +85,6 @@ object DataModule {
         logger: Logger
     ): PhoneWallpapers =
         PhoneWallpapers(settings, AndroidWallpaperSystem(context), io, logger)
-
-    @Provides
-    @Singleton
-    fun specialPermissions(@ApplicationContext context: Context, logger: Logger): SpecialPermissions = SpecialPermissions(context, logger)
 
     /** Dispatcher for disk and system-service work. */
     @Provides

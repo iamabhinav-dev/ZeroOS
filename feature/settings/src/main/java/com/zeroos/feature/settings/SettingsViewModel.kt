@@ -6,16 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.zeroos.core.data.apps.AppSearchIndex
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.visibleApps
+import com.zeroos.core.data.permissions.SpecialPermissions
 import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.system.SystemActions
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
 import com.zeroos.core.model.AppEntry
+import com.zeroos.core.model.SpecialPermission
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.GestureSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.LauncherSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -35,7 +39,11 @@ data class SettingsUiState(
     val swipeRightApp: AppEntry? = null,
     /** Apps for the swipe-app picker, filtered by [query]. */
     val pickerApps: List<AppEntry> = emptyList(),
-    val query: String = ""
+    val query: String = "",
+    /** Accessibility is switched on for ZeroOS in Android's settings (Step 4.2). */
+    val accessibilityEnabled: Boolean = false,
+    /** ZeroOS's Accessibility service is actually running; on but not running = the phone stopped it. */
+    val accessibilityRunning: Boolean = false
 )
 
 /**
@@ -47,14 +55,21 @@ class SettingsViewModel @Inject constructor(
     appsRepository: AppsRepository,
     private val settings: SettingsRepository,
     private val logger: Logger,
-    private val savedState: SavedStateHandle
+    private val savedState: SavedStateHandle,
+    /** Used by the Gestures page for the Accessibility explanation (Step 4.1). */
+    val permissions: SpecialPermissions,
+    systemActions: SystemActions
 ) : ViewModel() {
+
+    private val accessibilityEnabled = MutableStateFlow(permissions.isGranted(SpecialPermission.ACCESSIBILITY))
 
     val state: StateFlow<SettingsUiState> = combine(
         appsRepository.apps,
         settings.settings,
-        savedState.getStateFlow(KEY_QUERY, "")
-    ) { apps, current, query ->
+        savedState.getStateFlow(KEY_QUERY, ""),
+        accessibilityEnabled,
+        systemActions.running
+    ) { apps, current, query, enabled, running ->
         val visible = visibleApps(apps, current)
         val byKey = visible.associateBy { it.key.asString() }
         SettingsUiState(
@@ -63,7 +78,9 @@ class SettingsViewModel @Inject constructor(
             swipeLeftApp = current.gestures.swipeLeftApp?.let(byKey::get),
             swipeRightApp = current.gestures.swipeRightApp?.let(byKey::get),
             pickerApps = AppSearchIndex(visible).search(query),
-            query = query
+            query = query,
+            accessibilityEnabled = enabled,
+            accessibilityRunning = running
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), SettingsUiState())
 
@@ -96,6 +113,21 @@ class SettingsViewModel @Inject constructor(
             SwipeSide.LEFT -> gestures("swipeLeft=$value") { it.copy(swipeLeftApp = key) }
             SwipeSide.RIGHT -> gestures("swipeRight=$value") { it.copy(swipeRightApp = key) }
         }
+    }
+
+    /** Checked again whenever the Gestures page comes back to the front (Step 4.2). */
+    fun refreshAccessibility() {
+        accessibilityEnabled.value = permissions.isGranted(SpecialPermission.ACCESSIBILITY)
+    }
+
+    /** Double-tap to lock (F4.5); turning it on needs Accessibility, asked for by the page first. */
+    fun setDoubleTapLock(on: Boolean) = gestures("doubleTapLock=$on") { it.copy(doubleTapLock = on) }
+
+    /** Result of the Accessibility explanation (Step 4.1); granted also turns double-tap on. */
+    fun onAccessibilityResult(granted: Boolean) {
+        permissions.record(SpecialPermission.ACCESSIBILITY, granted)
+        refreshAccessibility()
+        if (granted) setDoubleTapLock(true)
     }
 
     private fun gestures(change: String, transform: (GestureSettings) -> GestureSettings) =
