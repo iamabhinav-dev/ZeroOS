@@ -663,6 +663,7 @@ Full screen, shown before a flagged app opens from ZeroOS.
 │  ________________________________  │  never saved or logged (F17.8)
 │                                    │
 │  Go back            Open Instagram │  "Open …" appears when the countdown ends
+│                                    │  (and, with the prompt on, once an intention is typed, D-043)
 └────────────────────────────────────┘
 ```
 

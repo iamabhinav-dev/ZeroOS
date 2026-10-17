@@ -108,7 +108,12 @@ private fun PauseScreen(app: AppEntry, screen: StopScreen.Pause, pun: Int?, acti
         art = { BreathingDots(screen.seconds, still = rememberReducedMotion()) },
         buttons = {
             TextAction(stringResource(R.string.wellbeing_go_back), actions.onBack, muted = true)
-            if (left == 0) TextAction(stringResource(R.string.wellbeing_open_app, app.displayName()), actions.onOpen)
+            // With the prompt on, an intention must be typed first (D-043); spaces don't count.
+            if (left == 0 &&
+                (!screen.intentionPrompt || intention.isNotBlank())
+            ) {
+                TextAction(stringResource(R.string.wellbeing_open_app, app.displayName()), actions.onOpen)
+            }
         }
     ) {
         Line(pun?.let { stringArrayResource(R.array.wellbeing_puns_pause).getOrNull(it) } ?: stringResource(R.string.wellbeing_pause_plain))

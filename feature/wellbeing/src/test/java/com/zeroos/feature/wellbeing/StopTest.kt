@@ -9,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.datastore.core.DataStoreFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -197,9 +198,20 @@ class StopScreensTest {
     }
 
     @Test
-    fun f8_2_intentionFieldWhenPromptIsOn() {
+    fun f8_2_intentionRequiredBeforeOpenWhenPromptIsOn() {
+        compose.mainClock.autoAdvance = false
         show(StopScreen.Pause(5, intentionPrompt = true))
         compose.onNodeWithText("Why are you opening it?").assertExists()
+        compose.mainClock.advanceTimeBy(5_100)
+        // Countdown over, but no intention yet (D-043).
+        compose.onNodeWithText("Open Instagram").assertDoesNotExist()
+        compose.onNodeWithTag(StopTestTags.INTENTION).performTextInput("   ")
+        compose.mainClock.advanceTimeByFrame()
+        compose.onNodeWithText("Open Instagram").assertDoesNotExist()
+        compose.onNodeWithTag(StopTestTags.INTENTION).performTextInput("reply to Sam")
+        compose.mainClock.advanceTimeByFrame()
+        compose.onNodeWithText("Open Instagram").performClick()
+        assertEquals(listOf("open"), calls)
     }
 
     @Test
