@@ -139,7 +139,7 @@ private fun WallpaperPreview(
             ) {
                 DotMatrixIcon(
                     DotIcons.Back,
-                    height = tokens.spacing.sectionGap * 2,
+                    height = tokens.spacing.minTouchTarget / 2,
                     contentDescription = stringResource(R.string.common_back)
                 )
             }
