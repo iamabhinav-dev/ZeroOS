@@ -25,3 +25,6 @@ releases/
 
 # Editor build output (VS Code Java/Kotlin extensions)
 bin/
+
+# Personal working copy of the wallpaper prompts (the tracked one is docs/brand/wallpaper-prompts.md)
+/image_prompts.md
