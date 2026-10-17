@@ -185,6 +185,11 @@ Lock screen or Both, and a screen not chosen is left untouched. "Restore previou
 the current wallpaper without all-files access, which ZeroOS won't request.
 *Why:* User's request; keeps the phone's look minimal from one place.
 
+**D-039 — Notification filter deferred** · 2026-10-17 · Accepted
+F7 (notification filter, inbox, digests) is not built in v1.1. Requirements, plan Step 4.4 and wireframe H9 are
+kept for later. Focus mode (F9.3) relies on Do Not Disturb (F9.7) for quiet until F7 exists.
+*Why:* User's choice, to keep Phase 4 smaller.
+
 ---
 
 ## Pending (to be decided during the plan)

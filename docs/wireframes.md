@@ -539,7 +539,7 @@ Shown once on first start; "Skip" on every page goes straight to home (F14.5).
 
 ---
 
-## H. Phase 4: wellbeing, notifications, focus, insights (F7–F10) — proposed, awaiting approval
+## H. Phase 4: wellbeing, focus, insights (F8–F10) — approved 2026-10-17 (notifications H9 deferred, D-039)
 
 Same rules as before: Doto everywhere, black and white only, no icons or badges, text rows; values in `‹…›`
 are Appendix A defaults. Everything in this phase is **opt-in** and works with every permission denied.
@@ -554,7 +554,6 @@ Home's screen-time slot ④ and focus slot ⑤ are already drawn in A3 and A4.
 │  Appearance                      › │
 │  Wellbeing                       › │  → H3 (F8)        new
 │  Screen time                     › │  → H4 (F10)       new
-│  Notifications                   › │  → H8 (F7)        new
 │  Focus                           › │  → H10 (F9)       new
 │  Backup                          › │
 │  Diagnostics                     › │
@@ -691,32 +690,6 @@ Full screen, shown before a flagged app opens from ZeroOS.
 │  YouTube                    used up │  tap → H7
 ```
 
-### H9. Settings → Notifications (F7)
-```
-│  ← Notifications                   │
-│  Filter notifications      ‹off›   │  needs Notification access → H2 (F7.1)
-│  Allowed apps (4)                › │  → app picker; their notifications come
-│                                    │  through as usual (F7.2)
-│  Digest                    ‹off›   │  (F7.4)
-│  Digest times        ‹12:00, 18:00› │ tap → time picker list
-│  Inbox (12)                      › │  → H9a
-│                                    │
-│  Calls, alarms and system alerts   │  always shown, muted (F7.6)
-│  always come through.              │
-```
-**H9a. Inbox** (F7.3, F7.5)
-```
-│  ← Inbox                           │
-│  WhatsApp · 3                      │  grouped by app, newest first
-│    Rahul: on my way          10:41 │  tap → opens it (if Android still allows)
-│    Mom: call me              10:02 │  long-press → dismiss
-│  Gmail · 1                         │
-│    Your order shipped         9:15 │
-│                                    │
-│  Clear all                         │  asks to confirm
-```
-*Opened from here and from the digest notification. Home shows no badge or count (F1.5).*
-
 ### H10. Settings → Focus (F9)
 ```
 │  ← Focus                           │
@@ -750,8 +723,9 @@ Full screen, shown before a flagged app opens from ZeroOS.
 └────────────────────────────────────┘
 ```
 While active: home slot ⑤ shows "focus · 23m left" (A4); favorites and the app list show only the allowed
-apps (F9.3); all notifications except calls and alarms go to the inbox; **holding** "focus · 23m left" for
-3 s ends it early, with a filling dot line as feedback (F9.5).
+apps (F9.3); Do Not Disturb keeps it quiet if turned on (F9.7; notification filtering waits for F7, D-039);
+**holding** "focus · 23m left" for 3 s ends it early, with a filling dot line as feedback (F9.5). The picker
+remembers the last allowed apps as the default for next time.
 
 ### H12. Insights (F10.1, F10.2), from home stats or Screen time
 ```
@@ -784,13 +758,38 @@ apps (F9.3); all notifications except calls and alarms go to the inbox; **holdin
 ```
 *Swipe down opens the notification shade automatically while Accessibility is on (F4.4, D-033).*
 
-### Open questions for H
-1. **Inbox entry point:** only Settings → Notifications → Inbox and the digest notification (no badge, F1.5)?
-   Or also a quiet text line on home, like "12 in inbox", that disappears when empty?
-2. **Notification text in the inbox:** show the sender and first line as on the lock screen (stored on the phone
-   only, never logged, F17.8), or only "WhatsApp · 3" without content?
-3. **Pause app list:** one Apps page for both pause and limits (H5), or separate lists?
-4. **Focus allow-list:** remember the last allow-list as the default for next time?
+### Answers for H (2026-10-17)
+- Pause and limits share one Apps list (H5).
+- Focus remembers the last allowed apps as the default.
+
+### H9 (deferred, D-039). Notifications and inbox
+Kept for when F7 is built; not part of v1.1.
+
+#### Settings → Notifications (F7)
+```
+│  ← Notifications                   │
+│  Filter notifications      ‹off›   │  needs Notification access → H2 (F7.1)
+│  Allowed apps (4)                › │  → app picker; their notifications come
+│                                    │  through as usual (F7.2)
+│  Digest                    ‹off›   │  (F7.4)
+│  Digest times        ‹12:00, 18:00› │ tap → time picker list
+│  Inbox (12)                      › │  → Inbox below
+│                                    │
+│  Calls, alarms and system alerts   │  always shown, muted (F7.6)
+│  always come through.              │
+```
+**Inbox** (F7.3, F7.5)
+```
+│  ← Inbox                           │
+│  WhatsApp · 3                      │  grouped by app, newest first
+│    Rahul: on my way          10:41 │  tap → opens it (if Android still allows)
+│    Mom: call me              10:02 │  long-press → dismiss
+│  Gmail · 1                         │
+│    Your order shipped         9:15 │
+│                                    │
+│  Clear all                         │  asks to confirm
+```
+*Opened from here and from the digest notification. Home shows no badge or count (F1.5).*
 
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
