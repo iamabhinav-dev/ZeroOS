@@ -4,6 +4,12 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.16 (versionCode 16)
+- Accessibility service (off until you turn it on): double-tap empty space on home to lock the phone
+  (Settings → Gestures, F4.5); while it's on, swipe down opens the notification shade instead of search (F4.4).
+  It reads nothing on the screen. Gestures warns if it's off, or if the phone stopped it (Step 4.2)
+- Settings → Diagnostics shows ZeroOS's memory use; the log records it each time you leave ZeroOS (NFR-P4)
+- Note: this APK declares an Accessibility service, so Play Protect may warn when installing (D-018)
 ## 0.0.15 (versionCode 15)
 - Larger back arrow on the full-screen wallpaper preview (F6.8)
 - Groundwork for Phase 4: permission explanation screen and checks (Usage access, Accessibility, Do Not
