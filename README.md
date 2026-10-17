@@ -54,11 +54,11 @@ The other wallpapers are images that are **not in git**: anyone building ZeroOS 
 2. Paste a prompt into an image generator (e.g. Gemini or ChatGPT) and save the result in `docs/brand/wallpapers/`
    with the file name given above the prompt: `wallpaper_<name>_dark.png` or `wallpaper_<name>_light.png`
    (portrait, ideally 1260×2800; PNG or JPG).
-3. Run `python3 scripts/add-wallpapers.py` (needs Pillow: `pip install pillow`). It converts the images to WebP in
-   `app/src/main/assets/wallpapers/`, reports the size each adds to the APK, warns if the total gets too big, and
-   lists any label still missing. With `--format dots` (also needs numpy and scipy) it stores each image's dots as
-   circles instead, which the app draws at the phone's exact resolution: sharper and smaller, but a redraw of the
-   image rather than a copy.
+3. Run `python3 scripts/add-wallpapers.py` (needs `pip install pillow numpy scipy`). It finds every dot in each
+   image and stores them as circles in `app/src/main/assets/wallpapers/`; the app draws them at the phone's exact
+   resolution, so they stay sharp. It reports the size each adds to the APK, warns if the total gets too big, and
+   lists any label still missing. (`--format webp` stores the images themselves instead: an exact copy, but
+   enlarged on the phone and about three times bigger.)
 4. For a new design, add its label to `core/resources/src/main/res/values/strings.xml` as
    `<string name="wallpaper_<name>" tools:ignore="UnusedResources">Name</string>` (the script prints the line).
 5. Rebuild. No code changes are needed. To remove a wallpaper, delete its image and run the script again.

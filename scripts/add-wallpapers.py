@@ -5,13 +5,13 @@ Input:  docs/brand/wallpapers/wallpaper_<name>_<dark|light>.png (or .jpg), portr
 Output: app/src/main/assets/wallpapers/<name>_<dark|light>.<webp|dots>, which the app finds on its own.
 
 Two formats (pick with --format):
-  webp  the image itself, compressed (default).
   dots  every dot found in the image, stored as a circle (centre and radius); the app draws them fresh at the
-        phone's exact resolution, so they stay sharp. Needs numpy and scipy as well.
+        phone's exact resolution, so they stay sharp (default, chosen on the phone). Needs numpy and scipy.
+  webp  the image itself, compressed: an exact copy, but enlarged on the phone and about 3x bigger.
 
 Both folders are git-ignored: the images are generated from docs/brand/wallpaper-prompts.md, not committed.
 Run again after adding or removing images; outputs without a source are deleted.
-Needs Python 3 with Pillow (pip install pillow).
+Needs Python 3 with Pillow, numpy and scipy (pip install pillow numpy scipy).
 """
 import argparse
 import re
@@ -132,7 +132,7 @@ def save_dots(path: Path, width: int, height: int, dots) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--format", choices=["webp", "dots"], default="webp")
+    parser.add_argument("--format", choices=["dots", "webp"], default="dots")
     fmt = parser.parse_args().format
     if not SOURCE.is_dir():
         print(f"No {SOURCE.relative_to(ROOT)}: nothing to add. The gallery will show Pure black / Pure white only.")
