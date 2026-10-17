@@ -47,7 +47,7 @@ Default launchers are designed for engagement: bright icons, notification badges
 | F6 | Appearance customization | P1 | v1.0 |
 | F14 | Onboarding | P0 | v1.0 |
 | F13 | Backup & restore settings | P0 | v1.0 |
-| F7 | Notification filter / inbox | P1 | v1.1 |
+| F7 | Notification filter / inbox | P1 | Deferred (D-039) |
 | F8 | App usage limits & mindful pause (toggleable) | P1 | v1.1 |
 | F9 | Focus mode | P1 | v1.1 |
 | F10 | Screen-time insights & home-screen stats | P1 | v1.1 |
@@ -139,7 +139,8 @@ The default screen shown when I press Home.
 | F6.7 | Clock shows **hh:mm** or **hh:mm:ss** (show seconds on/off); it shrinks to fit one line if needed (D-036). |
 | F6.8 | **Phone wallpaper from ZeroOS** (Settings → Appearance): pick from a small built-in gallery (thumbnail + name); tapping one opens it full screen (swipe left/right to the neighbouring ones, without wrapping around) with a back arrow and **Apply**, which asks **Home screen**, **Lock screen** or **Both**; a screen not chosen is left unchanged. Uses only Android's public `WallpaperManager` (`FLAG_SYSTEM` / `FLAG_LOCK`). Gallery: generated **Pure black** and **Pure white**, plus monochrome images added later from `docs/brand/wallpapers/` (no code change per image). The gallery shows only wallpapers matching the current theme: dark ones (Pure black, dark images) in dark mode, light ones (Pure white, light images) in light mode; with theme "System" it follows the phone's dark mode. Images are centre-cropped to the phone's real screen size, never stretched, decoded off the main thread and downsampled. "Restore previous" (per screen) brings back the wallpaper ZeroOS set there before; the phone's own earlier wallpaper can't be read by apps, which the screen says. If the phone rejects a separate lock-screen wallpaper, the screen says so (D-038). |
 
-### F7 — Notification Filter
+### F7 — Notification Filter (deferred, D-039)
+Kept for later; not built in v1.1.
 
 | ID | Requirement |
 |---|---|
@@ -176,7 +177,7 @@ The default screen shown when I press Home.
 |---|---|
 | F9.1 | A text button **"focus"** on the home screen starts Focus mode with one tap (opens the duration + allow-list picker). It can be hidden in Settings; Focus can also be started from Settings. While Focus is active, the button is replaced by the remaining time (F9.4), and holding it ends the session (F9.5). |
 | F9.2 | Pick a duration (25 / 50 / 90 min / custom) and an allow-list of apps. |
-| F9.3 | During focus: only allowed apps are shown/launchable; notification filter is maximal. |
+| F9.3 | During focus: only allowed apps are shown/launchable; notification filter is maximal (once F7 is built, D-039; until then Do Not Disturb, F9.7, keeps it quiet). |
 | F9.4 | Home screen shows remaining focus time. |
 | F9.5 | Ending early requires a deliberate action (e.g., hold for 3 s). |
 | F9.6 | Optional scheduled focus sessions (e.g., weekdays 09:00–12:00). |
@@ -459,7 +460,7 @@ Low-fidelity wireframes live in `docs/wireframes.md`. They are approved **phase 
 |---|---|
 | **M0 – Prototype** | Home screen + app list + set as default launcher. |
 | **v1.0 – Daily driver** | F1–F6, F13, F14; installed on my phone as the default launcher. |
-| **v1.1** | F7 Notification filter, F8 Usage limits, F9 Focus mode, F10 Insights & home-screen stats. |
+| **v1.1** | F8 Usage limits, F9 Focus mode, F10 Insights & home-screen stats (F7 Notification filter deferred, D-039). |
 | **v1.2** | F11 Grayscale shortcut, F12 Widgets (calendar, to-do). |
 | **v1.3** | F16 Short-form content blocker (YouTube Shorts + Instagram Reels). |
 

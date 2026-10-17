@@ -13,7 +13,7 @@ Time estimates are **full-time-equivalent for one developer**; scale to your own
 | 1 | Prototype (M0) | 1 week | Usable as default launcher |
 | 2 | v1.0 features | 3–4 weeks | F1–F6, F13, F14 complete |
 | 3 | Daily-driver hardening | 1 week | v1.0 installed as my default launcher |
-| 4 | v1.1 Wellbeing & insights | 5–6 weeks | F7, F8, F9, F10 |
+| 4 | v1.1 Wellbeing & insights | 5–6 weeks | F8, F9, F10 (F7 deferred, D-039) |
 | 5 | v1.2 Extras | 1 week | F11, F12 |
 | 6 | v1.3 Short-form blocker | 2–3 weeks | F16 |
 | **Total** | | **~4 months** | |
@@ -273,9 +273,9 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 
 ---
 
-## Phase 4 — v1.1 Wellbeing & Insights (F7, F8, F9, F10)
+## Phase 4 — v1.1 Wellbeing & Insights (F8, F9, F10; F7 deferred, D-039)
 
-### Step 4.0 — Wireframes for Phase 4
+### Step 4.0 — Wireframes for Phase 4 ✅
 Permission explanation screens, mindful pause, limit reached, wellbeing settings (F8 toggles), notification inbox and filter settings, focus picker, Insights, and the home screen-time stats in each style. **Approved by me before Step 4.1.**
 
 ### Step 4.1 — Infrastructure
@@ -296,7 +296,8 @@ Build in this order:
 3. **Daily limits (F8.3–F8.6)**: today's usage via `UsageStatsManager.queryEvents` since local midnight; cache in Room; block screen with "5 more minutes"; remaining time in app list.
 4. **Outside-launcher enforcement (F8.7)**: Accessibility service on `TYPE_WINDOW_STATE_CHANGED` for limited packages → block overlay.
 
-### Step 4.4 — Notification filter (F7)
+### Step 4.4 — Notification filter (F7) — deferred (D-039)
+*Not built in v1.1; kept here for later together with wireframe H9. Skip the inbox table, `feature/notifications/` and the digest work in Step 4.1 until then.*
 - `NotificationListenerService`: allowed apps pass; others → `cancelNotification` + store in Room inbox.
 - Never filter `CATEGORY_CALL`, `CATEGORY_ALARM`, or system/critical notifications.
 - Inbox screen (open stored `contentIntent` if valid, dismiss, clear all); scheduled digests.
@@ -316,7 +317,7 @@ Reuses the usage calculation from Step 4.3.
 - Robolectric: Room DAOs + migration tests, WorkManager jobs (`work-testing`), notification listener logic with fake `StatusBarNotification`s, accessibility event handling with fake events.
 - UI + screenshots: pause, limit-reached, inbox, focus start/end, permission explanation screens, Insights screen, home with each stats style (dark/light, default/largest font, permission not granted).
 
-**Done when:** F7–F10 met and traced; every feature works with permissions denied; manual check: limits and filter work on the test phone, services survive overnight + reboot with the F14.6 settings applied, and home-screen screen time/unlocks roughly match the phone's own screen-time screen.
+**Done when:** F8–F10 met and traced (F7 deferred); every feature works with permissions denied; manual check: limits work on the test phone, services survive overnight + reboot with the F14.6 settings applied, and home-screen screen time/unlocks roughly match the phone's own screen-time screen.
 
 ---
 
@@ -385,6 +386,7 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 - Every bug: regression test first.
 
 ## Deferred Work (not planned now; revisit when wanted)
+- Notification filter and inbox (F7, Step 4.4, wireframe H9; D-039).
 - Instrumented tests on an emulator or the phone.
 - Macrobenchmark + Baseline Profiles for startup (NFR-P1/P2 measured automatically).
 - Translations / RTL.
