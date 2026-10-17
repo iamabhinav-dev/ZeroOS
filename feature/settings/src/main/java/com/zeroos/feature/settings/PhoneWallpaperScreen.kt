@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +26,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
@@ -95,7 +99,7 @@ fun PhoneWallpaperScreen(
 ) {
     val previewing = state.previewing
     if (previewing != null) {
-        WallpaperPreview(previewing, state.choosing, actions, image)
+        WallpaperPreview(state.items, previewing, state.choosing, actions, image)
         return
     }
     SettingsPageScaffold(stringResource(R.string.phone_wallpaper_title), SettingsTestTags.PHONE_WALLPAPER, onBack) {
@@ -112,70 +116,6 @@ fun PhoneWallpaperScreen(
         }
         item { BodyText(stringResource(R.string.phone_wallpaper_note), muted = true, small = true) }
     }
-}
-
-/** Wireframe F5c: the wallpaper full screen, cropped as it will be, with a back arrow and Apply. */
-@Composable
-private fun WallpaperPreview(
-    item: WallpaperItem,
-    choosing: Boolean,
-    actions: PhoneWallpaperActions,
-    image: suspend (WallpaperItem, Int, Int) -> ImageBitmap?
-) {
-    val tokens = ZeroTheme.tokens
-    BackHandler(onBack = actions.onClosePreview)
-    val size = LocalWindowInfo.current.containerSize
-    val bitmap by produceState<ImageBitmap?>(null, item.id, size) {
-        if (size.width > 0 && size.height > 0) value = image(item, size.width, size.height)
-    }
-    Box(Modifier.fillMaxSize().background(tokens.colors.background).testTag(SettingsTestTags.WALLPAPER_PREVIEW)) {
-        bitmap?.let { Image(it, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()) }
-        Column(Modifier.fillMaxSize().safeDrawingPadding()) {
-            Box(
-                Modifier
-                    .size(tokens.spacing.minTouchTarget)
-                    .clickable(role = Role.Button, onClick = actions.onClosePreview),
-                contentAlignment = Alignment.Center
-            ) {
-                DotMatrixIcon(
-                    DotIcons.Back,
-                    height = tokens.spacing.minTouchTarget / 2,
-                    contentDescription = stringResource(R.string.common_back)
-                )
-            }
-            Spacer(Modifier.weight(1f))
-            Text(
-                wallpaperLabel(item.name),
-                color = tokens.colors.text,
-                fontSize = tokens.textSizes.body,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-            TextAction(
-                stringResource(R.string.phone_wallpaper_apply),
-                onClick = actions.onShowApply,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
-    }
-    if (choosing) ApplyDialog(actions)
-}
-
-/** Apply → Home screen, Lock screen or Both; a screen not chosen is left unchanged (F6.8). */
-@Composable
-private fun ApplyDialog(actions: PhoneWallpaperActions) {
-    AlertDialog(
-        onDismissRequest = actions.onDismissApply,
-        containerColor = ZeroTheme.tokens.colors.background,
-        title = { Text(stringResource(R.string.phone_wallpaper_apply_title)) },
-        text = {
-            Column {
-                MinimalListItem(stringResource(R.string.phone_wallpaper_home_screen), { actions.onApply(setOf(WallpaperScreen.HOME)) })
-                MinimalListItem(stringResource(R.string.phone_wallpaper_lock_screen), { actions.onApply(setOf(WallpaperScreen.LOCK)) })
-                MinimalListItem(stringResource(R.string.phone_wallpaper_both), { actions.onApply(WallpaperScreen.entries.toSet()) })
-            }
-        },
-        confirmButton = {}
-    )
 }
 
 @Composable

@@ -432,7 +432,9 @@ system Back gesture still works.*
 │                                    │  Back gesture does the same
 │                                    │
 │            (wallpaper,             │  full screen, cropped exactly as it
-│             full screen)           │  will be on the phone
+│             full screen)           │  will be on the phone; swipe left/right
+│                                    │  for the next/previous one (stops at the
+│                                    │  first and last, no wrapping)
 │                                    │
 │                Rose                │  name
 │               Apply                │  → dialog below
