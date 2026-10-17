@@ -12,6 +12,8 @@ import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.createSettingsDataStore
+import com.zeroos.core.data.wallpaper.AndroidWallpaperSystem
+import com.zeroos.core.data.wallpaper.PhoneWallpapers
 import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.Logger
 import dagger.Module
@@ -73,6 +75,16 @@ object DataModule {
     @Singleton
     fun homeAppsCache(@ApplicationContext context: Context, logger: Logger): HomeAppsCache =
         HomeAppsCache(File(context.cacheDir, "home_apps.json"), logger)
+
+    @Provides
+    @Singleton
+    fun phoneWallpapers(
+        @ApplicationContext context: Context,
+        settings: SettingsRepository,
+        io: CoroutineDispatcher,
+        logger: Logger
+    ): PhoneWallpapers =
+        PhoneWallpapers(settings, AndroidWallpaperSystem(context), io, logger)
 
     /** Dispatcher for disk and system-service work. */
     @Provides
