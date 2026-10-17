@@ -25,3 +25,6 @@ Other findings:
   while the spike's service is on. Limiting the service to YouTube and Instagram (`packageNames`, spike-4-limited)
   did **not** remove the warning. Decision: keep D-023 as is; the user doesn't need a payment app and accepts the
   warning while the F16/F8 service is on. Other UPI apps may do the same.
+- **Overnight service survival (2026-10-17):** not tested with the spike (uninstalled). Moved to Phase 4's manual
+  check, where ZeroOS's own Accessibility service must survive overnight and a reboot. The launcher itself kept
+  working overnight on 0.0.14.

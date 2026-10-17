@@ -193,4 +193,6 @@ kept for later. Focus mode (F9.3) relies on Do Not Disturb (F9.7) for quiet unti
 ---
 
 ## Pending (to be decided during the plan)
-- Remaining spike check (D-028), see `docs/spike/RESULTS.md`: overnight survival (before Phase 4).
+- ~~Remaining spike check (D-028): overnight survival before Phase 4.~~ Moved into Phase 4's own manual check
+  ("services survive overnight + reboot", Step 4.x Done-when) on 2026-10-17: the spike is uninstalled and ZeroOS
+  gets its own services there. ZeroOS itself was fine overnight (Step 3.2).
