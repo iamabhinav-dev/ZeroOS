@@ -14,6 +14,7 @@ import com.zeroos.core.logging.FileLogger
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.info
 import com.zeroos.core.logging.warn
+import com.zeroos.launcher.diagnostics.MemoryReader
 import com.zeroos.launcher.safemode.CrashLoopGuard
 import dagger.hilt.android.HiltAndroidApp
 import java.io.File
@@ -42,6 +43,8 @@ class ZeroApplication : Application() {
     @Inject lateinit var appsRepository: AppsRepository
 
     @Inject lateinit var favoritesRepository: FavoritesRepository
+
+    @Inject lateinit var memoryReader: MemoryReader
 
     /** Work that lives as long as the app process. */
     private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -72,6 +75,12 @@ class ZeroApplication : Application() {
             appsRepository.apps.collect { apps -> favoritesRepository.pruneUninstalled(apps.map { it.key.packageName }.toSet()) }
         }
         if (BuildConfig.DEBUG) enableStrictMode()
+    }
+
+    /** Leaving ZeroOS: log its memory once, so a day of use leaves samples in the log (NFR-P4). */
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        if (level == TRIM_MEMORY_UI_HIDDEN) appScope.launch { logger.info(TAG, "memory: ${memoryReader.megabytes()} MB") }
     }
 
     private fun appInfo() = "ZeroOS ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}, ${BuildConfig.BUILD_TYPE}), " +
