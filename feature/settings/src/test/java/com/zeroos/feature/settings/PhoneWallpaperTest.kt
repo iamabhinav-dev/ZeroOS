@@ -13,6 +13,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
 import androidx.datastore.core.DataStoreFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -119,6 +122,38 @@ class PhoneWallpaperScreenTest {
         compose.onNodeWithContentDescription("Back").performClick()
         compose.onNodeWithText("Apply").performClick()
         assertEquals(listOf("close", "apply?"), calls)
+    }
+
+    @Test
+    fun f6_8_swipeGoesToTheNeighbouringWallpaper() {
+        show(preview("rose_dark"))
+        compose.onNodeWithTag(SettingsTestTags.WALLPAPER_PREVIEW).performTouchInput { swipeLeft() }
+        compose.waitForIdle()
+        assertEquals(listOf("open:wave_dark"), calls)
+    }
+
+    @Test
+    fun f6_8_swipeRightGoesBack() {
+        show(preview("leaf_dark"))
+        compose.onNodeWithTag(SettingsTestTags.WALLPAPER_PREVIEW).performTouchInput { swipeRight() }
+        compose.waitForIdle()
+        assertEquals(listOf("open:pure_black"), calls)
+    }
+
+    @Test
+    fun f6_8_noWrappingAroundAtTheEnds() {
+        show(preview("wave_dark"))
+        compose.onNodeWithTag(SettingsTestTags.WALLPAPER_PREVIEW).performTouchInput { swipeLeft() }
+        compose.waitForIdle()
+        assertEquals("last wallpaper: nothing after it", emptyList<String>(), calls)
+    }
+
+    @Test
+    fun f6_8_noWrappingAroundAtTheStart() {
+        show(preview("pure_black"))
+        compose.onNodeWithTag(SettingsTestTags.WALLPAPER_PREVIEW).performTouchInput { swipeRight() }
+        compose.waitForIdle()
+        assertEquals("first wallpaper: nothing before it", emptyList<String>(), calls)
     }
 
     @Test

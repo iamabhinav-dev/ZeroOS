@@ -199,4 +199,6 @@ object SettingsTestTags {
     const val WALLPAPER_PREVIEW = "settings_wallpaper_preview"
 
     fun wallpaper(id: String) = "wallpaper_$id"
+
+    fun wallpaperPage(id: String) = "wallpaper_page_$id"
 }
