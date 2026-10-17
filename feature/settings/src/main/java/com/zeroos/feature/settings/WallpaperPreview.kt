@@ -86,7 +86,7 @@ internal fun WallpaperPreview(
             ) {
                 DotMatrixIcon(
                     DotIcons.Back,
-                    height = tokens.spacing.minTouchTarget / 2,
+                    height = tokens.spacing.minTouchTarget * BACK_ARROW_SHARE,
                     contentDescription = stringResource(R.string.common_back)
                 )
             }
@@ -136,3 +136,6 @@ private fun ApplyDialog(actions: PhoneWallpaperActions) {
         confirmButton = {}
     )
 }
+
+/** The back arrow fills three quarters of its 48 dp touch target (36 dp), easy to see over any wallpaper. */
+private const val BACK_ARROW_SHARE = 0.75f
