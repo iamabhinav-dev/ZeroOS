@@ -4,6 +4,11 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.15 (versionCode 15)
+- Larger back arrow on the full-screen wallpaper preview (F6.8)
+- Groundwork for Phase 4: permission explanation screen and checks (Usage access, Accessibility, Do Not
+  Disturb); ZeroOS now appears in Android's Usage access list (Step 4.1). Nothing asks for it yet
+- First release build for daily use (smaller and faster than the debug builds so far)
 ## 0.0.14 (versionCode 14)
 - Wallpaper preview: swipe left or right to the next or previous wallpaper; it stops at the first and last (F6.8)
 ## 0.0.13 (versionCode 13)
