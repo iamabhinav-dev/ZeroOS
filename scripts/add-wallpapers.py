@@ -37,46 +37,89 @@ DOTS_UNIT = 8                    # positions and radii are stored in 1/8 pixel
 
 
 def find_dots(image: Image.Image, dark: bool):
-    """Centre (x, y) and radius of every dot, in source pixels. Touching dots are filled with several circles."""
+    """Centre (x, y) and radius of every dot, in source pixels.
+
+    A region is taken as one dot only if it's round and the original is lit under almost all of the circle.
+    Otherwise (dots touching each other) it's split by looking again with a stricter brightness threshold;
+    what still won't split is filled with dots of normal size, so no oversized circle can appear.
+    """
     import numpy as np
     from scipy import ndimage
 
     grey = np.asarray(image.convert("L"), dtype=np.float32) / 255.0
     ink = grey if dark else 1.0 - grey
-    mask = ink > 0.5
-    labels, _ = ndimage.label(mask)
-    dots = []
+    height, width = ink.shape
+    yy_all, xx_all = np.mgrid[0:height, 0:width]
+    dots, leftovers = [], []
+
+    def as_dot(region, y0, x0):
+        """(x, y, r) if this region is one clean round dot; () if it's too faint to matter; None to split it."""
+        h, w = region.shape
+        local = ink[y0:y0 + h, x0:x0 + w]
+        # The region already holds the dot's soft edge (lit above 0.3); no neighbouring dots are counted.
+        weight = local * region
+        area = float(weight.sum())
+        if area < 0.4:
+            return ()
+        ys, xs = yy_all[y0:y0 + h, x0:x0 + w], xx_all[y0:y0 + h, x0:x0 + w]
+        cx, cy = float((xs * weight).sum() / area) + 0.5, float((ys * weight).sum() / area) + 0.5
+        r = float(np.sqrt(area / np.pi))
+        if r <= 1.6:
+            return (cx, cy, r)
+        inside = (xs + 0.5 - cx) ** 2 + (ys + 0.5 - cy) ** 2 <= (r * 0.85) ** 2
+        if not inside.any():
+            return None
+        core = local[inside]
+        # One real dot is evenly solid inside; packed dots show darker gaps between them.
+        solid = float(core.mean()) >= 0.85 and float(core.std()) <= 0.08 and float(core.min()) >= 0.6
+        round_shape = region.sum() >= 0.7 * np.pi * (max(h, w) / 2 - 1) ** 2
+        return (cx, cy, r) if solid and round_shape else None
+
+    def split(region, y0, x0, threshold):
+        dot = as_dot(region, y0, x0)
+        if dot == ():
+            return
+        if dot is not None:
+            dots.append(dot)
+            return
+        if threshold > 0.9:
+            leftovers.append((region, y0, x0))
+            return
+        stricter = region & (ink[y0:y0 + region.shape[0], x0:x0 + region.shape[1]] > threshold)
+        labels, count = ndimage.label(stricter)
+        if count <= 1:
+            # Still one piece: look again, stricter.
+            split(region, y0, x0, threshold + 0.15)
+            return
+        for index, box in enumerate(ndimage.find_objects(labels), start=1):
+            part = np.zeros_like(region)
+            part[box] = labels[box] == index
+            # Give each part its own soft edge back (pixels of the region next to it, not of other parts).
+            part = ndimage.binary_dilation(part) & region & ((labels == 0) | (labels == index))
+            split(part, y0, x0, threshold + 0.15)
+
+    labels, _ = ndimage.label(ink > 0.3)
     for index, box in enumerate(ndimage.find_objects(labels), start=1):
         if box is None:
             continue
-        # Look one pixel around the dot so its soft edge counts towards its size.
-        y0, y1 = max(box[0].start - 1, 0), min(box[0].stop + 1, mask.shape[0])
-        x0, x1 = max(box[1].start - 1, 0), min(box[1].stop + 1, mask.shape[1])
-        crop = labels[y0:y1, x0:x1]
-        own = crop == index
-        # Only this dot's own soft edge, not the edges of neighbouring dots.
-        near = ndimage.binary_dilation(own) & ((crop == 0) | own)
-        weight = ink[y0:y1, x0:x1] * near
-        area = float(weight.sum())
-        if area < 0.5:
-            continue
-        h, w = y1 - y0 - 2, x1 - x0 - 2
-        round_enough = max(w, h) <= 1.35 * max(min(w, h), 1) and own.sum() >= 0.6 * np.pi * (max(w, h) / 2) ** 2
-        if round_enough or max(w, h) <= 3:
-            ys, xs = np.mgrid[y0:y1, x0:x1]
-            dots.append((float((xs * weight).sum() / area) + 0.5, float((ys * weight).sum() / area) + 0.5, float(np.sqrt(area / np.pi))))
-            continue
-        # Merged dots: place circles at the thickest points until the blob is covered.
-        left = own.copy()
+        y0, y1 = max(box[0].start - 1, 0), min(box[0].stop + 1, height)
+        x0, x1 = max(box[1].start - 1, 0), min(box[1].stop + 1, width)
+        split(labels[y0:y1, x0:x1] == index, y0, x0, 0.45)
+
+    # Regions that never split: fill with dots no larger than the image's normal dots.
+    radii = np.array([d[2] for d in dots]) if dots else np.array([1.5])
+    cap = max(1.5, float(np.percentile(radii, 90)))
+    for region, y0, x0 in leftovers:
+        left = region & (ink[y0:y0 + region.shape[0], x0:x0 + region.shape[1]] > 0.5)
+        yy, xx = np.ogrid[: left.shape[0], : left.shape[1]]
         while left.sum() > 2:
             distance = ndimage.distance_transform_edt(left)
             py, px = np.unravel_index(int(distance.argmax()), distance.shape)
-            radius = float(distance[py, px])
+            radius = min(float(distance[py, px]), cap)
             if radius < 0.75:
                 break
             dots.append((x0 + px + 0.5, y0 + py + 0.5, radius))
-            yy, xx = np.ogrid[: left.shape[0], : left.shape[1]]
-            left &= (yy - py) ** 2 + (xx - px) ** 2 > (radius + 0.5) ** 2
+            left &= (yy - py) ** 2 + (xx - px) ** 2 > (radius + 0.6) ** 2
     return dots
 
 
