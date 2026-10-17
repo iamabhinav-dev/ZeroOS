@@ -190,6 +190,19 @@ F7 (notification filter, inbox, digests) is not built in v1.1. Requirements, pla
 kept for later. Focus mode (F9.3) relies on Do Not Disturb (F9.7) for quiet until F7 exists.
 *Why:* User's choice, to keep Phase 4 smaller.
 
+**D-040 — Phase 4 starts during the week of use** · 2026-10-17 · Accepted
+Phase 4 work begins while Step 3.4 (one week of daily use) and the memory check are still running; bugs found
+during the week are fixed before new Phase 4 work continues. Step 4.1 adds only what the next steps use: Room
+(per-app rules, focus schedules) and the permission helper; WorkManager arrives with scheduled focus (Step 4.5)
+and the notification module stays deferred (D-039).
+*Why:* User's choice; daily use, cold start, battery and overnight checks were already good.
+
+**D-041 — Per-app rules and focus schedules in the settings file** · 2026-10-17 · Accepted
+Wellbeing's per-app rules (mindful pause, daily limit) and focus schedules are stored in `LauncherSettings`
+(DataStore JSON, D-029), not in a Room database. They're small, and this puts them in the settings backup
+(F13.4) automatically. Room is added only if a later step needs it (e.g. a usage-history cache).
+*Why:* User's choice; less machinery, backup for free.
+
 ---
 
 ## Pending (to be decided during the plan)
