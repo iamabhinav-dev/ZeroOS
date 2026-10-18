@@ -132,6 +132,13 @@ class AppListScreenTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_scrollerHighlightsCurrentLetterScreenshot() {
+        show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun f2_7_scrollerWhileSlidingScreenshot() {
         show(listState(options = AppListSettings(keyboardAutoOpen = false, fastScroller = true)))
         // Hold a finger on "G" (Gmail): G stands out, the other letters fade.
@@ -150,6 +157,13 @@ class AppListScreenTest {
 
     @Test
     fun step2_4_listScreenshot() {
+        show(listState())
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_listScreenshot() {
         show(listState())
         compose.onRoot().captureRoboImage()
     }

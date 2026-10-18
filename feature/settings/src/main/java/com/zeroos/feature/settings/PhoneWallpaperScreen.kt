@@ -102,9 +102,13 @@ fun PhoneWallpaperScreen(
         WallpaperPreview(state.items, previewing, state.choosing, actions, image)
         return
     }
+    // Three thumbnails across in portrait; as many as fit their usual width in landscape.
+    val spacing = ZeroTheme.tokens.spacing
+    val windowWidth = with(LocalDensity.current) { LocalWindowInfo.current.containerSize.width.toDp() }
+    val columns = maxOf(GALLERY_COLUMNS, (windowWidth / (spacing.thumbnailWidth + spacing.screenGutter)).toInt())
     SettingsPageScaffold(stringResource(R.string.phone_wallpaper_title), SettingsTestTags.PHONE_WALLPAPER, onBack) {
-        state.items.chunked(GALLERY_COLUMNS).forEach { row ->
-            item(key = row.first().id) { GalleryRow(row, state.currentHomeId, image, actions.onOpen) }
+        state.items.chunked(columns).forEach { row ->
+            item(key = row.first().id) { GalleryRow(row, columns, state.currentHomeId, image, actions.onOpen) }
         }
         item { BodyText(status(state), muted = true, small = true) }
         state.result?.let { outcome -> outcomeLines(outcome).forEach { line -> item { BodyText(stringResource(line)) } } }
@@ -121,6 +125,7 @@ fun PhoneWallpaperScreen(
 @Composable
 private fun GalleryRow(
     row: List<WallpaperItem>,
+    columns: Int,
     selectedId: String?,
     thumbnail: suspend (WallpaperItem, Int, Int) -> ImageBitmap?,
     onOpen: (WallpaperItem) -> Unit
@@ -131,7 +136,7 @@ private fun GalleryRow(
         horizontalArrangement = Arrangement.spacedBy(tokens.spacing.screenGutter)
     ) {
         row.forEach { GalleryItem(it, it.id == selectedId, thumbnail, onOpen, Modifier.weight(1f)) }
-        repeat(GALLERY_COLUMNS - row.size) { Spacer(Modifier.weight(1f)) }
+        repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
     }
 }
 

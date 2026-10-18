@@ -63,6 +63,10 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **UI:** no app icons, badges, or colorful elements, which goes against the product's purpose. Use theme tokens from `core/ui` (no hardcoded colors, sizes, spacing, or durations).
 - **Text (NFR-L3–L7):** every user-facing text goes in `core/resources` (`strings.xml` / `plurals.xml`); never hardcode text in Kotlin or Compose. **Search for an existing string before adding one** and reuse it (`common_*` for shared text, `<screen>_*` for screen-specific text). Use placeholders and plurals, never concatenation. The build fails on hardcoded text.
 - **Accessibility:** content descriptions, 48dp touch targets, WCAG AA contrast (NFR-A1–A4).
+- **Landscape:** every screen must work in portrait **and** landscape: nothing cut off, buttons reachable, no
+  oversized art. Screens that don't scroll use a two-pane layout when wider than tall. Every new or changed
+  screen gets a landscape screenshot test (`@Config(qualifiers = "w872dp-h392dp-land-xxhdpi")`, named
+  `landscape_*`) that is looked at before committing.
 - **Performance:** no polling loops, no work on the main thread, and use system callbacks (NFR-P1–P6).
 - **Time:** never call `System.currentTimeMillis()` or `LocalDate.now()` directly in logic; inject a `Clock`/`TimeSource` so tests can control time.
 - **State:** survive process death and config changes (`SavedStateHandle`, persisted settings) (NFR-R7).

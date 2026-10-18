@@ -118,4 +118,11 @@ class FavoritesEditorTest {
         showEditor(FavoritesEditorState(favorites, max = 6))
         compose.onRoot().captureRoboImage()
     }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_editorScreenshot() {
+        showEditor(FavoritesEditorState(favorites, max = 6))
+        compose.onRoot().captureRoboImage()
+    }
 }

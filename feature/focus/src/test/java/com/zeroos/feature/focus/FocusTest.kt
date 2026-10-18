@@ -205,4 +205,22 @@ class FocusScreensTest {
         compose.mainClock.advanceTimeByFrame()
         compose.onRoot().captureRoboImage()
     }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_pickerScreenshot() {
+        preload()
+        compose.setContent { ZeroTheme { FocusPickerScreen(state, actions, onBack = {}) } }
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_startedScreenshot() {
+        preload()
+        compose.mainClock.autoAdvance = false
+        compose.setContent { ZeroTheme { FocusStartedScreen(FocusIcon.MIX, 50, onDone = {}) } }
+        compose.mainClock.advanceTimeByFrame()
+        compose.onRoot().captureRoboImage()
+    }
 }

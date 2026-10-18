@@ -130,6 +130,13 @@ class AppearanceTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_appearanceDarkScreenshot() {
+        show(AppearanceSettings())
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step2_8_appearanceLightPreviewScreenshot() {
         show(AppearanceSettings(theme = ThemeMode.LIGHT, textSize = TextSize.EXTRA_LARGE))
         compose.onRoot().captureRoboImage()

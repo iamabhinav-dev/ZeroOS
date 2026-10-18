@@ -195,6 +195,14 @@ class SettingsScreensTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_aboutWordmarkScreenshot() {
+        compose.setContent { ZeroTheme { AboutScreen(AboutState("0.0.12", 12), onLicenses = {}, onBack = {}) } }
+        compose.onNodeWithContentDescription("ZeroOS").assertExists()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun d037_aboutWordmarkLightScreenshot() {
         compose.setContent { ZeroTheme(ThemeMode.LIGHT) { AboutScreen(AboutState("0.0.12", 12), onLicenses = {}, onBack = {}) } }
         compose.onRoot().captureRoboImage()
@@ -210,6 +218,13 @@ class SettingsScreensTest {
 
     @Test
     fun step2_11_settingsMainScreenshot() {
+        showMain()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_settingsMainScreenshot() {
         showMain()
         compose.onRoot().captureRoboImage()
     }

@@ -5,15 +5,19 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -160,18 +164,41 @@ private fun LimitScreen(app: AppEntry, screen: StopScreen.Limit, pun: Int, actio
 }
 
 @Composable
-private fun StopLayout(art: @Composable () -> Unit, buttons: @Composable () -> Unit, text: @Composable ColumnScope.() -> Unit) {
+internal fun StopLayout(
+    art: @Composable () -> Unit,
+    buttons: @Composable () -> Unit,
+    buttonsArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
+    text: @Composable ColumnScope.() -> Unit
+) {
     val tokens = ZeroTheme.tokens
-    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Spacer(Modifier.weight(1f))
-        art()
+    val textColumn = @Composable { modifier: Modifier ->
         Column(
-            Modifier.fillMaxWidth().padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.sectionGap),
+            modifier.fillMaxWidth().padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.sectionGap),
             verticalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap),
             content = text
         )
-        Spacer(Modifier.weight(1f))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { buttons() }
+    }
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        if (maxWidth > maxHeight) {
+            // Landscape: the dot art on the left, text and buttons on the right, so nothing is pushed off screen.
+            Row(Modifier.fillMaxSize(), verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.weight(1f), contentAlignment = Alignment.Center) { art() }
+                Column(Modifier.weight(1f).fillMaxHeight()) {
+                    Spacer(Modifier.weight(1f))
+                    textColumn(Modifier.verticalScroll(rememberScrollState()))
+                    Spacer(Modifier.weight(1f))
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = buttonsArrangement) { buttons() }
+                }
+            }
+        } else {
+            Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Spacer(Modifier.weight(1f))
+                art()
+                textColumn(Modifier)
+                Spacer(Modifier.weight(1f))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = buttonsArrangement) { buttons() }
+            }
+        }
     }
 }
 

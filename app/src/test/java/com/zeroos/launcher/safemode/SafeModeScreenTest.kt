@@ -14,6 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
@@ -54,6 +55,13 @@ class SafeModeScreenTest {
 
     @Test
     fun step1_5_safeModeScreenshot() {
+        show()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_safeModeScreenshot() {
         show()
         compose.onRoot().captureRoboImage()
     }

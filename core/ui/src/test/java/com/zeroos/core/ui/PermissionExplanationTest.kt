@@ -122,6 +122,13 @@ class PermissionExplanationTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_accessibilityScreenshot() {
+        show(SpecialPermission.ACCESSIBILITY)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step4_1_accessibilityLightScreenshot() {
         show(SpecialPermission.ACCESSIBILITY, notYet = true, theme = ThemeMode.LIGHT)
         compose.onRoot().captureRoboImage()

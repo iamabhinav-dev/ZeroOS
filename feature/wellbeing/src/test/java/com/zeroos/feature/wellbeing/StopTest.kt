@@ -281,4 +281,31 @@ class StopScreensTest {
         compose.mainClock.advanceTimeBy(2_000)
         compose.onRoot().captureRoboImage()
     }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_pauseScreenshot() {
+        compose.mainClock.autoAdvance = false
+        show(StopScreen.Pause(5, intentionPrompt = true))
+        compose.mainClock.advanceTimeBy(2_500)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_limitScreenshot() {
+        compose.mainClock.autoAdvance = false
+        show(StopScreen.Limit(30, 2), pun = 0)
+        compose.mainClock.advanceTimeBy(3_000)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_breakScreenshot() {
+        compose.mainClock.autoAdvance = false
+        compose.setContent { ZeroTheme { BreakScreen(pun = 0, buttonPun = 0, waitSeconds = 5, onDone = {}) } }
+        compose.mainClock.advanceTimeBy(2_000)
+        compose.onRoot().captureRoboImage()
+    }
 }

@@ -6,13 +6,16 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -76,35 +79,58 @@ data class FocusPickerActions(
     val onStart: () -> Unit
 )
 
-/** Wireframe H11. */
+/** Wireframe H11. In landscape the icon and duration sit on the left and the app list on the right. */
 @Composable
 fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBack: () -> Unit) {
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
-    Column(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(FocusTestTags.PICKER)) {
-        LazyColumn(Modifier.weight(1f)) {
-            item { ScreenTitle(stringResource(R.string.focus_title)) }
-            item {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    FocusMark(state.icon, tokens.spacing.focusMarkLarge, stringResource(R.string.focus_icon_description))
-                }
-            }
-            item { BodyText(stringResource(R.string.focus_how_long)) }
-            item { Presets(state.minutes, actions.onPreset) }
-            item {
-                val custom = state.minutes?.takeIf { it !in FOCUS_PRESETS }
-                SettingRow(
-                    stringResource(R.string.focus_custom),
-                    stringResource(R.string.wellbeing_minutes, custom ?: CUSTOM_HINT),
-                    actions.onCustom,
-                    Modifier.semantics { selected = custom != null }.outlinedIf(custom != null)
-                )
-            }
-            item { BodyText(stringResource(R.string.focus_apps)) }
-            items(state.apps, key = { it.key.asString() }) { app -> AllowedApp(app, state.allowed, actions.onToggle) }
+    BoxWithConstraints(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(FocusTestTags.PICKER)) {
+        val start = @Composable {
+            TextAction(stringResource(R.string.focus_start), actions.onStart, modifier = Modifier.testTag(FocusTestTags.START))
         }
-        TextAction(stringResource(R.string.focus_start), actions.onStart, modifier = Modifier.testTag(FocusTestTags.START))
+        if (maxWidth > maxHeight) {
+            Row(Modifier.fillMaxSize()) {
+                Column(Modifier.weight(1f).fillMaxHeight()) {
+                    LazyColumn(Modifier.weight(1f)) { durationItems(state, actions) }
+                    start()
+                }
+                LazyColumn(Modifier.weight(1f)) { appItems(state, actions) }
+            }
+        } else {
+            Column(Modifier.fillMaxSize()) {
+                LazyColumn(Modifier.weight(1f)) {
+                    durationItems(state, actions)
+                    appItems(state, actions)
+                }
+                start()
+            }
+        }
     }
+}
+
+private fun LazyListScope.durationItems(state: FocusPickerState, actions: FocusPickerActions) {
+    item { ScreenTitle(stringResource(R.string.focus_title)) }
+    item {
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            FocusMark(state.icon, ZeroTheme.tokens.spacing.focusMarkLarge, stringResource(R.string.focus_icon_description))
+        }
+    }
+    item { BodyText(stringResource(R.string.focus_how_long)) }
+    item { Presets(state.minutes, actions.onPreset) }
+    item {
+        val custom = state.minutes?.takeIf { it !in FOCUS_PRESETS }
+        SettingRow(
+            stringResource(R.string.focus_custom),
+            stringResource(R.string.wellbeing_minutes, custom ?: CUSTOM_HINT),
+            actions.onCustom,
+            Modifier.semantics { selected = custom != null }.outlinedIf(custom != null)
+        )
+    }
+}
+
+private fun LazyListScope.appItems(state: FocusPickerState, actions: FocusPickerActions) {
+    item { BodyText(stringResource(R.string.focus_apps)) }
+    items(state.apps, key = { it.key.asString() }) { app -> AllowedApp(app, state.allowed, actions.onToggle) }
 }
 
 @Composable

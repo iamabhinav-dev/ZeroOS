@@ -2,6 +2,7 @@ package com.zeroos.feature.wellbeing
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,35 +51,32 @@ fun BreakScreen(pun: Int, buttonPun: Int, waitSeconds: Int, onDone: () -> Unit) 
             left = now - 1
         }
     }
-    Column(
-        Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(StopTestTags.BREAK),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(Modifier.weight(1f))
-        BreathingDots(BREATH_SECONDS, still = rememberReducedMotion(), repeat = true)
-        Column(
-            Modifier.fillMaxWidth().padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.sectionGap),
-            verticalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap)
+    Box(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(StopTestTags.BREAK)) {
+        StopLayout(
+            art = { BreathingDots(BREATH_SECONDS, still = rememberReducedMotion(), repeat = true) },
+            buttons = {
+                val countdown = left
+                if (countdown == null) {
+                    TextAction(
+                        punLine(R.array.wellbeing_puns_break_button, buttonPun),
+                        { left = waitSeconds },
+                        modifier = Modifier.testTag(StopTestTags.BREAK_BUTTON)
+                    )
+                } else {
+                    Text(
+                        countdown.toString(),
+                        color = tokens.colors.text,
+                        fontSize = tokens.textSizes.title,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(tokens.spacing.sectionGap).semantics { liveRegion = LiveRegionMode.Polite }
+                            .testTag(StopTestTags.BREAK_BUTTON)
+                    )
+                }
+            },
+            buttonsArrangement = Arrangement.Center
         ) {
             Line(punLine(R.array.wellbeing_puns_break, pun))
         }
-        Spacer(Modifier.weight(1f))
-        val countdown = left
-        if (countdown == null) {
-            TextAction(punLine(R.array.wellbeing_puns_break_button, buttonPun), {
-                left = waitSeconds
-            }, modifier = Modifier.testTag(StopTestTags.BREAK_BUTTON))
-        } else {
-            Text(
-                countdown.toString(),
-                color = tokens.colors.text,
-                fontSize = tokens.textSizes.title,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(tokens.spacing.sectionGap).semantics { liveRegion = LiveRegionMode.Polite }
-                    .testTag(StopTestTags.BREAK_BUTTON)
-            )
-        }
-        Spacer(Modifier.weight(1f))
     }
 }
 
