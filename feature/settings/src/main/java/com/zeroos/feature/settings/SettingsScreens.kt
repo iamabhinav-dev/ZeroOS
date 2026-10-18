@@ -76,9 +76,11 @@ fun SettingsRoute(
     onClose: () -> Unit,
     onOpenDiagnostics: () -> Unit,
     onStartFocus: () -> Unit = {},
+    /** The page to open on, e.g. Focus when coming back from the Focus picker. */
+    startPage: SettingsPage = SettingsPage.MAIN,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-    var page by rememberSaveable { mutableStateOf(SettingsPage.MAIN) }
+    var page by rememberSaveable { mutableStateOf(startPage) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(page) { viewModel.onPageShown(page) }
     val back = { if (page == SettingsPage.MAIN) onClose() else page = page.parent }

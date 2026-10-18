@@ -37,6 +37,8 @@ data class HomeUiState(
     val showFocus: Boolean = false,
     /** Minutes left in the running session, or null when idle (F9.4). */
     val focusMinutesLeft: Int? = null,
+    /** How much of the session has passed, 0–1, for the filling dot line (F9.4). */
+    val focusProgress: Float = 0f,
     val focusIcon: FocusIcon = FocusIcon.MIX
 )
 
@@ -51,6 +53,10 @@ fun HomeUiState.withFocus(settings: FocusSettings, session: FocusSession?): Home
         val left = it.endsAtMillis - time.toInstant().toEpochMilli()
         ((left + MILLIS_PER_MINUTE - 1) / MILLIS_PER_MINUTE).toInt().coerceAtLeast(1)
     },
+    focusProgress = session?.let {
+        val total = (it.endsAtMillis - it.startedAtMillis).coerceAtLeast(1)
+        ((time.toInstant().toEpochMilli() - it.startedAtMillis).toFloat() / total).coerceIn(0f, 1f)
+    } ?: 0f,
     focusIcon = settings.icon
 )
 

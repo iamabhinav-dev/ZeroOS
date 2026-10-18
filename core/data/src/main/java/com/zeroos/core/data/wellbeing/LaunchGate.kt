@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.stateIn
 class LaunchGate(
     private val apps: AppsRepository,
     settings: SettingsRepository,
-    private val focusRepository: FocusRepository,
+    focusRepository: FocusRepository,
     scope: CoroutineScope,
     private val logger: Logger
 ) {
@@ -58,9 +58,6 @@ class LaunchGate(
         pending.value = null
         return apps.launch(app.key)
     }
-
-    /** Ends focus early (F9.5). */
-    suspend fun endFocus() = focusRepository.end()
 
     /** "Go back" / "Go home": the app stays closed. */
     fun dismiss() {

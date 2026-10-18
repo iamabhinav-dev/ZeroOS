@@ -8,8 +8,13 @@
     <string name="common_dismiss">Dismiss</string>
     <string name="home_not_default">ZeroOS isn\'t your home app</string>
     <string name="home_set_default">Set as default</string>
-    <string name="focus_button">focus</string>
-    <string name="focus_left">focus · %1$dm left</string>
+    <string name="focus_left">%1$dm left</string>
+    <string name="focus_end_title">End focus early?</string>
+    <string name="focus_end_reason">Why are you ending it?</string>
+    <string name="focus_keep">Keep focusing</string>
+    <string name="focus_end">End focus</string>
+    <string name="focus_shorter">Shorter</string>
+    <string name="focus_longer">Longer</string>
     <string name="focus_icon_description">Focus icon</string>
     <string name="focus_title">Focus</string>
     <string name="focus_how_long">How long?</string>

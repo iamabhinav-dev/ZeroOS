@@ -32,8 +32,6 @@ class HomeApps @Inject constructor(
     /** The running focus session (F9.3, F9.4). */
     val focus: Flow<FocusSession?> = gate.focus
 
-    suspend fun endFocus() = gate.endFocus()
-
     fun saver(scope: CoroutineScope) = HomeAppsSaver(cache, scope, io)
 }
 

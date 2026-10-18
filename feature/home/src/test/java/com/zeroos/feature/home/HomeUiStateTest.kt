@@ -138,6 +138,9 @@ class HomeUiStateTest {
         assertEquals(listOf("Phone", "Maps"), active.favorites.map { it.label })
         assertEquals("time left always shows while focusing", true, active.showFocus)
         assertEquals("rounded up", 23, active.focusMinutesLeft)
+        assertEquals("just started: nothing filled yet", 0f, active.focusProgress)
+        val fifthGone = FocusSession(now - 60_000L, now + 4 * 60_000L, emptySet())
+        assertEquals("1 of 5 minutes passed", 0.2f, base.withFocus(FocusSettings(), fifthGone).focusProgress, 0.001f)
         assertEquals(FocusIcon.RIM, active.focusIcon)
         assertEquals(1, base.withFocus(FocusSettings(), session.copy(endsAtMillis = now + 1)).focusMinutesLeft)
     }

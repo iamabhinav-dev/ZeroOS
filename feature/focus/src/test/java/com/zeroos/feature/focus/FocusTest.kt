@@ -3,10 +3,12 @@ package com.zeroos.feature.focus
 import android.content.Context
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.datastore.core.DataStoreFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.core.app.ApplicationProvider
@@ -115,11 +117,19 @@ class FocusPickerViewModelTest {
         val vm = viewModel()
         vm.selectMinutes(90)
         assertEquals(90, vm.state.first { it.minutes == 90 }.minutes)
-        vm.cycleCustom()
+        vm.stepCustom(longer = true)
         assertEquals(105, vm.state.first { it.minutes == 105 }.minutes)
+        vm.stepCustom(longer = false)
+        assertEquals("one step back", 90, vm.state.first { it.minutes == 90 }.minutes)
         vm.selectMinutes(240)
-        vm.cycleCustom()
-        assertEquals("wraps to 5", 5, vm.state.first { it.minutes == 5 }.minutes)
+        vm.stepCustom(longer = true)
+        assertEquals("stops at 240", 240, vm.state.value.minutes)
+        vm.selectMinutes(5)
+        vm.stepCustom(longer = false)
+        assertEquals("stops at 5", 5, vm.state.first { it.minutes == 5 }.minutes)
+        vm.onQueryChange("ma")
+        assertEquals(listOf("Maps"), vm.state.first { it.query == "ma" }.apps.map { it.label })
+        vm.onQueryChange("")
         val phone = vm.state.value.apps.first { it.label == "Phone" }
         vm.toggle(phone)
         assertEquals(listOf(phone.key.asString()), vm.state.first { it.allowed.isNotEmpty() }.allowed)
@@ -157,7 +167,8 @@ class FocusScreensTest {
     private val state = FocusPickerState(FocusIcon.MIX, 50, apps, listOf(key("Phone").asString(), key("Messages").asString()))
     private val actions = FocusPickerActions(
         onPreset = { calls += "preset $it" },
-        onCustom = { calls += "custom" },
+        onCustom = { calls += if (it) "longer" else "shorter" },
+        onQueryChange = { calls += "query $it" },
         onToggle = { calls += "toggle ${it.label}" },
         onStart = { calls += "start" }
     )
@@ -168,10 +179,11 @@ class FocusScreensTest {
     fun f9_2_pickerActions() {
         compose.setContent { ZeroTheme { FocusPickerScreen(state, actions, onBack = {}) } }
         compose.onNodeWithText("25 min").performClick()
-        compose.onNodeWithText("Custom").performClick()
+        compose.onNodeWithContentDescription("Longer").performClick()
+        compose.onNodeWithContentDescription("Shorter").performClick()
         compose.onNodeWithText("Maps").performClick()
         compose.onNodeWithTag(FocusTestTags.START).performClick()
-        assertEquals(listOf("preset 25", "custom", "toggle Maps", "start"), calls)
+        assertEquals(listOf("preset 25", "longer", "shorter", "toggle Maps", "start"), calls)
         // Picked apps show their place.
         compose.onNodeWithText("2").assertExists()
     }
@@ -221,6 +233,41 @@ class FocusScreensTest {
         compose.mainClock.autoAdvance = false
         compose.setContent { ZeroTheme { FocusStartedScreen(FocusIcon.MIX, 50, onDone = {}) } }
         compose.mainClock.advanceTimeByFrame()
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    fun f9_5_endingEarlyNeedsAReason() {
+        var ended = 0
+        var kept = 0
+        compose.mainClock.autoAdvance = false
+        compose.setContent { ZeroTheme { FocusEndScreen(FocusIcon.MIX, onEnd = { ended++ }, onKeep = { kept++ }) } }
+        compose.mainClock.advanceTimeByFrame()
+        compose.onNodeWithText("End focus early?").assertExists()
+        compose.onNodeWithText("End focus").assertDoesNotExist()
+        compose.onNodeWithTag(FocusTestTags.REASON).performTextInput("   ")
+        compose.mainClock.advanceTimeByFrame()
+        compose.onNodeWithText("End focus").assertDoesNotExist()
+        compose.onNodeWithTag(FocusTestTags.REASON).performTextInput("call from work")
+        compose.mainClock.advanceTimeByFrame()
+        compose.onNodeWithText("End focus").performClick()
+        compose.onNodeWithText("Keep focusing").performClick()
+        assertEquals(1, ended)
+        assertEquals(1, kept)
+    }
+
+    @Test
+    fun step4_5_endEarlyScreenshot() {
+        preload()
+        compose.setContent { ZeroTheme { FocusEndScreen(FocusIcon.MIX, onEnd = {}, onKeep = {}) } }
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_endEarlyScreenshot() {
+        preload()
+        compose.setContent { ZeroTheme { FocusEndScreen(FocusIcon.MIX, onEnd = {}, onKeep = {}) } }
         compose.onRoot().captureRoboImage()
     }
 }

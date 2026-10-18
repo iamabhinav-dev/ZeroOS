@@ -215,7 +215,7 @@ class LaunchGateTest {
         assertFalse(gate.launch(app("yt")))
         assertTrue(gate.launch(app("phone")))
         assertEquals(listOf("phone"), launched)
-        gate.endFocus()
+        focus.end()
         gate.focus.first { it == null }
         assertTrue(gate.launch(app("yt")))
     }

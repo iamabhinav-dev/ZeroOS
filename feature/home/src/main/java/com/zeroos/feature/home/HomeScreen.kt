@@ -68,6 +68,7 @@ fun HomeRoute(
     onLongPress: () -> Unit,
     onDoubleTap: () -> Unit = {},
     onOpenFocus: () -> Unit = {},
+    onEndFocusEarly: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -112,11 +113,7 @@ fun HomeRoute(
         onDateClick = { open("calendar", Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR)) },
         slots = HomeSlots(
             focus = if (state.showFocus) {
-                (
-                    {
-                        FocusSlot(state.focusMinutesLeft, state.focusIcon, onOpenFocus, viewModel::endFocus)
-                    }
-                    )
+                { FocusSlot(state.focusMinutesLeft, state.focusProgress, state.focusIcon, onOpenFocus, onEndFocusEarly) }
             } else {
                 null
             }

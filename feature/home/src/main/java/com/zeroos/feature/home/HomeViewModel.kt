@@ -58,11 +58,6 @@ class HomeViewModel @Inject constructor(
         homeApps.launch(app)
     }
 
-    /** Held "focus · 23m left" for 3 s (F9.5). */
-    fun endFocus() {
-        viewModelScope.launch { homeApps.endFocus() }
-    }
-
     /** Favorite long-press menu (F2.8): every app here is already a favorite. */
     fun removeFavorite(app: AppEntry) {
         viewModelScope.launch { actions.removeFavorite(app) }

@@ -3,6 +3,7 @@ package com.zeroos.feature.focus
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.apps.AppSearchIndex
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.visibleApps
 import com.zeroos.core.data.focus.FocusRepository
@@ -23,7 +24,9 @@ data class FocusPickerState(
     val icon: FocusIcon = FocusIcon.MIX,
     val minutes: Int? = null,
     val apps: List<AppEntry> = emptyList(),
-    val allowed: List<String> = emptyList()
+    val allowed: List<String> = emptyList(),
+    /** Filters [apps]; never logged (F17.8). */
+    val query: String = ""
 )
 
 /**
@@ -52,11 +55,12 @@ class FocusPickerViewModel @Inject constructor(
         appsRepository.apps,
         settings.settings,
         savedState.getStateFlow<Int?>(KEY_MINUTES, null),
-        savedState.getStateFlow(KEY_ALLOWED, ArrayList<String>())
-    ) { apps, current, minutes, allowed ->
+        savedState.getStateFlow(KEY_ALLOWED, ArrayList<String>()),
+        savedState.getStateFlow(KEY_QUERY, "")
+    ) { apps, current, minutes, allowed, query ->
         val visible = visibleApps(apps, current)
         val keys = visible.map { it.key.asString() }.toSet()
-        FocusPickerState(current.focus.icon, minutes, visible, allowed.filter { it in keys })
+        FocusPickerState(current.focus.icon, minutes, AppSearchIndex(visible).search(query), allowed.filter { it in keys }, query)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), FocusPickerState())
 
     /** 25 / 50 / 90 min (F9.2). */
@@ -64,10 +68,18 @@ class FocusPickerViewModel @Inject constructor(
         savedState[KEY_MINUTES] = minutes
     }
 
-    /** "Custom": steps through 5–240 min (F9.2, Appendix A). */
-    fun cycleCustom() {
-        val now = state.value.minutes ?: 0
-        savedState[KEY_MINUTES] = CUSTOM_STEPS.firstOrNull { it > now } ?: CUSTOM_STEPS.first()
+    /** "Custom" ‹ ›: one step shorter or longer within 5–240 min, stopping at the ends (F9.2, D-051). */
+    fun stepCustom(longer: Boolean) {
+        val now = state.value.minutes ?: CUSTOM_DEFAULT
+        savedState[KEY_MINUTES] = if (longer) {
+            CUSTOM_STEPS.firstOrNull { it > now } ?: CUSTOM_STEPS.last()
+        } else {
+            CUSTOM_STEPS.lastOrNull { it < now } ?: CUSTOM_STEPS.first()
+        }
+    }
+
+    fun onQueryChange(query: String) {
+        savedState[KEY_QUERY] = query
     }
 
     fun toggle(app: AppEntry) {
@@ -92,12 +104,16 @@ class FocusPickerViewModel @Inject constructor(
     private companion object {
         const val KEY_MINUTES = "focus_minutes"
         const val KEY_ALLOWED = "focus_allowed"
+        const val KEY_QUERY = "focus_query"
         const val STOP_TIMEOUT_MS = 5_000L
     }
 }
 
 /** F9.2 presets. */
 val FOCUS_PRESETS = listOf(25, 50, 90)
+
+/** Shown on "Custom" before a custom length is chosen (H11 shows ‹45 min›). */
+const val CUSTOM_DEFAULT = 45
 
 /** F9.2 custom: 5–240 min, every 5 min up to an hour, then every 15. */
 internal val CUSTOM_STEPS = (5..60 step 5).toList() + (75..240 step 15).toList()

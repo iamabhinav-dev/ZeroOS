@@ -29,6 +29,7 @@ enum class LauncherScreen(val logName: String) {
     APP_LIST("app list"),
     SETTINGS("settings"),
     FOCUS("focus"),
+    FOCUS_END("end focus"),
     DIAGNOSTICS("diagnostics")
 }
 

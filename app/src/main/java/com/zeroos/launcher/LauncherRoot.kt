@@ -20,9 +20,11 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.data.system.defaultHomeIntent
 import com.zeroos.feature.applist.AppListRoute
+import com.zeroos.feature.focus.FocusEndRoute
 import com.zeroos.feature.focus.FocusRoute
 import com.zeroos.feature.home.HomeRoute
 import com.zeroos.feature.onboarding.OnboardingRoute
+import com.zeroos.feature.settings.SettingsPage
 import com.zeroos.feature.settings.SettingsRoute
 import com.zeroos.feature.wellbeing.StopHost
 import com.zeroos.launcher.diagnostics.CrashBanner
@@ -37,6 +39,9 @@ import kotlinx.coroutines.flow.Flow
 fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: LauncherViewModel = hiltViewModel()) {
     var screen by rememberSaveable { mutableStateOf(LauncherScreen.HOME) }
     var openReport by rememberSaveable { mutableStateOf<String?>(null) }
+    // Back from the Focus picker returns to where it was opened: home, or Settings → Focus.
+    var focusFromSettings by rememberSaveable { mutableStateOf(false) }
+    var settingsPage by rememberSaveable { mutableStateOf(SettingsPage.MAIN) }
     val crashReport by viewModel.crashReport.collectAsStateWithLifecycle()
     val onboardingCompleted by viewModel.onboardingCompleted.collectAsStateWithLifecycle()
     val notHomeApp by viewModel.notHomeApp.collectAsStateWithLifecycle()
@@ -72,44 +77,59 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
                     // Swipe down opens search: the app list with its search field (F4.4).
                     // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
                     onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
-                    onLongPress = { screen = LauncherScreen.SETTINGS },
+                    onLongPress = {
+                        settingsPage = SettingsPage.MAIN
+                        screen = LauncherScreen.SETTINGS
+                    },
                     onDoubleTap = viewModel::lockScreen,
-                    onOpenFocus = { screen = LauncherScreen.FOCUS }
+                    onOpenFocus = {
+                        focusFromSettings = false
+                        screen = LauncherScreen.FOCUS
+                    },
+                    onEndFocusEarly = { screen = LauncherScreen.FOCUS_END }
                 )
-                Column(Modifier.align(Alignment.TopCenter).safeDrawingPadding()) {
-                    crashReport?.let { report ->
-                        CrashBanner(
-                            onView = {
-                                viewModel.markCrashSeen()
-                                openReport = report
-                                screen = LauncherScreen.DIAGNOSTICS
-                            },
-                            onDismiss = viewModel::markCrashSeen
-                        )
-                    }
-                    if (notHomeApp) {
-                        NotHomeAppBanner(
-                            onSetDefault = {
-                                try {
-                                    homeDialog.launch(defaultHomeIntent(context))
-                                } catch (e: ActivityNotFoundException) {
-                                    viewModel.onHomeDialogFailed(e)
-                                }
-                            },
-                            onDismiss = viewModel::dismissHomeApp
-                        )
-                    }
-                }
+                HomeBanners(
+                    crashReport = crashReport,
+                    notHomeApp = notHomeApp,
+                    onViewReport = { report ->
+                        viewModel.markCrashSeen()
+                        openReport = report
+                        screen = LauncherScreen.DIAGNOSTICS
+                    },
+                    onDismissCrash = viewModel::markCrashSeen,
+                    onSetDefault = {
+                        try {
+                            homeDialog.launch(defaultHomeIntent(context))
+                        } catch (e: ActivityNotFoundException) {
+                            viewModel.onHomeDialogFailed(e)
+                        }
+                    },
+                    onDismissHome = viewModel::dismissHomeApp,
+                    modifier = Modifier.align(Alignment.TopCenter).safeDrawingPadding()
+                )
             }
 
             LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
 
-            LauncherScreen.FOCUS -> FocusRoute(onClose = { screen = LauncherScreen.HOME })
+            LauncherScreen.FOCUS -> FocusRoute(
+                onBack = {
+                    val (back, page) = focusBack(focusFromSettings)
+                    settingsPage = page
+                    screen = back
+                },
+                onStarted = { screen = LauncherScreen.HOME }
+            )
+
+            LauncherScreen.FOCUS_END -> FocusEndRoute(onDone = { screen = LauncherScreen.HOME })
 
             LauncherScreen.SETTINGS -> SettingsRoute(
                 onClose = { screen = LauncherScreen.HOME },
                 onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS },
-                onStartFocus = { screen = LauncherScreen.FOCUS }
+                onStartFocus = {
+                    focusFromSettings = true
+                    screen = LauncherScreen.FOCUS
+                },
+                startPage = settingsPage
             )
 
             LauncherScreen.DIAGNOSTICS -> DiagnosticsRoute(
@@ -122,5 +142,26 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
                 openReport = openReport
             )
         }
+    }
+}
+
+/** Where Back from the Focus picker goes: home, or Settings → Focus if it was opened there (D-051). */
+internal fun focusBack(fromSettings: Boolean): Pair<LauncherScreen, SettingsPage> =
+    if (fromSettings) LauncherScreen.SETTINGS to SettingsPage.FOCUS else LauncherScreen.HOME to SettingsPage.MAIN
+
+/** The crash banner (F17.10) and "ZeroOS isn't your home app" (F14.7) at the top of home. */
+@Composable
+private fun HomeBanners(
+    crashReport: String?,
+    notHomeApp: Boolean,
+    onViewReport: (String) -> Unit,
+    onDismissCrash: () -> Unit,
+    onSetDefault: () -> Unit,
+    onDismissHome: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
+        crashReport?.let { report -> CrashBanner(onView = { onViewReport(report) }, onDismiss = onDismissCrash) }
+        if (notHomeApp) NotHomeAppBanner(onSetDefault = onSetDefault, onDismiss = onDismissHome)
     }
 }
