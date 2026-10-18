@@ -12,6 +12,13 @@ A personal, minimalist, text-first Android launcher. Sideloaded on my own phone;
 | [docs/wireframes.md](docs/wireframes.md) | Approved screen layouts |
 | [CHANGELOG.md](CHANGELOG.md) | Changes per installed version |
 
+## Before you install — read this
+- Read this README, [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) first.
+  **Installing ZeroOS means you have read and understood them and agree to them.**
+- **Use at your own risk.** ZeroOS replaces your home screen and may cause problems (the phone hard to use,
+  missed notifications or alarms, lost settings, conflicts with your phone's software). You install it on your
+  own judgement; the author and owner of this repository is not responsible for any damage or loss.
+
 ## Setup (command line, no Android Studio)
 - JDK 21 in `~/.local/jdk-21` (builds Java 17 bytecode; Java 21 is needed by Robolectric for API 37)
 - Android SDK in `~/Android/Sdk` (cmdline-tools, platform-tools, `platforms;android-37.0`, `build-tools;37.0.0`)
@@ -74,7 +81,7 @@ shows Pure black and Pure white.
 
 ## Installing on the phone
 1. `./gradlew check assembleRelease`
-2. Copy `app/build/outputs/apk/release/app-release.apk` to the phone (USB file transfer, Drive or Telegram).
+2. Copy `app/build/outputs/apk/release/app-release.apk` to the phone (USB or any file transfer).
 3. Open it on the phone and install over the previous version.
    From v1.1 on (notification filter / Accessibility), Play Protect may block it: Play Store → profile → Play Protect → ⚙ →
    turn off "Scan apps with Play Protect", install, then **turn it back on** (D-018).

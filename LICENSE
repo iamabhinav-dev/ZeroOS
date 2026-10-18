@@ -26,9 +26,23 @@ its GitHub Releases page, and any APK or other build compiled from this source (
    Libraries and the Doto font included in the APKs keep their own licences; see THIRD_PARTY_NOTICES.md and the
    LICENSES/ folder. Nothing here limits your rights under those licences for those parts.
 
-5. NO WARRANTY
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE
-   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+5. USE AT YOUR OWN RISK — NO WARRANTY, NO LIABILITY
+   ZeroOS is a home-screen replacement made by one person for personal use. It may have bugs and may cause
+   problems on your phone, for example: the phone becoming hard to use, missed calls, notifications or alarms,
+   apps not opening, lost settings or data, battery drain, or conflicts with your phone's own software.
+   You choose to install and use it on your own judgement, knowing these risks.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+   TO MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. TO THE FULLEST EXTENT ALLOWED BY
+   LAW, THE AUTHOR AND OWNER OF THIS REPOSITORY IS NOT RESPONSIBLE OR LIABLE FOR ANY CLAIM, LOSS OR DAMAGE OF ANY
+   KIND (DIRECT, INDIRECT, INCIDENTAL, SPECIAL OR CONSEQUENTIAL, INCLUDING LOSS OF DATA, DEVICE MALFUNCTION OR
+   LOST TIME) ARISING FROM DOWNLOADING, INSTALLING, USING OR BEING UNABLE TO USE THE SOFTWARE, EVEN IF ADVISED OF
+   THE POSSIBILITY OF SUCH DAMAGE.
+
+6. ACCEPTANCE
+   Before installing, read README.md, this LICENSE and THIRD_PARTY_NOTICES.md. By downloading, building,
+   installing or using the Software, you confirm that you have read and understood all of them and agree to
+   these terms. If you don't agree, don't install or use it.
 
 Breaking these terms ends your permission to use the Software. For any other use, ask the owner through their
 GitHub profile.
