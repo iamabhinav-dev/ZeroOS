@@ -252,3 +252,9 @@ The user's phone model and brand, measurements from it, apps they use and person
 git-ignored `PERSONAL.md`, never in tracked files (docs, code comments, strings, tests) or commit messages. Public
 files say "the primary phone" / "the test phone". Existing mentions were moved there and made generic.
 *Why:* User's choice; keeps the repo public-ready (D-046).
+
+**D-049 — "Not the home app" line on home (F14.7)** · 2026-10-18 · Accepted
+Some phones' battery-saving modes reset the default home app to the stock launcher, and no app can prevent it with
+public APIs. ZeroOS instead shows a line at the top of home whenever it comes to the front without being the
+default, with a one-tap "Set as default" (the same role dialog as onboarding). Wireframe A6.
+*Why:* User's choice after confirming the reset on the test phone; quick recovery instead of digging in Settings.

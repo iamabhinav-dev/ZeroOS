@@ -95,6 +95,8 @@ Rules: bump `versionCode` for every install; never install an APK built from old
   "View crash report", "Open Home settings" and "Exit safe mode".
 - To switch back to the stock launcher at any time: pull down the notification shade → ⚙ Settings →
   **Apps → Default apps → Home app** → the stock launcher (menu names differ between phones).
+- Some phones' battery-saving modes switch the home app back to the stock launcher. Open ZeroOS from the app
+  drawer and tap **Set as default** on the line at the top of home (F14.7).
 
 ## Licence
 Personal use only. You may install the release APKs, or build ZeroOS yourself, for your own non-commercial use.
