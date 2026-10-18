@@ -4,6 +4,11 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.26 (versionCode 26)
+- Focus picker: a thin line under the search, Start focus as an outlined button, and tapping anywhere on the
+  Custom row picks it
+- Focus icon twice as big on home and on the Focus screens
+- Includes everything from 0.0.24 and 0.0.25 (those releases were replaced by this one)
 ## 0.0.25 (versionCode 25)
 - Back arrow (dotted ‹) at the top of every Settings page, Diagnostics, the Focus picker and the permission
   screens; it goes back to the page you came from, like the Back gesture (D-052)

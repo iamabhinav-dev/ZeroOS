@@ -20,8 +20,8 @@ android {
 
     defaultConfig {
         applicationId = "com.zeroos.launcher"
-        versionCode = 25
-        versionName = "0.0.25"
+        versionCode = 26
+        versionName = "0.0.26"
     }
 
     signingConfigs {
