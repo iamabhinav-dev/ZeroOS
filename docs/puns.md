@@ -72,3 +72,42 @@ survives restarts.
 18. Battery for this app: 0%. Recharge tomorrow.
 19. You win today. The app loses.
 20. Done for the day. Go make something.
+
+## D. Take a break (F8.16): same app for too long
+1. Your attention span called. It wants a break.
+2. Breaking news: the outside world is still there.
+3. 15 minutes in. Blink twice if you're okay.
+4. Your eyes would like a word.
+5. Stretch. Your neck has been very patient.
+6. Scroll check: still enjoying this?
+7. Time flies when you're thumbing.
+8. Look at something far away. Like a window.
+9. Your thumb deserves a holiday.
+10. Still here? Still worth it?
+11. Pause the feed. Feed yourself a glass of water.
+12. A break now beats a headache later.
+13. Stand up. Sit back down. Feel better?
+14. The algorithm can wait. You can't.
+15. Quick break. The app will keep your place.
+16. You've been here a while. Rest your eyes.
+17. Even videos have intermissions.
+18. Breathe in. Breathe out. Now decide.
+19. Your posture called. It's not happy.
+20. Fifteen minutes gone. Where to next?
+
+## E. Take a break button (F8.16): "I need more time"
+1. Just one more video…
+2. I know, I know.
+3. Almost done, promise.
+4. Five more minutes, mom.
+5. This one's important. Really.
+6. Let me finish this bit.
+7. Fine, but I'm watching.
+8. I'm learning something. Probably.
+9. Just wrapping up.
+10. One more scroll.
+11. I'll stop soon. Honest.
+12. Okay, okay. Back in a sec.
+13. Not yet, I'm on a roll.
+14. Give me a moment.
+15. Last one. Definitely.

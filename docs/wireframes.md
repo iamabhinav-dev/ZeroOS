@@ -684,6 +684,25 @@ Full screen, shown before a flagged app opens from ZeroOS.
 **H7b.** The same screen appears over other apps when "Also outside ZeroOS" is on (F8.7, Accessibility).
 **H7c. Turning off during a limit** (F8.12): "Hold to turn off" button that fills over 3 s, or the pause (H6).
 
+### H14. Take a break (F8.16–F8.18), approved 2026-10-18
+Over a chosen app after 15 min straight (Accessibility overlay).
+```
+┌────────────────────────────────────┐
+│             ·  ·  ·                │  breathing dots
+│           ·  ●  ●  ·               │
+│             ·  ·  ·                │
+│                                    │
+│  Your attention span called.       │  list D
+│  It wants a break.                 │
+│                                    │
+│        [ Just one more video… ]    │  list E; after tapping it the label
+│                                    │  becomes "5", "4" … then the screen
+│                                    │  goes away. Back does nothing.
+└────────────────────────────────────┘
+```
+Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wait after tapping ‹5 s›"; the per-app sheet
+(H5a) gains "Take a break ‹off›".
+
 ### H8. App list with limits (F8.5)
 ```
 │  Instagram                  12m left │  small muted text, only for limited apps

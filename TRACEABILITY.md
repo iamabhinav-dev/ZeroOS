@@ -56,6 +56,7 @@ Update this file in the same commit as the code and tests.
 | F8.5 | 🟡 | StopRulesTest › f8_5_*, AppListViewModelTest › f8_5_* | "12m left" in the app list |
 | F8.13–F8.15 | 🟡 | PunBagTest › f8_13_*, WellbeingStateRepositoryTest › f8_13_*, StopViewModelTest › f8_14_*, StopScreensTest › f8_14_*, screenshots | Dots animate; still with "Remove animations" |
 | F8.7 | ⬜ | (Step 4.3 part 3) | |
+| F8.16–F8.18 | ⬜ | (Step 4.3 part 3, D-044) | |
 | F9.1–F9.7 | ⬜ | | |
 | F10.1–F10.13 | ⬜ | | Compare with the phone's screen-time screen |
 | F11.1–F11.3 | ⬜ | | |
