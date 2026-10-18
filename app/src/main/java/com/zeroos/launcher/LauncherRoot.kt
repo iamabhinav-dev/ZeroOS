@@ -20,6 +20,7 @@ import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.data.system.defaultHomeIntent
 import com.zeroos.feature.applist.AppListRoute
+import com.zeroos.feature.focus.FocusRoute
 import com.zeroos.feature.home.HomeRoute
 import com.zeroos.feature.onboarding.OnboardingRoute
 import com.zeroos.feature.settings.SettingsRoute
@@ -72,7 +73,8 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
                     // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
                     onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
                     onLongPress = { screen = LauncherScreen.SETTINGS },
-                    onDoubleTap = viewModel::lockScreen
+                    onDoubleTap = viewModel::lockScreen,
+                    onOpenFocus = { screen = LauncherScreen.FOCUS }
                 )
                 Column(Modifier.align(Alignment.TopCenter).safeDrawingPadding()) {
                     crashReport?.let { report ->
@@ -101,6 +103,8 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
             }
 
             LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
+
+            LauncherScreen.FOCUS -> FocusRoute(onClose = { screen = LauncherScreen.HOME })
 
             LauncherScreen.SETTINGS -> SettingsRoute(
                 onClose = { screen = LauncherScreen.HOME },

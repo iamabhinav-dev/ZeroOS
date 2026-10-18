@@ -1,0 +1,103 @@
+package com.zeroos.feature.focus
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.apps.visibleApps
+import com.zeroos.core.data.focus.FocusRepository
+import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.model.AppEntry
+import com.zeroos.core.model.settings.FocusIcon
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+/** The Focus picker (wireframe H11): [allowed] holds app keys in the order they were picked. */
+data class FocusPickerState(
+    val icon: FocusIcon = FocusIcon.MIX,
+    val minutes: Int? = null,
+    val apps: List<AppEntry> = emptyList(),
+    val allowed: List<String> = emptyList()
+)
+
+/**
+ * Duration and allowed apps (F9.2). The last choice is the default next time (H11); choices survive process death
+ * (NFR-R7). Starting saves them and starts the session (F9.1).
+ */
+@HiltViewModel
+class FocusPickerViewModel @Inject constructor(
+    appsRepository: AppsRepository,
+    private val settings: SettingsRepository,
+    private val focus: FocusRepository,
+    private val savedState: SavedStateHandle
+) : ViewModel() {
+
+    init {
+        viewModelScope.launch {
+            if (!savedState.contains(KEY_MINUTES)) {
+                val last = settings.settings.first().focus
+                savedState[KEY_ALLOWED] = ArrayList(last.lastAllowed)
+                savedState[KEY_MINUTES] = last.lastMinutes
+            }
+        }
+    }
+
+    val state: StateFlow<FocusPickerState> = combine(
+        appsRepository.apps,
+        settings.settings,
+        savedState.getStateFlow<Int?>(KEY_MINUTES, null),
+        savedState.getStateFlow(KEY_ALLOWED, ArrayList<String>())
+    ) { apps, current, minutes, allowed ->
+        val visible = visibleApps(apps, current)
+        val keys = visible.map { it.key.asString() }.toSet()
+        FocusPickerState(current.focus.icon, minutes, visible, allowed.filter { it in keys })
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), FocusPickerState())
+
+    /** 25 / 50 / 90 min (F9.2). */
+    fun selectMinutes(minutes: Int) {
+        savedState[KEY_MINUTES] = minutes
+    }
+
+    /** "Custom": steps through 5–240 min (F9.2, Appendix A). */
+    fun cycleCustom() {
+        val now = state.value.minutes ?: 0
+        savedState[KEY_MINUTES] = CUSTOM_STEPS.firstOrNull { it > now } ?: CUSTOM_STEPS.first()
+    }
+
+    fun toggle(app: AppEntry) {
+        val key = app.key.asString()
+        val allowed = state.value.allowed
+        savedState[KEY_ALLOWED] = ArrayList(if (key in allowed) allowed - key else allowed + key)
+    }
+
+    /** Remembers the choice for next time, then starts focus (F9.1, F9.2). */
+    fun start(onStarted: (Int) -> Unit) {
+        val minutes = state.value.minutes ?: return
+        val allowed = state.value.allowed
+        viewModelScope.launch {
+            settings.update("focus.last=$minutes min, ${allowed.size} apps") {
+                it.copy(focus = it.focus.copy(lastMinutes = minutes, lastAllowed = allowed))
+            }
+            focus.start(minutes, allowed.toSet())
+            onStarted(minutes)
+        }
+    }
+
+    private companion object {
+        const val KEY_MINUTES = "focus_minutes"
+        const val KEY_ALLOWED = "focus_allowed"
+        const val STOP_TIMEOUT_MS = 5_000L
+    }
+}
+
+/** F9.2 presets. */
+val FOCUS_PRESETS = listOf(25, 50, 90)
+
+/** F9.2 custom: 5–240 min, every 5 min up to an hour, then every 15. */
+internal val CUSTOM_STEPS = (5..60 step 5).toList() + (75..240 step 15).toList()
