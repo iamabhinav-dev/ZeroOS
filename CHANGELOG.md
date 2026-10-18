@@ -4,6 +4,14 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.23 (versionCode 23)
+- Focus mode (F9): tap "focus" on home, pick 25 / 50 / 90 min or a custom length and the apps you can use, then
+  Start. A short "Focus started" screen appears; while focusing, home shows the Focus icon and "focus · 23m
+  left", and only your allowed apps appear on home and in the app list. Hold it for 3 s to end early
+- Settings → Wellbeing → Focus (shown even with Wellbeing off): show "focus" on home, Focus icon (Mix, Sphere,
+  Rim or Flow), Start focus, and turn on Do Not Disturb during focus (put back afterwards)
+- Every screen now works in landscape too (two-pane stop, break and Focus screens; wider wallpaper gallery)
+- Focus schedules come next (not in this version)
 ## 0.0.22 (versionCode 22)
 - If ZeroOS isn't the default home app when it opens (e.g. a battery-saving mode switched it back), home shows
   "ZeroOS isn't your home app" with **Set as default** (F14.7)
