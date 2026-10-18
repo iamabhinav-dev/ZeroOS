@@ -125,16 +125,29 @@ fun ToggleRow(label: String, checked: Boolean, onCheckedChange: (Boolean) -> Uni
 
 /** A short text button, e.g. "Export logs". [compact] uses less side padding for rows of several buttons. */
 @Composable
-fun TextAction(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, muted: Boolean = false, compact: Boolean = false) {
+fun TextAction(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    muted: Boolean = false,
+    compact: Boolean = false,
+    /** False: dimmed, doesn't react, and screen readers say it's unavailable (e.g. ‹ at the shortest length). */
+    enabled: Boolean = true
+) {
     val tokens = ZeroTheme.tokens
+    val color = when {
+        !enabled -> tokens.colors.textFaint
+        muted -> tokens.colors.textMuted
+        else -> tokens.colors.text
+    }
     Box(
         modifier = modifier
             .heightIn(min = tokens.spacing.minTouchTarget)
-            .combinedClickable(onClick = onClick)
+            .combinedClickable(enabled = enabled, onClick = onClick)
             .padding(horizontal = if (compact) tokens.spacing.sectionGap else tokens.spacing.screenGutter),
         contentAlignment = UiAlignment.CenterStart
     ) {
-        Text(text = text, color = if (muted) tokens.colors.textMuted else tokens.colors.text, fontSize = tokens.textSizes.body)
+        Text(text = text, color = color, fontSize = tokens.textSizes.body)
     }
 }
 

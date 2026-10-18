@@ -120,14 +120,27 @@ internal fun CustomRow(state: FocusPickerState, onSelect: () -> Unit, onStep: (B
             fontSize = tokens.textSizes.body,
             modifier = Modifier.weight(1f)
         )
-        TextAction(STEP_DOWN, { onStep(false) }, modifier = Modifier.semantics { contentDescription = shorter }, compact = true)
+        TextAction(
+            STEP_DOWN,
+            { onStep(false) },
+            modifier = Modifier.semantics { contentDescription = shorter },
+            compact = true,
+            // No wrapping round: dimmed at the shortest length (D-054).
+            enabled = state.custom > CUSTOM_STEPS.first()
+        )
         Text(
             stringResource(R.string.wellbeing_minutes, state.custom),
             color = if (chosen) tokens.colors.text else tokens.colors.textMuted,
             fontSize = tokens.textSizes.body,
             modifier = Modifier.outlinedIf(chosen).padding(tokens.spacing.listItemCompact)
         )
-        TextAction(STEP_UP, { onStep(true) }, modifier = Modifier.semantics { contentDescription = longer }, compact = true)
+        TextAction(
+            STEP_UP,
+            { onStep(true) },
+            modifier = Modifier.semantics { contentDescription = longer },
+            compact = true,
+            enabled = state.custom < CUSTOM_STEPS.last()
+        )
     }
 }
 

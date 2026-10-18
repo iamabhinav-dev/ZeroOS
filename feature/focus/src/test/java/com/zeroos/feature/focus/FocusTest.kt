@@ -2,6 +2,11 @@ package com.zeroos.feature.focus
 
 import android.content.Context
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.test.assertIsEnabled
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -43,6 +48,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -281,5 +287,28 @@ class FocusScreensTest {
         compose.setContent { ZeroTheme { FocusPickerScreen(state, actions, onBack = { backs++ }) } }
         compose.onNodeWithContentDescription("Back").performClick()
         assertEquals(1, backs)
+    }
+
+    @Test
+    fun d054_arrowsDimAtTheEnds() {
+        var custom by mutableStateOf(5)
+        compose.setContent { ZeroTheme { FocusPickerScreen(state.copy(minutes = custom, custom = custom), actions, onBack = {}) } }
+        compose.onNodeWithContentDescription("Shorter").assertIsNotEnabled()
+        compose.onNodeWithContentDescription("Longer").assertIsEnabled()
+        compose.onNodeWithContentDescription("Shorter").performClick()
+        assertTrue("dimmed ‹ does nothing", calls.isEmpty())
+        custom = 240
+        compose.onNodeWithContentDescription("Longer").assertIsNotEnabled()
+        compose.onNodeWithContentDescription("Shorter").assertIsEnabled()
+        custom = 45
+        compose.onNodeWithContentDescription("Longer").assertIsEnabled()
+        compose.onNodeWithContentDescription("Shorter").assertIsEnabled()
+    }
+
+    @Test
+    fun d054_dimmedArrowScreenshot() {
+        preload()
+        compose.setContent { ZeroTheme { FocusPickerScreen(state.copy(minutes = 5, custom = 5), actions, onBack = {}) } }
+        compose.onRoot().captureRoboImage()
     }
 }
