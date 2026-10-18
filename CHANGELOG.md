@@ -4,6 +4,12 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.20 (versionCode 20)
+- Wellbeing → "Also outside ZeroOS" (needs Accessibility): the limit screen also appears over a limited app
+  opened from a notification or recents, and when its limit runs out while you're in it (F8.7)
+- Wellbeing → "Take a break" (needs Usage access and Accessibility, D-044): after 15 min straight in a chosen
+  app, a black screen with a pun and a button; tap it and the screen goes away after 5 s. Choose apps in
+  Wellbeing → Apps; "Break after" 5–60 min, "Wait after tapping" 3–30 s (F8.16–F8.18)
 ## 0.0.19 (versionCode 19)
 - Mindful pause: with "Intention prompt" on, "Open …" appears only once you've typed why you're opening the
   app (D-043)
