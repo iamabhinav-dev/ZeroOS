@@ -1,8 +1,10 @@
 package com.zeroos.launcher
 
+import android.app.NotificationManager
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.focus.AndroidDoNotDisturb
 import com.zeroos.core.data.focus.FocusRepository
 import com.zeroos.core.data.focus.createFocusStateDataStore
 import com.zeroos.core.data.settings.SettingsRepository
@@ -39,7 +41,12 @@ object WellbeingModule {
     @Provides
     @Singleton
     fun focusRepository(@ApplicationContext context: Context, clock: Clock, logger: Logger): FocusRepository =
-        FocusRepository(createFocusStateDataStore(context, logger, CoroutineScope(SupervisorJob() + Dispatchers.IO)), clock, logger)
+        FocusRepository(
+            createFocusStateDataStore(context, logger, CoroutineScope(SupervisorJob() + Dispatchers.IO)),
+            clock,
+            logger,
+            AndroidDoNotDisturb(context.getSystemService(NotificationManager::class.java))
+        )
 
     @Provides
     @Singleton

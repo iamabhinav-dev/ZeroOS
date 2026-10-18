@@ -31,37 +31,77 @@ data class FocusSession(val startedAtMillis: Long, val endsAtMillis: Long, val a
     fun allows(appKey: String) = appKey in allowed
 }
 
-/** The stored session, if any; kept apart from the settings (and the backup), so it survives restarts. */
+/**
+ * The stored session, if any; kept apart from the settings (and the backup), so it survives restarts.
+ * [dndRestore] is the Do Not Disturb filter to put back when focus ends (F9.7), set only if focus turned it on.
+ */
 @Serializable
-data class FocusState(val session: FocusSession? = null)
+data class FocusState(val session: FocusSession? = null, val dndRestore: Int? = null)
 
-/** Starts and ends focus sessions and tells when one is running (F9). Start and end are logged (F17.7). */
+/**
+ * Starts and ends focus sessions and tells when one is running (F9). Start and end are logged (F17.7). If focus
+ * turned Do Not Disturb on, it's put back as it was when focus ends, even after a restart (F9.7).
+ */
 @OptIn(ExperimentalCoroutinesApi::class)
-class FocusRepository(private val dataStore: DataStore<FocusState>, private val clock: Clock, private val logger: Logger) {
+class FocusRepository(
+    private val dataStore: DataStore<FocusState>,
+    private val clock: Clock,
+    private val logger: Logger,
+    private val dnd: DoNotDisturb = DoNotDisturb.Unavailable
+) {
 
     /** The running session, or null. Ends on its own when the time is up: one timer, no polling (NFR-P1). */
     val active: Flow<FocusSession?> = dataStore.data.map { it.session }.distinctUntilChanged().transformLatest { session ->
         val left = session?.let { it.endsAtMillis - clock.millis() } ?: 0
         if (session == null || left <= 0) {
+            restoreDnd()
             emit(null)
         } else {
             emit(session)
             delay(left)
             logger.info(TAG, "focus ended: time up")
+            restoreDnd()
             emit(null)
         }
     }
 
-    suspend fun start(minutes: Int, allowed: Set<String>) {
+    /** [turnOnDnd]: the Do Not Disturb setting (F9.7); it's skipped, and logged, without access. */
+    suspend fun start(minutes: Int, allowed: Set<String>, turnOnDnd: Boolean = false) {
         val now = clock.millis()
-        dataStore.updateData { FocusState(FocusSession(now, now + minutes * MILLIS_PER_MINUTE, allowed)) }
+        val restore = if (turnOnDnd) turnOnDnd() else null
+        dataStore.updateData { old ->
+            FocusState(FocusSession(now, now + minutes * MILLIS_PER_MINUTE, allowed), restore ?: old.dndRestore)
+        }
         logger.info(TAG, "focus started: $minutes min, ${allowed.size} apps allowed")
+    }
+
+    /** Turns Do Not Disturb on and returns the filter to restore, or null if it was already on or there's no access. */
+    private fun turnOnDnd(): Int? {
+        val before = if (dnd.hasAccess()) dnd.current() else null
+        when {
+            before == null -> logger.info(TAG, "do not disturb skipped: no access")
+
+            before != DoNotDisturb.ON -> {
+                dnd.set(DoNotDisturb.ON)
+                logger.info(TAG, "do not disturb on")
+            }
+        }
+        return before?.takeIf { it != DoNotDisturb.ON }
+    }
+
+    private suspend fun restoreDnd() {
+        val restore = dataStore.data.first().dndRestore ?: return
+        if (dnd.hasAccess()) {
+            dnd.set(restore)
+            logger.info(TAG, "do not disturb restored")
+        }
+        dataStore.updateData { it.copy(dndRestore = null) }
     }
 
     /** Ends the session early (F9.5). */
     suspend fun end() {
         if (dataStore.data.first().session == null) return
-        dataStore.updateData { FocusState() }
+        dataStore.updateData { it.copy(session = null) }
         logger.info(TAG, "focus ended early")
     }
 

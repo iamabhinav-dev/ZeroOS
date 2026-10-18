@@ -84,7 +84,7 @@ class FocusPickerViewModel @Inject constructor(
             settings.update("focus.last=$minutes min, ${allowed.size} apps") {
                 it.copy(focus = it.focus.copy(lastMinutes = minutes, lastAllowed = allowed))
             }
-            focus.start(minutes, allowed.toSet())
+            focus.start(minutes, allowed.toSet(), turnOnDnd = settings.settings.first().focus.doNotDisturb)
             onStarted(minutes)
         }
     }

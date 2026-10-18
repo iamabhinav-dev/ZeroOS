@@ -81,4 +81,54 @@ class FocusRepositoryTest {
         val bytes = java.io.ByteArrayOutputStream().also { FocusStateSerializer.writeTo(state, it) }.toByteArray()
         assertEquals(state, FocusStateSerializer.readFrom(bytes.inputStream()))
     }
+
+    private class FakeDnd(var access: Boolean = true, var filter: Int = ALL) : DoNotDisturb {
+        override fun hasAccess() = access
+
+        override fun current() = filter
+
+        override fun set(filter: Int) {
+            this.filter = filter
+        }
+    }
+
+    @Test
+    fun f9_7_doNotDisturbOnDuringFocusAndRestoredAfter() = runTest {
+        val dnd = FakeDnd()
+        val store = DataStoreFactory.create(FocusStateSerializer, scope = backgroundScope, produceFile = {
+            temp.newFile().apply { delete() }
+        })
+        val repo = FocusRepository(store, Clock.systemUTC(), logger, dnd)
+        repo.start(25, emptySet(), turnOnDnd = true)
+        assertEquals(DoNotDisturb.ON, dnd.filter)
+        repo.end()
+        repo.active.first { it == null }
+        assertEquals("put back as it was", ALL, dnd.filter)
+        assertNull(store.data.first().dndRestore)
+    }
+
+    @Test
+    fun f9_7_withoutAccessOrAlreadyOnNothingChanges() = runTest {
+        val noAccess = FakeDnd(access = false)
+        val repo = FocusRepository(
+            DataStoreFactory.create(FocusStateSerializer, scope = backgroundScope, produceFile = { temp.newFile().apply { delete() } }),
+            Clock.systemUTC(),
+            logger,
+            noAccess
+        )
+        repo.start(25, emptySet(), turnOnDnd = true)
+        assertEquals(ALL, noAccess.filter)
+        assertTrue(logged.contains("do not disturb skipped: no access"))
+
+        val alreadyOn = FakeDnd(filter = DoNotDisturb.ON)
+        val store = DataStoreFactory.create(FocusStateSerializer, scope = backgroundScope, produceFile = {
+            temp.newFile().apply { delete() }
+        })
+        FocusRepository(store, Clock.systemUTC(), logger, alreadyOn).start(25, emptySet(), turnOnDnd = true)
+        assertNull("was already on: left on afterwards", store.data.first().dndRestore)
+    }
+
+    private companion object {
+        const val ALL = android.app.NotificationManager.INTERRUPTION_FILTER_ALL
+    }
 }
