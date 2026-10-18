@@ -4,6 +4,13 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.24 (versionCode 24)
+- Home shows just the small Focus icon; tap it to start focus. While focusing: the icon, "23m left" and a dot
+  line that fills as the time passes
+- To end focus early, tap the focus line and type why; "End focus" appears once you have (the reason isn't saved)
+- Focus picker: search the apps you can use; custom length with ‹ › to go shorter or longer (5–240 min)
+- Back from a picker opened in Settings → Wellbeing → Focus returns to the Focus settings
+- Fix: holding the focus line no longer opens Settings
 ## 0.0.23 (versionCode 23)
 - Focus mode (F9): tap "focus" on home, pick 25 / 50 / 90 min or a custom length and the apps you can use, then
   Start. A short "Focus started" screen appears; while focusing, home shows the Focus icon and "focus · 23m
