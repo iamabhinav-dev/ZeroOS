@@ -20,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackArrow
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.TextAction
@@ -31,7 +33,7 @@ fun CrashReportsScreen(reports: List<CrashReportItem>, onOpen: (CrashReportItem)
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
     LazyColumn(modifier = Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding()) {
-        item { ScreenTitle(stringResource(R.string.crash_reports_title)) }
+        item { BackTitle(stringResource(R.string.crash_reports_title), onBack) }
         if (reports.isEmpty()) item { BodyText(stringResource(R.string.crash_reports_empty), muted = true) }
         items(reports, key = { it.fileName }) { report ->
             Column(
@@ -63,9 +65,14 @@ fun CrashReportScreen(text: String, onBack: () -> Unit) {
             .background(tokens.colors.background)
             .safeDrawingPadding()
             .verticalScroll(rememberScrollState())
-            .padding(tokens.spacing.screenGutter)
     ) {
-        Text(text = text, color = tokens.colors.text, fontSize = tokens.textSizes.small)
+        BackArrow(onBack)
+        Text(
+            text = text,
+            color = tokens.colors.text,
+            fontSize = tokens.textSizes.small,
+            modifier = Modifier.padding(tokens.spacing.screenGutter)
+        )
     }
 }
 

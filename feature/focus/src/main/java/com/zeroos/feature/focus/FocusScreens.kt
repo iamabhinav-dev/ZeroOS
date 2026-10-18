@@ -41,6 +41,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.FocusIcon
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.FocusMark
 import com.zeroos.core.ui.MinimalListItem
@@ -98,7 +99,7 @@ fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBa
         if (maxWidth > maxHeight) {
             Row(Modifier.fillMaxSize()) {
                 Column(Modifier.weight(1f).fillMaxHeight()) {
-                    LazyColumn(Modifier.weight(1f)) { durationItems(state, actions) }
+                    LazyColumn(Modifier.weight(1f)) { durationItems(state, actions, onBack) }
                     start()
                 }
                 LazyColumn(Modifier.weight(1f)) { appItems(state, actions) }
@@ -106,7 +107,7 @@ fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBa
         } else {
             Column(Modifier.fillMaxSize()) {
                 LazyColumn(Modifier.weight(1f)) {
-                    durationItems(state, actions)
+                    durationItems(state, actions, onBack)
                     appItems(state, actions)
                 }
                 start()
@@ -115,8 +116,8 @@ fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBa
     }
 }
 
-private fun LazyListScope.durationItems(state: FocusPickerState, actions: FocusPickerActions) {
-    item { ScreenTitle(stringResource(R.string.focus_title)) }
+private fun LazyListScope.durationItems(state: FocusPickerState, actions: FocusPickerActions, onBack: () -> Unit) {
+    item { BackTitle(stringResource(R.string.focus_title), onBack) }
     item {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             FocusMark(state.icon, ZeroTheme.tokens.spacing.focusMarkLarge, stringResource(R.string.focus_icon_description))

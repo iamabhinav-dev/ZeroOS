@@ -270,4 +270,12 @@ class FocusScreensTest {
         compose.setContent { ZeroTheme { FocusEndScreen(FocusIcon.MIX, onEnd = {}, onKeep = {}) } }
         compose.onRoot().captureRoboImage()
     }
+
+    @Test
+    fun d052_pickerBackArrow() {
+        var backs = 0
+        compose.setContent { ZeroTheme { FocusPickerScreen(state, actions, onBack = { backs++ }) } }
+        compose.onNodeWithContentDescription("Back").performClick()
+        assertEquals(1, backs)
+    }
 }

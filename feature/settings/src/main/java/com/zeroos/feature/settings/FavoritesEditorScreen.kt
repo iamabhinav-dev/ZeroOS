@@ -40,6 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.AppLabel
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.DotIcons
 import com.zeroos.core.ui.DotMatrixIcon
@@ -97,8 +98,7 @@ fun FavoritesEditorScreen(
         modifier = Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(FavoritesTestTags.EDITOR)
     ) {
         item {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                ScreenTitle(stringResource(R.string.favorites_title), Modifier.weight(1f))
+            BackTitle(stringResource(R.string.favorites_title), onBack) {
                 BodyText(stringResource(R.string.favorites_count, state.favorites.size, state.max), muted = true)
             }
         }
@@ -204,7 +204,7 @@ fun AppPickerScreen(
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
     Column(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding()) {
-        ScreenTitle(title)
+        BackTitle(title, onBack)
         SearchField(query, autoOpenKeyboard = false, onQueryChange = onQueryChange, onGo = {
             apps.firstOrNull()?.let(onPick)
         })

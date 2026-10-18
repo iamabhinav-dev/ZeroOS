@@ -28,6 +28,7 @@ import com.zeroos.core.model.settings.AppRule
 import com.zeroos.core.model.settings.DisableFriction
 import com.zeroos.core.model.settings.WellbeingSettings
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.HoldToConfirm
 import com.zeroos.core.ui.MinimalBottomSheet
@@ -218,7 +219,7 @@ fun WellbeingAppsScreen(
     var open by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(onBack = onBack)
     Column(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(SettingsTestTags.WELLBEING_APPS)) {
-        ScreenTitle(stringResource(R.string.wellbeing_apps))
+        BackTitle(stringResource(R.string.wellbeing_apps), onBack)
         SearchField(state.query, autoOpenKeyboard = false, onQueryChange = onQueryChange, onGo = {})
         HorizontalDivider(color = tokens.colors.divider)
         LazyColumn {

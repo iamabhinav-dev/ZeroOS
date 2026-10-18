@@ -31,7 +31,7 @@ fun PermissionExplanation(permission: SpecialPermission, notYet: Boolean, action
     LazyColumn(
         Modifier.fillMaxSize().background(ZeroTheme.tokens.colors.background).safeDrawingPadding().testTag(PermissionTestTags.SCREEN)
     ) {
-        item { ScreenTitle(stringResource(permission.title())) }
+        item { BackTitle(stringResource(permission.title()), actions.onNotNow) }
         if (notYet) item { BodyText(stringResource(R.string.permission_not_yet)) }
         item { BodyText(stringResource(permission.why())) }
         item { BodyText(stringResource(R.string.permission_private), muted = true) }

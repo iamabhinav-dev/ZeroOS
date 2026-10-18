@@ -25,6 +25,7 @@ import com.zeroos.core.model.settings.TextSize
 import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.model.settings.Wallpaper
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.ClockFormat
 import com.zeroos.core.ui.ClockText
 import com.zeroos.core.ui.ScreenTitle
@@ -71,7 +72,7 @@ fun AppearanceScreen(state: AppearanceSettings, actions: AppearanceActions, onBa
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
     LazyColumn(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(AppearanceTestTags.SCREEN)) {
-        item { ScreenTitle(stringResource(R.string.appearance_title)) }
+        item { BackTitle(stringResource(R.string.appearance_title), onBack) }
         item { SettingRow(stringResource(R.string.appearance_theme), stringResource(state.theme.label()), actions.onTheme) }
         item { SettingRow(stringResource(R.string.appearance_wallpaper), stringResource(state.wallpaper.label()), actions.onWallpaper) }
         item { NavRow(R.string.appearance_phone_wallpaper, actions.onPhoneWallpaper) }

@@ -273,3 +273,12 @@ where End focus appears only after typing why (replaces hold 3 s; the hold also 
 picker gets a search field and ‹ › for the custom length (stops at 5 and 240 min). Back from a picker opened in
 Settings → Focus returns there. Wireframes A4, H11, H16.
 *Why:* User's feedback.
+
+**D-052 — Back arrow on every page** · 2026-10-18 · Accepted
+The wireframes show "← Title" headers, but pages had only the title (Back worked only through the system gesture).
+Every Settings page, Diagnostics and crash reports, the Focus picker and the permission explanations now show the
+dotted ‹ arrow before the title (48 dp, read as "Back"). It calls the same back action as the system gesture, so it
+goes to the page it was opened from (e.g. Focus icon → Focus → Wellbeing → Settings), never straight home. Not on
+home, the app list (Back / swipe down, F2.11), the stop, break and end-focus screens (their own choices), the "Focus
+started" screen or onboarding (its own Back/Next/Skip).
+*Why:* User's request; matches the approved wireframes.

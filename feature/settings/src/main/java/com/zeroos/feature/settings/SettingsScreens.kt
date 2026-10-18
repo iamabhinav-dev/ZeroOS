@@ -27,6 +27,7 @@ import com.zeroos.core.model.settings.AppListSettings
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.MinimalListItem
 import com.zeroos.core.ui.PermissionRequest
 import com.zeroos.core.ui.ScreenTitle
@@ -226,7 +227,7 @@ internal fun SettingsPageScaffold(title: String, testTag: String, onBack: () -> 
     LazyColumn(
         Modifier.fillMaxSize().background(ZeroTheme.tokens.colors.background).safeDrawingPadding().testTag(testTag)
     ) {
-        item { ScreenTitle(title) }
+        item { BackTitle(title, onBack) }
         content()
     }
 }
