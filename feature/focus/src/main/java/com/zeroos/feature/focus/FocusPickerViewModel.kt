@@ -26,7 +26,9 @@ data class FocusPickerState(
     val apps: List<AppEntry> = emptyList(),
     val allowed: List<String> = emptyList(),
     /** Filters [apps]; never logged (F17.8). */
-    val query: String = ""
+    val query: String = "",
+    /** The custom length shown on the Custom row; selected when [minutes] equals it and isn't a preset. */
+    val custom: Int = CUSTOM_DEFAULT
 )
 
 /**
@@ -47,20 +49,31 @@ class FocusPickerViewModel @Inject constructor(
                 val last = settings.settings.first().focus
                 savedState[KEY_ALLOWED] = ArrayList(last.lastAllowed)
                 savedState[KEY_MINUTES] = last.lastMinutes
+                if (last.lastMinutes !in FOCUS_PRESETS) savedState[KEY_CUSTOM] = last.lastMinutes
             }
         }
     }
 
-    val state: StateFlow<FocusPickerState> = combine(
-        appsRepository.apps,
-        settings.settings,
+    private val choice = combine(
         savedState.getStateFlow<Int?>(KEY_MINUTES, null),
+        savedState.getStateFlow(KEY_CUSTOM, CUSTOM_DEFAULT),
         savedState.getStateFlow(KEY_ALLOWED, ArrayList<String>()),
         savedState.getStateFlow(KEY_QUERY, "")
-    ) { apps, current, minutes, allowed, query ->
+    ) { minutes, custom, allowed, query -> Choice(minutes, custom, allowed, query) }
+
+    val state: StateFlow<FocusPickerState> = combine(appsRepository.apps, settings.settings, choice) { apps, current, c ->
         val visible = visibleApps(apps, current)
         val keys = visible.map { it.key.asString() }.toSet()
-        FocusPickerState(current.focus.icon, minutes, AppSearchIndex(visible).search(query), allowed.filter { it in keys }, query)
+        FocusPickerState(
+            current.focus.icon,
+            c.minutes,
+            AppSearchIndex(visible).search(c.query),
+            c.allowed.filter {
+                it in keys
+            },
+            c.query,
+            c.custom
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), FocusPickerState())
 
     /** 25 / 50 / 90 min (F9.2). */
@@ -68,14 +81,21 @@ class FocusPickerViewModel @Inject constructor(
         savedState[KEY_MINUTES] = minutes
     }
 
-    /** "Custom" ‹ ›: one step shorter or longer within 5–240 min, stopping at the ends (F9.2, D-051). */
+    /** Tapping the Custom row picks the custom length shown on it (D-053). */
+    fun selectCustom() {
+        savedState[KEY_MINUTES] = state.value.custom
+    }
+
+    /** "Custom" ‹ ›: picks Custom and goes one step shorter or longer within 5–240 min, stopping at the ends (F9.2, D-051). */
     fun stepCustom(longer: Boolean) {
-        val now = state.value.minutes ?: CUSTOM_DEFAULT
-        savedState[KEY_MINUTES] = if (longer) {
+        val now = state.value.custom
+        val next = if (longer) {
             CUSTOM_STEPS.firstOrNull { it > now } ?: CUSTOM_STEPS.last()
         } else {
             CUSTOM_STEPS.lastOrNull { it < now } ?: CUSTOM_STEPS.first()
         }
+        savedState[KEY_CUSTOM] = next
+        savedState[KEY_MINUTES] = next
     }
 
     fun onQueryChange(query: String) {
@@ -105,12 +125,15 @@ class FocusPickerViewModel @Inject constructor(
         const val KEY_MINUTES = "focus_minutes"
         const val KEY_ALLOWED = "focus_allowed"
         const val KEY_QUERY = "focus_query"
+        const val KEY_CUSTOM = "focus_custom"
         const val STOP_TIMEOUT_MS = 5_000L
     }
 }
 
 /** F9.2 presets. */
 val FOCUS_PRESETS = listOf(25, 50, 90)
+
+private data class Choice(val minutes: Int?, val custom: Int, val allowed: List<String>, val query: String)
 
 /** Shown on "Custom" before a custom length is chosen (H11 shows ‹45 min›). */
 const val CUSTOM_DEFAULT = 45

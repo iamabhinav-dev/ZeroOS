@@ -12,11 +12,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +38,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.toggleableState
 import androidx.compose.ui.state.ToggleableState
+import androidx.compose.ui.unit.Dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.model.AppEntry
@@ -70,6 +73,7 @@ fun FocusRoute(onBack: () -> Unit, onStarted: () -> Unit, viewModel: FocusPicker
         FocusPickerActions(
             onPreset = viewModel::selectMinutes,
             onCustom = viewModel::stepCustom,
+            onSelectCustom = viewModel::selectCustom,
             onQueryChange = viewModel::onQueryChange,
             onToggle = viewModel::toggle,
             onStart = { viewModel.start { minutes -> started = minutes } }
@@ -82,6 +86,7 @@ data class FocusPickerActions(
     val onPreset: (Int) -> Unit,
     /** true = longer. */
     val onCustom: (Boolean) -> Unit,
+    val onSelectCustom: () -> Unit,
     val onQueryChange: (String) -> Unit,
     val onToggle: (AppEntry) -> Unit,
     val onStart: () -> Unit
@@ -93,13 +98,13 @@ fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBa
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
     BoxWithConstraints(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(FocusTestTags.PICKER)) {
-        val start = @Composable {
-            TextAction(stringResource(R.string.focus_start), actions.onStart, modifier = Modifier.testTag(FocusTestTags.START))
-        }
+        // An outlined button keeps Start focus apart from the picked apps (D-053, user's choice).
+        val start = @Composable { StartButton(actions.onStart) }
         if (maxWidth > maxHeight) {
             Row(Modifier.fillMaxSize()) {
                 Column(Modifier.weight(1f).fillMaxHeight()) {
-                    LazyColumn(Modifier.weight(1f)) { durationItems(state, actions, onBack) }
+                    // Half-size icon in landscape so the durations stay in view on a short screen.
+                    LazyColumn(Modifier.weight(1f)) { durationItems(state, actions, onBack, tokens.spacing.focusMarkLarge / 2) }
                     start()
                 }
                 LazyColumn(Modifier.weight(1f)) { appItems(state, actions) }
@@ -107,7 +112,7 @@ fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBa
         } else {
             Column(Modifier.fillMaxSize()) {
                 LazyColumn(Modifier.weight(1f)) {
-                    durationItems(state, actions, onBack)
+                    durationItems(state, actions, onBack, tokens.spacing.focusMarkLarge)
                     appItems(state, actions)
                 }
                 start()
@@ -116,16 +121,16 @@ fun FocusPickerScreen(state: FocusPickerState, actions: FocusPickerActions, onBa
     }
 }
 
-private fun LazyListScope.durationItems(state: FocusPickerState, actions: FocusPickerActions, onBack: () -> Unit) {
+private fun LazyListScope.durationItems(state: FocusPickerState, actions: FocusPickerActions, onBack: () -> Unit, iconSize: Dp) {
     item { BackTitle(stringResource(R.string.focus_title), onBack) }
     item {
         Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            FocusMark(state.icon, ZeroTheme.tokens.spacing.focusMarkLarge, stringResource(R.string.focus_icon_description))
+            FocusMark(state.icon, iconSize, stringResource(R.string.focus_icon_description))
         }
     }
     item { BodyText(stringResource(R.string.focus_how_long)) }
     item { Presets(state.minutes, actions.onPreset) }
-    item { CustomRow(state.minutes, actions.onCustom) }
+    item { CustomRow(state, actions.onSelectCustom, actions.onCustom) }
 }
 
 private fun LazyListScope.appItems(state: FocusPickerState, actions: FocusPickerActions) {
@@ -134,76 +139,10 @@ private fun LazyListScope.appItems(state: FocusPickerState, actions: FocusPicker
         SearchField(state.query, autoOpenKeyboard = false, onQueryChange = actions.onQueryChange, onGo = {
         }, modifier = Modifier.testTag(FocusTestTags.SEARCH))
     }
+    // A thin line keeps the search apart from the app names, like the app list (D-053).
+    item { Separator() }
     items(state.apps, key = { it.key.asString() }) { app -> AllowedApp(app, state.allowed, actions.onToggle) }
 }
-
-@Composable
-private fun Presets(minutes: Int?, onPreset: (Int) -> Unit) {
-    val tokens = ZeroTheme.tokens
-    Row(
-        Modifier.fillMaxWidth().padding(horizontal = tokens.spacing.screenGutter),
-        horizontalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap)
-    ) {
-        FOCUS_PRESETS.forEach { preset ->
-            TextAction(
-                stringResource(R.string.wellbeing_minutes, preset),
-                { onPreset(preset) },
-                modifier = Modifier.semantics { selected = minutes == preset }.outlinedIf(minutes == preset),
-                compact = true
-            )
-        }
-    }
-}
-
-/** "Custom ‹ 45 min ›": one step shorter or longer; outlined when a custom length is chosen (H11, D-051). */
-@Composable
-private fun CustomRow(minutes: Int?, onStep: (Boolean) -> Unit) {
-    val tokens = ZeroTheme.tokens
-    val custom = minutes?.takeIf { it !in FOCUS_PRESETS }
-    val shorter = stringResource(R.string.focus_shorter)
-    val longer = stringResource(R.string.focus_longer)
-    Row(
-        Modifier.fillMaxWidth().padding(start = tokens.spacing.screenGutter),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            stringResource(R.string.focus_custom),
-            color = tokens.colors.text,
-            fontSize = tokens.textSizes.body,
-            modifier = Modifier.weight(1f)
-        )
-        TextAction(STEP_DOWN, { onStep(false) }, modifier = Modifier.semantics { contentDescription = shorter }, compact = true)
-        Text(
-            stringResource(R.string.wellbeing_minutes, custom ?: CUSTOM_DEFAULT),
-            color = if (custom != null) tokens.colors.text else tokens.colors.textMuted,
-            fontSize = tokens.textSizes.body,
-            modifier = Modifier.semantics { selected = custom != null }.outlinedIf(custom != null).padding(tokens.spacing.listItemCompact)
-        )
-        TextAction(STEP_UP, { onStep(true) }, modifier = Modifier.semantics { contentDescription = longer }, compact = true)
-    }
-}
-
-/** Picked apps show their place in the list, like onboarding (Doto has no ☑, H11). */
-@Composable
-private fun AllowedApp(app: AppEntry, allowed: List<String>, onToggle: (AppEntry) -> Unit) {
-    val position = allowed.indexOf(app.key.asString())
-    val checked = position >= 0
-    MinimalListItem(
-        text = app.displayName(),
-        onClick = { onToggle(app) },
-        muted = !checked,
-        trailing = if (checked) (position + 1).toString() else null,
-        large = true,
-        modifier = Modifier.semantics {
-            role = Role.Checkbox
-            toggleableState = ToggleableState(checked)
-        }
-    )
-}
-
-@Composable
-private fun Modifier.outlinedIf(on: Boolean): Modifier =
-    if (on) border(ZeroTheme.tokens.spacing.hairline, ZeroTheme.tokens.colors.text) else this
 
 /** Wireframe H15 (F9.9b): the icon and "Focus · 50 min" for 2 s; a tap skips it. */
 @Composable
@@ -230,10 +169,6 @@ fun FocusStartedScreen(icon: FocusIcon, minutes: Int, onDone: () -> Unit) {
     }
 }
 
-/** The ‹ › arrows on "Custom" (symbols, not words; their spoken labels are string resources). */
-private const val STEP_DOWN = "‹"
-private const val STEP_UP = "›"
-
 /** F9.9b, Appendix A: 2 s. */
 private val STARTED_SCREEN = 2.seconds
 
@@ -244,4 +179,5 @@ object FocusTestTags {
     const val END = "focus_end"
     const val REASON = "focus_end_reason"
     const val SEARCH = "focus_search"
+    const val CUSTOM = "focus_custom"
 }

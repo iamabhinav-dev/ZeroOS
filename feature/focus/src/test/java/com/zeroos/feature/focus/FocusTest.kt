@@ -117,16 +117,18 @@ class FocusPickerViewModelTest {
         val vm = viewModel()
         vm.selectMinutes(90)
         assertEquals(90, vm.state.first { it.minutes == 90 }.minutes)
+        // Tapping the Custom row picks the custom length it shows (45 by default).
+        vm.selectCustom()
+        assertEquals(45, vm.state.first { it.minutes == 45 }.minutes)
+        vm.selectMinutes(25)
         vm.stepCustom(longer = true)
-        assertEquals(105, vm.state.first { it.minutes == 105 }.minutes)
+        assertEquals("‹ › step from the custom length and pick it", 50, vm.state.first { it.minutes == 50 && it.custom == 50 }.minutes)
         vm.stepCustom(longer = false)
-        assertEquals("one step back", 90, vm.state.first { it.minutes == 90 }.minutes)
-        vm.selectMinutes(240)
-        vm.stepCustom(longer = true)
-        assertEquals("stops at 240", 240, vm.state.value.minutes)
-        vm.selectMinutes(5)
-        vm.stepCustom(longer = false)
-        assertEquals("stops at 5", 5, vm.state.first { it.minutes == 5 }.minutes)
+        assertEquals("one step back", 45, vm.state.first { it.minutes == 45 }.minutes)
+        repeat(30) { vm.stepCustom(longer = true) }
+        assertEquals("stops at 240", 240, vm.state.first { it.custom == 240 }.minutes)
+        repeat(30) { vm.stepCustom(longer = false) }
+        assertEquals("stops at 5", 5, vm.state.first { it.custom == 5 }.minutes)
         vm.onQueryChange("ma")
         assertEquals(listOf("Maps"), vm.state.first { it.query == "ma" }.apps.map { it.label })
         vm.onQueryChange("")
@@ -168,6 +170,7 @@ class FocusScreensTest {
     private val actions = FocusPickerActions(
         onPreset = { calls += "preset $it" },
         onCustom = { calls += if (it) "longer" else "shorter" },
+        onSelectCustom = { calls += "custom" },
         onQueryChange = { calls += "query $it" },
         onToggle = { calls += "toggle ${it.label}" },
         onStart = { calls += "start" }
@@ -181,9 +184,10 @@ class FocusScreensTest {
         compose.onNodeWithText("25 min").performClick()
         compose.onNodeWithContentDescription("Longer").performClick()
         compose.onNodeWithContentDescription("Shorter").performClick()
+        compose.onNodeWithText("Custom").performClick()
         compose.onNodeWithText("Maps").performClick()
         compose.onNodeWithTag(FocusTestTags.START).performClick()
-        assertEquals(listOf("preset 25", "longer", "shorter", "toggle Maps", "start"), calls)
+        assertEquals(listOf("preset 25", "longer", "shorter", "custom", "toggle Maps", "start"), calls)
         // Picked apps show their place.
         compose.onNodeWithText("2").assertExists()
     }

@@ -282,3 +282,10 @@ goes to the page it was opened from (e.g. Focus icon → Focus → Wellbeing →
 home, the app list (Back / swipe down, F2.11), the stop, break and end-focus screens (their own choices), the "Focus
 started" screen or onboarding (its own Back/Next/Skip).
 *Why:* User's request; matches the approved wireframes.
+
+**D-053 — Focus picker polish, bigger Focus icon** · 2026-10-18 · Accepted
+A thin line under the search field (like the app list) and Start focus as a full-width outlined button (user's pick of four options), so both stand apart from the app names;
+tapping anywhere on the Custom row picks the custom length (‹ › still step it); the Focus icon is twice as big:
+48 dp on home, 240 dp on the picker, "Focus started" and "End focus early?" screens (the settings-row preview
+stays 24 dp). Wireframe H11 updated.
+*Why:* User's feedback on 0.0.25.

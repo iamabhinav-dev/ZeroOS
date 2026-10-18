@@ -752,16 +752,19 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │            ( F icon )              │  big Focus icon (F9.9a)
 │  How long?                         │
 │  25 min     50 min     90 min      │  tap one (selected = outlined)
-│  Custom              ‹  45 min  ›  │  ‹ › one step shorter / longer, 5–240 min
+│  Custom              ‹  45 min  ›  │  tap the row to pick it; ‹ › one step, 5–240 min
 │                                    │
 │  Apps you can use                  │  picked apps show a number, like
 │  search…                           │  filters the list (D-051)
+│  ────────────────────────────────  │  thin line under the search (D-053)
 │  Phone                          1  │  onboarding (Doto has no ☑)
 │  Messages                       2  │
 │  Maps                              │
 │  …                                 │
 │                                    │
-│  Start focus                       │
+│  ┌──────────────────────────────┐  │  outlined button (D-053)
+│  │         Start focus          │  │
+│  └──────────────────────────────┘  │
 └────────────────────────────────────┘
 ```
 **H16. End focus early?** (F9.5, D-051), from tapping "(F) 23m left" on home.

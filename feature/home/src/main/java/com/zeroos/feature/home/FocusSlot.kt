@@ -36,7 +36,7 @@ fun FocusSlot(minutesLeft: Int?, progress: Float, icon: FocusIcon, onStart: () -
                 .testTag(HomeTestTags.FOCUS),
             contentAlignment = Alignment.CenterStart
         ) {
-            FocusMark(icon, tokens.spacing.focusMarkSmall, stringResource(R.string.focus_start))
+            FocusMark(icon, tokens.spacing.focusMarkHome, stringResource(R.string.focus_start))
         }
     } else {
         Column(
@@ -47,7 +47,7 @@ fun FocusSlot(minutesLeft: Int?, progress: Float, icon: FocusIcon, onStart: () -
                 .testTag(HomeTestTags.FOCUS)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap)) {
-                FocusMark(icon, tokens.spacing.focusMarkSmall, stringResource(R.string.focus_icon_description))
+                FocusMark(icon, tokens.spacing.focusMarkHome, stringResource(R.string.focus_icon_description))
                 Text(stringResource(R.string.focus_left, minutesLeft), color = tokens.colors.text, fontSize = tokens.textSizes.body)
             }
             DotLine(progress)
