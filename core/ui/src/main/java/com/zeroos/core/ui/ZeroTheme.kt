@@ -80,7 +80,11 @@ data class ZeroSpacing(
     /** Focus icon on home, alone or next to the time left (F9.1, F9.9c). */
     val focusMarkHome: Dp = 48.dp,
     /** Focus icon on the picker, "Focus started" and "End focus early?" screens (F9.9a, F9.9b). */
-    val focusMarkLarge: Dp = 240.dp
+    val focusMarkLarge: Dp = 240.dp,
+    /** Height of the small charts in home's stats slot (F10.5, wireframe A3). */
+    val statsChartHeight: Dp = 28.dp,
+    /** Height of the 7-day chart on Insights (F10.2, H12). */
+    val insightsChartHeight: Dp = 96.dp
 )
 
 /** Text sizes at "Medium"; [scaled] applies the S/M/L/XL setting (F6.4). The system font scale applies on top via sp. */
