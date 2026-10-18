@@ -613,6 +613,7 @@ Extra lines per permission:
 │  "5 more minutes"          ‹2/day› │  0–5 (F8.4)
 │  Also outside ZeroOS       ‹off›   │  needs Accessibility → H2 (F8.7)
 │  Turning off               ‹hold 3 s› │ off / hold 3 s / pause (F8.12)
+│  Focus                           › │  → H10; shown even when Wellbeing is off (F9.10)
 ```
 *Turning Wellbeing off while a limit is active asks for the chosen friction first (H7c).*
 
@@ -709,13 +710,20 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │  YouTube                    used up │  tap → H7
 ```
 
-### H10. Settings → Focus (F9)
+### H10. Settings → Wellbeing → Focus (F9, F9.10; updated 2026-10-18, D-047)
 ```
 │  ← Focus                           │
 │  Show "focus" on home      ‹on›    │  (F9.1)
+│  Focus icon               (F)    › │  small preview → H10b (F9.8)
 │  Start focus                     › │  → H11
 │  Turn on Do Not Disturb    ‹off›   │  needs DND access → H2 (F9.7)
 │  Schedules                       › │  → H10a (F9.6)
+```
+**H10b. Focus icon** (F9.8)
+```
+│  ← Focus icon                      │
+│   (F)     (F)     (F)     (F)      │  the four dotted marks
+│   Mix    Sphere   Rim    Flow      │  selected = outlined; default Mix
 ```
 **H10a. Schedules**
 ```
@@ -728,6 +736,7 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 ```
 ┌────────────────────────────────────┐
 │  ← Focus                           │
+│            ( F icon )              │  big Focus icon (F9.9a)
 │  How long?                         │
 │  25 min     50 min     90 min      │  tap one (selected = outlined)
 │  Custom                  ‹45 min›  │  5–240 min
@@ -741,7 +750,14 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │  Start focus                       │
 └────────────────────────────────────┘
 ```
-While active: home slot ⑤ shows "focus · 23m left" (A4); favorites and the app list show only the allowed
+**H15. Focus started** (F9.9b): after "Start focus", a black screen for 2 s, tap to skip.
+```
+┌────────────────────────────────────┐
+│            ( F icon )              │
+│          Focus · 50 min            │
+└────────────────────────────────────┘
+```
+While active: home slot ⑤ shows "(F) focus · 23m left" with a small Focus icon the height of the text (A4, F9.9c); favorites and the app list show only the allowed
 apps (F9.3); Do Not Disturb keeps it quiet if turned on (F9.7; notification filtering waits for F7, D-039);
 **holding** "focus · 23m left" for 3 s ends it early, with a filling dot line as feedback (F9.5). The picker
 remembers the last allowed apps as the default for next time.

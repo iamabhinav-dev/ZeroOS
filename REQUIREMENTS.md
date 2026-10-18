@@ -185,6 +185,9 @@ Kept for later; not built in v1.1.
 | F9.5 | Ending early requires a deliberate action (e.g., hold for 3 s). |
 | F9.6 | Optional scheduled focus sessions (e.g., weekdays 09:00–12:00). |
 | F9.7 | Optionally toggle system Do Not Disturb (requires DND access). |
+| F9.8 | **Focus icon** (D-047): a dotted circle with the F as the empty gap, chosen from four designs: Mix, Sphere, Rim, Flow (`docs/brand/focus-marks/`). Drawn in the theme colour. |
+| F9.9 | The Focus icon shows (a) big at the top of the Focus picker; (b) on a **"Focus started"** screen after "Start focus" (tap to skip); (c) small next to "focus · 23m left" on home while focus runs; (d) as a preview on the "Focus icon" settings row. |
+| F9.10 | Focus settings live in **Settings → Wellbeing → Focus**. The Focus row is shown even when Wellbeing is off, and Focus works independently of the Wellbeing switch (which only controls F8). |
 
 ### F10 — Screen-Time Insights
 
@@ -522,6 +525,8 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Focus durations (F9.2) | 25 / 50 / 90 min | custom 5–240 min |
 | End focus early (F9.5) | Hold 3 s | — |
 | Focus toggles DND (F9.7) | Off | on/off |
+| Focus icon (F9.8) | Mix | Mix / Sphere / Rim / Flow |
+| "Focus started" screen (F9.9) | 2 s, tap to skip | — |
 | F16 feature toggle (F16.1) | Off | on/off |
 | F16 mode (F16.7/F16.8) | Block | block / limit |
 | F16 daily allowance (F16.8) | 15 min | 0–120 min |

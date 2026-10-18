@@ -305,6 +305,7 @@ Build in this order:
 
 ### Step 4.5 — Focus mode (F9)
 - Start from the home **"focus" text button** (fills the focus slot from Step 2.3) or Settings → duration + allow-list; while active the button shows remaining time and hold-3s ends it; filtered app list, maximal notification filtering, remaining time on home, hold-3s to end; optional DND; scheduled sessions.
+- Focus icon (F9.8–F9.10, D-047): four dot designs from `docs/brand/focus-marks/`, picked in Settings → Wellbeing → Focus; shown on the picker, a 2 s "Focus started" screen, home and the settings row. Focus works with Wellbeing off.
 
 ### Step 4.6 — Screen-time insights & home-screen stats (F10)
 Reuses the usage calculation from Step 4.3.

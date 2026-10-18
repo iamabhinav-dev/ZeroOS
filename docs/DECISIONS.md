@@ -239,3 +239,10 @@ no personal data in files, issues off. `LICENSE` allows personal, non-commercial
 forbids uploading or sharing them anywhere (app stores, APK sites, websites, file-sharing). Third-party licences in
 `THIRD_PARTY_NOTICES.md` and `LICENSES/`. Builds are published as GitHub Releases with that notice.
 *Why:* User's choice; going public later shouldn't need another clean-up.
+
+**D-047 — Focus icon, Focus under Wellbeing** · 2026-10-18 · Accepted
+Focus gets a selectable icon: four dotted-circle designs with the F as the empty gap (Mix, Sphere, Rim, Flow;
+default Mix), shown on the Focus picker, a 2 s "Focus started" screen (tap to skip), next to the remaining time on
+home and on its settings row (F9.8, F9.9). Focus settings move into Settings → Wellbeing → Focus, but Focus stays
+independent of the Wellbeing switch (F9.10). Wireframes H3, H10, H10b, H11, H15 updated.
+*Why:* User's choice. The small icon on home is an exception to the text-only home, chosen deliberately.
