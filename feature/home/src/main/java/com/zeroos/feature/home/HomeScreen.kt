@@ -69,6 +69,8 @@ fun HomeRoute(
     onDoubleTap: () -> Unit = {},
     onOpenFocus: () -> Unit = {},
     onEndFocusEarly: () -> Unit = {},
+    /** Slot ④: screen-time stats, provided by feature/insights (F10.3). */
+    stats: (@Composable () -> Unit)? = null,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -112,6 +114,7 @@ fun HomeRoute(
         onClockClick = { open("alarms", Intent(AlarmClock.ACTION_SHOW_ALARMS)) },
         onDateClick = { open("calendar", Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR)) },
         slots = HomeSlots(
+            stats = stats,
             focus = if (state.showFocus) {
                 { FocusSlot(state.focusMinutesLeft, state.focusProgress, state.focusIcon, onOpenFocus, onEndFocusEarly) }
             } else {

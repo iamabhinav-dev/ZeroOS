@@ -68,6 +68,7 @@ dependencies {
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:wellbeing"))
     implementation(project(":feature:focus"))
+    implementation(project(":feature:insights"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

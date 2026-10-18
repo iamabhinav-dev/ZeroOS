@@ -30,6 +30,8 @@ enum class LauncherScreen(val logName: String) {
     SETTINGS("settings"),
     FOCUS("focus"),
     FOCUS_END("end focus"),
+    INSIGHTS("insights"),
+    USAGE_ACCESS("usage access"),
     DIAGNOSTICS("diagnostics")
 }
 

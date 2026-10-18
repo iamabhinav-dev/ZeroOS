@@ -23,6 +23,9 @@ import com.zeroos.feature.applist.AppListRoute
 import com.zeroos.feature.focus.FocusEndRoute
 import com.zeroos.feature.focus.FocusRoute
 import com.zeroos.feature.home.HomeRoute
+import com.zeroos.feature.insights.HomeStatsRoute
+import com.zeroos.feature.insights.InsightsRoute
+import com.zeroos.feature.insights.UsageAccessRoute
 import com.zeroos.feature.onboarding.OnboardingRoute
 import com.zeroos.feature.settings.SettingsPage
 import com.zeroos.feature.settings.SettingsRoute
@@ -39,9 +42,15 @@ import kotlinx.coroutines.flow.Flow
 fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: LauncherViewModel = hiltViewModel()) {
     var screen by rememberSaveable { mutableStateOf(LauncherScreen.HOME) }
     var openReport by rememberSaveable { mutableStateOf<String?>(null) }
-    // Back from the Focus picker returns to where it was opened: home, or Settings → Focus.
-    var focusFromSettings by rememberSaveable { mutableStateOf(false) }
+    // Focus and Insights can be opened from home or a Settings page; Back returns there (D-051).
+    var cameFrom by rememberSaveable { mutableStateOf<SettingsPage?>(null) }
     var settingsPage by rememberSaveable { mutableStateOf(SettingsPage.MAIN) }
+    // The Usage access explanation returns to the screen that asked (F10.11).
+    var accessReturn by rememberSaveable { mutableStateOf(LauncherScreen.HOME) }
+    val open = { target: LauncherScreen, from: SettingsPage? ->
+        cameFrom = from
+        screen = target
+    }
     val crashReport by viewModel.crashReport.collectAsStateWithLifecycle()
     val onboardingCompleted by viewModel.onboardingCompleted.collectAsStateWithLifecycle()
     val notHomeApp by viewModel.notHomeApp.collectAsStateWithLifecycle()
@@ -82,11 +91,17 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
                         screen = LauncherScreen.SETTINGS
                     },
                     onDoubleTap = viewModel::lockScreen,
-                    onOpenFocus = {
-                        focusFromSettings = false
-                        screen = LauncherScreen.FOCUS
-                    },
-                    onEndFocusEarly = { screen = LauncherScreen.FOCUS_END }
+                    onOpenFocus = { open(LauncherScreen.FOCUS, null) },
+                    onEndFocusEarly = { screen = LauncherScreen.FOCUS_END },
+                    stats = {
+                        HomeStatsRoute(
+                            onOpenInsights = { open(LauncherScreen.INSIGHTS, null) },
+                            onAskAccess = {
+                                accessReturn = LauncherScreen.HOME
+                                screen = LauncherScreen.USAGE_ACCESS
+                            }
+                        )
+                    }
                 )
                 HomeBanners(
                     crashReport = crashReport,
@@ -111,24 +126,26 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
 
             LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
 
-            LauncherScreen.FOCUS -> FocusRoute(
+            LauncherScreen.FOCUS, LauncherScreen.FOCUS_END, LauncherScreen.INSIGHTS, LauncherScreen.USAGE_ACCESS -> SideScreen(
+                screen = screen,
                 onBack = {
-                    val (back, page) = focusBack(focusFromSettings)
+                    val (back, page) = backFrom(cameFrom)
                     settingsPage = page
                     screen = back
                 },
-                onStarted = { screen = LauncherScreen.HOME }
+                onHome = { screen = LauncherScreen.HOME },
+                onAccessDone = { screen = accessReturn },
+                onAskAccess = {
+                    accessReturn = LauncherScreen.INSIGHTS
+                    screen = LauncherScreen.USAGE_ACCESS
+                }
             )
-
-            LauncherScreen.FOCUS_END -> FocusEndRoute(onDone = { screen = LauncherScreen.HOME })
 
             LauncherScreen.SETTINGS -> SettingsRoute(
                 onClose = { screen = LauncherScreen.HOME },
                 onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS },
-                onStartFocus = {
-                    focusFromSettings = true
-                    screen = LauncherScreen.FOCUS
-                },
+                onStartFocus = { open(LauncherScreen.FOCUS, SettingsPage.FOCUS) },
+                onOpenInsights = { open(LauncherScreen.INSIGHTS, SettingsPage.SCREEN_TIME) },
                 startPage = settingsPage
             )
 
@@ -145,9 +162,21 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
     }
 }
 
-/** Where Back from the Focus picker goes: home, or Settings → Focus if it was opened there (D-051). */
-internal fun focusBack(fromSettings: Boolean): Pair<LauncherScreen, SettingsPage> =
-    if (fromSettings) LauncherScreen.SETTINGS to SettingsPage.FOCUS else LauncherScreen.HOME to SettingsPage.MAIN
+/** Where Back from Focus or Insights goes: home, or the Settings page it was opened from (D-051). */
+internal fun backFrom(page: SettingsPage?): Pair<LauncherScreen, SettingsPage> =
+    if (page != null) LauncherScreen.SETTINGS to page else LauncherScreen.HOME to SettingsPage.MAIN
+
+/** Screens opened from home or Settings: the Focus picker, ending focus early, Insights and Usage access. */
+@Composable
+private fun SideScreen(screen: LauncherScreen, onBack: () -> Unit, onHome: () -> Unit, onAccessDone: () -> Unit, onAskAccess: () -> Unit) {
+    when (screen) {
+        LauncherScreen.FOCUS -> FocusRoute(onBack = onBack, onStarted = onHome)
+        LauncherScreen.FOCUS_END -> FocusEndRoute(onDone = onHome)
+        LauncherScreen.INSIGHTS -> InsightsRoute(onAskAccess = onAskAccess, onBack = onBack)
+        LauncherScreen.USAGE_ACCESS -> UsageAccessRoute(onDone = onAccessDone)
+        else -> Unit
+    }
+}
 
 /** The crash banner (F17.10) and "ZeroOS isn't your home app" (F14.7) at the top of home. */
 @Composable
