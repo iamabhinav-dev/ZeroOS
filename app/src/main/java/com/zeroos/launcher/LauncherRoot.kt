@@ -108,7 +108,8 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
 
             LauncherScreen.SETTINGS -> SettingsRoute(
                 onClose = { screen = LauncherScreen.HOME },
-                onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS }
+                onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS },
+                onStartFocus = { screen = LauncherScreen.FOCUS }
             )
 
             LauncherScreen.DIAGNOSTICS -> DiagnosticsRoute(

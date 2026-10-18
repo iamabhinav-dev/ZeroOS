@@ -48,6 +48,8 @@ enum class SettingsPage(val logName: String) {
     PHONE_WALLPAPER("phone wallpaper"),
     WELLBEING("wellbeing"),
     WELLBEING_APPS("wellbeing apps"),
+    FOCUS("focus"),
+    FOCUS_ICON("focus icon"),
     BACKUP("backup"),
     ABOUT("about"),
     LICENSES("licenses");
@@ -59,7 +61,8 @@ enum class SettingsPage(val logName: String) {
             PICK_SWIPE_LEFT, PICK_SWIPE_RIGHT -> GESTURES
             LICENSES -> ABOUT
             PHONE_WALLPAPER -> APPEARANCE
-            WELLBEING_APPS -> WELLBEING
+            WELLBEING_APPS, FOCUS -> WELLBEING
+            FOCUS_ICON -> FOCUS
             else -> MAIN
         }
 }
@@ -69,7 +72,12 @@ enum class SettingsPage(val logName: String) {
  * [onOpenDiagnostics].
  */
 @Composable
-fun SettingsRoute(onClose: () -> Unit, onOpenDiagnostics: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsRoute(
+    onClose: () -> Unit,
+    onOpenDiagnostics: () -> Unit,
+    onStartFocus: () -> Unit = {},
+    viewModel: SettingsViewModel = hiltViewModel()
+) {
     var page by rememberSaveable { mutableStateOf(SettingsPage.MAIN) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(page) { viewModel.onPageShown(page) }
@@ -117,22 +125,31 @@ fun SettingsRoute(onClose: () -> Unit, onOpenDiagnostics: () -> Unit, viewModel:
 
         SettingsPage.PICK_SWIPE_RIGHT -> SwipeAppPicker(SwipeSide.RIGHT, state, viewModel, onDone = back)
 
-        else -> SimplePage(page, onOpen = { page = it }, onBack = back)
+        else -> SimplePage(page, onOpen = { page = it }, onStartFocus = onStartFocus, onBack = back)
     }
 }
 
 /** Pages that only open other pages or go back: Appearance, Phone wallpaper, Wellbeing, Backup, About, Licenses. */
 @Composable
-private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onBack: () -> Unit) {
+private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onStartFocus: () -> Unit, onBack: () -> Unit) {
     when (page) {
         SettingsPage.APPEARANCE -> AppearanceRoute(onPhoneWallpaper = { onOpen(SettingsPage.PHONE_WALLPAPER) }, onBack = onBack)
 
         SettingsPage.PHONE_WALLPAPER -> PhoneWallpaperRoute(onBack = onBack)
 
-        SettingsPage.WELLBEING, SettingsPage.WELLBEING_APPS ->
-            WellbeingRoute(showApps = page == SettingsPage.WELLBEING_APPS, onOpenApps = {
-                onOpen(SettingsPage.WELLBEING_APPS)
-            }, onBack = onBack)
+        SettingsPage.WELLBEING, SettingsPage.WELLBEING_APPS -> WellbeingRoute(
+            showApps = page == SettingsPage.WELLBEING_APPS,
+            onOpenApps = { onOpen(SettingsPage.WELLBEING_APPS) },
+            onOpenFocus = { onOpen(SettingsPage.FOCUS) },
+            onBack = onBack
+        )
+
+        SettingsPage.FOCUS, SettingsPage.FOCUS_ICON -> FocusSettingsRoute(
+            showIcons = page == SettingsPage.FOCUS_ICON,
+            onOpenIcons = { onOpen(SettingsPage.FOCUS_ICON) },
+            onStartFocus = onStartFocus,
+            onBack = onBack
+        )
 
         SettingsPage.BACKUP -> BackupRoute(onBack = onBack)
 
@@ -244,6 +261,8 @@ object SettingsTestTags {
     const val WALLPAPER_PREVIEW = "settings_wallpaper_preview"
     const val WELLBEING = "settings_wellbeing"
     const val WELLBEING_APPS = "settings_wellbeing_apps"
+    const val FOCUS = "settings_focus"
+    const val FOCUS_ICON = "settings_focus_icon"
 
     fun wallpaper(id: String) = "wallpaper_$id"
 

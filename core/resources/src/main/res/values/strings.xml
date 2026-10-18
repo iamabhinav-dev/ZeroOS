@@ -17,6 +17,13 @@
     <string name="focus_apps">Apps you can use</string>
     <string name="focus_start">Start focus</string>
     <string name="focus_started">Focus · %1$d min</string>
+    <string name="focus_show_on_home">Show \"focus\" on home</string>
+    <string name="focus_icon">Focus icon</string>
+    <string name="focus_dnd">Turn on Do Not Disturb</string>
+    <string name="focus_icon_mix">Mix</string>
+    <string name="focus_icon_sphere">Sphere</string>
+    <string name="focus_icon_rim">Rim</string>
+    <string name="focus_icon_flow">Flow</string>
     <string name="common_on">on</string>
     <string name="common_off">off</string>
     <string name="common_date_time">%1$s, %2$s</string>
