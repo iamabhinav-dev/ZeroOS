@@ -104,6 +104,7 @@ Update this file in the same commit as the code and tests.
 | NFR-A2 | 🟡 | ComponentsTest › nfrA2_listItemsAreAtLeast48dpAndClickable | |
 | NFR-A3 | 🟡 | ZeroThemeTest › nfrA3_textMeetsWcagAaInBothThemes | Light theme dotted text legibility |
 | NFR-A4 | ⬜ | | |
+| NFR-A5 | ✅ | landscape_* screenshot tests in every module (home, app list, onboarding, settings, wallpapers, wellbeing, focus, diagnostics, safe mode, permission explanation) | Rotate the phone on each screen |
 | NFR-R4 | 🟡 | HomeScreenTest › nfrR4_* (side by side; favorites scroll if needed) | Rotate home on the phone |
 | NFR-R1–R8 | ⬜ | | |
 | NFR-L1–L3, L5, L6 | ⬜ | | |

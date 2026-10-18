@@ -258,3 +258,10 @@ Some phones' battery-saving modes reset the default home app to the stock launch
 public APIs. ZeroOS instead shows a line at the top of home whenever it comes to the front without being the
 default, with a one-tap "Set as default" (the same role dialog as onboarding). Wireframe A6.
 *Why:* User's choice after confirming the reset on the test phone; quick recovery instead of digging in Settings.
+
+**D-050 — Landscape for every screen; stricter hardcoding checks** · 2026-10-18 · Accepted
+Every screen must work in landscape (NFR-A5) and has a `landscape_*` screenshot test; AGENTS.md §4 makes it a rule
+for new and changed screens. The detekt rules now also catch text passed to ZeroOS's own components and toasts
+(`TextAction("…")`, `BodyText("…")`, `SettingRow(…, "…")`, `Toast.makeText(…, "…")`) and number literals as
+durations in `delay(…)` / `tween(…)`, on top of Lint `HardcodedText`, `Text("…")`, colours and sizes (NFR-L4, L7, L8).
+*Why:* User's request.

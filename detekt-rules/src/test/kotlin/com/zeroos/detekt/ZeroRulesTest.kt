@@ -24,6 +24,42 @@ class ZeroRulesTest {
     }
 
     @Test
+    fun nfrL4_flagsLiteralTextInZeroOsComponentsAndToasts() {
+        val code = """
+            fun Screen() {
+                TextAction("Go back", onBack)
+                BodyText("Hello")
+                ScreenTitle("Settings")
+                MinimalListItem("Phone", onClick = {}, trailing = "1m left")
+                SettingRow(stringResource(R.string.x), "on", {})
+                ToggleRow("Wi-Fi", true, {})
+                HoldToConfirm("Hold", HOLD, {})
+                Toast.makeText(context, "Saved", Toast.LENGTH_SHORT)
+                TextAction(stringResource(R.string.ok), onOk)
+                MinimalListItem(app.displayName(), onClick = {}, trailing = position.toString())
+                Toast.makeText(context, message, Toast.LENGTH_SHORT)
+            }
+        """.trimIndent()
+        assertEquals(9, HardcodedUiText(Config.empty).lint(code).size)
+    }
+
+    @Test
+    fun nfrL8_flagsLiteralDurations() {
+        val code = """
+            suspend fun f() {
+                delay(2000)
+                delay(500L)
+                tween(300)
+                tween(durationMillis = 250, easing = LinearEasing)
+                delay(1.seconds)
+                delay(STARTED_SCREEN)
+                tween(DRAIN_MILLIS, easing = LinearEasing)
+            }
+        """.trimIndent()
+        assertEquals(4, HardcodedUiValue(Config.empty).lint(code).size)
+    }
+
+    @Test
     fun nfrL8_flagsLiteralColorsAndSizes() {
         val code = """
             fun Screen() {

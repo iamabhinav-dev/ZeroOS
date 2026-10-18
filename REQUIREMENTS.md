@@ -349,6 +349,7 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | NFR-A2 | Minimum touch target 48×48 dp. |
 | NFR-A3 | Text contrast meets WCAG AA (4.5:1). |
 | NFR-A4 | Respect system font scaling and reduced motion settings. |
+| NFR-A5 | **Portrait and landscape:** every screen works in both: nothing cut off, every button reachable, art sized to fit. Screens that don't scroll switch to a two-pane layout when wider than tall. Checked by a landscape screenshot test for every screen (D-050). |
 
 ### 4.4 Reliability & Compatibility
 | ID | Requirement |
