@@ -22,7 +22,7 @@ data class PermissionActions(val onOpenSettings: () -> Unit, val onOpenAppInfo: 
 
 /**
  * Explains a special permission before opening Android's screen for it (wireframe H2, F14.4, NFR-S4). Accessibility
- * also shows the "Allow restricted settings" steps for sideloaded apps, what it reads, and the UPI-app note.
+ * also shows the "Allow restricted settings" steps for sideloaded apps, what it reads, and the banking-app note.
  * [notYet] adds "Not allowed yet" after a return without the permission.
  */
 @Composable
@@ -37,7 +37,7 @@ fun PermissionExplanation(permission: SpecialPermission, notYet: Boolean, action
         item { BodyText(stringResource(R.string.permission_private), muted = true) }
         if (permission == SpecialPermission.ACCESSIBILITY) {
             item { BodyText(stringResource(R.string.permission_accessibility_reads)) }
-            item { BodyText(stringResource(R.string.permission_accessibility_upi), muted = true) }
+            item { BodyText(stringResource(R.string.permission_accessibility_banking), muted = true) }
             item { BodyText(stringResource(R.string.permission_restricted_intro)) }
             RESTRICTED_STEPS.forEachIndexed { index, step ->
                 item {

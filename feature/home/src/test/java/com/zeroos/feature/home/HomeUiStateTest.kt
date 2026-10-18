@@ -11,7 +11,7 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class HomeUiStateTest {
-    private val time = ZonedDateTime.parse("2026-10-16T10:42:00+05:30[Asia/Kolkata]")
+    private val time = ZonedDateTime.parse("2026-10-16T10:42:00+01:00")
     private fun app(name: String) = AppEntry(AppKey("pkg.$name", "Main", 0), name)
     private val apps = listOf("Phone", "Messages", "Camera", "Maps").map(::app)
     private fun key(name: String) = AppKey("pkg.$name", "Main", 0).asString()
@@ -79,7 +79,7 @@ class HomeUiStateTest {
 
     @Test
     fun f1_3_f1_8_batteryAndAlarmFollowSettings() {
-        val alarm = Instant.parse("2026-10-17T01:00:00Z")
+        val alarm = Instant.parse("2026-10-17T05:30:00Z")
         val shown =
             homeUiState(
                 time,

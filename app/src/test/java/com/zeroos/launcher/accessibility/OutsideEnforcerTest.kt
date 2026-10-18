@@ -84,7 +84,7 @@ class OutsideEnforcerTest {
 
     /** Virtual time drives both the timers and the clock. */
     private fun TestScope.clock(): Clock = object : Clock() {
-        override fun getZone(): ZoneId = ZoneId.of("Asia/Kolkata")
+        override fun getZone(): ZoneId = ZoneId.of("+01:00")
 
         override fun withZone(zone: ZoneId) = this
 

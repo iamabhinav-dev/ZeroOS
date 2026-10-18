@@ -8,7 +8,7 @@ import java.time.ZoneId
 /** Test clock that can be moved forward or to another time zone (Testing Policy #6). */
 class MutableClock(
     private var now: Instant = Instant.parse("2026-10-15T05:00:00Z"),
-    private var zoneId: ZoneId = ZoneId.of("Asia/Kolkata")
+    private var zoneId: ZoneId = ZoneId.of("+01:00")
 ) : Clock() {
     override fun getZone(): ZoneId = zoneId
 

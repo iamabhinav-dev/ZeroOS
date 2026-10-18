@@ -78,8 +78,8 @@ JDK 21 (originally 17; Robolectric needs 21 for API 37) + Android SDK command-li
 
 **D-018 — Handling Play Protect install blocks** · 2026-10-15 · Accepted
 From v1.1 (when the manifest declares a notification listener and an Accessibility service), install updates by briefly turning off "Scan apps with Play Protect", installing, and turning it back on. v1.0 needs nothing.
-*Why:* In India, Play Protect blocks apps from browsers, messaging apps and file managers that declare these permissions; this workaround is free and needs no ADB or Developer options.
-*Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available in India.
+*Why:* In some regions, Play Protect blocks apps from browsers, messaging apps and file managers that declare these permissions; this workaround is free and needs no ADB or Developer options.
+*Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available.
 *Confirmed 2026-10-16:* Play Protect blocked the spike APK on the phone; choosing to install anyway in the Play Protect dialog worked, so pausing scanning may not even be needed.
 
 **D-019 — Block screen sends you home, no grace period** · 2026-10-15 · Accepted

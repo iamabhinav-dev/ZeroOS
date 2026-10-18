@@ -19,7 +19,7 @@ import org.robolectric.shadows.ShadowLooper
 class TimeTicksTest {
     private val context: Context = ApplicationProvider.getApplicationContext()
     private val clock = MutableClock(Instant.parse("2026-10-15T10:29:00Z"))
-    private var zone: ZoneId = ZoneId.of("Asia/Kolkata")
+    private var zone: ZoneId = ZoneId.of("+01:00")
     private val ticks = TimeTicks(context, clock) { zone }
 
     private fun broadcast(action: String) {
@@ -30,10 +30,10 @@ class TimeTicksTest {
     @Test
     fun f1_1_emitsNowThenOnEveryMinuteTick() = runTest {
         ticks.ticks.test {
-            assertEquals("15:59", awaitItem().toLocalTime().toString())
+            assertEquals("11:29", awaitItem().toLocalTime().toString())
             clock.advanceBy(Duration.ofMinutes(1))
             broadcast(Intent.ACTION_TIME_TICK)
-            assertEquals("16:00", awaitItem().toLocalTime().toString())
+            assertEquals("11:30", awaitItem().toLocalTime().toString())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -42,9 +42,9 @@ class TimeTicksTest {
     fun f1_1_updatesWhenTimeZoneChanges() = runTest {
         ticks.ticks.test {
             awaitItem()
-            zone = ZoneId.of("Europe/London")
+            zone = ZoneId.of("America/New_York")
             broadcast(Intent.ACTION_TIMEZONE_CHANGED)
-            assertEquals("11:29", awaitItem().toLocalTime().toString())
+            assertEquals("06:29", awaitItem().toLocalTime().toString())
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -53,7 +53,7 @@ class TimeTicksTest {
     fun f1_1_updatesWhenClockIsSetManually() = runTest {
         ticks.ticks.test {
             awaitItem()
-            clock.setTo(Instant.parse("2026-10-15T18:30:00Z"))
+            clock.setTo(Instant.parse("2026-10-15T23:00:00Z"))
             broadcast(Intent.ACTION_TIME_CHANGED)
             assertEquals("00:00", awaitItem().toLocalTime().toString())
             cancelAndIgnoreRemainingEvents()
@@ -65,12 +65,12 @@ class TimeTicksTest {
         clock.setTo(Instant.parse("2026-10-15T10:29:07.250Z"))
         val seconds = TimeTicks(context, clock) { zone }
         seconds.secondTicks.test {
-            assertEquals("15:59:07.250", awaitItem().toLocalTime().toString())
+            assertEquals("11:29:07.250", awaitItem().toLocalTime().toString())
             // The next tick waits for the rest of this second (750 ms), then comes every 1 s.
             clock.advanceBy(Duration.ofMillis(750))
-            assertEquals("15:59:08", awaitItem().toLocalTime().toString())
+            assertEquals("11:29:08", awaitItem().toLocalTime().toString())
             clock.advanceBy(Duration.ofSeconds(1))
-            assertEquals("15:59:09", awaitItem().toLocalTime().toString())
+            assertEquals("11:29:09", awaitItem().toLocalTime().toString())
             cancelAndIgnoreRemainingEvents()
         }
     }

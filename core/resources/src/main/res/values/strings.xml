@@ -94,7 +94,7 @@
     <string name="permission_accessibility_title">Accessibility</string>
     <string name="permission_accessibility_why">ZeroOS needs accessibility to keep your limits outside ZeroOS and for double-tap to lock.</string>
     <string name="permission_accessibility_reads">It sees which app is in front and reads nothing else.</string>
-    <string name="permission_accessibility_upi">Some banking and UPI apps warn while any accessibility service is on.</string>
+    <string name="permission_accessibility_banking">Some banking and payment apps warn while any accessibility service is on.</string>
     <string name="permission_dnd_title">Do Not Disturb</string>
     <string name="permission_dnd_why">Lets Focus turn on Do Not Disturb and back off.</string>
     <string name="permission_private">It stays on this phone. Nothing is sent anywhere.</string>

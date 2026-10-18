@@ -36,5 +36,5 @@ fun parseLogLines(lines: List<String>): List<StoredLogEntry> {
     return entries.asReversed()
 }
 
-/** `2026-10-15T10:42:03.123+05:30 I/home: shown` → time, level letter, tag, message. */
+/** `2026-10-15T10:42:03.123+01:00 I/home: shown` → time, level letter, tag, message. */
 private val HEADER = Regex("""^(\S+) ([DIWE])/([^:]+): (.*)$""")

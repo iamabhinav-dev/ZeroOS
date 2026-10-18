@@ -39,10 +39,10 @@ class UsageTimeTest {
 
     @Test
     fun f8_6_dayStartsAtLocalMidnight() {
-        val zone = ZoneId.of("Asia/Kolkata")
-        assertEquals(Instant.parse("2026-10-16T18:30:00Z"), startOfDay(Instant.parse("2026-10-17T10:00:00Z"), zone))
+        val zone = ZoneId.of("+01:00")
+        assertEquals(Instant.parse("2026-10-16T23:00:00Z"), startOfDay(Instant.parse("2026-10-17T10:00:00Z"), zone))
         // Just after midnight it's a new day.
-        assertEquals(Instant.parse("2026-10-17T18:30:00Z"), startOfDay(Instant.parse("2026-10-17T18:31:00Z"), zone))
+        assertEquals(Instant.parse("2026-10-17T23:00:00Z"), startOfDay(Instant.parse("2026-10-17T23:01:00Z"), zone))
     }
 
     @Test
@@ -52,7 +52,7 @@ class UsageTimeTest {
         assertEquals(Instant.parse("2026-10-24T23:00:00Z"), startOfDay(Instant.parse("2026-10-25T12:00:00Z"), london))
         // Same moment, different zone: a different local day start.
         val now = Instant.parse("2026-10-17T02:00:00Z")
-        assertEquals(Instant.parse("2026-10-16T18:30:00Z"), startOfDay(now, ZoneId.of("Asia/Kolkata")))
+        assertEquals(Instant.parse("2026-10-16T04:00:00Z"), startOfDay(now, ZoneId.of("America/New_York")))
         assertEquals(Instant.parse("2026-10-16T23:00:00Z"), startOfDay(now, london))
     }
 

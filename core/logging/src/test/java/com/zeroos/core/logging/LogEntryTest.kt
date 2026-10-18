@@ -11,8 +11,8 @@ class LogEntryTest {
 
     @Test
     fun f17_2_formatsTimestampLevelTagAndMessage() {
-        val line = LogEntry(time, LogLevel.INFO, "home", "shown").format(ZoneId.of("Asia/Kolkata"))
-        assertEquals("2026-10-15T10:42:03.123+05:30 I/home: shown", line)
+        val line = LogEntry(time, LogLevel.INFO, "home", "shown").format(ZoneId.of("+01:00"))
+        assertEquals("2026-10-15T06:12:03.123+01:00 I/home: shown", line)
     }
 
     @Test

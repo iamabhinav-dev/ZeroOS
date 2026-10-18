@@ -6,7 +6,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ClockFormatTest {
-    private val time = ZonedDateTime.parse("2026-10-15T16:05:00+05:30[Asia/Kolkata]")
+    private val time = ZonedDateTime.parse("2026-10-15T16:05:00+01:00")
 
     @Test
     fun f1_1_uses24HourClockWhenDeviceDoes() {

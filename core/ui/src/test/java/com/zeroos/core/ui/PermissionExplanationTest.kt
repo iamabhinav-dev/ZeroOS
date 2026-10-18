@@ -49,10 +49,10 @@ class PermissionExplanationTest {
     }
 
     @Test
-    fun f14_4_accessibilityShowsRestrictedStepsAndUpiNote() {
+    fun f14_4_accessibilityShowsRestrictedStepsAndBankingNote() {
         show(SpecialPermission.ACCESSIBILITY)
         compose.onNodeWithText("It sees which app is in front and reads nothing else.").assertExists()
-        compose.onNodeWithText("Some banking and UPI apps warn while any accessibility service is on.").assertExists()
+        compose.onNodeWithText("Some banking and payment apps warn while any accessibility service is on.").assertExists()
         val list = compose.onNodeWithTag(PermissionTestTags.SCREEN)
         list.performScrollToNode(hasText("2 Tap the three dots (top right)"))
         compose.onNodeWithText("2 Tap the three dots (top right)").assertExists()

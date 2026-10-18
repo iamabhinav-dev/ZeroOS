@@ -101,7 +101,7 @@ A small debug APK installed on the phone to check the risky parts **before** bui
 3. **Notification listener**: survives overnight and after a reboot with the phone's default battery settings, and again with background activity allowed.
 4. **Accessibility service**: can be enabled after "Allow restricted settings"; survives overnight; a debug **node-tree dumper** saves YouTube Shorts and Instagram Reels screen structures to a file (these become F16 test fixtures, with no ADB needed).
 5. **Overlay**: `TYPE_ACCESSIBILITY_OVERLAY` shows a black screen over YouTube.
-6. **Play Protect install block**: install the spike APK (which declares a notification listener and an Accessibility service) from a file manager/Drive/Telegram with Play Protect **on**. Record whether it is blocked, then confirm the workaround (pause Play Protect scanning → install → turn it back on) works (D-018).
+6. **Play Protect install block**: install the spike APK (which declares a notification listener and an Accessibility service) from a file manager or other app with Play Protect **on**. Record whether it is blocked, then confirm the workaround (pause Play Protect scanning → install → turn it back on) works (D-018).
 
 Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss** before continuing the plan.
 
@@ -129,7 +129,7 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 - Versioning: `versionCode` +1 per install; `versionName` = milestone (e.g., `1.0.3`). Android refuses to install a lower `versionCode` over a higher one, so a rollback = rebuild old code with a **higher** `versionCode`.
 - Document the install workflow in `README.md`:
   1. `./gradlew check assembleRelease`
-  2. Copy `app/build/outputs/apk/release/*.apk` to the phone (USB file transfer / Drive / Telegram)
+  2. Copy `app/build/outputs/apk/release/*.apk` to the phone (USB or any file transfer)
   3. Open it on the phone and install over the previous version. From Phase 4 on (the app declares notification-listener/Accessibility services), Play Protect may block the install: pause it first (Play Store → profile → Play Protect → ⚙ → "Scan apps with Play Protect" off), install, then **turn it back on** (D-018)
   4. Run the manual check
 

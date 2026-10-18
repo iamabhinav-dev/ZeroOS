@@ -28,10 +28,10 @@ class DiagnosticsScreenTest {
 
     private val state = DiagnosticsUiState(
         entries = listOf(
-            StoredLogEntry("2026-10-15T10:42:03.123+05:30", LogLevel.INFO, "home", "shown", emptyList()),
-            StoredLogEntry("2026-10-15T10:41:58.000+05:30", LogLevel.INFO, "apps", "launched com.whatsapp", emptyList()),
+            StoredLogEntry("2026-10-15T10:42:03.123+01:00", LogLevel.INFO, "home", "shown", emptyList()),
+            StoredLogEntry("2026-10-15T10:41:58.000+01:00", LogLevel.INFO, "apps", "launched com.whatsapp", emptyList()),
             StoredLogEntry(
-                "2026-10-15T10:40:12.000+05:30",
+                "2026-10-15T10:40:12.000+01:00",
                 LogLevel.ERROR,
                 "apps",
                 "could not launch x",

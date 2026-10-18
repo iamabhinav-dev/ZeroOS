@@ -134,7 +134,7 @@ class WellbeingStateRepositoryTest {
 
     @Test
     fun f8_6_extraUsesResetAtLocalMidnight() = runTest {
-        val clock = MutableClock(Instant.parse("2026-10-17T18:00:00Z")) // 23:30 in Kolkata
+        val clock = MutableClock(Instant.parse("2026-10-17T22:30:00Z")) // 23:30 local (+01:00)
         val repo = repository(clock)
         repo.useExtra("yt")
         repo.useExtra("yt")

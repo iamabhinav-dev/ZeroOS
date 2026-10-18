@@ -49,7 +49,7 @@ class HomeScreenTest {
     @get:Rule
     val compose = createComposeRule()
 
-    private val time = ZonedDateTime.parse("2026-10-15T10:42:00+05:30[Asia/Kolkata]")
+    private val time = ZonedDateTime.parse("2026-10-15T10:42:00+01:00")
     private val favorites = listOf("Phone", "Messages", "Camera", "Maps", "WhatsApp", "Spotify")
         .map { AppEntry(AppKey("pkg.$it", "Main", 0), it) }
     private val calls = mutableListOf<String>()

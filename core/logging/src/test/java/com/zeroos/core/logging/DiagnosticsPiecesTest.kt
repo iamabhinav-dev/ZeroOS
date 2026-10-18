@@ -42,8 +42,8 @@ class DiagnosticsPiecesTest {
     fun f17_9_parsesEntriesNewestFirstWithDetails() {
         val entries = parseLogLines(
             listOf(
-                "2026-10-15T10:40:00.000+05:30 I/home: shown",
-                "2026-10-15T10:41:00.000+05:30 E/apps: could not launch x",
+                "2026-10-15T10:40:00.000+01:00 I/home: shown",
+                "2026-10-15T10:41:00.000+01:00 E/apps: could not launch x",
                 "    java.lang.SecurityException: gone",
                 "    at a.b.C(C.kt:1)",
                 "garbage without header"
@@ -53,7 +53,7 @@ class DiagnosticsPiecesTest {
         assertEquals(LogLevel.ERROR, entries[0].level)
         assertEquals("could not launch x", entries[0].message)
         assertEquals(listOf("java.lang.SecurityException: gone", "at a.b.C(C.kt:1)", "garbage without header"), entries[0].details)
-        assertEquals("2026-10-15T10:40:00.000+05:30", entries[1].time)
+        assertEquals("2026-10-15T10:40:00.000+01:00", entries[1].time)
     }
 
     @Test

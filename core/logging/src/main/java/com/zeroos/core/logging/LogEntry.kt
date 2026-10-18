@@ -14,7 +14,7 @@ data class LogEntry(
     val message: String,
     val stackTrace: String? = null
 ) {
-    /** `2026-10-15T10:42:03.123+05:30 I/home: shown`, followed by indented stack trace lines. */
+    /** `2026-10-15T10:42:03.123+01:00 I/home: shown`, followed by indented stack trace lines. */
     fun format(zone: ZoneId): String = buildString {
         append(TIME_FORMAT.format(Instant.ofEpochMilli(timeMillis).atZone(zone)))
         append(' ').append(level.letter).append('/').append(tag).append(": ").append(message)
