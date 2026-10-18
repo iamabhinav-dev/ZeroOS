@@ -253,7 +253,7 @@ private fun BackgroundPage(batteryOptimized: Boolean, onTurnOff: () -> Unit) {
         )
     )
     if (batteryOptimized) TextAction(stringResource(R.string.onboarding_battery_turn_off), onTurnOff)
-    BodyText(stringResource(R.string.onboarding_oem_tip), muted = true)
+    BodyText(stringResource(R.string.onboarding_background_tip), muted = true)
 }
 
 private val SINGLE_DOT = listOf("●")

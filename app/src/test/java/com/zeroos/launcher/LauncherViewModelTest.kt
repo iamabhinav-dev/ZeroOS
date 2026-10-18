@@ -73,12 +73,12 @@ class LauncherViewModelTest {
             stackTrace =
                 arrayOf(StackTraceElement("com.zeroos.core.logging.LogFileStore", "crashReports", null, 1))
         }
-        val oem = RuntimeException().apply {
+        val system = RuntimeException().apply {
             stackTrace =
-                arrayOf(StackTraceElement("oem.content.res.OemThemeZipFile", "isFileExist", null, 1))
+                arrayOf(StackTraceElement("oem.content.res.ThemeZipFile", "isFileExist", null, 1))
         }
         assertEquals(true, isOwnCode(ours))
-        assertEquals(false, isOwnCode(oem))
+        assertEquals(false, isOwnCode(system))
     }
 
     @Test

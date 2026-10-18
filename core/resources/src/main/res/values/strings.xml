@@ -69,7 +69,7 @@
     <string name="onboarding_background_body">Your phone may stop apps in the background to save battery.</string>
     <string name="onboarding_battery_optimization">Battery optimization</string>
     <string name="onboarding_battery_turn_off">Turn off for ZeroOS</string>
-    <string name="onboarding_oem_tip">On some phones, also allow background activity for ZeroOS in its app settings.</string>
+    <string name="onboarding_background_tip">Some phones also need background activity allowed for ZeroOS in its app settings.</string>
 
     <!-- Hidden apps (F5.2, F5.3, wireframe E4) -->
     <string name="hidden_apps_title">Hidden apps</string>

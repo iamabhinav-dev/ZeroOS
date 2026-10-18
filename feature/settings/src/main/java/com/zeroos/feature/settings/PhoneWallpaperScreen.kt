@@ -206,7 +206,7 @@ internal fun outcomeLines(outcome: WallpaperOutcome): List<Int> = when (outcome)
             lock -> add(R.string.phone_wallpaper_done_lock)
         }
         if (WallpaperScreen.LOCK in result.rejected) add(R.string.phone_wallpaper_lock_rejected)
-        // Some phones (e.g. the phone's Themes app) keep their own lock screen even after accepting one (D-038).
+        // Some phones (e.g. a phone maker's theme app) keep their own lock screen even after accepting one (D-038).
         if (lock) add(R.string.phone_wallpaper_lock_hint)
         if (result.homeBackgroundSwitched) add(R.string.phone_wallpaper_switched)
     }

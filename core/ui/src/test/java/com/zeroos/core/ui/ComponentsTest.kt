@@ -96,7 +96,7 @@ class ComponentsTest {
         }
     }
 
-    /** Rendered at the the test phone's density (about 1080 x 2400, xxhdpi) so Doto's dots are visible. */
+    /** Rendered at a common phone density (about 1080 x 2400, xxhdpi) so Doto's dots are visible. */
     @Test
     @Config(qualifiers = PHONE)
     fun step2_2_galleryDarkScreenshot() {

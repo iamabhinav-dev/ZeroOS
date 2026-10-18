@@ -45,7 +45,7 @@ class AndroidWallpaperSystem(
         if (!manager.isWallpaperSupported || !manager.isSetWallpaperAllowed) return emptySet()
         val size = screenSize()
         val image = bitmap(item, size.x, size.y)
-        // One screen at a time, home first, so a rejected lock screen is known (the phone, D-038).
+        // One screen at a time, home first, so a rejected lock screen is known (some phones, D-038).
         return WallpaperScreen.entries.filter { it in screens }.filter { screen ->
             manager.setBitmap(image, null, true, screen.flag()) != 0
         }.toSet()

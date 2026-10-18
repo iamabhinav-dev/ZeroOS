@@ -43,7 +43,7 @@ class AndroidLauncherAppsSource(
 
     /**
      * Profile type from Android's user type (Android 15+, available to the default launcher). Anything else
-     * that isn't the main profile counts as a clone: the only extra profile on the test phone is App Clone (D-030).
+     * that isn't the main profile counts as a clone: on phones whose only extra profile is an app clone (D-030).
      * Each profile's raw type is logged once (F17.7) to check this on the phone.
      */
     private fun profileOf(user: UserHandle, serial: Long): ProfileType {

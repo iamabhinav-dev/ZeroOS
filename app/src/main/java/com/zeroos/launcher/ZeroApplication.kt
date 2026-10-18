@@ -138,7 +138,7 @@ class ZeroApplication : Application() {
 }
 
 /**
- * True if a StrictMode violation involves ZeroOS code. Violations raised only inside the system (e.g. the phone's
+ * True if a StrictMode violation involves ZeroOS code. Violations raised only inside the system (e.g. the phone maker's
  * theme loader on every activity start) aren't ours to fix and would flood the log.
  */
 internal fun isOwnCode(violation: Throwable): Boolean = violation.stackTrace.any { it.className.startsWith("com.zeroos.") }
