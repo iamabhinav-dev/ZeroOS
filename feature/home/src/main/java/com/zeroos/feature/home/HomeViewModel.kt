@@ -39,21 +39,28 @@ class HomeViewModel @Inject constructor(
     private val time = settingsRepository.settings.map { it.appearance.showSeconds }.distinctUntilChanged()
         .flatMapLatest { seconds -> if (seconds) timeTicks.secondTicks else timeTicks.ticks }
 
+    private val settingsAndFocus = combine(settingsRepository.settings, homeApps.focus) { s, f -> s to f }
+
     val state: StateFlow<HomeUiState> = combine(
         time,
-        settingsRepository.settings,
+        settingsAndFocus,
         // Favorites from last time first, so they show at once on a cold start (NFR-P2).
         homeApps.snapshots(),
         batteryLevel.status.onStart { emit(null) },
         nextAlarm.time
-    ) { time, settings, apps, battery, alarm ->
+    ) { time, (settings, focus), apps, battery, alarm ->
         saver.onShown(apps, settings)
-        homeUiState(time, settings, apps.apps, battery, alarm)
+        homeUiState(time, settings, apps.apps, battery, alarm).withFocus(settings.focus, focus)
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState(timeTicks.now()))
 
     fun launch(app: AppEntry) {
         homeApps.launch(app)
+    }
+
+    /** Held "focus · 23m left" for 3 s (F9.5). */
+    fun endFocus() {
+        viewModelScope.launch { homeApps.endFocus() }
     }
 
     /** Favorite long-press menu (F2.8): every app here is already a favorite. */

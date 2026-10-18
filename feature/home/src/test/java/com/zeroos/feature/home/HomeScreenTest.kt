@@ -17,6 +17,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeLeft
@@ -29,10 +30,12 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.Alignment
+import com.zeroos.core.model.settings.FocusIcon
 import com.zeroos.core.model.settings.TextSize
 import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.preloadFocusMarks
 import java.time.ZonedDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -272,5 +275,26 @@ class HomeScreenTest {
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { doubleClick(center) }
         compose.waitForIdle()
         assertEquals(emptyList<String>(), calls)
+    }
+
+    @Test
+    fun f9_1_focusButtonOpensThePicker() {
+        show(slots = HomeSlots(focus = { FocusSlot(null, FocusIcon.MIX, onStart = { calls += "focus" }, onEnd = { calls += "end" }) }))
+        compose.onNodeWithText("focus").performClick()
+        assertEquals(listOf("focus"), calls)
+    }
+
+    @Test
+    fun f9_4_f9_5_timeLeftAndHoldToEnd() {
+        show(slots = HomeSlots(focus = { FocusSlot(23, FocusIcon.MIX, onStart = { calls += "focus" }, onEnd = { calls += "end" }) }))
+        compose.onNodeWithText("focus · 23m left", substring = true).performSemanticsAction(SemanticsActions.OnClick)
+        assertEquals(listOf("end"), calls)
+    }
+
+    @Test
+    fun step4_5_homeWhileFocusingScreenshot() {
+        preloadFocusMarks(androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>().resources)
+        show(slots = HomeSlots(focus = { FocusSlot(23, FocusIcon.MIX, onStart = {}, onEnd = {}) }))
+        compose.onRoot().captureRoboImage()
     }
 }

@@ -63,8 +63,10 @@ class AppListViewModel @Inject constructor(
 
     private class Indexed(val search: AppSearchIndex, val settings: LauncherSettings)
 
-    private val index = combine(repository.apps, settingsRepository.settings) { apps, settings ->
-        Indexed(AppSearchIndex(visibleApps(apps, settings)), settings)
+    // During focus only the allowed apps are listed (F9.3).
+    private val index = combine(repository.apps, settingsRepository.settings, gate.focus) { apps, settings, focus ->
+        val visible = visibleApps(apps, settings).filter { focus == null || focus.allows(it.key.asString()) }
+        Indexed(AppSearchIndex(visible), settings)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
 
     private val usageRefresh = MutableStateFlow(0)

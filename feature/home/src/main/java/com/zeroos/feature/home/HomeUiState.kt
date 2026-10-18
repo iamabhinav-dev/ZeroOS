@@ -1,8 +1,11 @@
 package com.zeroos.feature.home
 
 import com.zeroos.core.data.apps.renamedTo
+import com.zeroos.core.data.focus.FocusSession
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
+import com.zeroos.core.model.settings.FocusIcon
+import com.zeroos.core.model.settings.FocusSettings
 import com.zeroos.core.model.settings.LauncherSettings
 import com.zeroos.core.model.settings.Wallpaper
 import java.time.Instant
@@ -29,8 +32,29 @@ data class HomeUiState(
     /** Double-tap on empty space locks the phone (F4.5). */
     val doubleTapToLock: Boolean = false,
     /** Phone wallpaper shows through, dimmed (F6.2). */
-    val showWallpaper: Boolean = false
+    val showWallpaper: Boolean = false,
+    /** The focus slot (A4): shown when the button is on or a session runs (F9.1, F9.4). */
+    val showFocus: Boolean = false,
+    /** Minutes left in the running session, or null when idle (F9.4). */
+    val focusMinutesLeft: Int? = null,
+    val focusIcon: FocusIcon = FocusIcon.MIX
 )
+
+/**
+ * Applies a running focus session (F9.3, F9.4): only allowed favorites, and the minutes left, rounded up so
+ * "1m left" shows until the very end. With no session the slot shows the "focus" button if it's on (F9.1).
+ */
+fun HomeUiState.withFocus(settings: FocusSettings, session: FocusSession?): HomeUiState = copy(
+    favorites = if (session == null) favorites else favorites.filter { session.allows(it.key.asString()) },
+    showFocus = settings.showOnHome || session != null,
+    focusMinutesLeft = session?.let {
+        val left = it.endsAtMillis - time.toInstant().toEpochMilli()
+        ((left + MILLIS_PER_MINUTE - 1) / MILLIS_PER_MINUTE).toInt().coerceAtLeast(1)
+    },
+    focusIcon = settings.icon
+)
+
+private const val MILLIS_PER_MINUTE = 60_000L
 
 /**
  * Builds the home state. Favorites keep their saved order; uninstalled ones are skipped (F3.4); custom names

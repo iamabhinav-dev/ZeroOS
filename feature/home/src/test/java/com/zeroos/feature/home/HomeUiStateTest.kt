@@ -1,7 +1,10 @@
 package com.zeroos.feature.home
 
+import com.zeroos.core.data.focus.FocusSession
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
+import com.zeroos.core.model.settings.FocusIcon
+import com.zeroos.core.model.settings.FocusSettings
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.model.settings.LauncherSettings
 import java.time.Instant
@@ -117,5 +120,25 @@ class HomeUiStateTest {
         val on = LauncherSettings(gestures = com.zeroos.core.model.settings.GestureSettings(doubleTapLock = true))
         assertEquals(true, homeUiState(time, on, apps, null, null).doubleTapToLock)
         assertEquals(false, homeUiState(time, LauncherSettings(), apps, null, null).doubleTapToLock)
+    }
+
+    @Test
+    fun f9_1_f9_3_f9_4_focusFiltersFavoritesAndShowsMinutesLeft() {
+        val settings = LauncherSettings(favorites = apps.map { it.key.asString() })
+        val base = homeUiState(time, settings, apps, null, null)
+        val idle = base.withFocus(FocusSettings(), null)
+        assertEquals(4, idle.favorites.size)
+        assertEquals(true, idle.showFocus)
+        assertEquals(null, idle.focusMinutesLeft)
+        assertEquals(false, base.withFocus(FocusSettings(showOnHome = false), null).showFocus)
+
+        val now = time.toInstant().toEpochMilli()
+        val session = FocusSession(now, now + 22 * 60_000L + 1, setOf(key("Phone"), key("Maps")))
+        val active = base.withFocus(FocusSettings(showOnHome = false, icon = FocusIcon.RIM), session)
+        assertEquals(listOf("Phone", "Maps"), active.favorites.map { it.label })
+        assertEquals("time left always shows while focusing", true, active.showFocus)
+        assertEquals("rounded up", 23, active.focusMinutesLeft)
+        assertEquals(FocusIcon.RIM, active.focusIcon)
+        assertEquals(1, base.withFocus(FocusSettings(), session.copy(endsAtMillis = now + 1)).focusMinutesLeft)
     }
 }
