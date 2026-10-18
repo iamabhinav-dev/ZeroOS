@@ -265,3 +265,11 @@ for new and changed screens. The detekt rules now also catch text passed to Zero
 (`TextAction("…")`, `BodyText("…")`, `SettingRow(…, "…")`, `Toast.makeText(…, "…")`) and number literals as
 durations in `delay(…)` / `tween(…)`, on top of Lint `HardcodedText`, `Text("…")`, colours and sizes (NFR-L4, L7, L8).
 *Why:* User's request.
+
+**D-051 — Focus on home: icon, progress dots, reason to end early** · 2026-10-18 · Accepted
+After trying 0.0.23: the home slot shows only the small Focus icon (no "focus" text); while focusing, the icon,
+"23m left" and a dot line that fills as time passes. Ending early is a tap on it, then an "End focus early?" screen
+where End focus appears only after typing why (replaces hold 3 s; the hold also triggered home's long-press). The
+picker gets a search field and ‹ › for the custom length (stops at 5 and 240 min). Back from a picker opened in
+Settings → Focus returns there. Wireframes A4, H11, H16.
+*Why:* User's feedback.

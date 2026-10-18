@@ -178,11 +178,11 @@ Kept for later; not built in v1.1.
 
 | ID | Requirement |
 |---|---|
-| F9.1 | A text button **"focus"** on the home screen starts Focus mode with one tap (opens the duration + allow-list picker). It can be hidden in Settings; Focus can also be started from Settings. While Focus is active, the button is replaced by the remaining time (F9.4), and holding it ends the session (F9.5). |
-| F9.2 | Pick a duration (25 / 50 / 90 min / custom) and an allow-list of apps. |
+| F9.1 | The small **Focus icon** on the home screen starts Focus mode with one tap (opens the duration + allow-list picker). It can be hidden in Settings; Focus can also be started from Settings. While Focus is active, the icon is followed by the remaining time (F9.4); tapping it offers to end the session early (F9.5). (D-051) |
+| F9.2 | Pick a duration (25 / 50 / 90 min / custom) and an allow-list of apps.. The custom length has ‹ › to go one step shorter or longer (5–240 min, stopping at the ends), and the app list has a search field (D-051). |
 | F9.3 | During focus: only allowed apps are shown/launchable; notification filter is maximal (once F7 is built, D-039; until then Do Not Disturb, F9.7, keeps it quiet). |
-| F9.4 | Home screen shows remaining focus time. |
-| F9.5 | Ending early requires a deliberate action (e.g., hold for 3 s). |
+| F9.4 | Home screen shows remaining focus time, with a dot line under it that fills as the session passes (D-051). |
+| F9.5 | Ending early requires a deliberate action: an "End focus early?" screen where **End focus** appears only after typing why (spaces don't count). The reason is never saved or logged (F17.8). (D-051) |
 | F9.6 | Optional scheduled focus sessions (e.g., weekdays 09:00–12:00). |
 | F9.7 | Optionally toggle system Do Not Disturb (requires DND access). |
 | F9.8 | **Focus icon** (D-047): a dotted circle with the F as the empty gap, chosen from four designs: Mix, Sphere, Rim, Flow (`docs/brand/focus-marks/`). Drawn in the theme colour. |
@@ -523,9 +523,9 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Take a break wait after tapping (F8.18) | 5 s | 3–30 s |
 | Take a break reset gap (F8.17) | 1 min | — |
 | Disable friction (F8.12) | Hold 3 s | off / hold 3 s / pause |
-| Focus button on home (F9.1) | Shown | shown / hidden |
+| Focus icon on home (F9.1) | Shown | shown / hidden |
 | Focus durations (F9.2) | 25 / 50 / 90 min | custom 5–240 min |
-| End focus early (F9.5) | Hold 3 s | — |
+| End focus early (F9.5) | Type a reason first | — |
 | Focus toggles DND (F9.7) | Off | on/off |
 | Focus icon (F9.8) | Mix | Mix / Sphere / Rim / Flow |
 | "Focus started" screen (F9.9) | 2 s, tap to skip | — |
