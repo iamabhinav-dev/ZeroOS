@@ -4,6 +4,12 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.27 (versionCode 27)
+- Screen time on home (F10): today's screen time and unlocks under the date, in one of four styles: text,
+  progress bar against a daily goal, weekly dots or hourly dots. Until Usage access is granted, home shows
+  "Tap to show screen time" (× hides it). Tap the stats for Insights: today, top 5 apps, last 7 days
+- Settings → Screen time: show on home, style, daily goal, compare with yesterday, Insights
+- Focus picker: ‹ and › on Custom are dimmed at 5 and 240 min
 ## 0.0.26 (versionCode 26)
 - Focus picker: a thin line under the search, Start focus as an outlined button, and tapping anywhere on the
   Custom row picks it
