@@ -165,6 +165,10 @@ class WellbeingStateRepositoryTest {
         val limit = List(20) { repo.nextPun(PunList.LIMIT, 20) }
         assertEquals((0 until 20).toSet(), pause.toSet())
         assertEquals((0 until 20).toSet(), limit.toSet())
+        val breaks = List(20) { repo.nextPun(PunList.BREAK, 20) }
+        val buttons = List(15) { repo.nextPun(PunList.BREAK_BUTTON, 15) }
+        assertEquals((0 until 20).toSet(), breaks.toSet())
+        assertEquals((0 until 15).toSet(), buttons.toSet())
     }
 }
 

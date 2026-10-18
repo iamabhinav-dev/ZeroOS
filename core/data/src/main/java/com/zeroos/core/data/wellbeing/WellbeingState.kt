@@ -30,11 +30,13 @@ data class WellbeingState(
     val day: String = "",
     val extrasUsed: Map<String, Int> = emptyMap(),
     val pauseBag: PunBag = PunBag(),
-    val limitBag: PunBag = PunBag()
+    val limitBag: PunBag = PunBag(),
+    val breakBag: PunBag = PunBag(),
+    val breakButtonBag: PunBag = PunBag()
 )
 
-/** The two pun lists (F8.13): B for the pause, C for the limit (docs/puns.md). */
-enum class PunList { PAUSE, LIMIT }
+/** The pun lists in docs/puns.md: B pause, C limit (F8.13), D break message and E break button (F8.16). */
+enum class PunList { PAUSE, LIMIT, BREAK, BREAK_BUTTON }
 
 /** Reads and changes [WellbeingState]. The day follows the phone's current time zone ([zone] is read each time). */
 class WellbeingStateRepository(
@@ -61,14 +63,26 @@ class WellbeingStateRepository(
     suspend fun nextPun(list: PunList, size: Int): Int {
         var index = 0
         dataStore.updateData { s ->
-            val (drawn, bag) = (if (list == PunList.PAUSE) s.pauseBag else s.limitBag).draw(size, random)
+            val (drawn, bag) = s.bag(list).draw(size, random)
             index = drawn
-            if (list == PunList.PAUSE) s.copy(pauseBag = bag) else s.copy(limitBag = bag)
+            when (list) {
+                PunList.PAUSE -> s.copy(pauseBag = bag)
+                PunList.LIMIT -> s.copy(limitBag = bag)
+                PunList.BREAK -> s.copy(breakBag = bag)
+                PunList.BREAK_BUTTON -> s.copy(breakButtonBag = bag)
+            }
         }
         return index
     }
 
     private fun today() = clock.instant().atZone(zone()).toLocalDate().toString()
+
+    private fun WellbeingState.bag(list: PunList) = when (list) {
+        PunList.PAUSE -> pauseBag
+        PunList.LIMIT -> limitBag
+        PunList.BREAK -> breakBag
+        PunList.BREAK_BUTTON -> breakButtonBag
+    }
 
     private fun WellbeingState.extrasToday(today: String) = if (day == today) extrasUsed else emptyMap()
 
