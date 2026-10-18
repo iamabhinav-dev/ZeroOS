@@ -11,9 +11,9 @@ import java.time.ZoneId
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-/** One foreground change of an app, from Android's usage events (F8.3). */
+/** One foreground change of an app, or an unlock, from Android's usage events (F8.3, F10.12). */
 data class UsageEvent(val packageName: String, val type: Type, val timeMillis: Long) {
-    enum class Type { RESUMED, PAUSED }
+    enum class Type { RESUMED, PAUSED, UNLOCKED }
 }
 
 /** Android's usage events; a fake in tests. Needs Usage access. */
@@ -32,6 +32,7 @@ class AndroidUsageEventSource(private val usageStats: UsageStatsManager) : Usage
                 UsageEvents.Event.ACTIVITY_RESUMED -> UsageEvent.Type.RESUMED
                 UsageEvents.Event.ACTIVITY_PAUSED -> UsageEvent.Type.PAUSED
                 ACTIVITY_STOPPED -> UsageEvent.Type.PAUSED
+                KEYGUARD_HIDDEN -> UsageEvent.Type.UNLOCKED
                 else -> null
             } ?: continue
             out += UsageEvent(event.packageName, type, event.timeStamp)
@@ -42,6 +43,9 @@ class AndroidUsageEventSource(private val usageStats: UsageStatsManager) : Usage
     private companion object {
         /** UsageEvents.Event.ACTIVITY_STOPPED (API 29); also ends a session on older Android. */
         val ACTIVITY_STOPPED = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) UsageEvents.Event.ACTIVITY_STOPPED else -1
+
+        /** UsageEvents.Event.KEYGUARD_HIDDEN (API 28): an unlock (F10.12). */
+        val KEYGUARD_HIDDEN = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) UsageEvents.Event.KEYGUARD_HIDDEN else -1
     }
 }
 
@@ -65,6 +69,8 @@ fun foregroundMillis(events: List<UsageEvent>, startMillis: Long, nowMillis: Lon
                 val from = openSince.remove(event.packageName) ?: startMillis.takeIf { event.packageName !in seen }
                 if (from != null) totals.merge(event.packageName, time - from, Long::plus)
             }
+
+            UsageEvent.Type.UNLOCKED -> Unit
         }
         seen += event.packageName
     }

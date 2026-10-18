@@ -43,6 +43,8 @@ fun currentSessionStart(
                 intervals += longArrayOf(openSince ?: windowStartMillis, event.timeMillis)
                 openSince = null
             }
+
+            UsageEvent.Type.UNLOCKED -> Unit
         }
     }
     val open = openSince ?: nowMillis.takeIf { knownInFront } ?: return null
