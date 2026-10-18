@@ -4,6 +4,8 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.21 (versionCode 21)
+- Puns are always shown on the pause, limit and break screens; the "Puns on stop screens" switch is gone (D-045)
 ## 0.0.20 (versionCode 20)
 - Wellbeing → "Also outside ZeroOS" (needs Accessibility): the limit screen also appears over a limited app
   opened from a notification or recents, and when its limit runs out while you're in it (F8.7)
