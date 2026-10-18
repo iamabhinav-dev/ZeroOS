@@ -29,10 +29,12 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.Alignment
+import com.zeroos.core.model.settings.FocusIcon
 import com.zeroos.core.model.settings.TextSize
 import com.zeroos.core.model.settings.ThemeMode
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.core.ui.preloadFocusMarks
 import java.time.ZonedDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -272,5 +274,34 @@ class HomeScreenTest {
         compose.onNodeWithTag(HomeTestTags.ROOT).performTouchInput { doubleClick(center) }
         compose.waitForIdle()
         assertEquals(emptyList<String>(), calls)
+    }
+
+    @Test
+    fun f9_1_focusIconOpensThePicker() {
+        show(
+            slots = HomeSlots(focus = {
+                FocusSlot(null, 0f, FocusIcon.MIX, onStart = { calls += "focus" }, onEndEarly = { calls += "end" })
+            })
+        )
+        compose.onNodeWithContentDescription("Start focus").performClick()
+        assertEquals(listOf("focus"), calls)
+    }
+
+    @Test
+    fun f9_4_f9_5_timeLeftAndTapToEndEarly() {
+        show(
+            slots = HomeSlots(focus = {
+                FocusSlot(4, 0.2f, FocusIcon.MIX, onStart = { calls += "focus" }, onEndEarly = { calls += "end" })
+            })
+        )
+        compose.onNodeWithText("4m left").performClick()
+        assertEquals(listOf("end"), calls)
+    }
+
+    @Test
+    fun step4_5_homeWhileFocusingScreenshot() {
+        preloadFocusMarks(androidx.test.core.app.ApplicationProvider.getApplicationContext<android.content.Context>().resources)
+        show(slots = HomeSlots(focus = { FocusSlot(23, 0.4f, FocusIcon.MIX, onStart = {}, onEndEarly = {}) }))
+        compose.onRoot().captureRoboImage()
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ClockFormat
 import com.zeroos.core.ui.MinimalListItem
@@ -72,7 +73,7 @@ fun BackupScreen(
     val context = LocalContext.current
     BackHandler(onBack = onBack)
     Column(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(BackupTestTags.SCREEN)) {
-        ScreenTitle(stringResource(R.string.backup_title))
+        BackTitle(stringResource(R.string.backup_title), onBack)
         MinimalListItem(stringResource(R.string.backup_export), onClick = onExport, trailing = CHEVRON)
         MinimalListItem(stringResource(R.string.backup_import), onClick = onImport, trailing = CHEVRON)
         val locale = LocalConfiguration.current.locales[0]

@@ -3,6 +3,7 @@ package com.zeroos.core.ui
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
@@ -46,6 +47,13 @@ class PermissionExplanationTest {
         compose.onNodeWithText("Open settings").performClick()
         compose.onNodeWithText("Not now").performClick()
         assertEquals(listOf("settings", "not now"), calls)
+    }
+
+    @Test
+    fun d052_backArrowIsNotNow() {
+        show(SpecialPermission.USAGE_ACCESS)
+        compose.onNodeWithContentDescription("Back").performClick()
+        assertEquals(listOf("not now"), calls)
     }
 
     @Test
@@ -117,6 +125,13 @@ class PermissionExplanationTest {
 
     @Test
     fun step4_1_accessibilityScreenshot() {
+        show(SpecialPermission.ACCESSIBILITY)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_accessibilityScreenshot() {
         show(SpecialPermission.ACCESSIBILITY)
         compose.onRoot().captureRoboImage()
     }

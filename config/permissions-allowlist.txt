@@ -7,3 +7,4 @@ android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS  # F14.6: background rel
 android.permission.REQUEST_DELETE_PACKAGES  # F2.8: "Uninstall" in the app menu opens Android's uninstall dialog
 android.permission.SET_WALLPAPER  # F6.8: set the home/lock wallpaper from the built-in gallery (WallpaperManager)
 android.permission.PACKAGE_USAGE_STATS  # F8.3, F10: lets ZeroOS appear in Usage access settings (user grants it there; Step 4.1)
+android.permission.ACCESS_NOTIFICATION_POLICY  # F9.7: Focus can turn Do Not Disturb on and back off (user grants access in settings)

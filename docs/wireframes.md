@@ -117,10 +117,11 @@ Over the goal:
 │  Tap to show screen time       ×   │  × dismisses permanently
 ```
 
-### A4. Focus slot ⑤ states (F9)
+### A4. Focus slot ⑤ states (F9; updated 2026-10-18, D-051)
 ```
-Idle:     │  focus                             │   tap → focus picker (wireframed in Phase 4)
-Active:   │  focus · 23m left                  │   hold 3 s → end early (F9.5)
+Idle:     │  (F)                               │   small Focus icon; tap → focus picker (F9.1)
+Active:   │  (F) 23m left                      │   tap → H16 "End focus early?" (F9.5)
+          │  ●●●●●●●●○○○○○○○○○○○○              │   dots fill as the session passes (F9.4)
 Hidden:   (slot takes no space; setting F9.1)
 ```
 While focus is active, favorites that aren't on the allow-list are hidden (F9.3).
@@ -737,7 +738,7 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │   (F)     (F)     (F)     (F)      │  the four dotted marks
 │   Mix    Sphere   Rim    Flow      │  selected = outlined; default Mix
 ```
-**H10a. Schedules**
+**H10a. Schedules** (F9.6 deferred to the end, D-054; the Schedules row is not shown until then)
 ```
 │  ← Schedules                       │
 │  Weekdays 09:00–12:00     ‹on›     │  tap → edit days, start, end, apps
@@ -751,15 +752,29 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │            ( F icon )              │  big Focus icon (F9.9a)
 │  How long?                         │
 │  25 min     50 min     90 min      │  tap one (selected = outlined)
-│  Custom                  ‹45 min›  │  5–240 min
+│  Custom              ‹  45 min  ›  │  tap the row to pick it; ‹ › one step, 5–240 min
 │                                    │
 │  Apps you can use                  │  picked apps show a number, like
+│  search…                           │  filters the list (D-051)
+│  ────────────────────────────────  │  thin line under the search (D-053)
 │  Phone                          1  │  onboarding (Doto has no ☑)
 │  Messages                       2  │
 │  Maps                              │
 │  …                                 │
 │                                    │
-│  Start focus                       │
+│  ┌──────────────────────────────┐  │  outlined button (D-053)
+│  │         Start focus          │  │
+│  └──────────────────────────────┘  │
+└────────────────────────────────────┘
+```
+**H16. End focus early?** (F9.5, D-051), from tapping "(F) 23m left" on home.
+```
+┌────────────────────────────────────┐
+│            ( F icon )              │
+│  End focus early?                  │
+│  Why are you ending it?            │  never saved or logged (F17.8)
+│  ________________________________  │
+│  Keep focusing          End focus  │  "End focus" appears once a reason is typed
 └────────────────────────────────────┘
 ```
 **H15. Focus started** (F9.9b): after "Start focus", a black screen for 2 s, tap to skip.
@@ -769,9 +784,9 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │          Focus · 50 min            │
 └────────────────────────────────────┘
 ```
-While active: home slot ⑤ shows "(F) focus · 23m left" with a small Focus icon the height of the text (A4, F9.9c); favorites and the app list show only the allowed
+While active: home slot ⑤ shows "(F) 23m left" with a small Focus icon the height of the text and filling dots (A4, F9.9c); favorites and the app list show only the allowed
 apps (F9.3); Do Not Disturb keeps it quiet if turned on (F9.7; notification filtering waits for F7, D-039);
-**holding** "focus · 23m left" for 3 s ends it early, with a filling dot line as feedback (F9.5). The picker
+**tapping** "(F) 23m left" opens H16 to end it early (F9.5, D-051). The picker
 remembers the last allowed apps as the default for next time.
 
 ### H12. Insights (F10.1, F10.2), from home stats or Screen time

@@ -3,6 +3,7 @@ package com.zeroos.feature.home
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.HomeAppsCache
 import com.zeroos.core.data.apps.homeAppsToCache
+import com.zeroos.core.data.focus.FocusSession
 import com.zeroos.core.data.wellbeing.LaunchGate
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.LauncherSettings
@@ -27,6 +28,9 @@ class HomeApps @Inject constructor(
 
     /** Starts the app (F1.4), or shows its stop screen first (F8.1, F8.4); false if it can't be started. */
     fun launch(app: AppEntry): Boolean = gate.launch(app)
+
+    /** The running focus session (F9.3, F9.4). */
+    val focus: Flow<FocusSession?> = gate.focus
 
     fun saver(scope: CoroutineScope) = HomeAppsSaver(cache, scope, io)
 }

@@ -258,3 +258,40 @@ Some phones' battery-saving modes reset the default home app to the stock launch
 public APIs. ZeroOS instead shows a line at the top of home whenever it comes to the front without being the
 default, with a one-tap "Set as default" (the same role dialog as onboarding). Wireframe A6.
 *Why:* User's choice after confirming the reset on the test phone; quick recovery instead of digging in Settings.
+
+**D-050 — Landscape for every screen; stricter hardcoding checks** · 2026-10-18 · Accepted
+Every screen must work in landscape (NFR-A5) and has a `landscape_*` screenshot test; AGENTS.md §4 makes it a rule
+for new and changed screens. The detekt rules now also catch text passed to ZeroOS's own components and toasts
+(`TextAction("…")`, `BodyText("…")`, `SettingRow(…, "…")`, `Toast.makeText(…, "…")`) and number literals as
+durations in `delay(…)` / `tween(…)`, on top of Lint `HardcodedText`, `Text("…")`, colours and sizes (NFR-L4, L7, L8).
+*Why:* User's request.
+
+**D-051 — Focus on home: icon, progress dots, reason to end early** · 2026-10-18 · Accepted
+After trying 0.0.23: the home slot shows only the small Focus icon (no "focus" text); while focusing, the icon,
+"23m left" and a dot line that fills as time passes. Ending early is a tap on it, then an "End focus early?" screen
+where End focus appears only after typing why (replaces hold 3 s; the hold also triggered home's long-press). The
+picker gets a search field and ‹ › for the custom length (stops at 5 and 240 min). Back from a picker opened in
+Settings → Focus returns there. Wireframes A4, H11, H16.
+*Why:* User's feedback.
+
+**D-052 — Back arrow on every page** · 2026-10-18 · Accepted
+The wireframes show "← Title" headers, but pages had only the title (Back worked only through the system gesture).
+Every Settings page, Diagnostics and crash reports, the Focus picker and the permission explanations now show the
+dotted ‹ arrow before the title (48 dp, read as "Back"). It calls the same back action as the system gesture, so it
+goes to the page it was opened from (e.g. Focus icon → Focus → Wellbeing → Settings), never straight home. Not on
+home, the app list (Back / swipe down, F2.11), the stop, break and end-focus screens (their own choices), the "Focus
+started" screen or onboarding (its own Back/Next/Skip).
+*Why:* User's request; matches the approved wireframes.
+
+**D-053 — Focus picker polish, bigger Focus icon** · 2026-10-18 · Accepted
+A thin line under the search field (like the app list) and Start focus as a full-width outlined button (user's pick of four options), so both stand apart from the app names;
+tapping anywhere on the Custom row picks the custom length (‹ › still step it); the Focus icon is twice as big:
+48 dp on home, 240 dp on the picker, "Focus started" and "End focus early?" screens (the settings-row preview
+stays 24 dp). Wireframe H11 updated.
+*Why:* User's feedback on 0.0.25.
+
+**D-054 — Focus schedules deferred; ‹ › dim at the ends** · 2026-10-18 · Accepted
+Scheduled focus (F9.6) moves to the end, after the other phases; the proposed editor (H10c) and the open question
+about Do Not Disturb timing (WorkManager, possibly a few minutes late) wait until then. Step 4.5 is done without it.
+The Custom length's ‹ and › are dimmed and do nothing at 5 and 240 min (no wrapping).
+*Why:* User's choice.

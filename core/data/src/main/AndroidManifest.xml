@@ -10,4 +10,8 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
+
+    <!-- Do Not Disturb during focus (F9.7): lets ZeroOS appear in Android's "Do Not Disturb access" list; the user
+         turns it on there after the explanation screen. Normal permission, no prompt. -->
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 </manifest>

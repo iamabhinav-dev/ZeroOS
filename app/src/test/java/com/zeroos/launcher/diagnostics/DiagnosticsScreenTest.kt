@@ -17,6 +17,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
 @RunWith(AndroidJUnit4::class)
@@ -134,6 +135,13 @@ class DiagnosticsScreenTest {
 
     @Test
     fun step1_4_diagnosticsScreenshot() {
+        show(debug = true)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_diagnosticsScreenshot() {
         show(debug = true)
         compose.onRoot().captureRoboImage()
     }

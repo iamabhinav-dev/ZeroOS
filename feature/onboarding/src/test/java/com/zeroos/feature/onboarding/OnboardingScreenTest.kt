@@ -122,7 +122,21 @@ class OnboardingScreenTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_introScreenshot() {
+        show(OnboardingState())
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step2_9_defaultHomeScreenshot() {
+        show(OnboardingState(page = OnboardingPage.DEFAULT_HOME))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_defaultHomeScreenshot() {
         show(OnboardingState(page = OnboardingPage.DEFAULT_HOME))
         compose.onRoot().captureRoboImage()
     }
@@ -134,7 +148,21 @@ class OnboardingScreenTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_favoritesScreenshot() {
+        show(favorites)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step2_9_backgroundScreenshot() {
+        show(OnboardingState(page = OnboardingPage.BACKGROUND, batteryOptimized = true))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_backgroundScreenshot() {
         show(OnboardingState(page = OnboardingPage.BACKGROUND, batteryOptimized = true))
         compose.onRoot().captureRoboImage()
     }

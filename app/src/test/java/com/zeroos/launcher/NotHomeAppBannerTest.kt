@@ -43,3 +43,14 @@ class NotHomeAppBannerTest {
         compose.onRoot().captureRoboImage()
     }
 }
+
+class FocusNavigationTest {
+    @org.junit.Test
+    fun d051_backFromThePickerReturnsWhereItWasOpened() {
+        org.junit.Assert.assertEquals(
+            LauncherScreen.SETTINGS to com.zeroos.feature.settings.SettingsPage.FOCUS,
+            focusBack(fromSettings = true)
+        )
+        org.junit.Assert.assertEquals(LauncherScreen.HOME to com.zeroos.feature.settings.SettingsPage.MAIN, focusBack(fromSettings = false))
+    }
+}

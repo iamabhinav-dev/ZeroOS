@@ -12,8 +12,9 @@ import org.jetbrains.kotlin.psi.KtStringTemplateExpression
 import org.jetbrains.kotlin.psi.KtValueArgument
 
 /**
- * NFR-L4: user-facing text must come from string resources. Flags string literals containing letters
- * passed to text-showing composables (positionally) or to text-like named parameters.
+ * NFR-L4: user-facing text must come from string resources. Flags string literals containing letters passed
+ * to text-showing composables, ZeroOS's own components and toasts (at their text positions), or to text-like
+ * named parameters.
  */
 class HardcodedUiText(config: Config = Config.empty) : Rule(config) {
     override val issue = Issue(
@@ -29,7 +30,7 @@ class HardcodedUiText(config: Config = Config.empty) : Rule(config) {
         expression.valueArguments.forEachIndexed { index, argument ->
             val name = argument.getArgumentName()?.asName?.asString()
             val isTextArgument = when (name) {
-                null -> index == 0 && callee in TEXT_COMPOSABLES
+                null -> index in TEXT_POSITIONS[callee].orEmpty()
                 else -> name in TEXT_PARAMETERS
             }
             if (isTextArgument && argument.isLiteralWithLetters()) {
@@ -44,7 +45,28 @@ class HardcodedUiText(config: Config = Config.empty) : Rule(config) {
     }
 
     private companion object {
-        val TEXT_COMPOSABLES = setOf("Text", "BasicText", "ClickableText")
-        val TEXT_PARAMETERS = setOf("text", "contentDescription", "label", "placeholder", "title", "message", "stateDescription")
+        /** Which positional arguments are shown as text, per function. */
+        val TEXT_POSITIONS: Map<String, Set<Int>> = mapOf(
+            // Compose
+            "Text" to setOf(0),
+            "BasicText" to setOf(0),
+            "ClickableText" to setOf(0),
+            // ZeroOS components in core/ui and feature modules
+            "ScreenTitle" to setOf(0),
+            "BodyText" to setOf(0),
+            "AppLabel" to setOf(0),
+            "MinimalListItem" to setOf(0),
+            "ToggleRow" to setOf(0),
+            "TextAction" to setOf(0),
+            "HoldToConfirm" to setOf(0),
+            "NavRow" to setOf(0),
+            "Line" to setOf(0),
+            "SettingRow" to setOf(0, 1),
+            // Toast.makeText(context, text, duration)
+            "makeText" to setOf(1),
+        )
+        val TEXT_PARAMETERS = setOf(
+            "text", "contentDescription", "label", "placeholder", "title", "message", "stateDescription", "trailing", "value", "hint"
+        )
     }
 }

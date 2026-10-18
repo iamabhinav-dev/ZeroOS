@@ -30,6 +30,7 @@ import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.HiddenAppsConfirmation
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.AppLabel
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.TextAction
@@ -55,7 +56,7 @@ fun HiddenAppsScreen(apps: List<AppEntry>, onUnhide: (AppEntry) -> Unit, onBack:
     val tokens = ZeroTheme.tokens
     BackHandler(onBack = onBack)
     LazyColumn(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(HiddenAppsTestTags.LIST)) {
-        item { ScreenTitle(stringResource(R.string.hidden_apps_title)) }
+        item { BackTitle(stringResource(R.string.hidden_apps_title), onBack) }
         if (apps.isEmpty()) item { BodyText(stringResource(R.string.hidden_apps_empty), muted = true) }
         items(apps, key = { it.key.asString() }) { app ->
             Row(

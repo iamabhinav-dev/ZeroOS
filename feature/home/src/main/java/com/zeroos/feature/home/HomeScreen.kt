@@ -67,6 +67,8 @@ fun HomeRoute(
     onSwipeDown: () -> Unit,
     onLongPress: () -> Unit,
     onDoubleTap: () -> Unit = {},
+    onOpenFocus: () -> Unit = {},
+    onEndFocusEarly: () -> Unit = {},
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -108,7 +110,14 @@ fun HomeRoute(
         onFavoriteClick = viewModel::launch,
         onFavoriteLongClick = { menuFor = it },
         onClockClick = { open("alarms", Intent(AlarmClock.ACTION_SHOW_ALARMS)) },
-        onDateClick = { open("calendar", Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR)) }
+        onDateClick = { open("calendar", Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_CALENDAR)) },
+        slots = HomeSlots(
+            focus = if (state.showFocus) {
+                { FocusSlot(state.focusMinutesLeft, state.focusProgress, state.focusIcon, onOpenFocus, onEndFocusEarly) }
+            } else {
+                null
+            }
+        )
     )
 }
 
@@ -282,4 +291,5 @@ object HomeTestTags {
     const val ROOT = "home"
     const val FAVORITES = "home_favorites"
     const val CHARGING = "home_charging"
+    const val FOCUS = "home_focus"
 }

@@ -28,6 +28,7 @@ import com.zeroos.core.model.settings.AppRule
 import com.zeroos.core.model.settings.DisableFriction
 import com.zeroos.core.model.settings.WellbeingSettings
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.HoldToConfirm
 import com.zeroos.core.ui.MinimalBottomSheet
@@ -48,7 +49,13 @@ import kotlinx.coroutines.delay
  * asks for Usage access first (F8.11); switching off while a limit is active asks for the chosen friction (F8.12).
  */
 @Composable
-fun WellbeingRoute(showApps: Boolean, onOpenApps: () -> Unit, onBack: () -> Unit, viewModel: WellbeingViewModel = hiltViewModel()) {
+fun WellbeingRoute(
+    showApps: Boolean,
+    onOpenApps: () -> Unit,
+    onOpenFocus: () -> Unit,
+    onBack: () -> Unit,
+    viewModel: WellbeingViewModel = hiltViewModel()
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var askingFor by rememberSaveable { mutableStateOf<Pair<WellbeingToggle, SpecialPermission>?>(null) }
     var confirmingOff by rememberSaveable { mutableStateOf<WellbeingToggle?>(null) }
@@ -92,7 +99,8 @@ fun WellbeingRoute(showApps: Boolean, onOpenApps: () -> Unit, onBack: () -> Unit
                 }
             },
             onCycle = viewModel::cycle,
-            onOpenApps = onOpenApps
+            onOpenApps = onOpenApps,
+            onOpenFocus = onOpenFocus
         ),
         onBack = onBack
     )
@@ -128,7 +136,8 @@ internal fun toggleOutcome(settings: WellbeingSettings, missing: SpecialPermissi
 data class WellbeingActions(
     val onToggle: (WellbeingToggle, Boolean) -> Unit,
     val onCycle: (WellbeingCycle) -> Unit,
-    val onOpenApps: () -> Unit
+    val onOpenApps: () -> Unit,
+    val onOpenFocus: () -> Unit = {}
 )
 
 /** Wireframe H3. With Wellbeing off, only the master switch and a note are shown (F8.8, F8.10). */
@@ -138,6 +147,8 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
         item { ToggleRow(stringResource(R.string.settings_wellbeing), settings.enabled, { actions.onToggle(WellbeingToggle.ENABLED, it) }) }
         if (!settings.enabled) {
             item { BodyText(stringResource(R.string.wellbeing_off_note), muted = true, small = true) }
+            // Focus works without Wellbeing (F9.10).
+            item { NavRow(R.string.focus_title, actions.onOpenFocus) }
             return@SettingsPageScaffold
         }
         item { ToggleRow(stringResource(R.string.wellbeing_pause), settings.pauseEnabled, { actions.onToggle(WellbeingToggle.PAUSE, it) }) }
@@ -191,6 +202,7 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
                 actions.onCycle(WellbeingCycle.FRICTION)
             })
         }
+        item { NavRow(R.string.focus_title, actions.onOpenFocus) }
     }
 }
 
@@ -207,7 +219,7 @@ fun WellbeingAppsScreen(
     var open by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(onBack = onBack)
     Column(Modifier.fillMaxSize().background(tokens.colors.background).safeDrawingPadding().testTag(SettingsTestTags.WELLBEING_APPS)) {
-        ScreenTitle(stringResource(R.string.wellbeing_apps))
+        BackTitle(stringResource(R.string.wellbeing_apps), onBack)
         SearchField(state.query, autoOpenKeyboard = false, onQueryChange = onQueryChange, onGo = {})
         HorizontalDivider(color = tokens.colors.divider)
         LazyColumn {

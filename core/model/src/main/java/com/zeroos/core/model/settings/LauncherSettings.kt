@@ -24,7 +24,8 @@ data class LauncherSettings(
     /** Phone wallpapers ZeroOS has set, for "Restore previous" (F6.8). */
     val phoneWallpapers: PhoneWallpaperHistory = PhoneWallpaperHistory(),
     /** Mindful pause and daily limits (F8); off by default, settings kept while off (F8.10). */
-    val wellbeing: WellbeingSettings = WellbeingSettings()
+    val wellbeing: WellbeingSettings = WellbeingSettings(),
+    val focus: FocusSettings = FocusSettings()
 ) {
     companion object {
         const val CURRENT_VERSION = 1
@@ -165,3 +166,24 @@ enum class Wallpaper { BLACK, SYSTEM }
 
 @Serializable
 enum class TextSize { SMALL, MEDIUM, LARGE, EXTRA_LARGE }
+
+/** Focus mode settings (F9); defaults from Appendix A. Works whether or not Wellbeing is on (F9.10). */
+@Serializable
+data class FocusSettings(
+    /** The "focus" button on home (F9.1). */
+    val showOnHome: Boolean = true,
+    /** F9.8. */
+    val icon: FocusIcon = FocusIcon.MIX,
+    /** Turn on Do Not Disturb during focus (F9.7); needs DND access. */
+    val doNotDisturb: Boolean = false,
+    /** The picker's defaults next time: last duration and allowed apps (app keys, H11). */
+    val lastMinutes: Int = DEFAULT_FOCUS_MINUTES,
+    val lastAllowed: List<String> = emptyList()
+)
+
+/** The four Focus icon designs (F9.8, docs/brand/focus-marks/). */
+@Serializable
+enum class FocusIcon { MIX, SPHERE, RIM, FLOW }
+
+/** F9.2: the first preset. */
+const val DEFAULT_FOCUS_MINUTES = 25

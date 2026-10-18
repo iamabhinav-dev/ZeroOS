@@ -222,6 +222,13 @@ class PhoneWallpaperScreenTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_phoneWallpaperDarkScreenshot() {
+        show(PhoneWallpaperState(items = gallery(WallpaperTone.DARK), history = PhoneWallpaperHistory(home = listOf("rose_dark"))))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun f6_8_phoneWallpaperLightScreenshot() {
         show(PhoneWallpaperState(items = gallery(WallpaperTone.LIGHT)), ThemeMode.LIGHT)
         compose.onRoot().captureRoboImage()
@@ -234,7 +241,21 @@ class PhoneWallpaperScreenTest {
     }
 
     @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_previewScreenshot() {
+        show(preview("rose_dark"))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun f6_8_applyDialogScreenshot() {
+        show(preview("rose_dark", choosing = true))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_applyDialogScreenshot() {
         show(preview("rose_dark", choosing = true))
         compose.onRoot().captureRoboImage()
     }

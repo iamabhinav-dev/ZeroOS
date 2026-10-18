@@ -48,6 +48,7 @@ import com.zeroos.core.data.wallpaper.WallpaperItem
 import com.zeroos.core.data.wallpaper.WallpaperTone
 import com.zeroos.core.model.settings.WallpaperScreen
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackArrow
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.DotIcons
 import com.zeroos.core.ui.DotMatrixIcon
@@ -78,18 +79,7 @@ internal fun WallpaperPreview(
             PreviewImage(items[page], image)
         }
         Column(Modifier.fillMaxSize().safeDrawingPadding()) {
-            Box(
-                Modifier
-                    .size(tokens.spacing.minTouchTarget)
-                    .clickable(role = Role.Button, onClick = actions.onClosePreview),
-                contentAlignment = Alignment.Center
-            ) {
-                DotMatrixIcon(
-                    DotIcons.Back,
-                    height = tokens.spacing.minTouchTarget * BACK_ARROW_SHARE,
-                    contentDescription = stringResource(R.string.common_back)
-                )
-            }
+            BackArrow(actions.onClosePreview)
             Spacer(Modifier.weight(1f))
             Text(
                 wallpaperLabel(item.name),
@@ -136,6 +126,3 @@ private fun ApplyDialog(actions: PhoneWallpaperActions) {
         confirmButton = {}
     )
 }
-
-/** The back arrow fills three quarters of its 48 dp touch target (36 dp), easy to see over any wallpaper. */
-private const val BACK_ARROW_SHARE = 0.75f

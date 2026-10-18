@@ -13,8 +13,9 @@ import org.jetbrains.kotlin.psi.KtDotQualifiedExpression
 import org.jetbrains.kotlin.psi.KtNameReferenceExpression
 
 /**
- * NFR-L8: colors and sizes come from core/ui theme tokens. Flags `Color(<literal>)` and `<number>.dp` / `.sp`
- * (except zero). Configure `excludes` for core/ui, where the tokens are defined.
+ * NFR-L8: colors, sizes and durations come from core/ui theme tokens or named constants. Flags `Color(<literal>)`,
+ * `<number>.dp` / `.sp` (except zero), and number literals as the time of `delay(…)` / `tween(…)`. Configure
+ * `excludes` for core/ui, where the tokens are defined.
  */
 class HardcodedUiValue(config: Config = Config.empty) : Rule(config) {
     override val issue = Issue(
@@ -32,6 +33,16 @@ class HardcodedUiValue(config: Config = Config.empty) : Rule(config) {
         if (isColor && literalArgs) {
             report(CodeSmell(issue, Entity.from(expression), "Hardcoded color: use a core/ui color token."))
         }
+        val callee = expression.calleeExpression?.text
+        if (callee in TIMED) {
+            val time = expression.valueArguments.firstOrNull { arg ->
+                val name = arg.getArgumentName()?.asName?.asString()
+                if (name == null) arg == expression.valueArguments.first() else name in TIME_PARAMETERS
+            }
+            if (time?.getArgumentExpression() is KtConstantExpression) {
+                report(CodeSmell(issue, Entity.from(time), "Hardcoded duration in $callee(): use a named constant or token."))
+            }
+        }
     }
 
     override fun visitDotQualifiedExpression(expression: KtDotQualifiedExpression) {
@@ -47,5 +58,7 @@ class HardcodedUiValue(config: Config = Config.empty) : Rule(config) {
 
     private companion object {
         val UNITS = setOf("dp", "sp")
+        val TIMED = setOf("delay", "tween")
+        val TIME_PARAMETERS = setOf("durationMillis", "timeMillis")
     }
 }

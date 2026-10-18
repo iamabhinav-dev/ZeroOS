@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.StoredLogEntry
 import com.zeroos.core.resources.R
+import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
 import com.zeroos.core.ui.ScreenTitle
 import com.zeroos.core.ui.SettingRow
@@ -140,7 +141,7 @@ fun DiagnosticsScreen(
             .safeDrawingPadding()
             .testTag(DiagnosticsTestTags.ROOT)
     ) {
-        item { ScreenTitle(stringResource(R.string.diagnostics_title)) }
+        item { BackTitle(stringResource(R.string.diagnostics_title), onBack) }
         item {
             // Scrolls sideways if the filters don't fit (e.g. large text), so no tab wraps onto two lines.
             Row(

@@ -16,6 +16,8 @@ import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
+import com.zeroos.core.data.focus.FocusRepository
+import com.zeroos.core.data.focus.FocusStateSerializer
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
 import com.zeroos.core.data.wellbeing.LaunchGate
@@ -114,7 +116,12 @@ class StopViewModelTest {
                 ?.let { listOf(UsageEvent("com.instagram", UsageEvent.Type.RESUMED, clock.millis() - usedMinutes * 60_000)) + it }
                 .orEmpty()
         }
-        val gate = LaunchGate(AppsRepository(source, logger, io), settings, backgroundScope, logger)
+        val focusRepository = FocusRepository(
+            DataStoreFactory.create(FocusStateSerializer, scope = backgroundScope, produceFile = { temp.newFile().apply { delete() } }),
+            clock,
+            logger
+        )
+        val gate = LaunchGate(AppsRepository(source, logger, io), settings, focusRepository, backgroundScope, logger)
         val vm = StopViewModel(gate, settings, WellbeingStatus(TodayUsage(events, clock, io, logger, clock::getZone), state), state, logger)
         gate.launch(instagram)
         assertEquals(instagram, vm.pending.value)
@@ -269,6 +276,33 @@ class StopScreensTest {
 
     @Test
     fun step4_3_breakScreenshot() {
+        compose.mainClock.autoAdvance = false
+        compose.setContent { ZeroTheme { BreakScreen(pun = 0, buttonPun = 0, waitSeconds = 5, onDone = {}) } }
+        compose.mainClock.advanceTimeBy(2_000)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_pauseScreenshot() {
+        compose.mainClock.autoAdvance = false
+        show(StopScreen.Pause(5, intentionPrompt = true))
+        compose.mainClock.advanceTimeBy(2_500)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_limitScreenshot() {
+        compose.mainClock.autoAdvance = false
+        show(StopScreen.Limit(30, 2), pun = 0)
+        compose.mainClock.advanceTimeBy(3_000)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_breakScreenshot() {
         compose.mainClock.autoAdvance = false
         compose.setContent { ZeroTheme { BreakScreen(pun = 0, buttonPun = 0, waitSeconds = 5, onDone = {}) } }
         compose.mainClock.advanceTimeBy(2_000)

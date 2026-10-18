@@ -20,8 +20,8 @@ android {
 
     defaultConfig {
         applicationId = "com.zeroos.launcher"
-        versionCode = 22
-        versionName = "0.0.22"
+        versionCode = 26
+        versionName = "0.0.26"
     }
 
     signingConfigs {
@@ -67,6 +67,7 @@ dependencies {
     implementation(project(":feature:settings"))
     implementation(project(":feature:onboarding"))
     implementation(project(":feature:wellbeing"))
+    implementation(project(":feature:focus"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
