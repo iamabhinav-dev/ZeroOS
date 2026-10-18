@@ -89,15 +89,20 @@ class WellbeingScreensTest {
     @Test
     fun f8_9_partsAndOptionsWhenOn() {
         show(WellbeingSettings(enabled = true))
-        listOf("Mindful pause", "Intention prompt", "Daily limits", "Puns on stop screens").forEach {
+        listOf("Mindful pause", "Intention prompt", "Daily limits", "Also outside ZeroOS", "Take a break", "Puns on stop screens").forEach {
             compose.onNodeWithText(it).performClick()
         }
-        listOf("Pause length", "\"5 more minutes\"", "Turning off", "Apps").forEach { compose.onNodeWithText(it).performClick() }
+        listOf("Pause length", "\"5 more minutes\"", "Break after", "Wait after tapping", "Turning off", "Apps").forEach {
+            compose.onNodeWithText(it).performClick()
+        }
         assertEquals(
-            listOf("PAUSE:false", "INTENTION:true", "LIMITS:false", "PUNS:false", "PAUSE_SECONDS", "EXTRA_MINUTES", "FRICTION", "apps"),
+            listOf(
+                "PAUSE:false", "INTENTION:true", "LIMITS:false", "OUTSIDE:true", "BREAKS:true", "PUNS:false",
+                "PAUSE_SECONDS", "EXTRA_MINUTES", "BREAK_AFTER", "BREAK_WAIT", "FRICTION", "apps"
+            ),
             calls
         )
-        listOf("5 s", "2 a day", "hold 3 s").forEach { compose.onNodeWithText(it).assertExists() }
+        listOf("2 a day", "15 min", "hold 3 s").forEach { compose.onNodeWithText(it).assertExists() }
     }
 
     @Test
@@ -106,23 +111,26 @@ class WellbeingScreensTest {
             settings = WellbeingSettings(enabled = true),
             apps = listOf(
                 WellbeingAppRow(app("Instagram"), AppRule(pause = true, dailyLimitMinutes = 30)),
-                WellbeingAppRow(app("Chrome"), AppRule(pause = true)),
+                WellbeingAppRow(app("Chrome"), AppRule(pause = true, takeBreak = true)),
                 WellbeingAppRow(app("Maps"), AppRule())
             )
         )
         compose.setContent {
             ZeroTheme {
-                WellbeingAppsScreen(state, onQueryChange = {}, onPause = { p, on -> calls += "pause $p $on" }, onCycleLimit = {
+                WellbeingAppsScreen(state, onQueryChange = {
+                }, onFlag = { p, f, on -> calls += "${f.name.lowercase()} $p $on" }, onCycleLimit = {
                     calls +=
                         "limit $it"
                 }, onBack = {})
             }
         }
         compose.onNodeWithText("pause · 30 min").assertExists()
+        compose.onNodeWithText("pause · break").assertExists()
         compose.onNodeWithText("Instagram").performClick()
         compose.onNodeWithText("Daily limit").performClick()
         compose.onNodeWithText("Mindful pause").performClick()
-        assertEquals(listOf("limit com.instagram", "pause com.instagram false"), calls)
+        compose.onNodeWithText("Take a break").performClick()
+        assertEquals(listOf("limit com.instagram", "pause com.instagram false", "break com.instagram true"), calls)
     }
 
     @Test
@@ -173,9 +181,12 @@ class WellbeingViewModelTest {
         override fun uninstall(key: AppKey) = Unit
     }
     private var usage = false
+    private var accessibility = false
     private val permissions = mockk<SpecialPermissions>(relaxed = true) {
         every { isGranted(SpecialPermission.USAGE_ACCESS) } answers
             { usage }
+        every { isGranted(SpecialPermission.ACCESSIBILITY) } answers
+            { accessibility }
     }
 
     @Before
@@ -218,7 +229,7 @@ class WellbeingViewModelTest {
     fun f8_1_f8_3_rulesPerPackageWithCloneSharingIt() = runTest {
         val (vm, settings) = viewModel()
         assertEquals("one row per package", 3, vm.state.value.apps.size)
-        vm.setAppPause("com.instagram", true)
+        vm.setAppFlag("com.instagram", AppFlag.PAUSE, true)
         vm.cycleAppLimit("com.instagram")
         val rule = settings.settings.first {
             it.wellbeing.apps["com.instagram"]?.dailyLimitMinutes == 30
@@ -260,13 +271,13 @@ class WellbeingViewModelTest {
     @Test
     fun f8_11_withoutUsageAccessWellbeingRunsWithPauseOnly() = runTest {
         val (vm, settings) = viewModel()
-        vm.onUsageAccessResult(granted = false, turningOn = WellbeingToggle.ENABLED)
+        vm.onPermissionResult(SpecialPermission.USAGE_ACCESS, granted = false, turningOn = WellbeingToggle.ENABLED)
         val s = settings.settings.first { it.wellbeing.enabled }.wellbeing
         assertFalse(s.limitsEnabled)
         verify { permissions.record(SpecialPermission.USAGE_ACCESS, false) }
 
         usage = true
-        vm.onUsageAccessResult(granted = true, turningOn = WellbeingToggle.LIMITS)
+        vm.onPermissionResult(SpecialPermission.USAGE_ACCESS, granted = true, turningOn = WellbeingToggle.LIMITS)
         assertTrue(settings.settings.first { it.wellbeing.limitsEnabled }.wellbeing.limitsEnabled)
         assertTrue(vm.state.first { it.usageAccess }.usageAccess)
     }
@@ -274,23 +285,57 @@ class WellbeingViewModelTest {
     @Test
     fun f8_11_f8_12_whatASwitchDoes() {
         val limited = WellbeingSettings(enabled = true, apps = mapOf("com.maps" to AppRule(dailyLimitMinutes = 30)))
-        assertEquals(ToggleOutcome.CONFIRM_OFF, toggleOutcome(limited, true, WellbeingToggle.ENABLED, false))
-        assertEquals(ToggleOutcome.CONFIRM_OFF, toggleOutcome(limited, true, WellbeingToggle.LIMITS, false))
+        assertEquals(ToggleOutcome.CONFIRM_OFF, toggleOutcome(limited, null, WellbeingToggle.ENABLED, false))
+        assertEquals(ToggleOutcome.CONFIRM_OFF, toggleOutcome(limited, null, WellbeingToggle.LIMITS, false))
         assertEquals(
             ToggleOutcome.APPLY,
-            toggleOutcome(limited.copy(disableFriction = DisableFriction.OFF), true, WellbeingToggle.ENABLED, false)
+            toggleOutcome(limited.copy(disableFriction = DisableFriction.OFF), null, WellbeingToggle.ENABLED, false)
         )
-        assertEquals(ToggleOutcome.APPLY, toggleOutcome(limited, true, WellbeingToggle.PUNS, false))
-        assertEquals(ToggleOutcome.ASK_USAGE, toggleOutcome(WellbeingSettings(), false, WellbeingToggle.ENABLED, true))
+        assertEquals(ToggleOutcome.APPLY, toggleOutcome(limited, null, WellbeingToggle.PUNS, false))
+        assertEquals(ToggleOutcome.ASK, toggleOutcome(WellbeingSettings(), SpecialPermission.USAGE_ACCESS, WellbeingToggle.ENABLED, true))
+        assertEquals(ToggleOutcome.APPLY, toggleOutcome(WellbeingSettings(), null, WellbeingToggle.ENABLED, true))
         assertEquals(
-            ToggleOutcome.ASK_USAGE,
-            toggleOutcome(WellbeingSettings(enabled = true, limitsEnabled = false), false, WellbeingToggle.LIMITS, true)
-        )
-        assertEquals(ToggleOutcome.APPLY, toggleOutcome(WellbeingSettings(), true, WellbeingToggle.ENABLED, true))
-        assertEquals(
-            "no limits: no Usage access needed",
+            "turning off never asks",
             ToggleOutcome.APPLY,
-            toggleOutcome(WellbeingSettings(limitsEnabled = false), false, WellbeingToggle.ENABLED, true)
+            toggleOutcome(WellbeingSettings(), SpecialPermission.ACCESSIBILITY, WellbeingToggle.BREAKS, false)
         )
+    }
+
+    @Test
+    fun f8_11_f8_16_whichPermissionEachPartNeeds() {
+        val s = WellbeingSettings(enabled = true)
+        assertEquals(SpecialPermission.USAGE_ACCESS, neededPermission(WellbeingToggle.ENABLED, s, false, false))
+        assertEquals(null, neededPermission(WellbeingToggle.ENABLED, s.copy(limitsEnabled = false), false, false))
+        assertEquals(SpecialPermission.USAGE_ACCESS, neededPermission(WellbeingToggle.LIMITS, s, false, true))
+        assertEquals(SpecialPermission.ACCESSIBILITY, neededPermission(WellbeingToggle.OUTSIDE, s, false, false))
+        // Take a break needs both, Usage access first.
+        assertEquals(SpecialPermission.USAGE_ACCESS, neededPermission(WellbeingToggle.BREAKS, s, false, false))
+        assertEquals(SpecialPermission.ACCESSIBILITY, neededPermission(WellbeingToggle.BREAKS, s, true, false))
+        assertEquals(null, neededPermission(WellbeingToggle.BREAKS, s, true, true))
+        assertEquals(null, neededPermission(WellbeingToggle.PUNS, s, false, false))
+    }
+
+    @Test
+    fun f8_16_f8_18_breakTurnsOnOnlyWithBothPermissionsAndCycles() = runTest {
+        val (vm, settings) = viewModel(LauncherSettings(wellbeing = WellbeingSettings(enabled = true)))
+        usage = true
+        vm.onPermissionResult(SpecialPermission.USAGE_ACCESS, granted = true, turningOn = WellbeingToggle.BREAKS)
+        assertFalse("Accessibility still missing", settings.settings.first().wellbeing.breaksEnabled)
+        accessibility = true
+        vm.onPermissionResult(SpecialPermission.ACCESSIBILITY, granted = true, turningOn = WellbeingToggle.BREAKS)
+        assertTrue(settings.settings.first { it.wellbeing.breaksEnabled }.wellbeing.breaksEnabled)
+
+        vm.cycle(WellbeingCycle.BREAK_AFTER)
+        vm.cycle(WellbeingCycle.BREAK_WAIT)
+        val cycled = settings.settings.first { it.wellbeing.breakAfterMinutes == 20 && it.wellbeing.breakWaitSeconds == 10 }
+        assertEquals(20, cycled.wellbeing.breakAfterMinutes)
+        repeat(6) { vm.cycle(WellbeingCycle.BREAK_AFTER) }
+        assertEquals(15, settings.settings.first { it.wellbeing.breakAfterMinutes == 15 }.wellbeing.breakAfterMinutes)
+
+        vm.setAppFlag("com.instagram", AppFlag.BREAK, true)
+        val rule = settings.settings.first {
+            it.wellbeing.apps["com.instagram"]?.takeBreak == true
+        }.wellbeing.apps.getValue("com.instagram")
+        assertEquals(AppRule(takeBreak = true), rule)
     }
 }

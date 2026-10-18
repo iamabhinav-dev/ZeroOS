@@ -50,36 +50,44 @@ import kotlinx.coroutines.delay
 @Composable
 fun WellbeingRoute(showApps: Boolean, onOpenApps: () -> Unit, onBack: () -> Unit, viewModel: WellbeingViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    var askingFor by rememberSaveable { mutableStateOf<WellbeingToggle?>(null) }
+    var askingFor by rememberSaveable { mutableStateOf<Pair<WellbeingToggle, SpecialPermission>?>(null) }
     var confirmingOff by rememberSaveable { mutableStateOf<WellbeingToggle?>(null) }
     LifecycleResumeEffect(Unit) {
-        viewModel.refreshUsageAccess()
+        viewModel.refreshPermissions()
         onPauseOrDispose {}
     }
-    askingFor?.let { toggle ->
+    val permissions = viewModel.permissions
+    fun needed(toggle: WellbeingToggle) = neededPermission(
+        toggle,
+        state.settings,
+        permissions.isGranted(SpecialPermission.USAGE_ACCESS),
+        permissions.isGranted(SpecialPermission.ACCESSIBILITY)
+    )
+    askingFor?.let { (toggle, permission) ->
         PermissionRequest(
-            permission = SpecialPermission.USAGE_ACCESS,
-            isGranted = { viewModel.permissions.isGranted(SpecialPermission.USAGE_ACCESS) },
-            openSettings = { viewModel.permissions.openSettings(SpecialPermission.USAGE_ACCESS) },
-            openAppInfo = viewModel.permissions::openAppInfo,
+            permission = permission,
+            isGranted = { permissions.isGranted(permission) },
+            openSettings = { permissions.openSettings(permission) },
+            openAppInfo = permissions::openAppInfo,
             onResult = { granted ->
-                askingFor = null
-                viewModel.onUsageAccessResult(granted, toggle)
+                viewModel.onPermissionResult(permission, granted, toggle)
+                // Still missing one (take a break needs both): ask for it next.
+                askingFor = if (granted) needed(toggle)?.let { toggle to it } else null
             }
         )
         return
     }
     if (showApps) {
-        WellbeingAppsScreen(state, viewModel::onQueryChange, viewModel::setAppPause, viewModel::cycleAppLimit, onBack)
+        WellbeingAppsScreen(state, viewModel::onQueryChange, viewModel::setAppFlag, viewModel::cycleAppLimit, onBack)
         return
     }
     WellbeingScreen(
         settings = state.settings,
         actions = WellbeingActions(
             onToggle = { toggle, on ->
-                when (toggleOutcome(state.settings, state.usageAccess, toggle, on)) {
+                when (toggleOutcome(state.settings, needed(toggle), toggle, on)) {
                     ToggleOutcome.CONFIRM_OFF -> confirmingOff = toggle
-                    ToggleOutcome.ASK_USAGE -> askingFor = toggle
+                    ToggleOutcome.ASK -> askingFor = needed(toggle)?.let { toggle to it }
                     ToggleOutcome.APPLY -> viewModel.setToggle(toggle, on)
                 }
             },
@@ -102,18 +110,17 @@ fun WellbeingRoute(showApps: Boolean, onOpenApps: () -> Unit, onBack: () -> Unit
 }
 
 /** What switching a Wellbeing row does (F8.11, F8.12). */
-enum class ToggleOutcome { APPLY, ASK_USAGE, CONFIRM_OFF }
+enum class ToggleOutcome { APPLY, ASK, CONFIRM_OFF }
 
 /**
- * Off while a daily limit is active (Wellbeing or limits) needs the friction; on (Wellbeing with limits, or limits)
- * without Usage access asks for it first; everything else applies at once.
+ * Off while a daily limit is active (Wellbeing or limits) needs the friction; on with a [missing] permission asks
+ * for it first (see [neededPermission]); everything else applies at once.
  */
-internal fun toggleOutcome(settings: WellbeingSettings, usageAccess: Boolean, toggle: WellbeingToggle, on: Boolean): ToggleOutcome {
+internal fun toggleOutcome(settings: WellbeingSettings, missing: SpecialPermission?, toggle: WellbeingToggle, on: Boolean): ToggleOutcome {
     val guarded = toggle == WellbeingToggle.ENABLED || toggle == WellbeingToggle.LIMITS
-    val needsUsage = !usageAccess && (toggle == WellbeingToggle.LIMITS || settings.limitsEnabled)
     return when {
         guarded && !on && settings.hasActiveLimit && settings.disableFriction != DisableFriction.OFF -> ToggleOutcome.CONFIRM_OFF
-        guarded && on && needsUsage -> ToggleOutcome.ASK_USAGE
+        on && missing != null -> ToggleOutcome.ASK
         else -> ToggleOutcome.APPLY
     }
 }
@@ -157,6 +164,28 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
                 { actions.onCycle(WellbeingCycle.EXTRA_MINUTES) }
             )
         }
+        item {
+            ToggleRow(stringResource(R.string.wellbeing_outside), settings.outsideEnforcement, {
+                actions.onToggle(WellbeingToggle.OUTSIDE, it)
+            })
+        }
+        item {
+            ToggleRow(stringResource(R.string.wellbeing_breaks), settings.breaksEnabled, { actions.onToggle(WellbeingToggle.BREAKS, it) })
+        }
+        item {
+            SettingRow(
+                stringResource(R.string.wellbeing_break_after),
+                stringResource(R.string.wellbeing_minutes, settings.breakAfterMinutes),
+                { actions.onCycle(WellbeingCycle.BREAK_AFTER) }
+            )
+        }
+        item {
+            SettingRow(
+                stringResource(R.string.wellbeing_break_wait),
+                stringResource(R.string.wellbeing_seconds, settings.breakWaitSeconds),
+                { actions.onCycle(WellbeingCycle.BREAK_WAIT) }
+            )
+        }
         item { ToggleRow(stringResource(R.string.wellbeing_puns), settings.puns, { actions.onToggle(WellbeingToggle.PUNS, it) }) }
         item {
             SettingRow(stringResource(R.string.wellbeing_friction), frictionLabel(settings.disableFriction), {
@@ -166,12 +195,12 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
     }
 }
 
-/** Wireframes H5 and H5a: apps with a rule first; tap one for its pause and daily limit. */
+/** Wireframes H5, H5a and H14: apps with a rule first; tap one for its pause, daily limit and take a break. */
 @Composable
 fun WellbeingAppsScreen(
     state: WellbeingUiState,
     onQueryChange: (String) -> Unit,
-    onPause: (String, Boolean) -> Unit,
+    onFlag: (String, AppFlag, Boolean) -> Unit,
     onCycleLimit: (String) -> Unit,
     onBack: () -> Unit
 ) {
@@ -197,12 +226,15 @@ fun WellbeingAppsScreen(
     if (sheet != null) {
         MinimalBottomSheet(onDismiss = { open = null }) {
             ScreenTitle(sheet.app.displayName())
-            ToggleRow(stringResource(R.string.wellbeing_pause), sheet.rule.pause, { onPause(sheet.app.key.packageName, it) })
+            ToggleRow(stringResource(R.string.wellbeing_pause), sheet.rule.pause, { onFlag(sheet.app.key.packageName, AppFlag.PAUSE, it) })
             SettingRow(
                 stringResource(R.string.wellbeing_daily_limit),
                 sheet.rule.dailyLimitMinutes?.let { stringResource(R.string.wellbeing_minutes, it) } ?: stringResource(R.string.common_off),
                 { onCycleLimit(sheet.app.key.packageName) }
             )
+            ToggleRow(stringResource(R.string.wellbeing_breaks), sheet.rule.takeBreak, {
+                onFlag(sheet.app.key.packageName, AppFlag.BREAK, it)
+            })
         }
     }
 }
@@ -248,15 +280,15 @@ private fun frictionLabel(friction: DisableFriction): String = when (friction) {
     DisableFriction.PAUSE -> stringResource(R.string.wellbeing_friction_pause)
 }
 
-/** "pause · 30 min", "30 min", "pause", or nothing (H5). */
+/** "pause · 30 min · break", "30 min", "pause", or nothing (H5). */
 @Composable
 private fun ruleSummary(rule: AppRule): String? {
-    val pause = if (rule.pause) stringResource(R.string.wellbeing_rule_pause) else null
-    val limit = rule.dailyLimitMinutes?.let { stringResource(R.string.wellbeing_minutes, it) }
-    return when {
-        pause != null && limit != null -> stringResource(R.string.wellbeing_rule_join, pause, limit)
-        else -> pause ?: limit
-    }
+    val parts = listOfNotNull(
+        if (rule.pause) stringResource(R.string.wellbeing_rule_pause) else null,
+        rule.dailyLimitMinutes?.let { stringResource(R.string.wellbeing_minutes, it) },
+        if (rule.takeBreak) stringResource(R.string.wellbeing_rule_break) else null
+    )
+    return parts.reduceOrNull { a, b -> stringResource(R.string.wellbeing_rule_join, a, b) }
 }
 
 /** F8.12, Appendix A: hold 3 s. */

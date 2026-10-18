@@ -181,6 +181,11 @@
     <string name="wellbeing_friction_hold">hold %1$d s</string>
     <string name="wellbeing_friction_pause">pause</string>
     <string name="wellbeing_rule_pause">pause</string>
+    <string name="wellbeing_rule_break">break</string>
+    <string name="wellbeing_outside">Also outside ZeroOS</string>
+    <string name="wellbeing_breaks">Take a break</string>
+    <string name="wellbeing_break_after">Break after</string>
+    <string name="wellbeing_break_wait">Wait after tapping</string>
     <string name="wellbeing_minutes">%1$d min</string>
     <string name="wellbeing_rule_join">%1$s · %2$s</string>
     <string name="wellbeing_daily_limit">Daily limit</string>

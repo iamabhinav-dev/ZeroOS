@@ -79,6 +79,12 @@ data class WellbeingSettings(
     val outsideEnforcement: Boolean = false,
     /** Random puns on the stop screens (F8.13, F8.14). */
     val puns: Boolean = true,
+    /** Take a break (F8.16–F8.18, D-044); needs Accessibility and Usage access. */
+    val breaksEnabled: Boolean = false,
+    /** F8.18: 5–60 min straight in a chosen app before the break screen. */
+    val breakAfterMinutes: Int = 15,
+    /** F8.18: 3–30 s countdown after tapping the break button. */
+    val breakWaitSeconds: Int = 5,
     /** Friction before turning Wellbeing or limits off (F8.12). */
     val disableFriction: DisableFriction = DisableFriction.HOLD,
     /** Rules by package name (F8.1, F8.3; D-041). */
@@ -86,12 +92,22 @@ data class WellbeingSettings(
 ) {
     /** At least one daily limit is set and limits are on: turning off then needs the friction (F8.12). */
     val hasActiveLimit: Boolean get() = enabled && limitsEnabled && apps.values.any { it.dailyLimitMinutes != null }
+
+    /** Apps the Accessibility service must watch: limits outside ZeroOS (F8.7) and take a break (F8.16). */
+    val watchedPackages: Set<String>
+        get() = if (!enabled) {
+            emptySet()
+        } else {
+            apps.filterValues {
+                (outsideEnforcement && limitsEnabled && it.dailyLimitMinutes != null) || (breaksEnabled && it.takeBreak)
+            }.keys
+        }
 }
 
 /** What Wellbeing does for one app (wireframe H5a). */
 @Serializable
-data class AppRule(val pause: Boolean = false, val dailyLimitMinutes: Int? = null) {
-    val isEmpty: Boolean get() = !pause && dailyLimitMinutes == null
+data class AppRule(val pause: Boolean = false, val dailyLimitMinutes: Int? = null, val takeBreak: Boolean = false) {
+    val isEmpty: Boolean get() = !pause && dailyLimitMinutes == null && !takeBreak
 }
 
 /** F8.12. */
