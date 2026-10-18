@@ -303,7 +303,7 @@ Build in this order:
 - Never filter `CATEGORY_CALL`, `CATEGORY_ALARM`, or system/critical notifications.
 - Inbox screen (open stored `contentIntent` if valid, dismiss, clear all); scheduled digests.
 
-### Step 4.5 — Focus mode (F9)
+### Step 4.5 — Focus mode (F9) ✅
 - Start from the home **"focus" text button** (fills the focus slot from Step 2.3) or Settings → duration + allow-list; while active the button shows remaining time and hold-3s ends it; filtered app list, maximal notification filtering, remaining time on home, hold-3s to end; optional DND; scheduled sessions.
 - Focus icon (F9.8–F9.10, D-047): four dot designs from `docs/brand/focus-marks/`, picked in Settings → Wellbeing → Focus; shown on the picker, a 2 s "Focus started" screen, home and the settings row. Focus works with Wellbeing off.
 
@@ -389,6 +389,7 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 
 ## Deferred Work (not planned now; revisit when wanted)
 - Notification filter and inbox (F7, Step 4.4, wireframe H9; D-039).
+- Scheduled focus sessions (F9.6, wireframe H10a; editor H10c to be approved; WorkManager for Do Not Disturb at the exact times) (D-054).
 - Instrumented tests on an emulator or the phone.
 - Macrobenchmark + Baseline Profiles for startup (NFR-P1/P2 measured automatically).
 - Translations / RTL.

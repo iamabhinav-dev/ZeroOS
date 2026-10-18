@@ -738,7 +738,7 @@ Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wa
 │   (F)     (F)     (F)     (F)      │  the four dotted marks
 │   Mix    Sphere   Rim    Flow      │  selected = outlined; default Mix
 ```
-**H10a. Schedules**
+**H10a. Schedules** (F9.6 deferred to the end, D-054; the Schedules row is not shown until then)
 ```
 │  ← Schedules                       │
 │  Weekdays 09:00–12:00     ‹on›     │  tap → edit days, start, end, apps

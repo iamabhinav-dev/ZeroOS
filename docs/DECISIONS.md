@@ -289,3 +289,9 @@ tapping anywhere on the Custom row picks the custom length (‹ › still step i
 48 dp on home, 240 dp on the picker, "Focus started" and "End focus early?" screens (the settings-row preview
 stays 24 dp). Wireframe H11 updated.
 *Why:* User's feedback on 0.0.25.
+
+**D-054 — Focus schedules deferred; ‹ › dim at the ends** · 2026-10-18 · Accepted
+Scheduled focus (F9.6) moves to the end, after the other phases; the proposed editor (H10c) and the open question
+about Do Not Disturb timing (WorkManager, possibly a few minutes late) wait until then. Step 4.5 is done without it.
+The Custom length's ‹ and › are dimmed and do nothing at 5 and 240 min (no wrapping).
+*Why:* User's choice.

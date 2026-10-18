@@ -57,7 +57,8 @@ Update this file in the same commit as the code and tests.
 | F8.13–F8.15 | ✅ | PunBagTest › f8_13_*, WellbeingStateRepositoryTest › f8_13_*, StopScreensTest › f8_14_* (always a pun, D-045), screenshots | Dots animate; still with "Remove animations"; passed on the phone 2026-10-18 |
 | F8.7 | ✅ | OutsideRulesTest › f8_7_*, OutsideEnforcerTest › f8_7_*, f8_4_*, WellbeingViewModelTest › f8_11_f8_16_* | Limit screen over the app when opened from a notification or recents; passed on the phone 2026-10-18 |
 | F8.16–F8.18 | ✅ | OutsideRulesTest › f8_16_*, f8_17_*, f8_18_*, OutsideWatcherTest › f8_16_*, OutsideEnforcerTest › f8_16_*, f8_17_*, StopScreensTest › f8_16_*, step4_3_breakScreenshot, WellbeingViewModelTest › f8_16_f8_18_*, WellbeingScreensTest › f8_9_* | Break after 15 min on YouTube; button countdown; Back does nothing; passed on the phone 2026-10-18 |
-| F9.1–F9.10 | ⬜ | (Step 4.5) | |
+| F9.1–F9.5, F9.7–F9.10 | ✅ | FocusRepositoryTest › f9_*, WellbeingRulesTest › f9_3_*, AppListViewModelTest › f9_3_*, HomeUiStateTest › f9_*, HomeScreenTest › f9_*, FocusPickerViewModelTest › f9_*, FocusScreensTest › f9_*, d052_*, d054_*, FocusSettingsViewModelTest › f9_*, FocusSettingsScreensTest › f9_*, step4_5_*, landscape_* | Focus start/end, icon, filtered apps, DND, end early with reason; passed on the phone 2026-10-18 (0.0.26) |
+| F9.6 | ⏸ | Deferred to the end (D-054) | |
 | F10.1–F10.13 | ⬜ | | Compare with the phone's screen-time screen |
 | F11.1–F11.3 | ⬜ | | |
 | F12.2–F12.4 | ⬜ | | |

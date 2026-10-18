@@ -183,7 +183,7 @@ Kept for later; not built in v1.1.
 | F9.3 | During focus: only allowed apps are shown/launchable; notification filter is maximal (once F7 is built, D-039; until then Do Not Disturb, F9.7, keeps it quiet). |
 | F9.4 | Home screen shows remaining focus time, with a dot line under it that fills as the session passes (D-051). |
 | F9.5 | Ending early requires a deliberate action: an "End focus early?" screen where **End focus** appears only after typing why (spaces don't count). The reason is never saved or logged (F17.8). (D-051) |
-| F9.6 | Optional scheduled focus sessions (e.g., weekdays 09:00–12:00). |
+| F9.6 | Optional scheduled focus sessions (e.g., weekdays 09:00–12:00). **Deferred to the end (D-054)**; proposed editor wireframe H10c kept for then. |
 | F9.7 | Optionally toggle system Do Not Disturb (requires DND access). |
 | F9.8 | **Focus icon** (D-047): a dotted circle with the F as the empty gap, chosen from four designs: Mix, Sphere, Rim, Flow (`docs/brand/focus-marks/`). Drawn in the theme colour. |
 | F9.9 | The Focus icon shows (a) big at the top of the Focus picker; (b) on a **"Focus started"** screen after "Start focus" (tap to skip); (c) small next to "focus · 23m left" on home while focus runs; (d) as a preview on the "Focus icon" settings row. |
