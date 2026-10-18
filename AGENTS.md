@@ -43,6 +43,14 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
   Types: `feat`, `fix`, `test`, `refactor`, `docs`, `chore`, `build`, `ci`, `perf`.
 - **Branches:** one branch per plan step, e.g. `step-2.4-app-search`; merge into `main` when the step is done.
 - **Never** commit secrets, keystores (`*.jks`), `keystore.properties`, `local.properties`, APKs, or build output.
+- **Keep the repo public-ready** (it's private, but may go public; D-046):
+  - Commit only with the GitHub noreply address (`git config user.email` in this repo); never a personal email.
+  - No personal data in files or commit messages: no emails, phone numbers, real names of other people,
+    screenshots with personal content, app-usage logs, or names of the user's banking/payment apps.
+  - Screen dumps and test fixtures keep structure only, never on-screen text.
+  - Keep `LICENSE` (personal use only, no uploading anywhere), `THIRD_PARTY_NOTICES.md` and `LICENSES/` up to
+    date: a new library in the APK gets a row (and its licence text if it isn't there yet).
+  - Every GitHub Release starts with the "Personal use only" notice linking `LICENSE`.
 - **Pushing:** after a step is merged into `main`, ask me before pushing to the private GitHub repo. **Never** force-push, rewrite history, or open PRs without my approval.
 - A step is finished only when the **Definition of Done** in IMPLEMENTATION_PLAN.md is met. Then mark it ✅ in IMPLEMENTATION_PLAN.md in its own `docs:` commit.
 

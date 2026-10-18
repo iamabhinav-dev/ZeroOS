@@ -232,3 +232,10 @@ a 1 min gap resets the timer. Pun lists D and E in docs/puns.md.
 The "Puns on stop screens" setting is removed: the pause, limit and break screens always show a line from their
 pun list (F8.14 changed). The plain fallback messages are gone too.
 *Why:* User's choice.
+
+**D-046 — Private repo, kept public-ready; personal use licence** · 2026-10-18 · Accepted
+The repo stays private for now but is kept safe to make public: history rewritten to the GitHub noreply email,
+no personal data in files, issues off. `LICENSE` allows personal, non-commercial use of the code and APKs and
+forbids uploading or sharing them anywhere (app stores, APK sites, websites, file-sharing). Third-party licences in
+`THIRD_PARTY_NOTICES.md` and `LICENSES/`. Builds are published as GitHub Releases with that notice.
+*Why:* User's choice; going public later shouldn't need another clean-up.
