@@ -88,3 +88,7 @@ Rules: bump `versionCode` for every install; never install an APK built from old
   "View crash report", "Open Home settings" and "Exit safe mode".
 - To switch back to the stock launcher at any time: pull down the notification shade → ⚙ Settings →
   **Apps → Default apps → Home app** → the stock launcher (menu names may differ slightly on the phone).
+
+## Licence
+Source-available, all rights reserved: the code may be read, but neither it nor any APK built from it may be
+used, redistributed or uploaded to any app store without permission. See [LICENSE](LICENSE).

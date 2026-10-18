@@ -1,0 +1,24 @@
+ZeroOS Launcher — Source-Available Licence
+Copyright (c) 2026 Abhinav Kumar Singh. All rights reserved.
+
+The source code, documentation, images and compiled builds in this repository ("the Software") are made
+public for reading and reference only. No licence to use the Software is granted except as written below.
+
+1. You MAY view and read the source code, and fork it on GitHub only as GitHub's Terms of Service allow.
+
+2. You may NOT, without the copyright holder's prior written permission:
+   a. install, run or otherwise use any release APK, or any APK or other build you compile from this source;
+   b. upload, publish, list or distribute the Software, any APK built from it, or any modified version, on any
+      app store or distribution platform, including Google Play, F-Droid, Samsung Galaxy Store, Huawei
+      AppGallery, Amazon Appstore, APKMirror, APKPure, or any similar service;
+   c. copy, modify, merge, sell, sublicense or redistribute the Software or any part of it, in source or
+      compiled form;
+   d. use the name "ZeroOS" or its logo for any app or product.
+
+3. Third-party parts keep their own licences: the Doto font is under the SIL Open Font License 1.1
+   (see core/ui/src/main/assets/licenses/doto-OFL.txt), and libraries are under their own licences.
+
+4. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE
+   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
+
+For permission requests, contact the owner through their GitHub profile.

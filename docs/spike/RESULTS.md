@@ -21,10 +21,10 @@ Other findings:
 - Screen-structure dumps (view IDs, bounds, "has-text" flags; never text) kept as Phase 6 test data:
   `youtube-shorts-screens/` (1, must match), `youtube-normal-screens/` (30, must not match),
   `instagram-reels-screens/` (2, must match), `instagram-normal-screens/` (28, must not match).
-- **UPI apps warn about Accessibility services (2026-10-16):** a payment app shows "Turn off accessibility access"
-  while the spike's service is on. Limiting the service to YouTube and Instagram (`packageNames`, spike-4-limited)
-  did **not** remove the warning. Decision: keep D-023 as is; the user doesn't need a payment app and accepts the
-  warning while the F16/F8 service is on. Other UPI apps may do the same.
+- **UPI apps warn about Accessibility services (2026-10-16):** a UPI payments app shows "Turn off accessibility
+  access" while the spike's service is on. Limiting the service to YouTube and Instagram (`packageNames`,
+  spike-4-limited) did **not** remove the warning. Decision: keep D-023 as is; the user accepts the warning while
+  the F16/F8 service is on. Other UPI apps may do the same.
 - **Overnight service survival (2026-10-17):** not tested with the spike (uninstalled). Moved to Phase 4's manual
   check, where ZeroOS's own Accessibility service must survive overnight and a reboot. The launcher itself kept
   working overnight on 0.0.14.
