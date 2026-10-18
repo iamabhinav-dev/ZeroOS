@@ -4,6 +4,10 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.22 (versionCode 22)
+- If ZeroOS isn't the default home app when it opens (e.g. a battery-saving mode switched it back), home shows
+  "ZeroOS isn't your home app" with **Set as default** (F14.7)
+- The background-activity tip in onboarding and the accessibility note are worded for any phone
 ## 0.0.21 (versionCode 21)
 - Puns are always shown on the pause, limit and break screens; the "Puns on stop screens" switch is gone (D-045)
 ## 0.0.20 (versionCode 20)
