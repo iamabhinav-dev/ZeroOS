@@ -51,7 +51,7 @@ Update this file in the same commit as the code and tests.
 | F7.1–F7.6 | ⬜ | Deferred (D-039) | |
 | F8.8–F8.12 | ✅ | WellbeingViewModelTest › f8_*, WellbeingScreensTest › f8_*, step4_3_*, HoldToConfirmTest › f8_12_* (settings and friction; stop screens in part 2) | Turn on/off with hold on the phone; passed on the phone 2026-10-18 |
 | F8.1, F8.2 | ✅ | StopRulesTest › f8_1_*, LaunchGateTest › f8_1_*, StopViewModelTest › f8_1_*, StopScreensTest › f8_1_*, f8_2_*, step4_3_pauseScreenshot, AppListViewModelTest › f8_8_off…f8_1_* | Pause before a flagged app on the phone; passed on the phone 2026-10-18 |
-| F8.3, F8.6 | 🟡 | UsageTimeTest › f8_3_*, f8_6_* (midnight, DST, time zone, clock set back), WellbeingStateRepositoryTest › f8_6_*, WellbeingStatusTest › f8_3_*, StopViewModelTest › f8_3_* | Used time roughly matches the phone's screen time; used time OK on the phone, midnight reset still to check |
+| F8.3, F8.6 | 🟡 | UsageTimeTest › f8_3_*, f8_6_* (midnight, DST, time zone, clock set back), WellbeingStateRepositoryTest › f8_6_*, WellbeingStatusTest › f8_3_*, StopViewModelTest › f8_3_* | Used time roughly matches the phone's screen time; used time OK on the phone, midnight reset of time left passed 2026-10-18; "5 more minutes" reset still to confirm |
 | F8.4 | ✅ | StopRulesTest › f8_4_*, StopViewModelTest › f8_4_*, StopScreensTest › f8_4_*, step4_3_limitScreenshotLight | Limit screen and "5 more minutes" on the phone; passed on the phone 2026-10-18 |
 | F8.5 | ✅ | StopRulesTest › f8_5_*, AppListViewModelTest › f8_5_* | "12m left" in the app list; passed on the phone 2026-10-18 |
 | F8.13–F8.15 | ✅ | PunBagTest › f8_13_*, WellbeingStateRepositoryTest › f8_13_*, StopScreensTest › f8_14_* (always a pun, D-045), screenshots | Dots animate; still with "Remove animations"; passed on the phone 2026-10-18 |
@@ -73,7 +73,7 @@ Update this file in the same commit as the code and tests.
 | F14.4 | ✅ | By design: no permission is requested during onboarding; dialogs open only from their buttons | |
 | F14.5 | ✅ | OnboardingViewModelTest › f14_5_*, OnboardingScreenTest › f14_1_f14_5_*, OnboardingGateTest › f14_5_* | |
 | F14.6 | ✅ | OnboardingViewModelTest › f14_2_f14_6_*, OnboardingScreenTest › f14_6_*, AndroidOnboardingSystemTest › f14_6_* | Battery dialog on the phone |
-| F14.7 | 🟡 | LauncherViewModelTest › f14_7_*, NotHomeAppBannerTest › f14_7_* | Line after battery saving resets the home app; Set as default fixes it |
+| F14.7 | ✅ | LauncherViewModelTest › f14_7_*, NotHomeAppBannerTest › f14_7_* | Line after battery saving resets the home app; Set as default fixes it; passed on the phone 2026-10-18 |
 | F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |
