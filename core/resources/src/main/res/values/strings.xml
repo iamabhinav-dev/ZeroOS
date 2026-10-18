@@ -205,6 +205,47 @@
     <string name="wellbeing_left_minutes">%1$dm left</string>
     <string name="wellbeing_left_hours">%1$dh %2$dm left</string>
     <string name="wellbeing_used_up">used up</string>
+    <string name="wellbeing_break_plain">Time for a break</string>
+    <string name="wellbeing_continue">Continue</string>
+    <string-array name="wellbeing_puns_break">
+        <item>Your attention span called. It wants a break.</item>
+        <item>Breaking news: the outside world is still there.</item>
+        <item>15 minutes in. Blink twice if you\'re okay.</item>
+        <item>Your eyes would like a word.</item>
+        <item>Stretch. Your neck has been very patient.</item>
+        <item>Scroll check: still enjoying this?</item>
+        <item>Time flies when you\'re thumbing.</item>
+        <item>Look at something far away. Like a window.</item>
+        <item>Your thumb deserves a holiday.</item>
+        <item>Still here? Still worth it?</item>
+        <item>Pause the feed. Feed yourself a glass of water.</item>
+        <item>A break now beats a headache later.</item>
+        <item>Stand up. Sit back down. Feel better?</item>
+        <item>The algorithm can wait. You can\'t.</item>
+        <item>Quick break. The app will keep your place.</item>
+        <item>You\'ve been here a while. Rest your eyes.</item>
+        <item>Even videos have intermissions.</item>
+        <item>Breathe in. Breathe out. Now decide.</item>
+        <item>Your posture called. It\'s not happy.</item>
+        <item>Fifteen minutes gone. Where to next?</item>
+    </string-array>
+    <string-array name="wellbeing_puns_break_button">
+        <item>Just one more video…</item>
+        <item>I know, I know.</item>
+        <item>Almost done, promise.</item>
+        <item>Five more minutes, mom.</item>
+        <item>This one\'s important. Really.</item>
+        <item>Let me finish this bit.</item>
+        <item>Fine, but I\'m watching.</item>
+        <item>I\'m learning something. Probably.</item>
+        <item>Just wrapping up.</item>
+        <item>One more scroll.</item>
+        <item>I\'ll stop soon. Honest.</item>
+        <item>Okay, okay. Back in a sec.</item>
+        <item>Not yet, I\'m on a roll.</item>
+        <item>Give me a moment.</item>
+        <item>Last one. Definitely.</item>
+    </string-array>
     <string-array name="wellbeing_puns_pause">
         <item>Breathe in. Is this really the plan?</item>
         <item>Your thumb got here first. Did you?</item>

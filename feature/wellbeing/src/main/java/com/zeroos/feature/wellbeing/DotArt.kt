@@ -22,15 +22,20 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * Breathing dots (F8.15): a ring of dots around a centre dot that grows and shrinks once over the pause, so the
- * breath ends with the countdown. Drawn mid-breath and still when [still].
+ * Breathing dots (F8.15): a ring of dots around a centre dot that grows and shrinks once over [seconds], so the
+ * breath ends with the pause countdown; with [repeat] it keeps breathing (the break screen, F8.16). Drawn
+ * mid-breath and still when [still].
  */
 @Composable
-fun BreathingDots(seconds: Int, still: Boolean) {
+fun BreathingDots(seconds: Int, still: Boolean, repeat: Boolean = false) {
     val tokens = ZeroTheme.tokens
     val progress = remember { Animatable(if (still) HALF else 0f) }
     LaunchedEffect(still) {
-        if (!still) progress.animateTo(1f, tween(seconds * MILLIS_PER_SECOND, easing = LinearEasing))
+        while (!still) {
+            progress.animateTo(1f, tween(seconds * MILLIS_PER_SECOND, easing = LinearEasing))
+            if (!repeat) break
+            progress.snapTo(0f)
+        }
     }
     val description = stringResource(R.string.wellbeing_breathing)
     val color = tokens.colors.text

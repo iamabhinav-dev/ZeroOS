@@ -176,7 +176,7 @@ private fun StopLayout(art: @Composable () -> Unit, buttons: @Composable () -> U
 }
 
 @Composable
-private fun Line(text: String) = Text(
+internal fun Line(text: String) = Text(
     text,
     color = ZeroTheme.tokens.colors.text,
     fontSize = ZeroTheme.tokens.textSizes.appLabel,
@@ -209,7 +209,7 @@ private fun IntentionField(value: String, onChange: (String) -> Unit) {
 
 /** System "Remove animations" is on (NFR-A4): the dot art stays still. */
 @Composable
-private fun rememberReducedMotion(): Boolean {
+internal fun rememberReducedMotion(): Boolean {
     val resolver = LocalContext.current.contentResolver
     return remember { Settings.Global.getFloat(resolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f }
 }
@@ -218,4 +218,6 @@ object StopTestTags {
     const val ROOT = "stop_screen"
     const val COUNTDOWN = "stop_countdown"
     const val INTENTION = "stop_intention"
+    const val BREAK = "break_screen"
+    const val BREAK_BUTTON = "break_button"
 }

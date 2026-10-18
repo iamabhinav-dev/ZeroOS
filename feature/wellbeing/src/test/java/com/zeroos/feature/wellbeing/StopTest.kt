@@ -249,4 +249,38 @@ class StopScreensTest {
         show(StopScreen.Limit(30, 1), pun = 0, theme = ThemeMode.LIGHT)
         compose.onRoot().captureRoboImage()
     }
+
+    @Test
+    fun f8_16_breakStaysUntilTappedThenCountsDownAndGoes() {
+        compose.mainClock.autoAdvance = false
+        var done = 0
+        compose.setContent { ZeroTheme { BreakScreen(pun = 0, buttonPun = 0, waitSeconds = 5, onDone = { done++ }) } }
+        compose.onNodeWithText("Your attention span called. It wants a break.").assertExists()
+        compose.mainClock.advanceTimeBy(60_000)
+        assertEquals("nothing happens until the button is tapped", 0, done)
+        compose.onNodeWithText("Just one more video…").performClick()
+        compose.mainClock.advanceTimeByFrame()
+        compose.onNodeWithText("5").assertExists()
+        compose.mainClock.advanceTimeBy(4_100)
+        assertEquals(0, done)
+        compose.mainClock.advanceTimeBy(1_100)
+        assertEquals(1, done)
+    }
+
+    @Test
+    fun f8_14_breakWithoutPuns() {
+        // The breath repeats while the screen is up, so Compose is never idle on its own.
+        compose.mainClock.autoAdvance = false
+        compose.setContent { ZeroTheme { BreakScreen(pun = null, buttonPun = null, waitSeconds = 3, onDone = {}) } }
+        compose.onNodeWithText("Time for a break").assertExists()
+        compose.onNodeWithText("Continue").assertExists()
+    }
+
+    @Test
+    fun step4_3_breakScreenshot() {
+        compose.mainClock.autoAdvance = false
+        compose.setContent { ZeroTheme { BreakScreen(pun = 0, buttonPun = 0, waitSeconds = 5, onDone = {}) } }
+        compose.mainClock.advanceTimeBy(2_000)
+        compose.onRoot().captureRoboImage()
+    }
 }
