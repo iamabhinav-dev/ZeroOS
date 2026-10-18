@@ -4,6 +4,10 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.25 (versionCode 25)
+- Back arrow (dotted ‹) at the top of every Settings page, Diagnostics, the Focus picker and the permission
+  screens; it goes back to the page you came from, like the Back gesture (D-052)
+- Includes everything from 0.0.24 (that release was replaced by this one)
 ## 0.0.24 (versionCode 24)
 - Home shows just the small Focus icon; tap it to start focus. While focusing: the icon, "23m left" and a dot
   line that fills as the time passes
