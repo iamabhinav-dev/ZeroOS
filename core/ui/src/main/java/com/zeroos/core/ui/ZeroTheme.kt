@@ -74,7 +74,11 @@ data class ZeroSpacing(
     /** Height of the "ZeroOS" wordmark (D-037). */
     val wordmarkHeight: Dp = 28.dp,
     /** Width of the dot art on the wellbeing stop screens (F8.15). */
-    val stopArtWidth: Dp = 160.dp
+    val stopArtWidth: Dp = 160.dp,
+    /** Focus icon next to the time left on home (F9.9c) and on the settings row (F9.9d). */
+    val focusMarkSmall: Dp = 24.dp,
+    /** Focus icon on the picker and the "Focus started" screen (F9.9a, F9.9b). */
+    val focusMarkLarge: Dp = 120.dp
 )
 
 /** Text sizes at "Medium"; [scaled] applies the S/M/L/XL setting (F6.4). The system font scale applies on top via sp. */

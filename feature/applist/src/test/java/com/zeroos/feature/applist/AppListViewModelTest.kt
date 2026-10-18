@@ -7,6 +7,8 @@ import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
 import com.zeroos.core.data.apps.visibleApps
+import com.zeroos.core.data.focus.FocusRepository
+import com.zeroos.core.data.focus.FocusStateSerializer
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
@@ -83,6 +85,7 @@ class AppListViewModelTest {
     @After
     fun tearDown() = Dispatchers.resetMain()
 
+    private lateinit var focusRepository: FocusRepository
     private val clock = MutableClock(Instant.parse("2026-10-17T10:00:00Z"))
     private var usageEvents = emptyList<UsageEvent>()
     private var usageReads = 0
@@ -112,7 +115,12 @@ class AppListViewModelTest {
             zone = clock::getZone
         )
         val status = WellbeingStatus(TodayUsage(usageSource, clock, io, logger, clock::getZone), wellbeingState)
-        val gate = LaunchGate(apps, settingsRepository, backgroundScope, logger)
+        focusRepository = FocusRepository(
+            DataStoreFactory.create(FocusStateSerializer, scope = backgroundScope, produceFile = { temp.newFile().apply { delete() } }),
+            clock,
+            logger
+        )
+        val gate = LaunchGate(apps, settingsRepository, focusRepository, backgroundScope, logger)
         val vm = AppListViewModel(apps, settingsRepository, actions, logger, SavedStateHandle(), gate, status)
         backgroundScope.launch { vm.state.collect {} }
         vm.state.first { !it.loading }
@@ -202,5 +210,14 @@ class AppListViewModelTest {
         launched.clear()
         assertTrue(on.launch(instagram))
         assertTrue("opened only after the stop screen", launched.isEmpty())
+    }
+
+    @Test
+    fun f9_3_duringFocusOnlyAllowedAppsAreListed() = runTest {
+        val vm = viewModel()
+        focusRepository.start(25, setOf(key("Maps").asString()))
+        assertEquals(listOf("Maps"), vm.state.first { it.results.size == 1 }.results.map { it.label })
+        focusRepository.end()
+        assertEquals(4, vm.state.first { it.results.size == 4 }.results.size)
     }
 }

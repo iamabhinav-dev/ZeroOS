@@ -3,6 +3,8 @@ package com.zeroos.launcher
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.focus.FocusRepository
+import com.zeroos.core.data.focus.createFocusStateDataStore
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.wellbeing.AndroidUsageEventSource
 import com.zeroos.core.data.wellbeing.LaunchGate
@@ -31,8 +33,13 @@ import kotlinx.coroutines.SupervisorJob
 object WellbeingModule {
     @Provides
     @Singleton
-    fun launchGate(apps: AppsRepository, settings: SettingsRepository, logger: Logger): LaunchGate =
-        LaunchGate(apps, settings, CoroutineScope(SupervisorJob() + Dispatchers.Default), logger)
+    fun launchGate(apps: AppsRepository, settings: SettingsRepository, focus: FocusRepository, logger: Logger): LaunchGate =
+        LaunchGate(apps, settings, focus, CoroutineScope(SupervisorJob() + Dispatchers.Default), logger)
+
+    @Provides
+    @Singleton
+    fun focusRepository(@ApplicationContext context: Context, clock: Clock, logger: Logger): FocusRepository =
+        FocusRepository(createFocusStateDataStore(context, logger, CoroutineScope(SupervisorJob() + Dispatchers.IO)), clock, logger)
 
     @Provides
     @Singleton

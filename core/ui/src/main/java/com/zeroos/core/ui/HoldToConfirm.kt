@@ -7,7 +7,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -18,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
@@ -31,7 +34,13 @@ import kotlinx.coroutines.launch
  * empties if let go early. Screen readers get a plain action instead of the hold.
  */
 @Composable
-fun HoldToConfirm(text: String, duration: Duration, onConfirm: () -> Unit, modifier: Modifier = Modifier) {
+fun HoldToConfirm(
+    text: String,
+    duration: Duration,
+    onConfirm: () -> Unit,
+    modifier: Modifier = Modifier,
+    leading: (@Composable () -> Unit)? = null
+) {
     val tokens = ZeroTheme.tokens
     val progress = remember { Animatable(0f) }
     val scope = rememberCoroutineScope()
@@ -57,7 +66,10 @@ fun HoldToConfirm(text: String, duration: Duration, onConfirm: () -> Unit, modif
             }
             .padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.listItemCompact)
     ) {
-        Text(text, color = tokens.colors.text, fontSize = tokens.textSizes.body)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap)) {
+            leading?.invoke()
+            Text(text, color = tokens.colors.text, fontSize = tokens.textSizes.body)
+        }
         val color = tokens.colors.text
         val faint = tokens.colors.divider
         Canvas(Modifier.fillMaxWidth().height(tokens.spacing.sectionGap)) {

@@ -4,6 +4,8 @@ import androidx.datastore.core.DataStoreFactory
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
+import com.zeroos.core.data.focus.FocusRepository
+import com.zeroos.core.data.focus.FocusStateSerializer
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
 import com.zeroos.core.logging.LogLevel
@@ -14,6 +16,7 @@ import com.zeroos.core.model.settings.AppRule
 import com.zeroos.core.model.settings.LauncherSettings
 import com.zeroos.core.model.settings.WellbeingSettings
 import com.zeroos.core.testing.MutableClock
+import java.time.Clock
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneId
@@ -196,6 +199,27 @@ class LaunchGateTest {
 
     private fun app(pkg: String) = AppEntry(AppKey(pkg, "Main", 0), pkg)
 
+    private lateinit var focus: FocusRepository
+
+    private fun TestScope.focusRepository() = FocusRepository(
+        DataStoreFactory.create(FocusStateSerializer, scope = backgroundScope, produceFile = { temp.newFile().apply { delete() } }),
+        Clock.systemUTC(),
+        logger
+    ).also { focus = it }
+
+    @Test
+    fun f9_3_duringFocusOnlyAllowedAppsOpen() = runTest(UnconfinedTestDispatcher()) {
+        val gate = gate(LauncherSettings())
+        focus.start(25, setOf(app("phone").key.asString()))
+        gate.focus.first { it != null }
+        assertFalse(gate.launch(app("yt")))
+        assertTrue(gate.launch(app("phone")))
+        assertEquals(listOf("phone"), launched)
+        gate.endFocus()
+        gate.focus.first { it == null }
+        assertTrue(gate.launch(app("yt")))
+    }
+
     private suspend fun TestScope.gate(settings: LauncherSettings): LaunchGate {
         val store = DataStoreFactory.create(SettingsSerializer, scope = backgroundScope, produceFile = {
             temp.newFile().apply { delete() }
@@ -203,7 +227,13 @@ class LaunchGateTest {
         store.updateData { settings }
         val repo = SettingsRepository(store, logger)
         repo.settings.first()
-        return LaunchGate(AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler)), repo, backgroundScope, logger)
+        return LaunchGate(
+            AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler)),
+            repo,
+            focusRepository(),
+            backgroundScope,
+            logger
+        )
     }
 
     @Test
