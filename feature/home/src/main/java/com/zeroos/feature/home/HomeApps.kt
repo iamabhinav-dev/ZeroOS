@@ -3,6 +3,7 @@ package com.zeroos.feature.home
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.HomeAppsCache
 import com.zeroos.core.data.apps.homeAppsToCache
+import com.zeroos.core.data.wellbeing.LaunchGate
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.LauncherSettings
 import javax.inject.Inject
@@ -19,12 +20,13 @@ import kotlinx.coroutines.withContext
 class HomeApps @Inject constructor(
     private val repository: AppsRepository,
     private val cache: HomeAppsCache,
-    private val io: CoroutineDispatcher
+    private val io: CoroutineDispatcher,
+    private val gate: LaunchGate
 ) {
     fun snapshots(): Flow<HomeAppsSnapshot> = homeAppsWithCache(cache, repository.apps, io)
 
-    /** Starts the app (F1.4); false if it can't be started. */
-    fun launch(app: AppEntry): Boolean = repository.launch(app.key)
+    /** Starts the app (F1.4), or shows its stop screen first (F8.1, F8.4); false if it can't be started. */
+    fun launch(app: AppEntry): Boolean = gate.launch(app)
 
     fun saver(scope: CoroutineScope) = HomeAppsSaver(cache, scope, io)
 }

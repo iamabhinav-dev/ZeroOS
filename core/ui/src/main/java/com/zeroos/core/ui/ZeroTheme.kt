@@ -72,7 +72,9 @@ data class ZeroSpacing(
     /** Width of a wallpaper thumbnail; its height follows the phone's shape (F6.8). */
     val thumbnailWidth: Dp = 96.dp,
     /** Height of the "ZeroOS" wordmark (D-037). */
-    val wordmarkHeight: Dp = 28.dp
+    val wordmarkHeight: Dp = 28.dp,
+    /** Width of the dot art on the wellbeing stop screens (F8.15). */
+    val stopArtWidth: Dp = 160.dp
 )
 
 /** Text sizes at "Medium"; [scaled] applies the S/M/L/XL setting (F6.4). The system font scale applies on top via sp. */

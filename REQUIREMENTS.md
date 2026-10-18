@@ -168,8 +168,11 @@ Kept for later; not built in v1.1.
 | F8.11 | Permissions (Usage Access, Accessibility) are requested only when the related toggle is first switched on; switching off stops the related background work immediately. |
 | F8.12 | Optional friction when turning off during an active limit (e.g., mindful pause or "hold for 3 s"), configurable, to prevent impulsive disabling. |
 | F8.13 | **Puns on stop screens:** the mindful pause (F8.1) shows a random line from a "pause" list (e.g. "Is this a want, or a habit?"); the limit-reached block (F8.4, F8.7) shows a random line from a "limit" list (e.g. "That's a wrap for today."). Lists of ~20 lines each (approved text in `docs/puns.md`) become string-arrays in `core/resources`. **Shuffle-bag order:** every line once before any repeat, never the same line twice in a row; the position survives restarts. |
-| F8.14 | Puns can be turned off in Settings → Wellbeing; then a plain message is shown (e.g. "Daily limit reached"). |
+| F8.14 | Puns are **always shown** on the stop screens; there is no setting to turn them off (D-045). |
 | F8.15 | **Dot animations** (monochrome, dot-matrix style, above the pun): the mindful pause shows **breathing dots** that slowly grow and shrink in time with the countdown; the limit-reached screen shows a **battery draining** to empty. They run only while the screen is visible, and are static when system "Remove animations" / reduced motion is on (NFR-A4). |
+| F8.16 | **Take a break** (D-044): when a chosen app has been in front for 15 min straight, a black screen covers it with a "break" pun (list D in `docs/puns.md`) and one button whose label is a "more time" pun (list E). The screen stays until the button is tapped; then a 5 s countdown runs on the button and the screen disappears, and the timer starts again. Back doesn't close it. Needs the Accessibility service (works outside ZeroOS, like F8.7). |
+| F8.17 | Leaving the app or turning the screen off for at least 1 min resets the take-a-break timer; shorter switches don't. Timers, not polling (NFR-P1). |
+| F8.18 | Settings → Wellbeing: "Take a break" switch, "after" (5–60 min) and "wait after tapping" (3–30 s). Apps are chosen per app in the Apps list, next to the pause and the limit. |
 
 ### F9 — Focus Mode
 
@@ -510,6 +513,10 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Intention prompt (F8.2) | Off | on/off |
 | Daily app limit (F8.3) | 30 min | 5–240 min |
 | "5 more minutes" uses/day (F8.4) | 2 | 0–5 |
+| Take a break (F8.16) | Off | on/off |
+| Take a break after (F8.18) | 15 min | 5–60 min |
+| Take a break wait after tapping (F8.18) | 5 s | 3–30 s |
+| Take a break reset gap (F8.17) | 1 min | — |
 | Disable friction (F8.12) | Hold 3 s | off / hold 3 s / pause |
 | Focus button on home (F9.1) | Shown | shown / hidden |
 | Focus durations (F9.2) | 25 / 50 / 90 min | custom 5–240 min |
@@ -519,7 +526,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | F16 mode (F16.7/F16.8) | Block | block / limit |
 | F16 daily allowance (F16.8) | 15 min | 0–120 min |
 | F16 block message (F16.9) | Random pun | random pun / custom (≤ 120 chars) |
-| Puns on pause / limit screens (F8.13, F8.14) | On | on/off |
+| Puns on pause / limit / break screens (F8.13, F8.14) | Always on (D-045) | — |
 | F16 auto-home after (F16.10) | Off | off / 3–10 s |
 | F16 pause after "Go home" before blocking again (F16.10) | 1 s | fixed |
 | F16 "Allow 5 minutes" uses/day (F16.11) | 1 | 0–5 |

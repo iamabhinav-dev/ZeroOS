@@ -166,6 +166,125 @@
     <string name="settings_gestures">Gestures</string>
     <string name="settings_about">About</string>
     <string name="settings_label_value">%1$s: %2$s</string>
+    <string name="settings_wellbeing">Wellbeing</string>
+    <string name="wellbeing_off_note">Off: no pauses, limits or tracking. Your apps and limits are kept.</string>
+    <string name="wellbeing_pause">Mindful pause</string>
+    <string name="wellbeing_pause_length">Pause length</string>
+    <string name="wellbeing_seconds">%1$d s</string>
+    <string name="wellbeing_intention">Intention prompt</string>
+    <string name="wellbeing_limits">Daily limits</string>
+    <string name="wellbeing_apps">Apps</string>
+    <string name="wellbeing_extra">"\"5 more minutes\""</string>
+    <string name="wellbeing_extra_value">%1$d a day</string>
+    <string name="wellbeing_friction">Turning off</string>
+    <string name="wellbeing_friction_hold">hold %1$d s</string>
+    <string name="wellbeing_friction_pause">pause</string>
+    <string name="wellbeing_rule_pause">pause</string>
+    <string name="wellbeing_rule_break">break</string>
+    <string name="wellbeing_outside">Also outside ZeroOS</string>
+    <string name="wellbeing_breaks">Take a break</string>
+    <string name="wellbeing_break_after">Break after</string>
+    <string name="wellbeing_break_wait">Wait after tapping</string>
+    <string name="wellbeing_minutes">%1$d min</string>
+    <string name="wellbeing_rule_join">%1$s · %2$s</string>
+    <string name="wellbeing_daily_limit">Daily limit</string>
+    <string name="wellbeing_turn_off_title">Turn off while a limit is active?</string>
+    <string name="wellbeing_hold_to_turn_off">Hold to turn off</string>
+    <string name="wellbeing_turn_off_in">You can turn it off in %1$d…</string>
+    <string name="wellbeing_turn_off">Turn off</string>
+    <string name="wellbeing_go_back">Go back</string>
+    <string name="wellbeing_go_home">Go home</string>
+    <string name="wellbeing_open_app">Open %1$s</string>
+    <string name="wellbeing_intention_hint">Why are you opening it?</string>
+    <string name="wellbeing_used_today">%1$s · %2$s used today</string>
+    <string name="wellbeing_breathing">Breathing dots</string>
+    <string name="wellbeing_battery_empty">Empty battery</string>
+    <string name="wellbeing_left_minutes">%1$dm left</string>
+    <string name="wellbeing_left_hours">%1$dh %2$dm left</string>
+    <string name="wellbeing_used_up">used up</string>
+    <string-array name="wellbeing_puns_break">
+        <item>Your attention span called. It wants a break.</item>
+        <item>Breaking news: the outside world is still there.</item>
+        <item>15 minutes in. Blink twice if you\'re okay.</item>
+        <item>Your eyes would like a word.</item>
+        <item>Stretch. Your neck has been very patient.</item>
+        <item>Scroll check: still enjoying this?</item>
+        <item>Time flies when you\'re thumbing.</item>
+        <item>Look at something far away. Like a window.</item>
+        <item>Your thumb deserves a holiday.</item>
+        <item>Still here? Still worth it?</item>
+        <item>Pause the feed. Feed yourself a glass of water.</item>
+        <item>A break now beats a headache later.</item>
+        <item>Stand up. Sit back down. Feel better?</item>
+        <item>The algorithm can wait. You can\'t.</item>
+        <item>Quick break. The app will keep your place.</item>
+        <item>You\'ve been here a while. Rest your eyes.</item>
+        <item>Even videos have intermissions.</item>
+        <item>Breathe in. Breathe out. Now decide.</item>
+        <item>Your posture called. It\'s not happy.</item>
+        <item>Fifteen minutes gone. Where to next?</item>
+    </string-array>
+    <string-array name="wellbeing_puns_break_button">
+        <item>Just one more video…</item>
+        <item>I know, I know.</item>
+        <item>Almost done, promise.</item>
+        <item>Five more minutes, mom.</item>
+        <item>This one\'s important. Really.</item>
+        <item>Let me finish this bit.</item>
+        <item>Fine, but I\'m watching.</item>
+        <item>I\'m learning something. Probably.</item>
+        <item>Just wrapping up.</item>
+        <item>One more scroll.</item>
+        <item>I\'ll stop soon. Honest.</item>
+        <item>Okay, okay. Back in a sec.</item>
+        <item>Not yet, I\'m on a roll.</item>
+        <item>Give me a moment.</item>
+        <item>Last one. Definitely.</item>
+    </string-array>
+    <string-array name="wellbeing_puns_pause">
+        <item>Breathe in. Is this really the plan?</item>
+        <item>Your thumb got here first. Did you?</item>
+        <item>Is this a want, or a habit?</item>
+        <item>Opening… your better judgement.</item>
+        <item>Five seconds to change your mind.</item>
+        <item>Plot twist: you don\'t need this right now.</item>
+        <item>What were you about to do before this?</item>
+        <item>Bored, or curious? Be honest.</item>
+        <item>Quick check: will future you thank you?</item>
+        <item>This app will still be here later. Promise.</item>
+        <item>Pause. Breathe. Decide.</item>
+        <item>Muscle memory detected.</item>
+        <item>Did you mean to open this, or did your thumb?</item>
+        <item>Is it urgent, or just shiny?</item>
+        <item>Take a breath. The feed won\'t miss you.</item>
+        <item>One deep breath before the deep dive.</item>
+        <item>Reminder: you\'re the boss of this phone.</item>
+        <item>Is there something better to do? Probably.</item>
+        <item>\"Not now\" is also an answer.</item>
+        <item>Hey, you had a plan today, right?</item>
+    </string-array>
+    <string-array name="wellbeing_puns_limit">
+        <item>That\'s a wrap for today.</item>
+        <item>You\'ve spent today\'s scroll budget.</item>
+        <item>Out of minutes, not out of life.</item>
+        <item>Game over. Real life has better graphics.</item>
+        <item>Closed for today. Come back tomorrow.</item>
+        <item>Daily limit reached. Future you says thanks.</item>
+        <item>Time\'s up. Go touch some grass.</item>
+        <item>This app has clocked out. So should you.</item>
+        <item>You\'ve hit the bottom of today\'s bucket.</item>
+        <item>The meter is full. Time for real life.</item>
+        <item>Tomorrow\'s minutes aren\'t for spending today.</item>
+        <item>Enough for today. Seriously.</item>
+        <item>Session over. No extra time.</item>
+        <item>The app needs rest. So do your eyes.</item>
+        <item>You did the scrolling. Now do the living.</item>
+        <item>Limit reached. Achievement unlocked: self-control.</item>
+        <item>That\'s all, folks.</item>
+        <item>Battery for this app: 0%. Recharge tomorrow.</item>
+        <item>You win today. The app loses.</item>
+        <item>Done for the day. Go make something.</item>
+    </string-array>
     <string name="home_settings_edit_favorites">Edit favorites</string>
     <string name="home_settings_max_favorites">Maximum favorites</string>
     <string name="home_settings_alignment">Alignment</string>

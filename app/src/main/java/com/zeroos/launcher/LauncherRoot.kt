@@ -16,6 +16,7 @@ import com.zeroos.feature.applist.AppListRoute
 import com.zeroos.feature.home.HomeRoute
 import com.zeroos.feature.onboarding.OnboardingRoute
 import com.zeroos.feature.settings.SettingsRoute
+import com.zeroos.feature.wellbeing.StopHost
 import com.zeroos.launcher.diagnostics.CrashBanner
 import com.zeroos.launcher.diagnostics.DiagnosticsRoute
 import kotlinx.coroutines.flow.Flow
@@ -46,44 +47,47 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
         true -> Unit
     }
 
-    when (screen) {
-        LauncherScreen.HOME -> Box {
-            HomeRoute(
-                onSwipeUp = { screen = LauncherScreen.APP_LIST },
-                // Swipe down opens search: the app list with its search field (F4.4).
-                // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
-                onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
-                onLongPress = { screen = LauncherScreen.SETTINGS },
-                onDoubleTap = viewModel::lockScreen
-            )
-            crashReport?.let { report ->
-                CrashBanner(
-                    onView = {
-                        viewModel.markCrashSeen()
-                        openReport = report
-                        screen = LauncherScreen.DIAGNOSTICS
-                    },
-                    onDismiss = viewModel::markCrashSeen,
-                    modifier = Modifier.align(Alignment.TopCenter).safeDrawingPadding()
+    // A wellbeing stop screen covers everything while an app waits behind it (F8.1, F8.4).
+    StopHost(homePresses) {
+        when (screen) {
+            LauncherScreen.HOME -> Box {
+                HomeRoute(
+                    onSwipeUp = { screen = LauncherScreen.APP_LIST },
+                    // Swipe down opens search: the app list with its search field (F4.4).
+                    // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
+                    onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
+                    onLongPress = { screen = LauncherScreen.SETTINGS },
+                    onDoubleTap = viewModel::lockScreen
                 )
+                crashReport?.let { report ->
+                    CrashBanner(
+                        onView = {
+                            viewModel.markCrashSeen()
+                            openReport = report
+                            screen = LauncherScreen.DIAGNOSTICS
+                        },
+                        onDismiss = viewModel::markCrashSeen,
+                        modifier = Modifier.align(Alignment.TopCenter).safeDrawingPadding()
+                    )
+                }
             }
+
+            LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
+
+            LauncherScreen.SETTINGS -> SettingsRoute(
+                onClose = { screen = LauncherScreen.HOME },
+                onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS }
+            )
+
+            LauncherScreen.DIAGNOSTICS -> DiagnosticsRoute(
+                onClose = {
+                    // Opened from a crash banner on home, or from Settings (wireframe F1).
+                    screen = if (openReport != null) LauncherScreen.HOME else LauncherScreen.SETTINGS
+                    openReport = null
+                },
+                showDebugTools = showDebugTools,
+                openReport = openReport
+            )
         }
-
-        LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
-
-        LauncherScreen.SETTINGS -> SettingsRoute(
-            onClose = { screen = LauncherScreen.HOME },
-            onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS }
-        )
-
-        LauncherScreen.DIAGNOSTICS -> DiagnosticsRoute(
-            onClose = {
-                // Opened from a crash banner on home, or from Settings (wireframe F1).
-                screen = if (openReport != null) LauncherScreen.HOME else LauncherScreen.SETTINGS
-                openReport = null
-            },
-            showDebugTools = showDebugTools,
-            openReport = openReport
-        )
     }
 }

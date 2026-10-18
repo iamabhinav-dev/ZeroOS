@@ -295,6 +295,7 @@ Build in this order:
 2. **Mindful pause (F8.1, F8.2)**: intercept launches from the launcher for flagged apps → full-screen pause with countdown + optional intention field.
 3. **Daily limits (F8.3–F8.6)**: today's usage via `UsageStatsManager.queryEvents` since local midnight; cache in Room; block screen with "5 more minutes"; remaining time in app list.
 4. **Outside-launcher enforcement (F8.7)**: Accessibility service on `TYPE_WINDOW_STATE_CHANGED` for limited packages → block overlay.
+5. **Take a break (F8.16–F8.18, D-044)**: same service; one timer per foreground session of a chosen app → break overlay with list D/E puns.
 
 ### Step 4.4 — Notification filter (F7) — deferred (D-039)
 *Not built in v1.1; kept here for later together with wireframe H9. Skip the inbox table, `feature/notifications/` and the digest work in Step 4.1 until then.*

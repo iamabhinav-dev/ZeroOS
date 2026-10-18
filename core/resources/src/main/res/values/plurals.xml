@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- "5 more minutes (2)": quantity is the extra minutes, %2$d the uses left today (F8.4). -->
+    <plurals name="wellbeing_more_minutes">
+        <item quantity="one">%1$d more minute (%2$d)</item>
+        <item quantity="other">%1$d more minutes (%2$d)</item>
+    </plurals>
+</resources>

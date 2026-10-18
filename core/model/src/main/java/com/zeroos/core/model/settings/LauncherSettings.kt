@@ -22,7 +22,9 @@ data class LauncherSettings(
     val gestures: GestureSettings = GestureSettings(),
     val appearance: AppearanceSettings = AppearanceSettings(),
     /** Phone wallpapers ZeroOS has set, for "Restore previous" (F6.8). */
-    val phoneWallpapers: PhoneWallpaperHistory = PhoneWallpaperHistory()
+    val phoneWallpapers: PhoneWallpaperHistory = PhoneWallpaperHistory(),
+    /** Mindful pause and daily limits (F8); off by default, settings kept while off (F8.10). */
+    val wellbeing: WellbeingSettings = WellbeingSettings()
 ) {
     companion object {
         const val CURRENT_VERSION = 1
@@ -57,6 +59,58 @@ data class PhoneWallpaperHistory(val home: List<String> = emptyList(), val lock:
         const val KEPT = 2
     }
 }
+
+/** F8 settings; defaults from Appendix A. Rules are per app package, so clones share their app's rule. */
+@Serializable
+data class WellbeingSettings(
+    /** Master switch (F8.8). */
+    val enabled: Boolean = false,
+    /** Mindful pause before flagged apps (F8.1, F8.9). */
+    val pauseEnabled: Boolean = true,
+    /** F8.1: 3–10 s. */
+    val pauseSeconds: Int = 5,
+    /** "Why are you opening this?" (F8.2). */
+    val intentionPrompt: Boolean = false,
+    /** Daily limits (F8.3–F8.6); needs Usage access. */
+    val limitsEnabled: Boolean = true,
+    /** "5 more minutes" per app per day (F8.4): 0–5. */
+    val extraMinutesPerDay: Int = 2,
+    /** Limits also outside ZeroOS, via the Accessibility service (F8.7). */
+    val outsideEnforcement: Boolean = false,
+    /** Take a break (F8.16–F8.18, D-044); needs Accessibility and Usage access. */
+    val breaksEnabled: Boolean = false,
+    /** F8.18: 5–60 min straight in a chosen app before the break screen. */
+    val breakAfterMinutes: Int = 15,
+    /** F8.18: 3–30 s countdown after tapping the break button. */
+    val breakWaitSeconds: Int = 5,
+    /** Friction before turning Wellbeing or limits off (F8.12). */
+    val disableFriction: DisableFriction = DisableFriction.HOLD,
+    /** Rules by package name (F8.1, F8.3; D-041). */
+    val apps: Map<String, AppRule> = emptyMap()
+) {
+    /** At least one daily limit is set and limits are on: turning off then needs the friction (F8.12). */
+    val hasActiveLimit: Boolean get() = enabled && limitsEnabled && apps.values.any { it.dailyLimitMinutes != null }
+
+    /** Apps the Accessibility service must watch: limits outside ZeroOS (F8.7) and take a break (F8.16). */
+    val watchedPackages: Set<String>
+        get() = if (!enabled) {
+            emptySet()
+        } else {
+            apps.filterValues {
+                (outsideEnforcement && limitsEnabled && it.dailyLimitMinutes != null) || (breaksEnabled && it.takeBreak)
+            }.keys
+        }
+}
+
+/** What Wellbeing does for one app (wireframe H5a). */
+@Serializable
+data class AppRule(val pause: Boolean = false, val dailyLimitMinutes: Int? = null, val takeBreak: Boolean = false) {
+    val isEmpty: Boolean get() = !pause && dailyLimitMinutes == null && !takeBreak
+}
+
+/** F8.12. */
+@Serializable
+enum class DisableFriction { OFF, HOLD, PAUSE }
 
 @Serializable
 data class HomeSettings(

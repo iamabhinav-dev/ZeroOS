@@ -215,3 +215,20 @@ to 60 MB wasn't worth the effort for a single-user launcher.
 - ~~Remaining spike check (D-028): overnight survival before Phase 4.~~ Moved into Phase 4's own manual check
   ("services survive overnight + reboot", Step 4.x Done-when) on 2026-10-17: the spike is uninstalled and ZeroOS
   gets its own services there. ZeroOS itself was fine overnight (Step 3.2).
+
+**D-043 — Intention required when the prompt is on** · 2026-10-17 · Accepted
+With the intention prompt (F8.2) on, "Open …" on the mindful pause appears only after the countdown ends *and*
+something other than spaces has been typed. The text is still kept only in memory, never saved or logged (F17.8).
+*Why:* User's choice; an empty answer made the prompt easy to skip.
+
+**D-044 — Take a break (F8.16–F8.18)** · 2026-10-18 · Accepted
+New wellbeing part: after 15 min straight in a chosen app, a black screen with a pun and a "more time" pun button;
+tapping it starts a 5 s countdown, then the screen goes away and the timer restarts. Uses the Accessibility service
+(the only public way to know which app is in front without polling); built with Step 4.3 part 3. Apps chosen per app;
+a 1 min gap resets the timer. Pun lists D and E in docs/puns.md.
+*Why:* User's request; approved with wireframe H14.
+
+**D-045 — Puns always on** · 2026-10-18 · Accepted
+The "Puns on stop screens" setting is removed: the pause, limit and break screens always show a line from their
+pun list (F8.14 changed). The plain fallback messages are gone too.
+*Why:* User's choice.

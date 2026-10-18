@@ -4,6 +4,23 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.21 (versionCode 21)
+- Puns are always shown on the pause, limit and break screens; the "Puns on stop screens" switch is gone (D-045)
+## 0.0.20 (versionCode 20)
+- Wellbeing → "Also outside ZeroOS" (needs Accessibility): the limit screen also appears over a limited app
+  opened from a notification or recents, and when its limit runs out while you're in it (F8.7)
+- Wellbeing → "Take a break" (needs Usage access and Accessibility, D-044): after 15 min straight in a chosen
+  app, a black screen with a pun and a button; tap it and the screen goes away after 5 s. Choose apps in
+  Wellbeing → Apps; "Break after" 5–60 min, "Wait after tapping" 3–30 s (F8.16–F8.18)
+## 0.0.19 (versionCode 19)
+- Mindful pause: with "Intention prompt" on, "Open …" appears only once you've typed why you're opening the
+  app (D-043)
+## 0.0.18 (versionCode 18)
+- Wellbeing (Settings → Wellbeing, off until you turn it on, F8): pick apps for a mindful pause and/or a daily
+  limit. Opening a paused app from ZeroOS shows breathing dots, a pun and a countdown before "Open …"; an
+  app whose limit is used up shows a draining battery with "Go home" and "5 more minutes" (2 a day by
+  default). Limits reset at midnight. The app list shows "12m left" / "used up" for limited apps. Turning
+  Wellbeing off while a limit is set asks you to hold for 3 s. Needs Usage access for limits
 ## 0.0.17 (versionCode 17)
 - Diagnostics: new Memory tab with ZeroOS's memory samples; a sample is taken 10 s after you leave ZeroOS (the
   previous trigger never fired on the test phone); a failed reading is logged as "memory check failed" (NFR-P4)

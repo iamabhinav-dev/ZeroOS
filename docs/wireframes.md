@@ -612,7 +612,6 @@ Extra lines per permission:
 │  Apps                            › │  → H5: which apps pause / have limits
 │  "5 more minutes"          ‹2/day› │  0–5 (F8.4)
 │  Also outside ZeroOS       ‹off›   │  needs Accessibility → H2 (F8.7)
-│  Puns on stop screens      ‹on›    │  (F8.13, F8.14)
 │  Turning off               ‹hold 3 s› │ off / hold 3 s / pause (F8.12)
 ```
 *Turning Wellbeing off while a limit is active asks for the chosen friction first (H7c).*
@@ -663,6 +662,7 @@ Full screen, shown before a flagged app opens from ZeroOS.
 │  ________________________________  │  never saved or logged (F17.8)
 │                                    │
 │  Go back            Open Instagram │  "Open …" appears when the countdown ends
+│                                    │  (and, with the prompt on, once an intention is typed, D-043)
 └────────────────────────────────────┘
 ```
 
@@ -675,13 +675,32 @@ Full screen, shown before a flagged app opens from ZeroOS.
 │            └───────────┘           │
 │                                    │
 │       That's a wrap for today.     │  random line from the limit list
-│   Instagram · 30 min used today    │  (plain "Daily limit reached" if puns off)
+│   Instagram · 30 min used today    │  (always a pun, D-045)
 │                                    │
 │  Go home        5 more minutes (1) │  (1) = uses left today; hidden at 0
 └────────────────────────────────────┘
 ```
 **H7b.** The same screen appears over other apps when "Also outside ZeroOS" is on (F8.7, Accessibility).
 **H7c. Turning off during a limit** (F8.12): "Hold to turn off" button that fills over 3 s, or the pause (H6).
+
+### H14. Take a break (F8.16–F8.18), approved 2026-10-18
+Over a chosen app after 15 min straight (Accessibility overlay).
+```
+┌────────────────────────────────────┐
+│             ·  ·  ·                │  breathing dots
+│           ·  ●  ●  ·               │
+│             ·  ·  ·                │
+│                                    │
+│  Your attention span called.       │  list D
+│  It wants a break.                 │
+│                                    │
+│        [ Just one more video… ]    │  list E; after tapping it the label
+│                                    │  becomes "5", "4" … then the screen
+│                                    │  goes away. Back does nothing.
+└────────────────────────────────────┘
+```
+Settings → Wellbeing gains "Take a break ‹off›", "After ‹15 min›", "Wait after tapping ‹5 s›"; the per-app sheet
+(H5a) gains "Take a break ‹off›".
 
 ### H8. App list with limits (F8.5)
 ```

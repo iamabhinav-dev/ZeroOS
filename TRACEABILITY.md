@@ -49,7 +49,14 @@ Update this file in the same commit as the code and tests.
 | F6.3 | ✅ | ZeroThemeTest › f6_3_everyTextStyleUsesDoto, ComponentsTest › step2_2_gallery* screenshots | Doto readable on the phone |
 | F6.4 | ✅ | ZeroThemeTest › f6_4_*, AppearanceViewModelTest › f6_* | |
 | F7.1–F7.6 | ⬜ | Deferred (D-039) | |
-| F8.1–F8.12 | ⬜ | | |
+| F8.8–F8.12 | 🟡 | WellbeingViewModelTest › f8_*, WellbeingScreensTest › f8_*, step4_3_*, HoldToConfirmTest › f8_12_* (settings and friction; stop screens in part 2) | Turn on/off with hold on the test phone |
+| F8.1, F8.2 | 🟡 | StopRulesTest › f8_1_*, LaunchGateTest › f8_1_*, StopViewModelTest › f8_1_*, StopScreensTest › f8_1_*, f8_2_*, step4_3_pauseScreenshot, AppListViewModelTest › f8_8_off…f8_1_* | Pause before a flagged app on the test phone |
+| F8.3, F8.6 | 🟡 | UsageTimeTest › f8_3_*, f8_6_* (midnight, DST, time zone, clock set back), WellbeingStateRepositoryTest › f8_6_*, WellbeingStatusTest › f8_3_*, StopViewModelTest › f8_3_* | Used time roughly matches the phone's screen time |
+| F8.4 | 🟡 | StopRulesTest › f8_4_*, StopViewModelTest › f8_4_*, StopScreensTest › f8_4_*, step4_3_limitScreenshotLight | Limit screen and "5 more minutes" on the test phone |
+| F8.5 | 🟡 | StopRulesTest › f8_5_*, AppListViewModelTest › f8_5_* | "12m left" in the app list |
+| F8.13–F8.15 | 🟡 | PunBagTest › f8_13_*, WellbeingStateRepositoryTest › f8_13_*, StopScreensTest › f8_14_* (always a pun, D-045), screenshots | Dots animate; still with "Remove animations" |
+| F8.7 | 🟡 | OutsideRulesTest › f8_7_*, OutsideEnforcerTest › f8_7_*, f8_4_*, WellbeingViewModelTest › f8_11_f8_16_* | Limit screen over the app when opened from a notification or recents |
+| F8.16–F8.18 | 🟡 | OutsideRulesTest › f8_16_*, f8_17_*, f8_18_*, OutsideWatcherTest › f8_16_*, OutsideEnforcerTest › f8_16_*, f8_17_*, StopScreensTest › f8_16_*, step4_3_breakScreenshot, WellbeingViewModelTest › f8_16_f8_18_*, WellbeingScreensTest › f8_9_* | Break after 15 min on YouTube; button countdown; Back does nothing |
 | F9.1–F9.7 | ⬜ | | |
 | F10.1–F10.13 | ⬜ | | Compare with the phone's screen-time screen |
 | F11.1–F11.3 | ⬜ | | |

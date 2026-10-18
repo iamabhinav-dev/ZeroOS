@@ -9,6 +9,8 @@ import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.visibleApps
 import com.zeroos.core.data.settings.AddFavoriteResult
 import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.wellbeing.LaunchGate
+import com.zeroos.core.data.wellbeing.WellbeingStatus
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
 import com.zeroos.core.logging.warn
@@ -17,10 +19,16 @@ import com.zeroos.core.model.settings.AppListSettings
 import com.zeroos.core.model.settings.LauncherSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /** What the app list shows (F2, wireframe B). */
@@ -33,19 +41,24 @@ data class AppListUiState(
     /** For the long-press menu (F2.8): favorites, renamed apps and the favorites limit. */
     val favoriteKeys: Set<String> = emptySet(),
     val renamedKeys: Set<String> = emptySet(),
-    val maxFavorites: Int = 0
+    val maxFavorites: Int = 0,
+    /** Minutes left today per limited package (F8.5); empty when limits are off. */
+    val minutesLeft: Map<String, Int> = emptyMap()
 ) {
     val showNoMatch: Boolean get() = !loading && query.isNotBlank() && results.isEmpty()
 }
 
-/** App list with search (Step 2.4). The query is never logged (F17.8). */
+/** App list with search (Step 2.4). The query is never logged (F17.8). Launches go through [LaunchGate] (F8.1, F8.4). */
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class AppListViewModel @Inject constructor(
-    private val repository: AppsRepository,
+    repository: AppsRepository,
     settingsRepository: SettingsRepository,
     private val actions: AppActions,
     private val logger: Logger,
-    private val savedState: SavedStateHandle
+    private val savedState: SavedStateHandle,
+    private val gate: LaunchGate,
+    status: WellbeingStatus
 ) : ViewModel() {
 
     private class Indexed(val search: AppSearchIndex, val settings: LauncherSettings)
@@ -54,7 +67,17 @@ class AppListViewModel @Inject constructor(
         Indexed(AppSearchIndex(visibleApps(apps, settings)), settings)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
 
-    val state: StateFlow<AppListUiState> = combine(index, savedState.getStateFlow(KEY_QUERY, "")) { indexed, query ->
+    private val usageRefresh = MutableStateFlow(0)
+
+    /** Read again each time the list comes to the front (F8.5); no usage is read while limits are off (F8.8). */
+    private val minutesLeft = combine(settingsRepository.settings.map { it.wellbeing }.distinctUntilChanged(), usageRefresh) { w, _ -> w }
+        .mapLatest { status.minutesLeft(it) }
+
+    val state: StateFlow<AppListUiState> = combine(
+        index,
+        savedState.getStateFlow(KEY_QUERY, ""),
+        minutesLeft
+    ) { indexed, query, left ->
         if (indexed == null) {
             AppListUiState(query = query)
         } else {
@@ -66,7 +89,8 @@ class AppListViewModel @Inject constructor(
                 loading = false,
                 favoriteKeys = s.favorites.toSet(),
                 renamedKeys = s.renamedApps.keys,
-                maxFavorites = s.home.maxFavorites
+                maxFavorites = s.home.maxFavorites,
+                minutesLeft = left
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), AppListUiState())
@@ -111,17 +135,18 @@ class AppListViewModel @Inject constructor(
         return single != null && launch(single)
     }
 
-    /** Returns true if the app started. */
-    fun launch(app: AppEntry): Boolean = repository.launch(app.key)
+    /** Returns true if the app started or its stop screen will show. */
+    fun launch(app: AppEntry): Boolean = gate.launch(app)
+
+    fun refreshUsage() = usageRefresh.update { it + 1 }
 
     fun clearQuery() {
         savedState[KEY_QUERY] = ""
     }
 
-    /** Web search, Play Store search or the uninstall dialog opened (F2.6, F2.8); queries aren't logged. */
-    fun onExternalSearch(target: String) = logger.info(TAG, "opened: $target")
-
-    fun onExternalSearchFailed(target: String, e: Exception) = logger.warn(TAG, "could not open $target", e)
+    /** Web or Play Store search opened, or [failure] if it couldn't (F2.6); queries aren't logged. */
+    fun onExternalSearch(target: String, failure: Exception? = null) =
+        if (failure == null) logger.info(TAG, "opened: $target") else logger.warn(TAG, "could not open $target", failure)
 
     private companion object {
         const val TAG = "applist"
