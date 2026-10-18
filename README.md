@@ -16,8 +16,9 @@ A personal, minimalist, text-first Android launcher. Sideloaded on my own phone;
 - Read this README, [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) first.
   **Installing ZeroOS means you have read and understood them and agree to them.**
 - **Use at your own risk.** ZeroOS replaces your home screen and may cause problems (the phone hard to use,
-  missed notifications or alarms, lost settings, conflicts with your phone's software). You install it on your
-  own judgement; the author and owner of this repository is not responsible for any damage or loss.
+  missed notifications or alarms, lost settings, conflicts with your phone's software), including problems not
+  listed here or not known when it was released. You install it on your own judgement; the author and owner of
+  this repository is not responsible for any damage or loss.
 
 ## Setup (command line, no Android Studio)
 - JDK 21 in `~/.local/jdk-21` (builds Java 17 bytecode; Java 21 is needed by Robolectric for API 37)
