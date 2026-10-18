@@ -1,24 +1,34 @@
-ZeroOS Launcher — Source-Available Licence
+ZeroOS Launcher — Personal Use Licence
 Copyright (c) 2026 Abhinav Kumar Singh. All rights reserved.
 
-The source code, documentation, images and compiled builds in this repository ("the Software") are made
-public for reading and reference only. No licence to use the Software is granted except as written below.
+This licence covers the ZeroOS source code, documentation and images in this repository, the APKs published on
+its GitHub Releases page, and any APK or other build compiled from this source (together, "the Software").
 
-1. You MAY view and read the source code, and fork it on GitHub only as GitHub's Terms of Service allow.
+1. PERSONAL USE ALLOWED
+   You may download, install and use the Software, and build it from source, only for your own personal,
+   non-commercial use on devices you own.
 
-2. You may NOT, without the copyright holder's prior written permission:
-   a. install, run or otherwise use any release APK, or any APK or other build you compile from this source;
-   b. upload, publish, list or distribute the Software, any APK built from it, or any modified version, on any
-      app store or distribution platform, including Google Play, F-Droid, Samsung Galaxy Store, Huawei
-      AppGallery, Amazon Appstore, APKMirror, APKPure, or any similar service;
-   c. copy, modify, merge, sell, sublicense or redistribute the Software or any part of it, in source or
-      compiled form;
-   d. use the name "ZeroOS" or its logo for any app or product.
+2. NO UPLOADING OR SHARING
+   You may not upload, publish, host, mirror, list, share or otherwise distribute the Software or any APK of it,
+   whether unchanged or modified, anywhere. This includes, but is not limited to:
+   - app stores: Google Play, F-Droid, Samsung Galaxy Store, Huawei AppGallery, Amazon Appstore, Xiaomi
+     GetApps, and any other store;
+   - APK sites and mirrors: APKMirror, APKPure, Uptodown and similar;
+   - websites, file-sharing services, cloud links, messaging groups, forums and torrents.
+   To let someone else use ZeroOS, point them to this repository so they can get it here themselves.
 
-3. Third-party parts keep their own licences: the Doto font is under the SIL Open Font License 1.1
-   (see core/ui/src/main/assets/licenses/doto-OFL.txt), and libraries are under their own licences.
+3. NO OTHER RIGHTS
+   You may not sell, rent, sublicense or use the Software commercially; distribute modified versions; remove or
+   change this notice; or use the name "ZeroOS" or its logo for another app or product. Forking on GitHub is
+   allowed only as far as GitHub's Terms of Service require for public repositories, and only under these terms.
 
-4. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE
+4. THIRD-PARTY PARTS
+   Libraries and the Doto font included in the APKs keep their own licences; see THIRD_PARTY_NOTICES.md and the
+   LICENSES/ folder. Nothing here limits your rights under those licences for those parts.
+
+5. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE
    COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY ARISING FROM THE SOFTWARE OR ITS USE.
 
-For permission requests, contact the owner through their GitHub profile.
+Breaking these terms ends your permission to use the Software. For any other use, ask the owner through their
+GitHub profile.

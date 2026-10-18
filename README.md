@@ -90,5 +90,7 @@ Rules: bump `versionCode` for every install; never install an APK built from old
   **Apps → Default apps → Home app** → the stock launcher (menu names may differ slightly on the phone).
 
 ## Licence
-Source-available, all rights reserved: the code may be read, but neither it nor any APK built from it may be
-used, redistributed or uploaded to any app store without permission. See [LICENSE](LICENSE).
+Personal use only. You may install the release APKs, or build ZeroOS yourself, for your own non-commercial use.
+You may **not** upload or share the code or any APK anywhere: no app stores (Google Play, F-Droid, …), APK
+sites, websites or file-sharing. See [LICENSE](LICENSE). Libraries and the Doto font keep their own licences:
+see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [LICENSES/](LICENSES/).
