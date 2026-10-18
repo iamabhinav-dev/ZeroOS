@@ -3,6 +3,7 @@ package com.zeroos.launcher
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.zeroos.core.data.system.DefaultHomeCheck
 import com.zeroos.core.data.system.SystemActions
 import com.zeroos.core.logging.CrashNotice
 import com.zeroos.core.logging.DiagnosticsSettings
@@ -19,6 +20,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -60,6 +62,8 @@ class LauncherViewModelTest {
     }
 
     private val actions = FakeSystemActions()
+    private var isDefault = true
+    private val home = DefaultHomeCheck { isDefault }
 
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
@@ -84,20 +88,34 @@ class LauncherViewModelTest {
     @Test
     fun f17_10_crashBannerShowsOncePerCrash() {
         val name = store.writeCrashReport("boom").name
-        val first = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions)
+        val first = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions, home)
         assertEquals(name, first.crashReport.value)
 
         first.markCrashSeen()
         assertNull(first.crashReport.value)
         assertNull(
-            LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions).crashReport.value
+            LauncherViewModel(
+                CrashNotice(store, settings),
+                logger,
+                Dispatchers.Unconfined,
+                settingsRepository(),
+                actions,
+                home
+            ).crashReport.value
         )
     }
 
     @Test
     fun f17_10_noBannerWithoutCrash() {
         assertNull(
-            LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions).crashReport.value
+            LauncherViewModel(
+                CrashNotice(store, settings),
+                logger,
+                Dispatchers.Unconfined,
+                settingsRepository(),
+                actions,
+                home
+            ).crashReport.value
         )
     }
 
@@ -108,18 +126,42 @@ class LauncherViewModelTest {
             logger,
             Dispatchers.Unconfined,
             settingsRepository(),
-            actions
+            actions,
+            home
         ).onScreenShown(LauncherScreen.APP_LIST)
         assertEquals(listOf("nav: screen: app list"), logged)
     }
 
     @Test
     fun f4_4_f4_5_shadeAndLockGoThroughAccessibility() {
-        val vm = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions)
+        val vm = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions, home)
         assertEquals("not running: swipe down falls back to search", false, vm.openNotificationShade())
         actions.running.value = true
         assertEquals(true, vm.openNotificationShade())
         vm.lockScreen()
         assertEquals(listOf("shade", "lock"), actions.done)
+    }
+
+    @Test
+    fun f14_7_lineShownWhileNotTheHomeAppAndBackAfterDismissOnNextResume() {
+        val vm = LauncherViewModel(CrashNotice(store, settings), logger, Dispatchers.Unconfined, settingsRepository(), actions, home)
+        vm.refreshHomeApp()
+        assertEquals(false, vm.notHomeApp.value)
+
+        isDefault = false
+        vm.refreshHomeApp()
+        assertEquals(true, vm.notHomeApp.value)
+        assertTrue(logged.contains("nav: not the default home app"))
+
+        vm.dismissHomeApp()
+        assertEquals(false, vm.notHomeApp.value)
+        // Next time ZeroOS comes to the front it shows again.
+        vm.refreshHomeApp()
+        assertEquals(true, vm.notHomeApp.value)
+
+        // Set as default again: the line goes away.
+        isDefault = true
+        vm.refreshHomeApp()
+        assertEquals(false, vm.notHomeApp.value)
     }
 }

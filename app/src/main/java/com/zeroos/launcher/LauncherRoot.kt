@@ -1,6 +1,10 @@
 package com.zeroos.launcher
 
+import android.content.ActivityNotFoundException
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,8 +14,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zeroos.core.data.system.defaultHomeIntent
 import com.zeroos.feature.applist.AppListRoute
 import com.zeroos.feature.home.HomeRoute
 import com.zeroos.feature.onboarding.OnboardingRoute
@@ -31,6 +38,14 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
     var openReport by rememberSaveable { mutableStateOf<String?>(null) }
     val crashReport by viewModel.crashReport.collectAsStateWithLifecycle()
     val onboardingCompleted by viewModel.onboardingCompleted.collectAsStateWithLifecycle()
+    val notHomeApp by viewModel.notHomeApp.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    // Checked each time ZeroOS comes to the front, and again when the default-home dialog closes (F14.7).
+    LifecycleResumeEffect(Unit) {
+        viewModel.refreshHomeApp()
+        onPauseOrDispose {}
+    }
+    val homeDialog = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { viewModel.refreshHomeApp() }
 
     LaunchedEffect(homePresses) {
         homePresses.collect {
@@ -59,16 +74,29 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
                     onLongPress = { screen = LauncherScreen.SETTINGS },
                     onDoubleTap = viewModel::lockScreen
                 )
-                crashReport?.let { report ->
-                    CrashBanner(
-                        onView = {
-                            viewModel.markCrashSeen()
-                            openReport = report
-                            screen = LauncherScreen.DIAGNOSTICS
-                        },
-                        onDismiss = viewModel::markCrashSeen,
-                        modifier = Modifier.align(Alignment.TopCenter).safeDrawingPadding()
-                    )
+                Column(Modifier.align(Alignment.TopCenter).safeDrawingPadding()) {
+                    crashReport?.let { report ->
+                        CrashBanner(
+                            onView = {
+                                viewModel.markCrashSeen()
+                                openReport = report
+                                screen = LauncherScreen.DIAGNOSTICS
+                            },
+                            onDismiss = viewModel::markCrashSeen
+                        )
+                    }
+                    if (notHomeApp) {
+                        NotHomeAppBanner(
+                            onSetDefault = {
+                                try {
+                                    homeDialog.launch(defaultHomeIntent(context))
+                                } catch (e: ActivityNotFoundException) {
+                                    viewModel.onHomeDialogFailed(e)
+                                }
+                            },
+                            onDismiss = viewModel::dismissHomeApp
+                        )
+                    }
                 }
             }
 

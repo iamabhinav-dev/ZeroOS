@@ -2,7 +2,9 @@ package com.zeroos.launcher
 
 import android.content.Context
 import com.zeroos.core.data.permissions.SpecialPermissions
+import com.zeroos.core.data.system.DefaultHomeCheck
 import com.zeroos.core.data.system.SystemActions
+import com.zeroos.core.data.system.isDefaultHome
 import com.zeroos.core.logging.Logger
 import com.zeroos.launcher.accessibility.AccessibilityBridge
 import dagger.Module
@@ -22,4 +24,8 @@ object SystemModule {
 
     @Provides
     fun systemActions(bridge: AccessibilityBridge): SystemActions = bridge
+
+    @Provides
+    fun defaultHomeCheck(@ApplicationContext context: Context): DefaultHomeCheck =
+        DefaultHomeCheck { isDefaultHome(context.packageManager, context.packageName) }
 }

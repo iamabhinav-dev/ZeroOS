@@ -3,10 +3,12 @@ package com.zeroos.launcher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.system.DefaultHomeCheck
 import com.zeroos.core.data.system.SystemActions
 import com.zeroos.core.logging.CrashNotice
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
+import com.zeroos.core.logging.warn
 import com.zeroos.core.model.settings.AppearanceSettings
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.io.File
@@ -36,7 +38,8 @@ class LauncherViewModel @Inject constructor(
     private val logger: Logger,
     private val ioDispatcher: CoroutineDispatcher,
     settingsRepository: SettingsRepository,
-    private val systemActions: SystemActions
+    private val systemActions: SystemActions,
+    private val defaultHome: DefaultHomeCheck
 ) : ViewModel() {
 
     /** Theme, text size, wallpaper and status bar for the whole app (F6). */
@@ -66,6 +69,26 @@ class LauncherViewModel @Inject constructor(
         unseenReport?.let(crashNotice::markSeen)
         mutableCrashReport.value = null
     }
+
+    private val mutableNotHomeApp = MutableStateFlow(false)
+
+    /** True while home should show "ZeroOS isn't your home app" (F14.7). */
+    val notHomeApp: StateFlow<Boolean> = mutableNotHomeApp.asStateFlow()
+
+    /** ZeroOS came to the front (or the home dialog closed): check again; a dismissed line comes back (F14.7). */
+    fun refreshHomeApp() {
+        val isDefault = defaultHome.isDefaultHome()
+        if (!isDefault) logger.info(TAG, "not the default home app")
+        mutableNotHomeApp.value = !isDefault
+    }
+
+    fun dismissHomeApp() {
+        logger.info(TAG, "not-home-app line dismissed")
+        mutableNotHomeApp.value = false
+    }
+
+    /** The default-home dialog couldn't open (F14.7). */
+    fun onHomeDialogFailed(e: Exception) = logger.warn(TAG, "could not open the default home dialog", e)
 
     /** Swipe down on home: the notification shade if Accessibility runs; false means "open search" (F4.4). */
     fun openNotificationShade(): Boolean = systemActions.openNotificationShade()
