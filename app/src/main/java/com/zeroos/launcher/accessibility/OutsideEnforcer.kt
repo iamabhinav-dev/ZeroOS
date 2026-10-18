@@ -18,12 +18,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-/** Everything the overlay window draws (wireframes H7b, H14); [pun]/[buttonPun] are null with puns off (F8.14). */
+/** Everything the overlay window draws (wireframes H7b, H14); [buttonPun] is only used on the break screen. */
 data class OverlayContent(
     val overlay: Overlay,
     val app: AppEntry,
-    val pun: Int?,
-    val buttonPun: Int?,
+    val pun: Int,
+    val buttonPun: Int,
     val appearance: AppearanceSettings
 )
 
@@ -56,11 +56,10 @@ class OverlayContentFactory(
         val current = settings.settings.first()
         val pkg = overlay.packageName
         val app = visibleApps(apps.apps.first(), current).firstOrNull { it.key.packageName == pkg } ?: AppEntry(AppKey(pkg, "", 0), pkg)
-        val puns = current.wellbeing.puns
-        val (pun, button) = when {
-            !puns -> null to null
-            overlay is Overlay.Limit -> state.nextPun(PunList.LIMIT, sizes.limit) to null
-            else -> state.nextPun(PunList.BREAK, sizes.breakLine) to state.nextPun(PunList.BREAK_BUTTON, sizes.breakButton)
+        // Puns are always shown (D-045).
+        val (pun, button) = when (overlay) {
+            is Overlay.Limit -> state.nextPun(PunList.LIMIT, sizes.limit) to 0
+            is Overlay.Break -> state.nextPun(PunList.BREAK, sizes.breakLine) to state.nextPun(PunList.BREAK_BUTTON, sizes.breakButton)
         }
         return OverlayContent(overlay, app, pun, button, current.appearance)
     }

@@ -77,8 +77,6 @@ data class WellbeingSettings(
     val extraMinutesPerDay: Int = 2,
     /** Limits also outside ZeroOS, via the Accessibility service (F8.7). */
     val outsideEnforcement: Boolean = false,
-    /** Random puns on the stop screens (F8.13, F8.14). */
-    val puns: Boolean = true,
     /** Take a break (F8.16–F8.18, D-044); needs Accessibility and Usage access. */
     val breaksEnabled: Boolean = false,
     /** F8.18: 5–60 min straight in a chosen app before the break screen. */

@@ -164,9 +164,9 @@ class StopViewModelTest {
     }
 
     @Test
-    fun f8_14_punsOffGivesNoLine() = runTest(UnconfinedTestDispatcher()) {
-        val (vm, _) = opened(WellbeingSettings(enabled = true, puns = false, apps = rules))
-        assertNull(vm.state.first { it.screen != null }.pun)
+    fun f8_14_punAlwaysDrawn() = runTest(UnconfinedTestDispatcher()) {
+        val (vm, _) = opened(WellbeingSettings(enabled = true, apps = rules))
+        assertTrue(vm.state.first { it.screen != null }.pun in 0 until 20)
     }
 }
 
@@ -180,7 +180,7 @@ class StopScreensTest {
     private val calls = mutableListOf<String>()
     private val actions = StopActions(onOpen = { calls += "open" }, onMoreMinutes = { calls += "more" }, onBack = { calls += "back" })
 
-    private fun show(screen: StopScreen, pun: Int? = 2, theme: ThemeMode = ThemeMode.DARK) =
+    private fun show(screen: StopScreen, pun: Int = 2, theme: ThemeMode = ThemeMode.DARK) =
         compose.setContent { ZeroTheme(theme) { StopScreen(StopUiState(instagram, screen, pun), actions) } }
 
     @Test
@@ -228,15 +228,6 @@ class StopScreensTest {
     }
 
     @Test
-    fun f8_14_plainMessagesWithoutPuns() {
-        var screen by mutableStateOf<StopScreen>(StopScreen.Pause(3, false))
-        compose.setContent { ZeroTheme { StopScreen(StopUiState(instagram, screen, null), actions) } }
-        compose.onNodeWithText("Take a breath first.").assertExists()
-        screen = StopScreen.Limit(30, 1)
-        compose.onNodeWithText("Daily limit reached").assertExists()
-    }
-
-    @Test
     fun step4_3_pauseScreenshot() {
         compose.mainClock.autoAdvance = false
         show(StopScreen.Pause(5, intentionPrompt = true))
@@ -268,12 +259,12 @@ class StopScreensTest {
     }
 
     @Test
-    fun f8_14_breakWithoutPuns() {
+    fun f8_14_alwaysAPunEvenIfTheListGotShorter() {
         // The breath repeats while the screen is up, so Compose is never idle on its own.
         compose.mainClock.autoAdvance = false
-        compose.setContent { ZeroTheme { BreakScreen(pun = null, buttonPun = null, waitSeconds = 3, onDone = {}) } }
-        compose.onNodeWithText("Time for a break").assertExists()
-        compose.onNodeWithText("Continue").assertExists()
+        compose.setContent { ZeroTheme { BreakScreen(pun = 99, buttonPun = 99, waitSeconds = 3, onDone = {}) } }
+        compose.onNodeWithText("Your attention span called. It wants a break.").assertExists()
+        compose.onNodeWithText("Just one more video…").assertExists()
     }
 
     @Test

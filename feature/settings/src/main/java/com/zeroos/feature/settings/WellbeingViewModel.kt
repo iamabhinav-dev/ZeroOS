@@ -43,7 +43,6 @@ enum class WellbeingToggle(val logName: String, val apply: (WellbeingSettings, B
     PAUSE("pause", { s, on -> s.copy(pauseEnabled = on) }),
     INTENTION("intentionPrompt", { s, on -> s.copy(intentionPrompt = on) }),
     LIMITS("limits", { s, on -> s.copy(limitsEnabled = on) }),
-    PUNS("puns", { s, on -> s.copy(puns = on) }),
     OUTSIDE("outsideEnforcement", { s, on -> s.copy(outsideEnforcement = on) }),
     BREAKS("breaks", { s, on -> s.copy(breaksEnabled = on) })
 }

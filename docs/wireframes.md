@@ -612,7 +612,6 @@ Extra lines per permission:
 │  Apps                            › │  → H5: which apps pause / have limits
 │  "5 more minutes"          ‹2/day› │  0–5 (F8.4)
 │  Also outside ZeroOS       ‹off›   │  needs Accessibility → H2 (F8.7)
-│  Puns on stop screens      ‹on›    │  (F8.13, F8.14)
 │  Turning off               ‹hold 3 s› │ off / hold 3 s / pause (F8.12)
 ```
 *Turning Wellbeing off while a limit is active asks for the chosen friction first (H7c).*
@@ -676,7 +675,7 @@ Full screen, shown before a flagged app opens from ZeroOS.
 │            └───────────┘           │
 │                                    │
 │       That's a wrap for today.     │  random line from the limit list
-│   Instagram · 30 min used today    │  (plain "Daily limit reached" if puns off)
+│   Instagram · 30 min used today    │  (always a pun, D-045)
 │                                    │
 │  Go home        5 more minutes (1) │  (1) = uses left today; hidden at 0
 └────────────────────────────────────┘

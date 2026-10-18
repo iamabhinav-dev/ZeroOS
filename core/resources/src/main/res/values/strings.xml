@@ -176,7 +176,6 @@
     <string name="wellbeing_apps">Apps</string>
     <string name="wellbeing_extra">"\"5 more minutes\""</string>
     <string name="wellbeing_extra_value">%1$d a day</string>
-    <string name="wellbeing_puns">Puns on stop screens</string>
     <string name="wellbeing_friction">Turning off</string>
     <string name="wellbeing_friction_hold">hold %1$d s</string>
     <string name="wellbeing_friction_pause">pause</string>
@@ -193,8 +192,6 @@
     <string name="wellbeing_hold_to_turn_off">Hold to turn off</string>
     <string name="wellbeing_turn_off_in">You can turn it off in %1$d…</string>
     <string name="wellbeing_turn_off">Turn off</string>
-    <string name="wellbeing_pause_plain">Take a breath first.</string>
-    <string name="wellbeing_limit_plain">Daily limit reached</string>
     <string name="wellbeing_go_back">Go back</string>
     <string name="wellbeing_go_home">Go home</string>
     <string name="wellbeing_open_app">Open %1$s</string>
@@ -205,8 +202,6 @@
     <string name="wellbeing_left_minutes">%1$dm left</string>
     <string name="wellbeing_left_hours">%1$dh %2$dm left</string>
     <string name="wellbeing_used_up">used up</string>
-    <string name="wellbeing_break_plain">Time for a break</string>
-    <string name="wellbeing_continue">Continue</string>
     <string-array name="wellbeing_puns_break">
         <item>Your attention span called. It wants a break.</item>
         <item>Breaking news: the outside world is still there.</item>

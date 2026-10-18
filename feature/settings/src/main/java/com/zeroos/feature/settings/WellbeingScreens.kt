@@ -186,7 +186,6 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
                 { actions.onCycle(WellbeingCycle.BREAK_WAIT) }
             )
         }
-        item { ToggleRow(stringResource(R.string.wellbeing_puns), settings.puns, { actions.onToggle(WellbeingToggle.PUNS, it) }) }
         item {
             SettingRow(stringResource(R.string.wellbeing_friction), frictionLabel(settings.disableFriction), {
                 actions.onCycle(WellbeingCycle.FRICTION)

@@ -95,7 +95,7 @@ fun StopScreen(state: StopUiState, actions: StopActions) {
 
 /** Wireframe H6 (F8.1, F8.2, F8.13, F8.15). The intention is kept only in memory: never saved or logged (F17.8). */
 @Composable
-private fun PauseScreen(app: AppEntry, screen: StopScreen.Pause, pun: Int?, actions: StopActions) {
+private fun PauseScreen(app: AppEntry, screen: StopScreen.Pause, pun: Int, actions: StopActions) {
     var left by rememberSaveable { mutableIntStateOf(screen.seconds) }
     var intention by remember { mutableStateOf("") }
     LaunchedEffect(Unit) {
@@ -116,7 +116,7 @@ private fun PauseScreen(app: AppEntry, screen: StopScreen.Pause, pun: Int?, acti
             }
         }
     ) {
-        Line(pun?.let { stringArrayResource(R.array.wellbeing_puns_pause).getOrNull(it) } ?: stringResource(R.string.wellbeing_pause_plain))
+        Line(punLine(R.array.wellbeing_puns_pause, pun))
         Text(
             if (left > 0) left.toString() else "",
             color = ZeroTheme.tokens.colors.text,
@@ -130,7 +130,7 @@ private fun PauseScreen(app: AppEntry, screen: StopScreen.Pause, pun: Int?, acti
 
 /** Wireframe H7 (F8.4, F8.13, F8.15). */
 @Composable
-private fun LimitScreen(app: AppEntry, screen: StopScreen.Limit, pun: Int?, actions: StopActions) {
+private fun LimitScreen(app: AppEntry, screen: StopScreen.Limit, pun: Int, actions: StopActions) {
     StopLayout(
         art = { DrainingBattery(still = rememberReducedMotion()) },
         buttons = {
@@ -144,7 +144,7 @@ private fun LimitScreen(app: AppEntry, screen: StopScreen.Limit, pun: Int?, acti
             }
         }
     ) {
-        Line(pun?.let { stringArrayResource(R.array.wellbeing_puns_limit).getOrNull(it) } ?: stringResource(R.string.wellbeing_limit_plain))
+        Line(punLine(R.array.wellbeing_puns_limit, pun))
         Text(
             stringResource(
                 R.string.wellbeing_used_today,
@@ -174,6 +174,10 @@ private fun StopLayout(art: @Composable () -> Unit, buttons: @Composable () -> U
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) { buttons() }
     }
 }
+
+/** Line [index] of a pun list (F8.13); the first line if the list got shorter since it was drawn. */
+@Composable
+internal fun punLine(list: Int, index: Int): String = stringArrayResource(list).let { it.getOrElse(index) { _ -> it.first() } }
 
 @Composable
 internal fun Line(text: String) = Text(

@@ -89,7 +89,7 @@ class WellbeingScreensTest {
     @Test
     fun f8_9_partsAndOptionsWhenOn() {
         show(WellbeingSettings(enabled = true))
-        listOf("Mindful pause", "Intention prompt", "Daily limits", "Also outside ZeroOS", "Take a break", "Puns on stop screens").forEach {
+        listOf("Mindful pause", "Intention prompt", "Daily limits", "Also outside ZeroOS", "Take a break").forEach {
             compose.onNodeWithText(it).performClick()
         }
         listOf("Pause length", "\"5 more minutes\"", "Break after", "Wait after tapping", "Turning off", "Apps").forEach {
@@ -97,12 +97,14 @@ class WellbeingScreensTest {
         }
         assertEquals(
             listOf(
-                "PAUSE:false", "INTENTION:true", "LIMITS:false", "OUTSIDE:true", "BREAKS:true", "PUNS:false",
+                "PAUSE:false", "INTENTION:true", "LIMITS:false", "OUTSIDE:true", "BREAKS:true",
                 "PAUSE_SECONDS", "EXTRA_MINUTES", "BREAK_AFTER", "BREAK_WAIT", "FRICTION", "apps"
             ),
             calls
         )
         listOf("2 a day", "15 min", "hold 3 s").forEach { compose.onNodeWithText(it).assertExists() }
+        // Puns are always on: no switch (D-045).
+        compose.onNodeWithText("Puns on stop screens").assertDoesNotExist()
     }
 
     @Test
@@ -222,7 +224,6 @@ class WellbeingViewModelTest {
         assertEquals(2, s.extraMinutesPerDay)
         assertEquals(DisableFriction.HOLD, s.disableFriction)
         assertFalse(s.intentionPrompt)
-        assertTrue(s.puns)
     }
 
     @Test
@@ -291,7 +292,7 @@ class WellbeingViewModelTest {
             ToggleOutcome.APPLY,
             toggleOutcome(limited.copy(disableFriction = DisableFriction.OFF), null, WellbeingToggle.ENABLED, false)
         )
-        assertEquals(ToggleOutcome.APPLY, toggleOutcome(limited, null, WellbeingToggle.PUNS, false))
+        assertEquals(ToggleOutcome.APPLY, toggleOutcome(limited, null, WellbeingToggle.PAUSE, false))
         assertEquals(ToggleOutcome.ASK, toggleOutcome(WellbeingSettings(), SpecialPermission.USAGE_ACCESS, WellbeingToggle.ENABLED, true))
         assertEquals(ToggleOutcome.APPLY, toggleOutcome(WellbeingSettings(), null, WellbeingToggle.ENABLED, true))
         assertEquals(
@@ -312,7 +313,7 @@ class WellbeingViewModelTest {
         assertEquals(SpecialPermission.USAGE_ACCESS, neededPermission(WellbeingToggle.BREAKS, s, false, false))
         assertEquals(SpecialPermission.ACCESSIBILITY, neededPermission(WellbeingToggle.BREAKS, s, true, false))
         assertEquals(null, neededPermission(WellbeingToggle.BREAKS, s, true, true))
-        assertEquals(null, neededPermission(WellbeingToggle.PUNS, s, false, false))
+        assertEquals(null, neededPermission(WellbeingToggle.PAUSE, s, false, false))
     }
 
     @Test

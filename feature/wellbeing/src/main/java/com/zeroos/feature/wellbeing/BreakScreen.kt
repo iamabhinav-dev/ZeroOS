@@ -33,11 +33,11 @@ import kotlinx.coroutines.delay
 
 /**
  * Take a break (wireframe H14, F8.16): a line from list D and one button with a line from list E ([pun] and
- * [buttonPun] index those lists; null = puns off, F8.14). The screen stays until the button is tapped; then the
+ * [buttonPun] index those lists). The screen stays until the button is tapped; then the
  * button counts down [waitSeconds] and [onDone] removes the screen. There is no other way out.
  */
 @Composable
-fun BreakScreen(pun: Int?, buttonPun: Int?, waitSeconds: Int, onDone: () -> Unit) {
+fun BreakScreen(pun: Int, buttonPun: Int, waitSeconds: Int, onDone: () -> Unit) {
     val tokens = ZeroTheme.tokens
     var left by remember { mutableStateOf<Int?>(null) }
     val done by rememberUpdatedState(onDone)
@@ -60,17 +60,14 @@ fun BreakScreen(pun: Int?, buttonPun: Int?, waitSeconds: Int, onDone: () -> Unit
             Modifier.fillMaxWidth().padding(horizontal = tokens.spacing.screenGutter, vertical = tokens.spacing.sectionGap),
             verticalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap)
         ) {
-            Line(
-                pun?.let { stringArrayResource(R.array.wellbeing_puns_break).getOrNull(it) }
-                    ?: stringResource(R.string.wellbeing_break_plain)
-            )
+            Line(punLine(R.array.wellbeing_puns_break, pun))
         }
         Spacer(Modifier.weight(1f))
         val countdown = left
         if (countdown == null) {
-            val label = buttonPun?.let { stringArrayResource(R.array.wellbeing_puns_break_button).getOrNull(it) }
-                ?: stringResource(R.string.wellbeing_continue)
-            TextAction(label, { left = waitSeconds }, modifier = Modifier.testTag(StopTestTags.BREAK_BUTTON))
+            TextAction(punLine(R.array.wellbeing_puns_break_button, buttonPun), {
+                left = waitSeconds
+            }, modifier = Modifier.testTag(StopTestTags.BREAK_BUTTON))
         } else {
             Text(
                 countdown.toString(),

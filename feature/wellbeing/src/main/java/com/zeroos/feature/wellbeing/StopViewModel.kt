@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /** The stop screen for [app]: null [screen] while today's usage is still being read. [pun] indexes the line list. */
-data class StopUiState(val app: AppEntry? = null, val screen: StopScreen? = null, val pun: Int? = null)
+data class StopUiState(val app: AppEntry? = null, val screen: StopScreen? = null, val pun: Int = 0)
 
 /** Sizes of the two pun lists, read from resources by the screen (F8.13). */
 data class PunCounts(val pause: Int, val limit: Int)
@@ -52,10 +52,10 @@ class StopViewModel @Inject constructor(
                 finish { gate.open(app) }
                 return@launch
             }
-            val pun = when {
-                !wellbeing.puns -> null
-                screen is StopScreen.Pause -> wellbeingState.nextPun(PunList.PAUSE, puns.pause)
-                else -> wellbeingState.nextPun(PunList.LIMIT, puns.limit)
+            // Puns are always shown (D-045).
+            val pun = when (screen) {
+                is StopScreen.Pause -> wellbeingState.nextPun(PunList.PAUSE, puns.pause)
+                is StopScreen.Limit -> wellbeingState.nextPun(PunList.LIMIT, puns.limit)
             }
             logger.info(TAG, logLine(pkg, screen))
             mutableState.value = StopUiState(app, screen, pun)

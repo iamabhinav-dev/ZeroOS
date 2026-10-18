@@ -227,3 +227,8 @@ tapping it starts a 5 s countdown, then the screen goes away and the timer resta
 (the only public way to know which app is in front without polling); built with Step 4.3 part 3. Apps chosen per app;
 a 1 min gap resets the timer. Pun lists D and E in docs/puns.md.
 *Why:* User's request; approved with wireframe H14.
+
+**D-045 — Puns always on** · 2026-10-18 · Accepted
+The "Puns on stop screens" setting is removed: the pause, limit and break screens always show a line from their
+pun list (F8.14 changed). The plain fallback messages are gone too.
+*Why:* User's choice.
