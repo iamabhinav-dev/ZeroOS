@@ -450,7 +450,7 @@ system Back gesture still works.*
 ```
 *Tapping outside the dialog or Back closes it without changes. After a choice, the preview closes and the
 gallery shows the result line. When "lock" is included and the phone rejects a separate lock-screen wallpaper,
-the result line says so; some phones (the phone's Themes app) can still override the lock screen, so the line points
+the result line says so; some phones' theme apps can still override the lock screen, so the line points
 there. Setting the home wallpaper while Home background is "Black" switches it to "Phone wallpaper" and says so.*
 
 ### F6. Backup (F13)
@@ -499,7 +499,8 @@ Shown once on first start; "Skip" on every page goes straight to home (F14.5).
 │   Press Home anytime to come back  │
 │   here.                            │
 │                                    │
-│   Keep the stock launcher installed:  │
+│   Keep the stock launcher          │
+│   installed:                       │
 │   it's your fallback if anything   │
 │   goes wrong.                      │
 │                                    │
@@ -530,7 +531,7 @@ Shown once on first start; "Skip" on every page goes straight to home (F14.5).
 │   Battery optimization: ‹on›       │
 │   [ Turn off for ZeroOS ]          │  Android's "ignore battery optimization" dialog
 │                                    │
-│   On some phones, also allow background   │  plain-text tip, no device-specific code
+│   Also allow background            │  plain-text tip, no device-specific code
 │   activity for ZeroOS in its app   │
 │   settings.                        │
 │                                    │
@@ -595,7 +596,7 @@ Extra lines per permission:
 │  It sees which app is in front and │  (F8.7, later F16; D-023)
 │  reads nothing else.               │
 │                                    │
-│  Some banking/UPI apps warn while  │  spike result (docs/spike/RESULTS.md)
+│  Some banking apps warn while      │  spike result (docs/spike/RESULTS.md)
 │  any accessibility service is on.  │
 ```
 - **Do Not Disturb** (F9.7): "Lets Focus turn on Do Not Disturb and back off."

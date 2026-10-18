@@ -2,7 +2,7 @@
 
 Rules for any AI agent (or human) working in this repository. **Read this file before making changes.**
 
-**Project context:** a personal launcher for one user. Primary device is the primary phone, but code must work on any Android phone. The app is installed by sideloading a signed APK. **No app store, no monetization, no ADB, no Developer options.** Don't propose or build anything that needs these.
+**Project context:** a personal launcher for one user. It's tested on one primary phone, but code must work on any Android phone. The app is installed by sideloading a signed APK. **No app store, no monetization, no ADB, no Developer options.** Don't propose or build anything that needs these.
 
 ## 1. Sources of Truth
 | File | Purpose |
@@ -45,8 +45,10 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **Never** commit secrets, keystores (`*.jks`), `keystore.properties`, `local.properties`, APKs, or build output.
 - **Keep the repo public-ready** (it's private, but may go public; D-046):
   - Commit only with the GitHub noreply address (`git config user.email` in this repo); never a personal email.
-  - No personal data in files or commit messages: no emails, phone numbers, real names of other people,
-    screenshots with personal content, app-usage logs, or names of the user's banking/payment apps.
+  - No personal data in tracked files or commit messages: no emails, phone numbers, real names of other people,
+    screenshots with personal content, app-usage logs, the user's phone model or brand, measurements from it,
+    or the apps and preferences they use. Write "the primary phone" / "the test phone" instead.
+  - Personal facts go **only** in the git-ignored `PERSONAL.md` (D-048); read it for context, never copy from it.
   - Screen dumps and test fixtures keep structure only, never on-screen text.
   - Keep `LICENSE` (personal use only, no uploading anywhere), `THIRD_PARTY_NOTICES.md` and `LICENSES/` up to
     date: a new library in the APK gets a row (and its licence text if it isn't there yet).

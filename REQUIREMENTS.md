@@ -5,7 +5,7 @@
 | | |
 |---|---|
 | **Audience** | Personal use only (one user). Not published to any app store. |
-| **Primary device** | the primary phone. Must also work on any other Android phone (no device-specific code paths). |
+| **Primary device** | One Android phone for manual checks. Must work on any other Android phone (no device-specific code paths). |
 | **Platform** | Android (min SDK 26 / Android 8.0, target latest stable SDK) |
 | **Distribution** | Signed release APK, sideloaded (copied to the phone and installed via "Install unknown apps"). **No ADB and no Developer options required.** |
 | **Type** | Home-screen launcher (`android.intent.category.HOME`) |
@@ -93,7 +93,7 @@ The default screen shown when I press Home.
 | F2.7 | Optional alphabetical fast-scroller on the side. |
 | F2.8 | Long-press an app → context menu: *Add to favorites, Rename, Hide, Set limit (from v1.1), App info, Uninstall*. |
 | F2.9 | List updates live when apps are installed/uninstalled/updated. |
-| F2.10 | Support apps in other profiles (work profile, or app clones such as App Clone **where Android exposes them via `LauncherApps`**), visually tagged (e.g., "WhatsApp · clone"). |
+| F2.10 | Support apps in other profiles (work profile, or app clones from phone makers' clone features **where Android exposes them via `LauncherApps`**), visually tagged (e.g., "WhatsApp · clone"). |
 | F2.11 | Back gesture or swipe down returns to home. |
 
 ### F3 — Favorite Apps
@@ -244,7 +244,7 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 | F14.3 | Pick initial favorites (suggest Phone, Messages, Camera, Maps). |
 | F14.4 | Permissions requested **just-in-time** when the related feature is enabled, never all upfront. |
 | F14.5 | Onboarding is skippable. |
-| F14.6 | **Background reliability step**: detect if battery optimization is on for ZeroOS and offer to open the relevant screen (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`). Show OEM tips (Some phones: allow background activity / auto-start) as plain text; never depend on OEM-private APIs. |
+| F14.6 | **Background reliability step**: detect if battery optimization is on for ZeroOS and offer to open the relevant screen (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`). Show plain-text tips for phones that restrict background apps as plain text; never depend on OEM-private APIs. |
 
 ### ~~F15 — Monetization~~ (removed)
 Not needed for personal use. All features are always available.
@@ -312,7 +312,7 @@ As the default home app, a crash on start would repeat on every Home press and m
 | F18.4 | Safe mode does not read DataStore/Room, start services, or apply any feature (limits, focus, F16, stats), so corrupted settings or a buggy feature cannot crash it. |
 | F18.5 | Safe mode depends only on `LauncherApps`, `core/logging` and `core/resources`; it lives in `app/` and is kept minimal. |
 | F18.6 | "Exit safe mode" resets the crash counter and restarts normally. A start without a crash for 60 s also resets the counter. |
-| F18.7 | **Never disable or uninstall the phone's stock launcher** (the stock launcher): it is the fallback if ZeroOS is unusable. Documented in README and onboarding. |
+| F18.7 | **Never disable or uninstall the phone's stock launcher**: it is the fallback if ZeroOS is unusable. Documented in README and onboarding. |
 
 ---
 
@@ -353,7 +353,7 @@ Until device-based benchmarks are re-enabled, NFR-P1/P2/P4/P5 are verified **man
 | ID | Requirement |
 |---|---|
 | NFR-R1 | No crashes or ANRs in daily use on the primary device. |
-| NFR-R2 | Primary device: the primary phone. Code uses only public Android APIs so it works on other Android phones (Pixel, Samsung, etc.) without changes. |
+| NFR-R2 | Manual checks on one primary phone. Code uses only public Android APIs so it works on other Android phones (Pixel, Samsung, etc.) without changes. |
 | NFR-R3 | Handle gesture navigation and 3-button navigation. |
 | NFR-R4 | Portrait layout required; landscape must not crash. |
 | NFR-R5 | Handle work-profile / app-clone apps. |
@@ -476,7 +476,7 @@ Low-fidelity wireframes live in `docs/wireframes.md`. They are approved **phase 
 
 | Risk / Question | Mitigation / Notes |
 |---|---|
-| The primary phone aggressively kills background services (notification listener, Accessibility Service) | F14.6 background reliability step; F16.15 warning; feasibility spike in Step 0.5. |
+| Some phone makers aggressively kill background services (notification listener, Accessibility Service) | F14.6 background reliability step; F16.15 warning; feasibility spike in Step 0.5. |
 | Android 13+ "restricted settings" block Accessibility/Notification access for sideloaded apps | Explain in-app: App info → ⋮ → Allow restricted settings. No Developer options needed. |
 | Play Protect (enhanced fraud protection, India) blocks sideloaded APKs that declare notification-listener or Accessibility services | v1.0 is unaffected (declares neither). From v1.1: pause Play Protect scanning while installing, then re-enable (D-018). Fallbacks: Play Console internal testing track; Google's hobbyist developer verification when it reaches India. Verified in spike Step 0.5. |
 | `UsageStatsManager` accuracy differs per OEM | Spike in Step 0.5; treat usage numbers as approximate. |

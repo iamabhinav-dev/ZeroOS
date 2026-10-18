@@ -3,7 +3,7 @@
 Step-by-step build plan for the features in [REQUIREMENTS.md](REQUIREMENTS.md).
 Each step lists **what to build**, **key technical notes**, **tests**, and a **done when** checklist. Steps are ordered so the app is installable and usable after every phase.
 
-**Context:** personal app, primary device: the primary phone, installed by sideloading a signed APK. No ADB, no Developer options, no app store.
+**Context:** personal app, tested on one primary phone, installed by sideloading a signed APK. No ADB, no Developer options, no app store.
 
 Time estimates are **full-time-equivalent for one developer**; scale to your own pace.
 
@@ -40,7 +40,7 @@ Tests are **required**, not a separate phase. For now, **all automated tests run
 ### Manual phone check (for steps that change UI or Android services)
 1. Build and install the APK on the primary phone (see *Install workflow*, Step 0.7).
 2. Check the step's "Done when" items by hand.
-3. Note the result in the step's final commit message (`Manual check: passed on the primary phone`).
+3. Note the result in the step's final commit message (`Manual check: passed on the phone`).
 
 ---
 
@@ -95,10 +95,10 @@ feature/applist/
 - **I review and approve them before Phase 1.** Agents build screens to match approved wireframes; differences need my approval.
 
 ### Step 0.5 — Feasibility spikes (throwaway, on a `spike/` branch, not merged)
-A small debug APK installed on the test phone to check the risky parts **before** building on them:
+A small debug APK installed on the phone to check the risky parts **before** building on them:
 1. **App list**: `LauncherApps` returns all apps, including App Clone apps if any.
 2. **Usage stats**: `UsageStatsManager` totals for 2–3 apps vs. the phone's own screen-time screen over 1 day.
-3. **Notification listener**: survives overnight and after a reboot with default battery settings, and again with background activity allowed.
+3. **Notification listener**: survives overnight and after a reboot with the phone's default battery settings, and again with background activity allowed.
 4. **Accessibility service**: can be enabled after "Allow restricted settings"; survives overnight; a debug **node-tree dumper** saves YouTube Shorts and Instagram Reels screen structures to a file (these become F16 test fixtures, with no ADB needed).
 5. **Overlay**: `TYPE_ACCESSIBILITY_OVERLAY` shows a black screen over YouTube.
 6. **Play Protect install block**: install the spike APK (which declares a notification listener and an Accessibility service) from a file manager/Drive/Telegram with Play Protect **on**. Record whether it is blocked, then confirm the workaround (pause Play Protect scanning → install → turn it back on) works (D-018).
@@ -138,7 +138,7 @@ Record findings in `docs/DECISIONS.md`. If any spike fails, **stop and discuss**
 - **Keystore:** store the release keystore and its passwords **outside the repo and off this computer** (e.g., password manager or encrypted cloud drive). Never in the GitHub repo, not even private.
 - Note both locations (not the secrets) in README.
 
-**Done when:** `./gradlew check` passes with sample tests; wireframes are approved; spike results are recorded with no blockers; a signed release APK installs on the test phone; code is on the private GitHub repo and the keystore backup is verified (restore it to a temp folder and build with it).
+**Done when:** `./gradlew check` passes with sample tests; wireframes are approved; spike results are recorded with no blockers; a signed release APK installs on the phone; code is on the private GitHub repo and the keystore backup is verified (restore it to a temp folder and build with it).
 
 ---
 
@@ -181,7 +181,7 @@ Behaviour:
 
 **Tests:** `AppsRepository` with a fake `LauncherApps` (list, sort, install/uninstall updates, extra profiles); clock Flow (minute alignment, time-zone change); Robolectric UI test (home → swipe up → list → tap fires launch); screenshots of home and list; logger (format, levels, rotation at 1 MB, 7-day cleanup, background writing, failure swallowed, forbidden content not logged), crash handler (writes file with last 50 entries, then delegates), exit-reason mapping with fakes, diagnostics screen UI + export intent; safe-mode trigger logic (2 crashes → normal, 3 within 60 s → safe, 3 spread out → normal, reset after 60 s stable and on exit), safe-mode screen UI with no DataStore access.
 
-**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the test phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart; a forced test crash (debug-only button) produces a crash report visible on the next start, and logs can be exported; a debug-only "crash on start" switch triggers safe mode after 3 starts, and "Open Home settings" lets me switch to the stock launcher.
+**Done when:** tests pass; manual check: ZeroOS can be set as default launcher on the phone, shows the clock, swipe up lists apps, tapping opens them, new installs appear without restart; a forced test crash (debug-only button) produces a crash report visible on the next start, and logs can be exported; a debug-only "crash on start" switch triggers safe mode after 3 starts, and "Open Home settings" lets me switch to the stock launcher.
 
 ---
 
@@ -248,7 +248,7 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 - Screenshots: every screen, dark/light, default/largest font.
 - Process death / config change: ViewModel state restored via `SavedStateHandle` (NFR-R7).
 
-**Done when:** every F1–F6, F13 and F14 requirement is met and traced to tests; manual check on the test phone passes for each step, including export → uninstall → reinstall → import restoring all settings.
+**Done when:** every F1–F6, F13 and F14 requirement is met and traced to tests; manual check on the phone passes for each step, including export → uninstall → reinstall → import restoring all settings.
 
 ---
 
@@ -257,7 +257,7 @@ Home · App list · Gestures · Appearance · Hidden apps · Backup · Diagnosti
 ### Step 3.1 — Test audit ✅
 - Every F1–F6/F13/F14 ID in TRACEABILITY.md has at least one test; fill gaps.
 
-### Step 3.2 — Manual performance & stability check on the test phone
+### Step 3.2 — Manual performance & stability check on the phone
 - Home appears instantly after Home press (NFR-P1); cold start feels ≤ 0.5 s (NFR-P2).
 - Memory in system settings → app info ≤ 60 MB idle (NFR-P4); battery usage of ZeroOS negligible after 24 h (NFR-P5).
 - No LeakCanary reports or StrictMode violations in a debug build during 1 day of use.
@@ -319,7 +319,7 @@ Reuses the usage calculation from Step 4.3.
 - Robolectric: Room DAOs + migration tests, WorkManager jobs (`work-testing`), notification listener logic with fake `StatusBarNotification`s, accessibility event handling with fake events.
 - UI + screenshots: pause, limit-reached, inbox, focus start/end, permission explanation screens, Insights screen, home with each stats style (dark/light, default/largest font, permission not granted).
 
-**Done when:** F8–F10 met and traced (F7 deferred); every feature works with permissions denied; manual check: limits work on the test phone, services survive overnight + reboot with the F14.6 settings applied, and home-screen screen time/unlocks roughly match the phone's own screen-time screen.
+**Done when:** F8–F10 met and traced (F7 deferred); every feature works with permissions denied; manual check: limits work on the phone, services survive overnight + reboot with the F14.6 settings applied, and home-screen screen time/unlocks roughly match the phone's own screen-time screen.
 
 ---
 
@@ -339,7 +339,7 @@ Grayscale screen, widget settings, and home calendar/to-do lines. **Approved by 
 - UI + screenshots: widgets, grayscale screen.
 - Permission allowlist updated for `READ_CALENDAR` with its ID.
 
-**Done when:** F11–F12 met and traced; manual check on the test phone.
+**Done when:** F11–F12 met and traced; manual check on the phone.
 
 ---
 
@@ -365,7 +365,7 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 - Robolectric: service event handling with fake events; overlay show/dismiss logic.
 - Screenshots: overlay, settings, explanation screen.
 
-**Done when:** F16 met and traced; manual check on the test phone: Shorts/Reels blocked within ~300 ms, normal videos untouched, battery impact acceptable after 1 day.
+**Done when:** F16 met and traced; manual check on the phone: Shorts/Reels blocked within ~300 ms, normal videos untouched, battery impact acceptable after 1 day.
 
 ---
 

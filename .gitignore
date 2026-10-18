@@ -36,3 +36,6 @@ bin/
 
 # Python bytecode from scripts/
 __pycache__/
+
+# Personal notes: phone model, results, apps used (D-048). Never commit.
+/PERSONAL.md

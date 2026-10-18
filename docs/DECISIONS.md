@@ -9,8 +9,8 @@ Format: **D-NNN — Title** · date · status · decision · why.
 The app is for one user. No app store, monetization (F15 removed), analytics, multi-user, or translation work.
 *Why:* Removes large amounts of store, policy and compatibility work that a single user doesn't need.
 
-**D-002 — Primary device: the primary phone, but generic Android code** · 2026-10-15 · Accepted
-Manual checks happen on the primary phone. Code uses only public Android APIs so it works on other phones.
+**D-002 — One primary phone for checks, generic Android code** · 2026-10-15 · Accepted
+Manual checks happen on one primary phone. Code uses only public Android APIs so it works on other phones.
 *Why:* It's the user's phone, and they want to be able to switch phones later.
 
 **D-003 — Sideloaded signed APK, no ADB / Developer options** · 2026-10-15 · Accepted
@@ -31,7 +31,7 @@ Short-form detection rules ship in a bundled asset file; when target apps change
 *Why:* Avoids network access, a rule server, and signing infrastructure for a single user.
 
 **D-007 — Keep onboarding** · 2026-10-15 · Accepted
-F14 stays, including the intro pages and a background-reliability step (F14.6) for battery settings.
+F14 stays, including the intro pages and a background-reliability step (F14.6) for phones that restrict background apps.
 *Why:* The user's choice.
 
 **D-008 — No weather; app is fully offline** · 2026-10-15 · Accepted
@@ -80,7 +80,7 @@ JDK 21 (originally 17; Robolectric needs 21 for API 37) + Android SDK command-li
 From v1.1 (when the manifest declares a notification listener and an Accessibility service), install updates by briefly turning off "Scan apps with Play Protect", installing, and turning it back on. v1.0 needs nothing.
 *Why:* In India, Play Protect blocks apps from browsers, messaging apps and file managers that declare these permissions; this workaround is free and needs no ADB or Developer options.
 *Fallbacks:* Play Console internal testing track ($25, adds policy paperwork and Play signing); Google's free hobbyist developer verification once available in India.
-*Confirmed 2026-10-16:* Play Protect blocked the spike APK on the test phone; choosing to install anyway in the Play Protect dialog worked, so pausing scanning may not even be needed.
+*Confirmed 2026-10-16:* Play Protect blocked the spike APK on the phone; choosing to install anyway in the Play Protect dialog worked, so pausing scanning may not even be needed.
 
 **D-019 — Block screen sends you home, no grace period** · 2026-10-15 · Accepted
 The F16 block button is "Go home" (`GLOBAL_ACTION_HOME`); the overlay reappears as soon as Shorts/Reels is detected again (only a ~1 s transition pause).
@@ -120,7 +120,7 @@ The swipe-up gesture is taught in the onboarding intro (G3) only; home stays cle
 *Why:* User's choice (wireframe question Q1).
 
 **D-028 — Phase 2 starts with the spike mostly done** · 2026-10-16 · Accepted
-Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usage stats similar to the phone's, services surviving a day of use and reconnecting after a restart. Remaining checks are due before the step that needs them: app clones before Step 2.4; overnight survival and Play Protect before Phase 4; Instagram Reels and a Shorts capture before Phase 6. Replaces the "finish Step 0.5 before Phase 2" rule of D-024.
+Confirmed on the phone: YouTube Shorts detection, overlay and Go home, usage stats similar to the phone's own, services surviving a day of use and reconnecting after a restart. Remaining checks are due before the step that needs them: app clones before Step 2.4; overnight survival and Play Protect before Phase 4; Instagram Reels and a Shorts capture before Phase 6. Replaces the "finish Step 0.5 before Phase 2" rule of D-024.
 *Why:* The confirmed results cover all Phase 2 risks except clone tags in the app list.
 
 **D-029 — Settings stored as JSON in DataStore** · 2026-10-16 · Accepted
@@ -129,8 +129,8 @@ Confirmed on the test phone: YouTube Shorts detection, overlay and Go home, usag
 
 **D-030 — Unknown second profiles are tagged "clone"** · 2026-10-16 · Superseded by D-034 for clones (work/private tags stay)
 Apps from a profile Android reports as managed are tagged "work", private space "private", and every other non-main profile "clone". The raw profile type is logged once per profile.
-*Why:* App Clone apps have the same name as the original, so they need a tag; the phone may not use Android's standard clone type, and App Clone is the only extra profile on this phone. The log shows the real type to refine this later.
-*Confirmed 2026-10-16:* the test phone reports App Clone as Android's standard `android.os.usertype.profile.CLONE`, so the tag comes from the real type, not the fallback.
+*Why:* phone makers' app-clone apps have the same name as the original, so they need a tag; a phone may not use Android's standard clone type. The log shows the real type to refine this later.
+*Confirmed 2026-10-16:* the test phone reports clones as Android's standard `android.os.usertype.profile.CLONE`, so the tag comes from the real type, not the fallback.
 
 **D-031 — Dot-matrix charging bolt** · 2026-10-16 · Accepted
 While charging, a lightning bolt drawn as dots on Doto's 5 × 7 grid follows the battery %. Drawn by a reusable `DotMatrixIcon` (also for the Phase 4/6 dot animations).
@@ -246,3 +246,9 @@ default Mix), shown on the Focus picker, a 2 s "Focus started" screen (tap to sk
 home and on its settings row (F9.8, F9.9). Focus settings move into Settings → Wellbeing → Focus, but Focus stays
 independent of the Wellbeing switch (F9.10). Wireframes H3, H10, H10b, H11, H15 updated.
 *Why:* User's choice. The small icon on home is an exception to the text-only home, chosen deliberately.
+
+**D-048 — Personal details only in a git-ignored file** · 2026-10-18 · Accepted
+The user's phone model and brand, measurements from it, apps they use and personal preferences are kept in the
+git-ignored `PERSONAL.md`, never in tracked files (docs, code comments, strings, tests) or commit messages. Public
+files say "the primary phone" / "the test phone". Existing mentions were moved there and made generic.
+*Why:* User's choice; keeps the repo public-ready (D-046).
