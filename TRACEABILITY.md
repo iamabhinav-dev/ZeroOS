@@ -73,6 +73,7 @@ Update this file in the same commit as the code and tests.
 | F14.4 | ✅ | By design: no permission is requested during onboarding; dialogs open only from their buttons | |
 | F14.5 | ✅ | OnboardingViewModelTest › f14_5_*, OnboardingScreenTest › f14_1_f14_5_*, OnboardingGateTest › f14_5_* | |
 | F14.6 | ✅ | OnboardingViewModelTest › f14_2_f14_6_*, OnboardingScreenTest › f14_6_*, AndroidOnboardingSystemTest › f14_6_* | Battery dialog on the phone |
+| F14.7 | 🟡 | LauncherViewModelTest › f14_7_*, NotHomeAppBannerTest › f14_7_* | Line after battery saving resets the home app; Set as default fixes it |
 | F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |

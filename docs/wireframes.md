@@ -145,6 +145,17 @@ At the largest system font × XL text size, with all slots filled:
 
 ---
 
+### A6. Not the home app (F14.7, approved 2026-10-18)
+Same place and style as the crash banner, at the top of home.
+```
+┌────────────────────────────────────┐
+│  ZeroOS isn't your home app        │
+│  Set as default        Dismiss     │
+│                                    │
+│  10:42                             │  normal home below
+└────────────────────────────────────┘
+```
+
 ## B. App list (F2)
 Opened by swiping up from home.
 

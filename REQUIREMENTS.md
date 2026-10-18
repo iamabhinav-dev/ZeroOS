@@ -245,6 +245,7 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 | F14.4 | Permissions requested **just-in-time** when the related feature is enabled, never all upfront. |
 | F14.5 | Onboarding is skippable. |
 | F14.6 | **Background reliability step**: detect if battery optimization is on for ZeroOS and offer to open the relevant screen (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`). Show plain-text tips for phones that restrict background apps as plain text; never depend on OEM-private APIs. |
+| F14.7 | **Not the home app** (D-049): whenever ZeroOS comes to the front and isn't the default home app (some phones' battery-saving modes switch it back to the stock launcher), home shows one line at the top: "ZeroOS isn't your home app · Set as default". Tapping it opens Android's "default home app" dialog (`RoleManager.ROLE_HOME`; home settings before Android 10). The line disappears once ZeroOS is the default again; "Dismiss" hides it until ZeroOS next comes to the front. Each detection is logged (F17.7). |
 
 ### ~~F15 — Monetization~~ (removed)
 Not needed for personal use. All features are always available.

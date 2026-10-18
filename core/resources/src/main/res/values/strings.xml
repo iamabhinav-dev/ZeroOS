@@ -6,6 +6,8 @@
     <string name="common_cancel">Cancel</string>
     <string name="common_back">Back</string>
     <string name="common_dismiss">Dismiss</string>
+    <string name="home_not_default">ZeroOS isn\'t your home app</string>
+    <string name="home_set_default">Set as default</string>
     <string name="common_on">on</string>
     <string name="common_off">off</string>
     <string name="common_date_time">%1$s, %2$s</string>
