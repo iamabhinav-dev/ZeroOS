@@ -6,7 +6,9 @@ import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.wellbeing.AndroidUsageEventSource
 import com.zeroos.core.data.wellbeing.LaunchGate
+import com.zeroos.core.data.wellbeing.OutsideWatcher
 import com.zeroos.core.data.wellbeing.TodayUsage
+import com.zeroos.core.data.wellbeing.UsageEventSource
 import com.zeroos.core.data.wellbeing.WellbeingStateRepository
 import com.zeroos.core.data.wellbeing.WellbeingStatus
 import com.zeroos.core.data.wellbeing.createWellbeingStateDataStore
@@ -54,4 +56,20 @@ object WellbeingModule {
             TodayUsage(AndroidUsageEventSource(context.getSystemService(UsageStatsManager::class.java)), clock, io, logger),
             state
         )
+
+    /** Android's usage events (needs Usage access; F8.3, F8.16). */
+    @Provides
+    fun usageEventSource(@ApplicationContext context: Context): UsageEventSource =
+        AndroidUsageEventSource(context.getSystemService(UsageStatsManager::class.java))
+
+    @Provides
+    @Singleton
+    fun outsideWatcher(
+        settings: SettingsRepository,
+        source: UsageEventSource,
+        state: WellbeingStateRepository,
+        clock: Clock,
+        logger: Logger
+    ) =
+        OutsideWatcher(settings, source, state, clock, Dispatchers.IO, logger)
 }

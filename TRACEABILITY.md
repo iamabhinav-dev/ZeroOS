@@ -55,8 +55,8 @@ Update this file in the same commit as the code and tests.
 | F8.4 | 🟡 | StopRulesTest › f8_4_*, StopViewModelTest › f8_4_*, StopScreensTest › f8_4_*, step4_3_limitScreenshotLight | Limit screen and "5 more minutes" on the test phone |
 | F8.5 | 🟡 | StopRulesTest › f8_5_*, AppListViewModelTest › f8_5_* | "12m left" in the app list |
 | F8.13–F8.15 | 🟡 | PunBagTest › f8_13_*, WellbeingStateRepositoryTest › f8_13_*, StopViewModelTest › f8_14_*, StopScreensTest › f8_14_*, screenshots | Dots animate; still with "Remove animations" |
-| F8.7 | ⬜ | (Step 4.3 part 3) | |
-| F8.16–F8.18 | ⬜ | (Step 4.3 part 3, D-044) | |
+| F8.7 | 🟡 | OutsideRulesTest › f8_7_*, OutsideEnforcerTest › f8_7_*, f8_4_*, WellbeingViewModelTest › f8_11_f8_16_* | Limit screen over the app when opened from a notification or recents |
+| F8.16–F8.18 | 🟡 | OutsideRulesTest › f8_16_*, f8_17_*, f8_18_*, OutsideWatcherTest › f8_16_*, OutsideEnforcerTest › f8_16_*, f8_17_*, StopScreensTest › f8_16_*, step4_3_breakScreenshot, WellbeingViewModelTest › f8_16_f8_18_*, WellbeingScreensTest › f8_9_* | Break after 15 min on YouTube; button countdown; Back does nothing |
 | F9.1–F9.7 | ⬜ | | |
 | F10.1–F10.13 | ⬜ | | Compare with the phone's screen-time screen |
 | F11.1–F11.3 | ⬜ | | |
