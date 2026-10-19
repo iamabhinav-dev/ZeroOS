@@ -32,11 +32,19 @@ data class WellbeingState(
     val pauseBag: PunBag = PunBag(),
     val limitBag: PunBag = PunBag(),
     val breakBag: PunBag = PunBag(),
-    val breakButtonBag: PunBag = PunBag()
+    val breakButtonBag: PunBag = PunBag(),
+    /** Short-video blocker, for [day] (F16.8, F16.11, F16.14): time in short videos, blocks, "Allow" uses. */
+    val shortFormMillis: Long = 0,
+    val shortFormBlocks: Int = 0,
+    val shortFormAllowUses: Int = 0,
+    val shortsBag: PunBag = PunBag()
 )
 
-/** The pun lists in docs/puns.md: B pause, C limit (F8.13), D break message and E break button (F8.16). */
-enum class PunList { PAUSE, LIMIT, BREAK, BREAK_BUTTON }
+/** Today's short-video numbers (F16.8, F16.14). */
+data class ShortFormDay(val millis: Long = 0, val blocks: Int = 0, val allowUses: Int = 0)
+
+/** The pun lists in docs/puns.md: A short videos (F16.9), B pause, C limit (F8.13), D break and E break button (F8.16). */
+enum class PunList { PAUSE, LIMIT, BREAK, BREAK_BUTTON, SHORTS }
 
 /** Reads and changes [WellbeingState]. The day follows the phone's current time zone ([zone] is read each time). */
 class WellbeingStateRepository(
@@ -53,10 +61,29 @@ class WellbeingStateRepository(
     suspend fun useExtra(packageName: String) {
         val today = today()
         val state = dataStore.updateData { s ->
-            val uses = s.extrasToday(today)
-            s.copy(day = today, extrasUsed = uses + (packageName to (uses[packageName] ?: 0) + 1))
+            val t = s.onDay(today)
+            t.copy(extrasUsed = t.extrasUsed + (packageName to (t.extrasUsed[packageName] ?: 0) + 1))
         }
         logger.info(TAG, "5 more minutes for $packageName (${state.extrasUsed[packageName]} today)")
+    }
+
+    /** Today's short-video time, blocks and "Allow 5 minutes" uses; a new day starts at zero (F16.8). */
+    suspend fun shortFormToday(): ShortFormDay {
+        val s = dataStore.data.first().onDay(today())
+        return ShortFormDay(s.shortFormMillis, s.shortFormBlocks, s.shortFormAllowUses)
+    }
+
+    /** Adds to today's short-video time, blocks and "Allow 5 minutes" uses (F16.8, F16.11, F16.14). */
+    suspend fun recordShortForm(millis: Long = 0, blocks: Int = 0, allowUses: Int = 0) {
+        dataStore.updateData { s ->
+            s.onDay(today()).let {
+                it.copy(
+                    shortFormMillis = it.shortFormMillis + millis.coerceAtLeast(0),
+                    shortFormBlocks = it.shortFormBlocks + blocks,
+                    shortFormAllowUses = it.shortFormAllowUses + allowUses
+                )
+            }
+        }
     }
 
     /** Index of the next line of [list], which has [size] lines (F8.13). */
@@ -70,6 +97,7 @@ class WellbeingStateRepository(
                 PunList.LIMIT -> s.copy(limitBag = bag)
                 PunList.BREAK -> s.copy(breakBag = bag)
                 PunList.BREAK_BUTTON -> s.copy(breakButtonBag = bag)
+                PunList.SHORTS -> s.copy(shortsBag = bag)
             }
         }
         return index
@@ -82,7 +110,18 @@ class WellbeingStateRepository(
         PunList.LIMIT -> limitBag
         PunList.BREAK -> breakBag
         PunList.BREAK_BUTTON -> breakButtonBag
+        PunList.SHORTS -> shortsBag
     }
+
+    /** This state on [today]: the day's counters start again when the date changes (F8.6, F16.8). */
+    private fun WellbeingState.onDay(today: String) =
+        if (day ==
+            today
+        ) {
+            this
+        } else {
+            copy(day = today, extrasUsed = emptyMap(), shortFormMillis = 0, shortFormBlocks = 0, shortFormAllowUses = 0)
+        }
 
     private fun WellbeingState.extrasToday(today: String) = if (day == today) extrasUsed else emptyMap()
 
