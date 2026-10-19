@@ -109,6 +109,16 @@ class SettingsStorageTest {
         context.dataStoreFile(SETTINGS_FILE_NAME).apply { parentFile?.mkdirs() }.writeText("{ not json")
         val settings = createSettingsDataStore(context, logger, backgroundScope).data.first()
         assertEquals(LauncherSettings(), settings)
-        assertEquals(LogLevel.ERROR to "settings file corrupted; reset to defaults", logged.single())
+        assertEquals(LogLevel.ERROR to "settings file corrupted; reset to defaults", logged.first())
+    }
+
+    @Test
+    fun d059_unreadableFileIsKeptBeforeTheReset() = runTest {
+        val context: Context = ApplicationProvider.getApplicationContext()
+        val file = context.dataStoreFile(SETTINGS_FILE_NAME).apply { parentFile?.mkdirs() }
+        file.writeText("""{ "favorites": "a later format" }""")
+        createSettingsDataStore(context, logger, backgroundScope).data.first()
+        assertEquals("""{ "favorites": "a later format" }""", File(file.parentFile, UNREADABLE_SETTINGS_FILE_NAME).readText())
+        assertEquals(LogLevel.WARN to "kept a copy of the unreadable settings file", logged.last())
     }
 }
