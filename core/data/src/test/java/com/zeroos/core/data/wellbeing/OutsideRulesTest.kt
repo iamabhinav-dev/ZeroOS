@@ -52,6 +52,16 @@ class OutsideRulesTest {
     }
 
     @Test
+    fun f8_17_pausedThenStoppedDoesNotStretchTheSessionBack() {
+        // Regression: home pauses and then stops the activity (both "left"); back from recents 20 s later.
+        val events = listOf(e("yt", RESUMED, 100), e("yt", PAUSED, 102), e("yt", PAUSED, 102, 500), e("yt", RESUMED, 102, 20_000))
+        assertEquals(100 * M, currentSessionStart(events, "yt", 0, 103 * M))
+        assertNull(on.outsideCheck("yt", facts(events, now = 103)).overlay)
+        // An app already open when the window starts still counts from the window start.
+        assertEquals(0L, currentSessionStart(listOf(e("yt", PAUSED, 2), e("yt", RESUMED, 2, 10_000)), "yt", 0, 5 * M))
+    }
+
+    @Test
     fun f8_16_breakDueAfterFifteenMinutesStraightOtherwiseTimerForTheRest() {
         val open = listOf(e("yt", RESUMED, 0))
         assertEquals(OutsideCheck(checkAgainInMillis = 5 * M), on.outsideCheck("yt", facts(open, now = 10)))
