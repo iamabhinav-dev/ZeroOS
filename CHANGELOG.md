@@ -4,6 +4,14 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.30 (versionCode 30)
+- **Before you start:** on first start, and once after an update that changes them, ZeroOS asks you to read the
+  README notes, licence and third-party notices of the installed version and tick that you agree (F14.8). They're
+  inside the app and also in Settings → About
+- **Import warning:** importing a settings backup now says that it replaces everything and can't be undone,
+  that permissions aren't in a backup, and whether the backup is from an older or newer version (F13.6, F13.7)
+- **Safer settings:** imported values are kept within their allowed ranges, and if the settings file ever can't
+  be read, a copy is kept before it's reset (D-059)
 ## 0.0.29 (versionCode 29)
 - Fixed: the take-a-break screen appeared at once when you went home and came back to the app from recent apps
   within a minute
