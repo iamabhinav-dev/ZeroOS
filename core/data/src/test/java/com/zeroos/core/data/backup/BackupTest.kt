@@ -96,6 +96,21 @@ class BackupTest {
     }
 
     @Test
+    fun f13_5_newerFileOfTheSameSchemaKeepsKnownSettingsAndDropsTheRest() {
+        // A later ZeroOS added a setting, a field and a style this version doesn't know, and wrote a null.
+        val newer = """{ "format": "zeroos-settings", "schemaVersion": 1, "futureTopLevel": 1, "settings": {
+            "favorites": ["x/x.Main#0"], "futureFeature": { "on": true },
+            "screenTime": { "showOnHome": false, "style": "SPARKLINE", "futureField": 3 },
+            "home": { "alignment": null, "maxFavorites": 4 } } }"""
+        val settings = (SettingsBackupCodec.decode(newer) as BackupReadResult.Ok).backup.settings
+        assertEquals(listOf("x/x.Main#0"), settings.favorites)
+        assertEquals(false, settings.screenTime.showOnHome)
+        assertEquals(LauncherSettings().screenTime.style, settings.screenTime.style)
+        assertEquals(LauncherSettings().home.alignment, settings.home.alignment)
+        assertEquals(4, settings.home.maxFavorites)
+    }
+
+    @Test
     fun f13_5_newerBackupIsRefused() {
         assertEquals(BackupReadResult.TooNew(2), SettingsBackupCodec.decode("""{ "format": "zeroos-settings", "schemaVersion": 2 }"""))
     }
