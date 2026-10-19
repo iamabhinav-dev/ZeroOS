@@ -62,6 +62,20 @@ class OutsideRulesTest {
     }
 
     @Test
+    fun f8_17_lockAndUnlockWithinAMinuteDoesNotShowTheBreakAtOnce() {
+        // Regression: locking pauses and then stops the activity, like going home; unlocked 40 s later.
+        val lock = listOf(
+            e("yt", RESUMED, 100),
+            e("yt", PAUSED, 105),
+            e("yt", PAUSED, 105, 300),
+            e("android", UsageEvent.Type.UNLOCKED, 105, 40_000),
+            e("yt", RESUMED, 105, 40_500)
+        )
+        assertEquals(100 * M, currentSessionStart(lock, "yt", 0, 106 * M))
+        assertNull(on.outsideCheck("yt", facts(lock, now = 106)).overlay)
+    }
+
+    @Test
     fun f8_16_breakDueAfterFifteenMinutesStraightOtherwiseTimerForTheRest() {
         val open = listOf(e("yt", RESUMED, 0))
         assertEquals(OutsideCheck(checkAgainInMillis = 5 * M), on.outsideCheck("yt", facts(open, now = 10)))
