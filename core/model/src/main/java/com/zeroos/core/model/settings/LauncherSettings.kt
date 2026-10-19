@@ -26,7 +26,9 @@ data class LauncherSettings(
     /** Mindful pause and daily limits (F8); off by default, settings kept while off (F8.10). */
     val wellbeing: WellbeingSettings = WellbeingSettings(),
     val focus: FocusSettings = FocusSettings(),
-    val screenTime: ScreenTimeSettings = ScreenTimeSettings()
+    val screenTime: ScreenTimeSettings = ScreenTimeSettings(),
+    /** Fingerprint of the README notes, LICENSE and notices the user accepted (F14.8); null until accepted. */
+    val acceptedDocuments: String? = null
 ) {
     companion object {
         const val CURRENT_VERSION = 1
