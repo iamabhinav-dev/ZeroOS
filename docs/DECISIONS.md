@@ -309,3 +309,12 @@ is used. Durations read "2h 14m", "4h" or "14m".
 The grayscale shortcut (F11), calendar line and to-do (F12) move to the end, with focus schedules (F9.6) and the
 notification filter (F7). The draft wireframes (section I) stay unapproved until then. Phase 6 (F16) is next.
 *Why:* User's choice.
+
+**D-057 — Phase 6 wireframes approved; Accessibility reads layout for the blocker** · 2026-10-19 · Accepted
+Section J is approved, with the blocker's settings in Settings → Wellbeing → Short videos (shown even when Wellbeing
+is off). The Accessibility service now declares that it can read screen layout (`canRetrieveWindowContent`, view IDs)
+because F16 needs it; Android grants that for all apps at once, so ZeroOS's code only ever looks inside the enabled
+target apps (YouTube, Instagram), and only while the blocker is on. To know which app is in front (F16.18) it
+receives window changes from all apps while the blocker is on and uses only the app name. The explanation screens
+say this plainly. This updates D-023 for F16.
+*Why:* User's choice; required by F16 as written.

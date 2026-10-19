@@ -347,7 +347,7 @@ Grayscale screen, widget settings, and home calendar/to-do lines. **Approved by 
 
 ## Phase 6 — v1.3 Short-Form Content Blocker (F16)
 
-### Step 6.0 — Wireframes for Phase 6
+### Step 6.0 — Wireframes for Phase 6 ✅
 Block overlay, short-form blocker settings, explanation screen. **Approved by me before Step 6.1.**
 
 ### Step 6.1 — Detection rules as data

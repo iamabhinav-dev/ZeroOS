@@ -922,6 +922,86 @@ ZeroOS can't switch grayscale itself (that needs ADB, F11.3); it opens Android's
 Android's normal permission dialog for "Calendar", after one explanation line in Settings:
 "Shows your next event on home. Nothing leaves your phone." Declined → the switch stays off.
 
+## J. Phase 6: short-form blocker (F16) — approved 2026-10-19 (D-057)
+
+### J1. Settings → Wellbeing after Phase 6
+```
+│  Focus                           › │  (H10)
+│  Short videos                    › │  → J2 (F16); shown even when Wellbeing is off,
+│                                    │  like Focus (the blocker works without F8, F16.11)
+```
+
+### J2. Settings → Short videos (F16.1, F16.3, F16.4, F16.7–F16.11, F16.15)
+```
+┌────────────────────────────────────┐
+│  ‹ Short videos                    │  (Settings → Wellbeing → Short videos)
+│  Block short videos        ‹off›   │  master, off by default; first time → J4
+│                                    │  (rows below only while it's on)
+│  YouTube Shorts            ‹on›    │  F16.4
+│  Instagram Reels           ‹on›    │
+│  Mode                     ‹Block›  │  Block / Limit (F16.7, F16.8)
+│  Daily allowance          ‹15 min› │  Limit mode only; 0–120 min
+│  Message            ‹Random pun›   │  Random pun / Custom (F16.9)
+│  Custom message                  › │  Custom only → J6
+│  Go home automatically     ‹off›   │  off / 3–10 s (F16.10)
+│  "Allow 5 minutes"        ‹1 a day›│  0–5 (F16.11)
+│                                    │
+│  The phone stopped the blocker.    │  only when killed/disabled (F16.15)
+│  Allow background activity…      › │
+└────────────────────────────────────┘
+```
+
+### J3. Block screen over YouTube / Instagram (F16.7, F16.9, F16.10, F16.11, F16.17)
+```
+┌────────────────────────────────────┐
+│                                    │
+│           ●●●●●●●●●                │  dot shutter closes over a dotted play
+│           ●●●●●●●●●                │  symbol once, then stays still (F16.17;
+│           ·  ▸  ·                  │  still with reduced motion)
+│                                    │
+│    Reels can wait. Your life       │  random line from list A, or your own
+│    can't.                          │  message (F16.9)
+│                                    │
+│  Go home        Allow 5 minutes (1)│  "Allow" → mindful pause first (F16.11);
+│                                    │  hidden at 0 uses or during Focus (F16.16)
+└────────────────────────────────────┘
+```
+- Shown only while YouTube/Instagram is really in front, and stays up through short gaps while a Short loads, so
+  it doesn't blink (F16.18). "Go home" leaves the app for ZeroOS home (F16.10). Back does nothing.
+- Same layout rules as the other stop screens, including the two-pane landscape version.
+
+### J4. Explanation before turning it on (F16.2), using the shared permission screen (H2)
+```
+│  ‹ Short videos                    │
+│  To spot Shorts and Reels, ZeroOS  │
+│  looks at the layout of YouTube    │
+│  and Instagram while they're open  │
+│  (button and list names, never     │
+│  what's in the video or comments). │
+│  It sees which app is in front for │
+│  all apps, and nothing else.       │
+│  Android allows this for all apps  │
+│  at once; ZeroOS only looks inside │
+│  YouTube and Instagram.            │
+│  It stays on this phone.           │
+│  If Android says "Restricted…":    │
+│  1 Open App info … (as H2)         │
+│  Open settings          Not now    │
+```
+
+### J5. Insights after Phase 6 (F16.14)
+```
+│  Short videos                      │
+│  12m today · blocked 4 times       │
+```
+
+### J6. Custom message (F16.9)
+```
+│  Your message                      │  text field, up to 120 characters,
+│  ____________________________      │  "87 left" counter; never logged (F17.8)
+│  Cancel                    Save    │
+```
+
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
 - **Q2. Fonts:** Doto for all text, no font picker (D-020).
