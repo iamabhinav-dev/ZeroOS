@@ -55,14 +55,17 @@ enum class SettingsPage(val logName: String) {
     SHORT_VIDEOS("short videos"),
     BACKUP("backup"),
     ABOUT("about"),
-    LICENSES("licenses");
+    LICENSES("licenses"),
+    DOC_README("readme"),
+    DOC_LICENSE("license"),
+    DOC_NOTICES("third-party notices");
 
     val parent: SettingsPage
         get() = when (this) {
             FAVORITES -> HOME
             HIDDEN_APPS -> APP_LIST
             PICK_SWIPE_LEFT, PICK_SWIPE_RIGHT -> GESTURES
-            LICENSES -> ABOUT
+            LICENSES, DOC_README, DOC_LICENSE, DOC_NOTICES -> ABOUT
             PHONE_WALLPAPER -> APPEARANCE
             WELLBEING_APPS, FOCUS, SHORT_VIDEOS -> WELLBEING
             FOCUS_ICON -> FOCUS
@@ -164,9 +167,16 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, open:
 
         SettingsPage.BACKUP -> BackupRoute(onBack = onBack)
 
-        SettingsPage.ABOUT -> AboutRoute(onLicenses = { onOpen(SettingsPage.LICENSES) }, onBack = onBack)
+        SettingsPage.ABOUT -> AboutRoute(
+            onLicenses = { onOpen(SettingsPage.LICENSES) },
+            onDocument = { onOpen(it.page()) },
+            onBack = onBack
+        )
 
         SettingsPage.LICENSES -> LicensesRoute(onBack = onBack)
+
+        SettingsPage.DOC_README, SettingsPage.DOC_LICENSE, SettingsPage.DOC_NOTICES ->
+            DocumentRoute(requireNotNull(page.document()), onBack = onBack)
 
         else -> Unit
     }

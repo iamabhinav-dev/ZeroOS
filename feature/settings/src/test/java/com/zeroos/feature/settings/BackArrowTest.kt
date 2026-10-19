@@ -13,6 +13,7 @@ import com.zeroos.core.model.settings.FocusIcon
 import com.zeroos.core.model.settings.FocusSettings
 import com.zeroos.core.model.settings.ScreenTimeSettings
 import com.zeroos.core.model.settings.WellbeingSettings
+import com.zeroos.core.ui.DocumentReader
 import com.zeroos.core.ui.ZeroTheme
 import io.mockk.mockk
 import org.junit.Assert.assertEquals
@@ -86,6 +87,9 @@ class BackArrowTest {
     fun d052_about() = tapsBack { AboutScreen(AboutState(), onLicenses = {}, onBack = it) }
 
     @Test
+    fun d052_document() = tapsBack { DocumentReader("License", "Text", onBack = it) }
+
+    @Test
     fun d052_licenses() = tapsBack { LicensesScreen("", onBack = it) }
 
     @Test
@@ -108,7 +112,10 @@ class BackArrowTest {
             SettingsPage.SHORT_VIDEOS to SettingsPage.WELLBEING,
             SettingsPage.BACKUP to SettingsPage.MAIN,
             SettingsPage.ABOUT to SettingsPage.MAIN,
-            SettingsPage.LICENSES to SettingsPage.ABOUT
+            SettingsPage.LICENSES to SettingsPage.ABOUT,
+            SettingsPage.DOC_README to SettingsPage.ABOUT,
+            SettingsPage.DOC_LICENSE to SettingsPage.ABOUT,
+            SettingsPage.DOC_NOTICES to SettingsPage.ABOUT
         )
         assertEquals(SettingsPage.entries.toSet() - SettingsPage.MAIN, expected.keys)
         expected.forEach { (page, parent) -> assertEquals(page.name, parent, page.parent) }
