@@ -56,7 +56,8 @@ class BackupTest {
             diagnostics,
             context.getSharedPreferences("backup-test-${temp.root.name}", Context.MODE_PRIVATE),
             clock,
-            logger
+            logger,
+            AppVersion("0.0.30", 30)
         ) to
             settings
     }
@@ -84,6 +85,18 @@ class BackupTest {
         assertFalse(targetDiagnostics.isLoggingEnabled)
         assertEquals(LogLevel.WARN, targetDiagnostics.minLevel)
         assertTrue("custom names never logged (F17.8)", logged.none { it.contains("Time Sink") })
+    }
+
+    @Test
+    fun f13_7_exportRecordsTheVersionAndImportComparesIt() = runTest {
+        val (source, _) = repository(diagnostics("diag-d"))
+        val file = ByteArrayOutputStream().also { source.export(it) }.toByteArray()
+        val backup = (source.read(ByteArrayInputStream(file)) as BackupReadResult.Ok).backup
+        assertEquals("0.0.30", backup.appVersionName)
+        assertEquals(BackupAge.SAME, source.ageOf(backup))
+        assertEquals(BackupAge.OLDER, source.ageOf(backup.copy(appVersionCode = 29)))
+        assertEquals(BackupAge.NEWER, source.ageOf(backup.copy(appVersionCode = 31)))
+        assertEquals(BackupAge.UNKNOWN, source.ageOf(backup.copy(appVersionCode = null)))
     }
 
     @Test

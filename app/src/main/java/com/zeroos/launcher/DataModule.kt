@@ -7,6 +7,7 @@ import com.zeroos.core.data.apps.AndroidLauncherAppsSource
 import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.HomeAppsCache
+import com.zeroos.core.data.backup.AppVersion
 import com.zeroos.core.data.backup.BackupRepository
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
@@ -68,7 +69,8 @@ object DataModule {
         diagnostics,
         context.getSharedPreferences("backup", Context.MODE_PRIVATE),
         clock,
-        logger
+        logger,
+        AppVersion(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toLong())
     )
 
     @Provides

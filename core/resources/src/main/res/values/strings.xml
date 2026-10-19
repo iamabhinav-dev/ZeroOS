@@ -367,6 +367,10 @@
     <string name="backup_never_exported">Not exported yet</string>
     <string name="backup_confirm_title">Replace all settings with this backup?</string>
     <string name="backup_confirm_import">Import</string>
+    <string name="backup_confirm_body">Everything you\'ve set up now is replaced: favorites, hidden and renamed apps, limits, Focus and short videos. This can\'t be undone. Export your current settings first if you might want them back.</string>
+    <string name="backup_confirm_older">Made with ZeroOS %1$s, an older version: settings added since then get their defaults.</string>
+    <string name="backup_confirm_newer">Made with ZeroOS %1$s, a newer version: settings this version doesn\'t have are left out.</string>
+    <string name="backup_confirm_permissions">Permissions such as Accessibility and Usage access aren\'t in a backup; turn them on again in Settings if you need them.</string>
     <string name="backup_exported">Settings exported</string>
     <string name="backup_imported">Settings imported</string>
     <string name="backup_not_a_backup">This isn\'t a ZeroOS settings backup</string>

@@ -2,6 +2,7 @@ package com.zeroos.feature.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.backup.BackupAge
 import com.zeroos.core.data.backup.BackupReadResult
 import com.zeroos.core.data.backup.BackupRepository
 import com.zeroos.core.data.backup.SettingsBackup
@@ -37,7 +38,9 @@ data class BackupState(
     val lastExportMillis: Long? = null,
     val message: BackupMessage? = null,
     /** A read backup waiting for "Replace all settings?" (F13.2). */
-    val pending: SettingsBackup? = null
+    val pending: SettingsBackup? = null,
+    /** Whether [pending] came from an older or newer ZeroOS, for the warning (F13.6, wireframe K1). */
+    val pendingAge: BackupAge = BackupAge.UNKNOWN
 )
 
 /** Export/import of all settings (F13). Streams come from the system file picker. */
@@ -62,8 +65,12 @@ class BackupViewModel @Inject constructor(
     fun read(open: () -> InputStream?) = runIo("import") {
         val stream = open() ?: throw IOException("no input stream")
         when (val result = stream.use { backup.read(it) }) {
-            is BackupReadResult.Ok -> mutableState.update { it.copy(pending = result.backup, message = null) }
+            is BackupReadResult.Ok -> mutableState.update {
+                it.copy(pending = result.backup, pendingAge = backup.ageOf(result.backup), message = null)
+            }
+
             BackupReadResult.NotABackup -> mutableState.update { it.copy(message = BackupMessage.NotABackup) }
+
             is BackupReadResult.TooNew -> mutableState.update { it.copy(message = BackupMessage.TooNew(result.version)) }
         }
     }
