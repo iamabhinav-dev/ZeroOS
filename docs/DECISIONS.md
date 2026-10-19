@@ -318,3 +318,12 @@ target apps (YouTube, Instagram), and only while the blocker is on. To know whic
 receives window changes from all apps while the blocker is on and uses only the app name. The explanation screens
 say this plainly. This updates D-023 for F16.
 *Why:* User's choice; required by F16 as written.
+
+**D-058 — Website on GitHub Pages; release channels by tag** · 2026-10-19 · Proposed (first draft, awaiting approval)
+A one-page site in `site/`, built by `scripts/build-site.py`, in the launcher's look. All its text is in
+`site/strings/en.json` and `./gradlew check` fails on hardcoded text (`checkSite`), as for the app (NFR-L3). It links
+to APKs on GitHub Releases and never hosts them (LICENSE §2). Channels: Stable = `vX.Y.Z` from 1.0.0, not a
+pre-release; Beta = pre-release tagged `-beta.N`/`-rc.N`; Early builds = `v0.x.y`, hidden once Stable exists. It goes
+live when the repo is made public (Pages on a private repo needs a paid plan, and private releases can't be
+downloaded by visitors).
+*Why:* User's request for a site that shows the app and stays correct when Stable and Beta releases start.
