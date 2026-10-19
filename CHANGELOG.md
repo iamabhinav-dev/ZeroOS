@@ -4,6 +4,14 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.28 (versionCode 28)
+- Short-video blocker (F16), off until you turn it on in Settings → Wellbeing → Short videos: blocks YouTube
+  Shorts and Instagram Reels with a black screen (dot shutter over a play symbol, a pun or your own message,
+  Go home). Block at once, or after a daily allowance (15 min by default); "Allow 5 minutes" once a day after a
+  mindful pause; always blocked during Focus. The rest of each app stays usable
+- Insights shows today's short-video time and how often it was blocked
+- The Accessibility service can now read screen layout, used only inside YouTube and Instagram while the blocker
+  is on; the explanation screens say so. Android may ask you to turn the service on again after updating
 ## 0.0.27 (versionCode 27)
 - Screen time on home (F10): today's screen time and unlocks under the date, in one of four styles: text,
   progress bar against a daily goal, weekly dots or hourly dots. Until Usage access is granted, home shows
