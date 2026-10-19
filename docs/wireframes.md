@@ -853,6 +853,75 @@ Kept for when F7 is built; not part of v1.1.
 ```
 *Opened from here and from the digest notification. Home shows no badge or count (F1.5).*
 
+## I. Phase 5: grayscale and minimal widgets (F11, F12) — PROPOSED, awaiting approval (Step 5.0)
+
+Doto has no ○ or ☐, so the calendar and to-do markers are drawn as dots (like the back arrow).
+
+### I1. Settings main after Phase 5
+```
+│  ‹ Settings                        │
+│  Home                            › │  calendar and to-do lines live here (I3)
+│  …                                 │
+│  Screen time                     › │
+│  Grayscale                       › │  → I2 (F11)            new
+│  Backup                          › │
+```
+
+### I2. Settings → Grayscale (F11.1, F11.2)
+ZeroOS can't switch grayscale itself (that needs ADB, F11.3); it opens Android's own screen.
+```
+┌────────────────────────────────────┐
+│  ‹ Grayscale                       │
+│  Android's color correction can    │
+│  show everything in gray.          │
+│                                    │
+│  Open color correction           › │  → Android's accessibility / color-
+│                                    │    correction screen
+│  There, turn on Color correction   │
+│  and choose Grayscale.             │  (F11.1)
+│                                    │
+│  Tip: turn on its shortcut (e.g.   │
+│  hold both volume keys) to switch  │  muted (F11.2)
+│  gray on and off any time.         │
+└────────────────────────────────────┘
+```
+
+### I3. Settings → Home with widgets (F12.4)
+```
+│  ‹ Home                            │
+│  Favorites                       › │
+│  …                                 │  (existing rows)
+│  Next calendar event       ‹off›   │  F12.2; asks for calendar access → I6
+│  To-do (up to 3)           ‹off›   │  F12.3
+```
+
+### I4. Home with both lines on (A1 slots ⑥ ⑦)
+```
+│  10:42                             │
+│  Thursday, 15 October · 82%        │
+│  2h 14m · 38 unlocks               │
+│  (F)                               │
+│                                    │
+│  ∙ Dentist · 4:30 pm               │  ⑥ next event today or tomorrow; tap → calendar app
+│  ⁘ buy milk                        │  ⑦ dotted box: tap the box → done (removed)
+│  ⁘ call home                       │     tap the text → edit it in place
+│  + add a task                      │  muted; only while fewer than 3
+```
+- ⑥ shows "Tomorrow · Dentist · 9:00" for tomorrow, "All day · Holiday" for all-day events, and is hidden when
+  there's nothing today or tomorrow.
+- ⑦ editing happens right on home: the line becomes a text field with the keyboard; Done or tapping elsewhere
+  saves; an empty task is removed. Up to 3 tasks, short (one line). Task text is never logged (F17.8).
+- Both lines follow the favorites alignment and shrink first when space runs out (A1 rules).
+
+### I5. To-do slot when empty
+```
+│  + add a task                      │  muted
+```
+
+### I6. Calendar access (F12.2)
+Android's normal permission dialog for "Calendar", after one explanation line in Settings:
+"Shows your next event on home. Nothing leaves your phone." Declined → the switch stays off.
+
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
 - **Q2. Fonts:** Doto for all text, no font picker (D-020).
