@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "apps": [
+    {
+      "package": "com.google.android.youtube",
+      "name": "YouTube Shorts",
+      "viewIds": ["reel_recycler", "reel_player_page_container", "reel_watch_player"]
+    },
+    {
+      "package": "com.instagram.android",
+      "name": "Instagram Reels",
+      "viewIds": ["clips_viewer_view_pager", "clips_video_container", "root_clips_layout"]
+    }
+  ]
+}
