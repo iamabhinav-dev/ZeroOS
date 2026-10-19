@@ -243,6 +243,14 @@ class StopScreensTest {
     }
 
     @Test
+    fun step4_3_pauseLightScreenshot() {
+        compose.mainClock.autoAdvance = false
+        show(StopScreen.Pause(5, intentionPrompt = true), theme = ThemeMode.LIGHT)
+        compose.mainClock.advanceTimeBy(2_500)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step4_3_limitScreenshotLight() {
         show(StopScreen.Limit(30, 1), pun = 0, theme = ThemeMode.LIGHT)
         compose.onRoot().captureRoboImage()

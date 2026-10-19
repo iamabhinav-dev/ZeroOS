@@ -220,6 +220,13 @@ class FocusScreensTest {
     }
 
     @Test
+    fun step4_5_pickerLightScreenshot() {
+        preload()
+        compose.setContent { ZeroTheme(ThemeMode.LIGHT) { FocusPickerScreen(state, actions, onBack = {}) } }
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step4_5_startedScreenshotLight() {
         preload()
         compose.mainClock.autoAdvance = false
