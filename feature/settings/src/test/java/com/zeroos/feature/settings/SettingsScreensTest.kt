@@ -220,6 +220,17 @@ class SettingsScreensTest {
     }
 
     @Test
+    fun f14_8_aboutOpensTheReleaseDocuments() {
+        compose.setContent {
+            ZeroTheme { AboutScreen(AboutState("0.0.30", 30), onLicenses = {}, onBack = {}, onDocument = { calls += it.name }) }
+        }
+        compose.onNodeWithText("README").performClick()
+        compose.onNodeWithText("License").performClick()
+        compose.onNodeWithText("Third-party notices").performClick()
+        assertEquals(listOf("README", "LICENSE", "NOTICES"), calls)
+    }
+
+    @Test
     fun step2_11_settingsMainScreenshot() {
         showMain()
         compose.onRoot().captureRoboImage()

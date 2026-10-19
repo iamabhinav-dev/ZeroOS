@@ -77,6 +77,7 @@ Update this file in the same commit as the code and tests.
 | F14.5 | ✅ | OnboardingViewModelTest › f14_5_*, OnboardingScreenTest › f14_1_f14_5_*, OnboardingGateTest › f14_5_* | |
 | F14.6 | ✅ | OnboardingViewModelTest › f14_2_f14_6_*, OnboardingScreenTest › f14_6_*, AndroidOnboardingSystemTest › f14_6_* | Battery dialog on the phone |
 | F14.7 | ✅ | LauncherViewModelTest › f14_7_*, NotHomeAppBannerTest › f14_7_* | Line after battery saving resets the home app; Set as default fixes it; passed on the phone 2026-10-18 |
+| F14.8 | ✅ | DocumentsRepositoryTest › f14_8_*, DocumentParserTest › f14_8_*, DocumentReaderTest › f14_8_*, landscape_readerScreenshot, ReadBeforeUsingScreenTest › f14_8_*, landscape_readBeforeUsingScreenshot, ReadBeforeUsingViewModelTest › f14_8_*, nfrR7_*, OnboardingGateTest › f14_8_f14_5_*, ReleaseDocsAssetsTest › f14_8_*, SettingsScreensTest › f14_8_*, BackArrowTest › d052_document | First start: documents page before onboarding; after an update that changes them, asked once more |
 | F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
 | F16.1–F16.16 (excl. F16.13) | ⬜ | | |
