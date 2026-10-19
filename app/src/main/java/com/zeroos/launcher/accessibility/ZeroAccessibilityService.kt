@@ -44,9 +44,9 @@ import kotlinx.coroutines.withContext
 
 /**
  * ZeroOS's single Accessibility service (Step 4.2), shared by F4.4, F4.5, F8.7, F8.16 and later F16. Off by
- * default; the user turns it on after the explanation screen. It can't read screen content
- * (canRetrieveWindowContent is false): it only learns which app's window came to the front, and only for ZeroOS
- * and the apps wellbeing watches (D-023).
+ * default; the user turns it on after the explanation screen. For wellbeing it only learns which app's window came
+ * to the front, for ZeroOS and the apps wellbeing watches (D-023); it reads screen structure only inside YouTube and
+ * Instagram while the short-video blocker is on (D-057).
  */
 @AndroidEntryPoint
 class ZeroAccessibilityService : AccessibilityService() {
@@ -93,16 +93,18 @@ class ZeroAccessibilityService : AccessibilityService() {
             resources.getStringArray(R.array.wellbeing_puns_pause).size
         )
         val contentFactory = OverlayContentFactory(settings, apps, wellbeingState, sizes)
+        // One window for every blocker: only one screen at a time.
+        val oneScreen = OneScreen(OverlayWindow(this))
         enforcer = OutsideEnforcer(
             watcher,
             contentFactory,
-            OverlayWindow(this),
+            oneScreen.wellbeing,
             scope,
             logger,
             ownPackage = packageName,
             homeActivity = MainActivity::class.java.name
         )
-        shortForm = startShortForm(scope, contentFactory)
+        shortForm = startShortForm(scope, contentFactory, oneScreen.shortForm)
         scope.launch {
             combine(watcher.watched, settings.settings.map { it.shortForm.enabled }) { w, on -> w to on }
                 .distinctUntilChanged()
@@ -112,8 +114,8 @@ class ZeroAccessibilityService : AccessibilityService() {
         ContextCompat.registerReceiver(this, screen, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
-    /** The short-video blocker (F16): rules from the bundled asset, its own overlay window and guard. */
-    private fun startShortForm(scope: CoroutineScope, contentFactory: OverlayContentFactory): ShortFormBridge {
+    /** The short-video blocker (F16): rules from the bundled asset, its guard, and its place in the shared window. */
+    private fun startShortForm(scope: CoroutineScope, contentFactory: OverlayContentFactory, window: OverlayDisplay): ShortFormBridge {
         var rules: ShortFormRules? = null
         scope.launch {
             rules = withContext(Dispatchers.IO) { assets.open(RULES_FILE).bufferedReader().use { ShortFormRules.parse(it.readText()) } }
@@ -121,7 +123,7 @@ class ZeroAccessibilityService : AccessibilityService() {
         }
         val shortFormSettings = settings.settings.map<_, ShortFormSettings?> { it.shortForm }.stateIn(scope, SharingStarted.Eagerly, null)
         lateinit var guard: ShortFormGuard
-        val display = ShortFormOverlayDisplay(OverlayWindow(this), contentFactory, scope) { guard }
+        val display = ShortFormOverlayDisplay(window, contentFactory, scope) { guard }
         guard = ShortFormGuard({ shortFormSettings.value }, { gate.focus.value != null }, wellbeingState, display, clock, scope, logger)
         @OptIn(ExperimentalCoroutinesApi::class)
         val worker = Dispatchers.Default.limitedParallelism(1)

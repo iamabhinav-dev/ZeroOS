@@ -81,9 +81,12 @@ class ShortFormBridge(
     }
 }
 
-/** Shows the block screen (J3) in its own overlay window, with the pun or custom message and the pause for "Allow". */
+/**
+ * Shows the block screen (J3) in the shared overlay window ([OneScreen]), with the pun or custom message and the
+ * pause for "Allow".
+ */
 class ShortFormOverlayDisplay(
-    private val window: OverlayWindow,
+    private val window: OverlayDisplay,
     private val content: OverlayContentFactory,
     private val scope: CoroutineScope,
     private val guard: () -> ShortFormGuard
