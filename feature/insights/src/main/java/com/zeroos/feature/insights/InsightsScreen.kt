@@ -32,6 +32,8 @@ import com.zeroos.core.data.insights.InsightsRepository
 import com.zeroos.core.data.insights.UsageSummary
 import com.zeroos.core.data.permissions.SpecialPermissions
 import com.zeroos.core.data.settings.SettingsRepository
+import com.zeroos.core.data.wellbeing.ShortFormDay
+import com.zeroos.core.data.wellbeing.WellbeingStateRepository
 import com.zeroos.core.model.SpecialPermission
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.BackTitle
@@ -54,7 +56,9 @@ data class InsightsState(
     val summary: UsageSummary? = null,
     val labels: Map<String, String> = emptyMap(),
     val compareYesterday: Boolean = false,
-    val hasAccess: Boolean = true
+    val hasAccess: Boolean = true,
+    /** Today's short-video time and blocks, shown while the blocker is on (F16.14). */
+    val shortForm: ShortFormDay? = null
 )
 
 /** Insights (F10.1, F10.2, F10.8): read when the screen opens or comes back, never on a timer (F10.9). */
@@ -64,19 +68,22 @@ class InsightsViewModel @Inject constructor(
     settings: SettingsRepository,
     private val insights: InsightsRepository,
     /** Also used by [UsageAccessRoute] for the explanation screen (F10.11). */
-    val permissions: SpecialPermissions
+    val permissions: SpecialPermissions,
+    private val wellbeingState: WellbeingStateRepository
 ) : ViewModel() {
     private val summary = MutableStateFlow<UsageSummary?>(null)
     private val access = MutableStateFlow(true)
+    private val shortForm = MutableStateFlow(ShortFormDay())
 
-    val state: StateFlow<InsightsState> = combine(apps.apps, settings.settings, summary, access) { list, s, sum, a ->
+    val state: StateFlow<InsightsState> = combine(apps.apps, settings.settings, summary, access, shortForm) { list, s, sum, a, sf ->
         val labels = visibleApps(list, s).associate { it.key.packageName to it.label }
-        InsightsState(sum, labels, s.screenTime.compareYesterday, a)
+        InsightsState(sum, labels, s.screenTime.compareYesterday, a, sf.takeIf { s.shortForm.enabled })
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), InsightsState())
 
     fun refresh() {
         val granted = permissions.isGranted(SpecialPermission.USAGE_ACCESS)
         access.value = granted
+        viewModelScope.launch { shortForm.value = wellbeingState.shortFormToday() }
         if (granted) viewModelScope.launch { summary.value = insights.summary() }
     }
 
@@ -143,6 +150,10 @@ fun InsightsScreen(state: InsightsState, onAskAccess: () -> Unit, onBack: () -> 
         }
         item { BodyText(stringResource(R.string.insights_last_7_days), muted = true) }
         item { WeekChart(summary) }
+        state.shortForm?.let { sf ->
+            item { BodyText(stringResource(R.string.shorts_title), muted = true) }
+            item { BodyText(pluralStringResource(R.plurals.insights_shorts_line, sf.blocks, duration(sf.millis), sf.blocks)) }
+        }
     }
 }
 
