@@ -853,6 +853,155 @@ Kept for when F7 is built; not part of v1.1.
 ```
 *Opened from here and from the digest notification. Home shows no badge or count (F1.5).*
 
+## I. Phase 5: grayscale and minimal widgets (F11, F12) — DRAFT, not approved; Phase 5 deferred to the end (D-056)
+
+Doto has no ○ or ☐, so the calendar and to-do markers are drawn as dots (like the back arrow).
+
+### I1. Settings main after Phase 5
+```
+│  ‹ Settings                        │
+│  Home                            › │  calendar and to-do lines live here (I3)
+│  …                                 │
+│  Screen time                     › │
+│  Grayscale                       › │  → I2 (F11)            new
+│  Backup                          › │
+```
+
+### I2. Settings → Grayscale (F11.1, F11.2)
+ZeroOS can't switch grayscale itself (that needs ADB, F11.3); it opens Android's own screen.
+```
+┌────────────────────────────────────┐
+│  ‹ Grayscale                       │
+│  Android's color correction can    │
+│  show everything in gray.          │
+│                                    │
+│  Open color correction           › │  → Android's accessibility / color-
+│                                    │    correction screen
+│  There, turn on Color correction   │
+│  and choose Grayscale.             │  (F11.1)
+│                                    │
+│  Tip: turn on its shortcut (e.g.   │
+│  hold both volume keys) to switch  │  muted (F11.2)
+│  gray on and off any time.         │
+└────────────────────────────────────┘
+```
+
+### I3. Settings → Home with widgets (F12.4)
+```
+│  ‹ Home                            │
+│  Favorites                       › │
+│  …                                 │  (existing rows)
+│  Next calendar event       ‹off›   │  F12.2; asks for calendar access → I6
+│  To-do (up to 3)           ‹off›   │  F12.3
+```
+
+### I4. Home with both lines on (A1 slots ⑥ ⑦)
+```
+│  10:42                             │
+│  Thursday, 15 October · 82%        │
+│  2h 14m · 38 unlocks               │
+│  (F)                               │
+│                                    │
+│  ∙ Dentist · 4:30 pm               │  ⑥ next event today or tomorrow; tap → calendar app
+│  ⁘ buy milk                        │  ⑦ dotted box: tap the box → done (removed)
+│  ⁘ call home                       │     tap the text → edit it in place
+│  + add a task                      │  muted; only while fewer than 3
+```
+- ⑥ shows "Tomorrow · Dentist · 9:00" for tomorrow, "All day · Holiday" for all-day events, and is hidden when
+  there's nothing today or tomorrow.
+- ⑦ editing happens right on home: the line becomes a text field with the keyboard; Done or tapping elsewhere
+  saves; an empty task is removed. Up to 3 tasks, short (one line). Task text is never logged (F17.8).
+- Both lines follow the favorites alignment and shrink first when space runs out (A1 rules).
+
+### I5. To-do slot when empty
+```
+│  + add a task                      │  muted
+```
+
+### I6. Calendar access (F12.2)
+Android's normal permission dialog for "Calendar", after one explanation line in Settings:
+"Shows your next event on home. Nothing leaves your phone." Declined → the switch stays off.
+
+## K. Before going public — DRAFT, not approved (2026-10-19)
+Proposed requirement changes, added to REQUIREMENTS.md once approved:
+- **F13.6** Before an import replaces anything, the confirmation warns what it does and what a backup can't carry.
+- **F13.7** A backup records the ZeroOS version that made it (an added field, D-059), so the warning can say whether
+  it's from an older or a newer version.
+- **F14.8** Before ZeroOS can be used, the user confirms they have read and accept the README notes, LICENSE and
+  third-party notices **of the installed release**. The documents are inside the app (copied from the repo when the
+  APK is built), so they work offline and always match the release. Not skippable (an exception to F14.5). Asked
+  again only when a later release changes those documents. Safe mode (F18) never shows it.
+
+### K1. Import confirmation (replaces the one-line dialog in F6)
+```
+┌────────────────────────────────────┐
+│  Replace all settings with this    │
+│  backup?                           │
+│                                    │
+│  Everything you've set up now is   │  always shown
+│  replaced: favourites, hidden and  │
+│  renamed apps, limits, Focus and   │
+│  short videos. This can't be       │
+│  undone. Export your current       │
+│  settings first if you might want  │
+│  them back.                        │
+│                                    │
+│  Made with ZeroOS 0.0.20, an older │  one of these, from F13.7:
+│  version: settings added since     │  · older: "…settings added since then get their defaults."
+│  then get their defaults.          │  · newer: "Made with ZeroOS 0.0.35, a newer version:
+│                                    │     settings this version doesn't have are left out."
+│                                    │  · same version, or not recorded: no line
+│  Permissions such as Accessibility │  always shown
+│  and Usage access aren't in a      │
+│  backup; turn them on again in     │
+│  Settings if you need them.        │
+│                                    │
+│            [ Cancel ]  [ Import ]  │
+└────────────────────────────────────┘
+```
+*Scrolls if the text is large; landscape: the same dialog, wider.*
+
+### K2. Read before using (first onboarding page, before G1)
+```
+┌────────────────────────────────────┐
+│  Before you start                  │  no Skip on this page
+│                                    │
+│  ZeroOS replaces your home screen  │
+│  and may cause problems on your    │
+│  phone, including ones not known   │
+│  when this version was released.   │
+│  You use it at your own risk; its  │
+│  author is not responsible for any │
+│  damage or loss.                   │
+│                                    │
+│  Read these for ZeroOS 0.0.30:     │  versionName of the installed app
+│  README                          › │  → K3
+│  Licence                         › │  → K3
+│  Third-party notices             › │  → K3
+│                                    │
+│  ☐ I have read and understood      │  dotted box, like the website
+│    them and I agree.               │
+│                                    │
+│                       [ Continue ] │  dimmed until the box is ticked
+└────────────────────────────────────┘
+```
+*Landscape: two panes, the text and links on the left, the box and Continue on the right.*
+*After an update that changed the documents: the same page, titled "The documents changed", shown once on the next
+start before home; Continue then goes straight to home.*
+
+### K3. Document reader
+```
+┌────────────────────────────────────┐
+│  ← Licence                         │  BackTitle (D-052); back returns to K2
+│                                    │
+│  ZeroOS Launcher — Personal Use    │  the document's text as in the release:
+│  Licence                           │  headings in bold, lists kept, scrolls
+│  Copyright (c) 2026 …              │
+│  …                                 │
+└────────────────────────────────────┘
+```
+*Also reachable later from Settings → About: "README", "Licence", "Third-party notices".*
+
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
 - **Q2. Fonts:** Doto for all text, no font picker (D-020).
