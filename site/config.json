@@ -28,13 +28,20 @@
     { "key": "changelog", "path": "CHANGELOG.md" }
   ],
   "screens": [
-    { "key": "home", "src": "feature/home/src/test/screenshots/com.zeroos.feature.home.HomeScreenTest.step2_3_homeScreenshot.png" },
-    { "key": "applist", "src": "feature/applist/src/test/screenshots/com.zeroos.feature.applist.AppListScreenTest.step2_4_listScreenshot.png" },
-    { "key": "focus", "src": "feature/focus/src/test/screenshots/com.zeroos.feature.focus.FocusScreensTest.step4_5_pickerScreenshot.png" },
-    { "key": "pause", "src": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.StopScreensTest.step4_3_pauseScreenshot.png" },
-    { "key": "shorts", "src": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.ShortFormScreenTest.step6_3_shortFormScreenshot.png" },
-    { "key": "insights", "src": "feature/insights/src/test/screenshots/com.zeroos.feature.insights.InsightsScreenTest.step4_6_insightsScreenshot.png" },
-    { "key": "settings", "src": "feature/settings/src/test/screenshots/com.zeroos.feature.settings.SettingsScreensTest.step2_11_settingsMainScreenshot.png" }
+    { "key": "home", "src": "feature/home/src/test/screenshots/com.zeroos.feature.home.HomeScreenTest.step2_3_homeScreenshot.png",
+      "light": "feature/home/src/test/screenshots/com.zeroos.feature.home.HomeScreenTest.f6_1_homeLightScreenshot.png" },
+    { "key": "applist", "src": "feature/applist/src/test/screenshots/com.zeroos.feature.applist.AppListScreenTest.step2_4_listScreenshot.png",
+      "light": "feature/applist/src/test/screenshots/com.zeroos.feature.applist.AppListScreenTest.f6_1_listLightScreenshot.png" },
+    { "key": "focus", "src": "feature/focus/src/test/screenshots/com.zeroos.feature.focus.FocusScreensTest.step4_5_pickerScreenshot.png",
+      "light": "feature/focus/src/test/screenshots/com.zeroos.feature.focus.FocusScreensTest.step4_5_pickerLightScreenshot.png" },
+    { "key": "pause", "src": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.StopScreensTest.step4_3_pauseScreenshot.png",
+      "light": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.StopScreensTest.step4_3_pauseLightScreenshot.png" },
+    { "key": "shorts", "src": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.ShortFormScreenTest.step6_3_shortFormScreenshot.png",
+      "light": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.ShortFormScreenTest.step6_3_shortFormLightScreenshot.png" },
+    { "key": "insights", "src": "feature/insights/src/test/screenshots/com.zeroos.feature.insights.InsightsScreenTest.step4_6_insightsScreenshot.png",
+      "light": "feature/insights/src/test/screenshots/com.zeroos.feature.insights.InsightsScreenTest.step4_6_insightsLightScreenshot.png" },
+    { "key": "settings", "src": "feature/settings/src/test/screenshots/com.zeroos.feature.settings.SettingsScreensTest.step2_11_settingsMainScreenshot.png",
+      "light": "feature/settings/src/test/screenshots/com.zeroos.feature.settings.SettingsScreensTest.f6_1_settingsMainLightScreenshot.png" }
   ],
   "features": ["home", "applist", "limits", "focus", "shorts", "insights", "look", "private", "backup", "safe"],
   "fonts": {

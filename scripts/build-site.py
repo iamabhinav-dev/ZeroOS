@@ -141,10 +141,17 @@ def logo_svg(source, label=None):
     return re.sub(r"\s+", " ", svg).strip()
 
 
+def screen_images(key, alt):
+    """The dark and light screenshot of a screen; CSS shows the one matching the page's theme (lazy, so only it loads)."""
+    return "".join(
+        f'<img class="only-{theme}" src="assets/screens/{key}{suffix}.png" width="1176" height="2616" loading="lazy" alt="{alt}">'
+        for theme, suffix in (("dark", ""), ("light", "-light"))
+    )
+
+
 def blocks(strings, config, logo):
     screens = "\n".join(
-        f'<figure class="shot"><div class="phone"><img src="assets/screens/{s["key"]}.png" width="1176" height="2616" '
-        f'loading="lazy" alt="{text(strings, "screen_" + s["key"] + "_alt")}"></div>'
+        f'<figure class="shot"><div class="phone">{screen_images(s["key"], text(strings, "screen_" + s["key"] + "_alt"))}</div>'
         f'<figcaption><strong>{text(strings, "screen_" + s["key"] + "_title")}</strong>'
         f'<span>{text(strings, "screen_" + s["key"] + "_body")}</span></figcaption></figure>'
         for s in config["screens"]
@@ -213,7 +220,7 @@ def build(out_dir, only_check=False):
     strings = json.loads((SITE / "strings" / "en.json").read_text(encoding="utf-8"))
     config = json.loads((SITE / "config.json").read_text(encoding="utf-8"))
     check(template, script, style, strings, config)
-    sources = [ROOT / s["src"] for s in config["screens"]] + [ROOT / p for p in config["fonts"].values()] + [ROOT / config["logo"]]
+    sources = [ROOT / s[v] for s in config["screens"] for v in ("src", "light")] + [ROOT / p for p in config["fonts"].values()] + [ROOT / config["logo"]]
     missing = [str(p.relative_to(ROOT)) for p in sources if not p.is_file()]
     if missing:
         raise SiteError("missing files: " + ", ".join(missing))
@@ -233,6 +240,7 @@ def build(out_dir, only_check=False):
         shutil.copy(ROOT / path, out_dir / "assets" / "fonts" / Path(path).name)
     for screen in config["screens"]:
         shutil.copy(ROOT / screen["src"], out_dir / "assets" / "screens" / f"{screen['key']}.png")
+        shutil.copy(ROOT / screen["light"], out_dir / "assets" / "screens" / f"{screen['key']}-light.png")
     (out_dir / ".nojekyll").write_text("", encoding="utf-8")
 
 

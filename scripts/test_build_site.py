@@ -93,6 +93,8 @@ class RealSiteTest(unittest.TestCase):
             self.assertNotIn("data-t", page)
             self.assertNotIn("<!-- @", page)
             self.assertTrue((Path(out) / "site" / "assets" / "screens" / "home.png").is_file())
+            self.assertTrue((Path(out) / "site" / "assets" / "screens" / "home-light.png").is_file())
+            self.assertEqual(page.count('class="only-dark"'), page.count('class="only-light"'))
             self.assertTrue((Path(out) / "site" / ".nojekyll").is_file())
 
 
