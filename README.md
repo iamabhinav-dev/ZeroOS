@@ -1,7 +1,46 @@
 # ZeroOS Launcher
 
-A personal, minimalist, text-first Android launcher. Sideloaded on my own phone; no app store.
+<!-- in-app:start -->
+ZeroOS is a minimalist Android home screen: plain text in black and white, with no icons, badges or feeds. It
+shows the time, the date and the few apps you choose, and has optional screen-time limits, a Focus mode and a
+short-video blocker. It is made by one person for personal use and is not on any app store.
 
+## Before you install — read this
+- Read this README, the [LICENSE](LICENSE) and the [third-party notices](THIRD_PARTY_NOTICES.md) first.
+  **Installing ZeroOS means you have read and understood them and agree to them.** ZeroOS asks you to confirm
+  this when it first starts, and again if a later version changes these documents.
+- **Use at your own risk.** ZeroOS replaces your home screen and may cause problems (the phone hard to use,
+  missed calls, notifications or alarms, lost settings, battery drain, conflicts with your phone's software),
+  including problems not listed here or not known when it was released. You install it on your own judgement;
+  the author and owner of this repository is not responsible for any damage or loss.
+- **Personal use only.** Don't upload or share the APKs anywhere. To tell someone about ZeroOS, point them to this
+  repository.
+
+## Install
+1. Use a phone with Android 8.0 or newer.
+2. On the phone, download `zeroos-<version>-release.apk` from this repository's GitHub Releases page and open it.
+   Allow your browser or file manager to install apps if Android asks. Play Protect may warn about an app from
+   outside the store.
+3. Press Home and choose ZeroOS, or set it in Settings → Apps → Default apps → Home app.
+
+**Updating:** export your settings first (ZeroOS Settings → Backup → Export settings), then install the new APK
+over the old one.
+
+## Go back to your old launcher
+Choose your old launcher in Settings → Apps → Default apps → Home app. Keep it installed: it's your fallback if
+anything goes wrong. If ZeroOS keeps crashing, it starts in a simple safe mode with a button for this.
+
+## What ZeroOS can access
+- **No internet.** ZeroOS has no internet permission, no ads, no analytics and no accounts; everything stays on
+  your phone.
+- **Optional, off until you turn on the feature that needs it:** Usage access (screen time and limits),
+  Accessibility (limits and breaks outside ZeroOS, the short-video blocker, double-tap to lock), and Do Not
+  Disturb access (Focus). Each one is explained before Android asks.
+- **Also used:** setting the wallpaper, opening alarms, asking to keep running in the background, and opening
+  Android's uninstall dialog for an app you choose.
+<!-- in-app:end -->
+
+## For developers
 | Document | What it covers |
 |---|---|
 | [REQUIREMENTS.md](REQUIREMENTS.md) | What to build (feature and requirement IDs, defaults in Appendix A) |
@@ -11,14 +50,6 @@ A personal, minimalist, text-first Android launcher. Sideloaded on my own phone;
 | [docs/DECISIONS.md](docs/DECISIONS.md) | Decisions already made |
 | [docs/wireframes.md](docs/wireframes.md) | Approved screen layouts |
 | [CHANGELOG.md](CHANGELOG.md) | Changes per installed version |
-
-## Before you install — read this
-- Read this README, [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) first.
-  **Installing ZeroOS means you have read and understood them and agree to them.**
-- **Use at your own risk.** ZeroOS replaces your home screen and may cause problems (the phone hard to use,
-  missed notifications or alarms, lost settings, conflicts with your phone's software), including problems not
-  listed here or not known when it was released. You install it on your own judgement; the author and owner of
-  this repository is not responsible for any damage or loss.
 
 ## Setup (command line, no Android Studio)
 - JDK 21 in `~/.local/jdk-21` (builds Java 17 bytecode; Java 21 is needed by Robolectric for API 37)
