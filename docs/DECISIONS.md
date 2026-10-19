@@ -318,3 +318,14 @@ target apps (YouTube, Instagram), and only while the blocker is on. To know whic
 receives window changes from all apps while the blocker is on and uses only the app name. The explanation screens
 say this plainly. This updates D-023 for F16.
 *Why:* User's choice; required by F16 as written.
+
+**D-059 — Settings stay compatible across versions** · 2026-10-19 · Accepted
+Settings are only ever added, each with an Appendix A default; nothing stored is renamed, retyped, removed or
+reused. Older files (settings and backups) get defaults for what's missing; newer ones of the same schema keep what
+this version knows and drop the rest, and an unknown option falls back to its default. A change that can't be done
+by adding raises the schema version (older ZeroOS then refuses the backup instead of half-importing it) and comes
+with a migration and its test. A real export of every release is kept under `core/data/src/test/resources/backups/`
+and must keep importing with nothing lost (`BackupCompatibilityTest`). Imported values are pulled into their
+Appendix A ranges. If the settings file ever can't be read, it's copied to `launcher_settings.unreadable.json`
+before the reset to defaults, so the setup can still be recovered.
+*Why:* User's question about forward and backward compatibility; they chose all four safeguards.
