@@ -295,3 +295,12 @@ Scheduled focus (F9.6) moves to the end, after the other phases; the proposed ed
 about Do Not Disturb timing (WorkManager, possibly a few minutes late) wait until then. Step 4.5 is done without it.
 The Custom length's ‹ and › are dimmed and do nothing at 5 and 240 min (no wrapping).
 *Why:* User's choice.
+
+**D-055 — How screen time is counted and shown (F10)** · 2026-10-18 · Accepted
+Screen time is the time apps were in front, from usage events, **not counting ZeroOS itself** (home isn't use of an
+app). "vs yesterday" compares with yesterday **up to the same time of day**, so mornings aren't compared with whole
+days. Unlocks are `KEYGUARD_HIDDEN` events (Android 9+; hidden on 8). Doto has no ↓/↑ or block characters, so the
+comparison uses a dotted arrow and every chart is drawn as dots (F10.6). At the largest text sizes the chart styles
+fall back to Text so home never scrolls (A1 layout rules). With the progress style and no goal set, the 2 h default
+is used. Durations read "2h 14m", "4h" or "14m".
+*Why:* Implementation choices for Step 4.6 within the approved wireframes A3, H4, H12.

@@ -11,6 +11,7 @@ import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.AppearanceSettings
 import com.zeroos.core.model.settings.FocusIcon
 import com.zeroos.core.model.settings.FocusSettings
+import com.zeroos.core.model.settings.ScreenTimeSettings
 import com.zeroos.core.model.settings.WellbeingSettings
 import com.zeroos.core.ui.ZeroTheme
 import io.mockk.mockk
@@ -74,6 +75,9 @@ class BackArrowTest {
     }
 
     @Test
+    fun d052_screenTime() = tapsBack { ScreenTimeSettingsScreen(ScreenTimeSettings(), ScreenTimeActions({}, {}, {}, {}, {}), onBack = it) }
+
+    @Test
     fun d052_about() = tapsBack { AboutScreen(AboutState(), onLicenses = {}, onBack = it) }
 
     @Test
@@ -95,6 +99,7 @@ class BackArrowTest {
             SettingsPage.WELLBEING_APPS to SettingsPage.WELLBEING,
             SettingsPage.FOCUS to SettingsPage.WELLBEING,
             SettingsPage.FOCUS_ICON to SettingsPage.FOCUS,
+            SettingsPage.SCREEN_TIME to SettingsPage.MAIN,
             SettingsPage.BACKUP to SettingsPage.MAIN,
             SettingsPage.ABOUT to SettingsPage.MAIN,
             SettingsPage.LICENSES to SettingsPage.ABOUT

@@ -51,6 +51,7 @@ enum class SettingsPage(val logName: String) {
     WELLBEING_APPS("wellbeing apps"),
     FOCUS("focus"),
     FOCUS_ICON("focus icon"),
+    SCREEN_TIME("screen time"),
     BACKUP("backup"),
     ABOUT("about"),
     LICENSES("licenses");
@@ -77,6 +78,7 @@ fun SettingsRoute(
     onClose: () -> Unit,
     onOpenDiagnostics: () -> Unit,
     onStartFocus: () -> Unit = {},
+    onOpenInsights: () -> Unit = {},
     /** The page to open on, e.g. Focus when coming back from the Focus picker. */
     startPage: SettingsPage = SettingsPage.MAIN,
     viewModel: SettingsViewModel = hiltViewModel()
@@ -128,13 +130,13 @@ fun SettingsRoute(
 
         SettingsPage.PICK_SWIPE_RIGHT -> SwipeAppPicker(SwipeSide.RIGHT, state, viewModel, onDone = back)
 
-        else -> SimplePage(page, onOpen = { page = it }, onStartFocus = onStartFocus, onBack = back)
+        else -> SimplePage(page, onOpen = { page = it }, SimpleCallbacks(onStartFocus, onOpenInsights), onBack = back)
     }
 }
 
 /** Pages that only open other pages or go back: Appearance, Phone wallpaper, Wellbeing, Backup, About, Licenses. */
 @Composable
-private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onStartFocus: () -> Unit, onBack: () -> Unit) {
+private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, open: SimpleCallbacks, onBack: () -> Unit) {
     when (page) {
         SettingsPage.APPEARANCE -> AppearanceRoute(onPhoneWallpaper = { onOpen(SettingsPage.PHONE_WALLPAPER) }, onBack = onBack)
 
@@ -150,9 +152,11 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onSta
         SettingsPage.FOCUS, SettingsPage.FOCUS_ICON -> FocusSettingsRoute(
             showIcons = page == SettingsPage.FOCUS_ICON,
             onOpenIcons = { onOpen(SettingsPage.FOCUS_ICON) },
-            onStartFocus = onStartFocus,
+            onStartFocus = open.focus,
             onBack = onBack
         )
+
+        SettingsPage.SCREEN_TIME -> ScreenTimeSettingsRoute(onOpenInsights = open.insights, onBack = onBack)
 
         SettingsPage.BACKUP -> BackupRoute(onBack = onBack)
 
@@ -163,6 +167,9 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, onSta
         else -> Unit
     }
 }
+
+/** Screens outside Settings that a page opens: the Focus picker and Insights. */
+private data class SimpleCallbacks(val focus: () -> Unit, val insights: () -> Unit)
 
 /** Gestures page with the Accessibility explanation for double-tap to lock (F4.5, Step 4.2). */
 @Composable
@@ -241,6 +248,7 @@ fun SettingsMainScreen(onOpen: (SettingsPage) -> Unit, onOpenDiagnostics: () -> 
         item { NavRow(R.string.settings_gestures) { onOpen(SettingsPage.GESTURES) } }
         item { NavRow(R.string.appearance_title) { onOpen(SettingsPage.APPEARANCE) } }
         item { NavRow(R.string.settings_wellbeing) { onOpen(SettingsPage.WELLBEING) } }
+        item { NavRow(R.string.settings_screen_time) { onOpen(SettingsPage.SCREEN_TIME) } }
         item { NavRow(R.string.backup_title) { onOpen(SettingsPage.BACKUP) } }
         item { NavRow(R.string.diagnostics_title, onOpenDiagnostics) }
         item { NavRow(R.string.settings_about) { onOpen(SettingsPage.ABOUT) } }
@@ -266,6 +274,7 @@ object SettingsTestTags {
     const val WELLBEING_APPS = "settings_wellbeing_apps"
     const val FOCUS = "settings_focus"
     const val FOCUS_ICON = "settings_focus_icon"
+    const val SCREEN_TIME = "settings_screen_time"
 
     fun wallpaper(id: String) = "wallpaper_$id"
 

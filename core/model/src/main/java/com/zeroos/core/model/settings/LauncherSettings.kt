@@ -25,7 +25,8 @@ data class LauncherSettings(
     val phoneWallpapers: PhoneWallpaperHistory = PhoneWallpaperHistory(),
     /** Mindful pause and daily limits (F8); off by default, settings kept while off (F8.10). */
     val wellbeing: WellbeingSettings = WellbeingSettings(),
-    val focus: FocusSettings = FocusSettings()
+    val focus: FocusSettings = FocusSettings(),
+    val screenTime: ScreenTimeSettings = ScreenTimeSettings()
 ) {
     companion object {
         const val CURRENT_VERSION = 1
@@ -187,3 +188,22 @@ enum class FocusIcon { MIX, SPHERE, RIM, FLOW }
 
 /** F9.2: the first preset. */
 const val DEFAULT_FOCUS_MINUTES = 25
+
+/** Screen-time stats on home and Insights (F10); defaults from Appendix A. */
+@Serializable
+data class ScreenTimeSettings(
+    /** Stats on home (F10.3); on by default, shown once Usage access is granted. */
+    val showOnHome: Boolean = true,
+    /** F10.5. */
+    val style: StatsStyle = StatsStyle.TEXT,
+    /** Daily goal for the progress bar, or null when off (F10.7): 30 min–8 h. */
+    val goalMinutes: Int? = null,
+    /** "↓ 12% vs yesterday" (F10.8). */
+    val compareYesterday: Boolean = false,
+    /** "Tap to show screen time" was dismissed: stats stay hidden until turned on in Settings (F10.11). */
+    val hintDismissed: Boolean = false
+)
+
+/** F10.5: how home shows screen time. */
+@Serializable
+enum class StatsStyle { TEXT, PROGRESS, WEEKLY, HOURLY }

@@ -8,6 +8,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.zeroos.core.ui.ZeroTheme
+import com.zeroos.feature.settings.SettingsPage
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -46,11 +47,9 @@ class NotHomeAppBannerTest {
 
 class FocusNavigationTest {
     @org.junit.Test
-    fun d051_backFromThePickerReturnsWhereItWasOpened() {
-        org.junit.Assert.assertEquals(
-            LauncherScreen.SETTINGS to com.zeroos.feature.settings.SettingsPage.FOCUS,
-            focusBack(fromSettings = true)
-        )
-        org.junit.Assert.assertEquals(LauncherScreen.HOME to com.zeroos.feature.settings.SettingsPage.MAIN, focusBack(fromSettings = false))
+    fun d051_backReturnsWhereFocusOrInsightsWasOpened() {
+        org.junit.Assert.assertEquals(LauncherScreen.SETTINGS to SettingsPage.FOCUS, backFrom(SettingsPage.FOCUS))
+        org.junit.Assert.assertEquals(LauncherScreen.SETTINGS to SettingsPage.SCREEN_TIME, backFrom(SettingsPage.SCREEN_TIME))
+        org.junit.Assert.assertEquals(LauncherScreen.HOME to SettingsPage.MAIN, backFrom(null))
     }
 }

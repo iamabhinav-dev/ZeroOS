@@ -71,6 +71,26 @@ object DotIcons {
         "....."
     )
 
+    /** Less than yesterday (F10.8). Doto has no "↓". */
+    val Down = listOf(
+        "..●..",
+        "..●..",
+        "..●..",
+        "●.●.●",
+        ".●●●.",
+        "..●.."
+    )
+
+    /** More than yesterday (F10.8). Doto has no "↑". */
+    val Up = listOf(
+        "..●..",
+        ".●●●.",
+        "●.●.●",
+        "..●..",
+        "..●..",
+        "..●.."
+    )
+
     /** Lightning bolt shown while charging (F1.3). */
     val Bolt = listOf(
         "...●.",

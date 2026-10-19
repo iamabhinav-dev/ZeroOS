@@ -90,10 +90,13 @@ class SettingsScreensTest {
     @Test
     fun step2_11_mainOpensEverySection() {
         showMain()
-        listOf("Home", "App list", "Gestures", "Appearance", "Wellbeing", "Backup", "Diagnostics", "About").forEach {
+        listOf("Home", "App list", "Gestures", "Appearance", "Wellbeing", "Screen time", "Backup", "Diagnostics", "About").forEach {
             compose.onNodeWithText(it).performClick()
         }
-        assertEquals(listOf("HOME", "APP_LIST", "GESTURES", "APPEARANCE", "WELLBEING", "BACKUP", "diagnostics", "ABOUT"), calls)
+        assertEquals(
+            listOf("HOME", "APP_LIST", "GESTURES", "APPEARANCE", "WELLBEING", "SCREEN_TIME", "BACKUP", "diagnostics", "ABOUT"),
+            calls
+        )
     }
 
     @Test

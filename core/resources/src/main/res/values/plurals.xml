@@ -5,4 +5,9 @@
         <item quantity="one">%1$d more minute (%2$d)</item>
         <item quantity="other">%1$d more minutes (%2$d)</item>
     </plurals>
+    <!-- "38 unlocks" (F10.1). -->
+    <plurals name="stats_unlocks">
+        <item quantity="one">%d unlock</item>
+        <item quantity="other">%d unlocks</item>
+    </plurals>
 </resources>
