@@ -10,4 +10,14 @@
         <item quantity="one">%d unlock</item>
         <item quantity="other">%d unlocks</item>
     </plurals>
+    <!-- Custom block message: "87 left" (F16.9). -->
+    <plurals name="shorts_chars_left">
+        <item quantity="one">%d left</item>
+        <item quantity="other">%d left</item>
+    </plurals>
+    <!-- Insights: "12m today · blocked 4 times" (F16.14). -->
+    <plurals name="insights_shorts_line">
+        <item quantity="one">%1$s today · blocked %2$d time</item>
+        <item quantity="other">%1$s today · blocked %2$d times</item>
+    </plurals>
 </resources>

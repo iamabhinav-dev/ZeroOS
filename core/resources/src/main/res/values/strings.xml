@@ -143,8 +143,8 @@
     <string name="permission_usage_title">Usage access</string>
     <string name="permission_usage_why">ZeroOS needs usage access to show your screen time and to know how long you\'ve used an app today.</string>
     <string name="permission_accessibility_title">Accessibility</string>
-    <string name="permission_accessibility_why">ZeroOS needs accessibility to keep your limits outside ZeroOS and for double-tap to lock.</string>
-    <string name="permission_accessibility_reads">It sees which app is in front and reads nothing else.</string>
+    <string name="permission_accessibility_why">ZeroOS needs accessibility to keep your limits outside ZeroOS, to block short videos and for double-tap to lock.</string>
+    <string name="permission_accessibility_reads">It sees which app is in front. Only while the short-video blocker is on, it also looks at the layout of YouTube and Instagram (button and list names, never what\'s in a video or comment). Android allows this for all apps at once; ZeroOS only looks inside those two.</string>
     <string name="permission_accessibility_banking">Some banking and payment apps warn while any accessibility service is on.</string>
     <string name="permission_dnd_title">Do Not Disturb</string>
     <string name="permission_dnd_why">Lets Focus turn on Do Not Disturb and back off.</string>
@@ -292,6 +292,45 @@
         <item>Give me a moment.</item>
         <item>Last one. Definitely.</item>
     </string-array>
+    <string name="shorts_title">Short videos</string>
+    <string name="shorts_enable">Block short videos</string>
+    <string name="shorts_youtube">YouTube Shorts</string>
+    <string name="shorts_instagram">Instagram Reels</string>
+    <string name="shorts_mode">Mode</string>
+    <string name="shorts_mode_block">Block</string>
+    <string name="shorts_mode_limit">Limit</string>
+    <string name="shorts_allowance">Daily allowance</string>
+    <string name="shorts_message">Message</string>
+    <string name="shorts_message_pun">Random pun</string>
+    <string name="shorts_message_custom">Custom</string>
+    <string name="shorts_custom">Custom message</string>
+    <string name="shorts_custom_hint">Your message</string>
+    <string name="shorts_auto_home">Go home automatically</string>
+    <string name="shorts_allow">"\"Allow 5 minutes\""</string>
+    <string name="shorts_allow_button">Allow 5 minutes (%1$d)</string>
+    <string name="shorts_play">Short video blocked</string>
+    <string-array name="shorts_puns">
+        <item>Short answer: no.</item>
+        <item>This Short has been cut short.</item>
+        <item>Reel life is out there.</item>
+        <item>Plot twist: you close the app.</item>
+        <item>You\'ve reached the end of the feed. It\'s outside.</item>
+        <item>Reels: 0. You: 1.</item>
+        <item>Swipe right… on real life.</item>
+        <item>Loading… your actual life.</item>
+        <item>Your thumb deserves a day off.</item>
+        <item>Breaking news: the outside world is still there.</item>
+        <item>This feed is on a diet.</item>
+        <item>Nothing to see here. Go do something real.</item>
+        <item>Infinite scroll, finite life.</item>
+        <item>The algorithm will survive without you.</item>
+        <item>No more Shorts. Long story.</item>
+        <item>You\'ve been un-reeled.</item>
+        <item>Fun fact: the next video isn\'t better.</item>
+        <item>Skip the reel, keep the deal.</item>
+        <item>Your attention span called. It wants a break.</item>
+        <item>Reels can wait. Your life can\'t.</item>
+    </string-array>
     <string-array name="wellbeing_puns_pause">
         <item>Breathe in. Is this really the plan?</item>
         <item>Your thumb got here first. Did you?</item>
@@ -356,7 +395,7 @@
     <string name="gestures_double_tap">Double-tap to lock</string>
     <string name="gestures_accessibility_off">Accessibility is off for ZeroOS. Tap to turn it on.</string>
     <string name="gestures_accessibility_stopped">Accessibility is on but not running. Your phone may have stopped it: let ZeroOS run in the background (Settings → Battery).</string>
-    <string name="accessibility_service_description">Lets ZeroOS lock the screen with a double-tap and open notifications with a swipe down. It reads nothing on your screen.</string>
+    <string name="accessibility_service_description">Lets ZeroOS lock the screen with a double-tap, open notifications with a swipe down, keep your limits and, if you turn it on, block short videos. For that it only looks at the layout of YouTube and Instagram. Nothing leaves your phone.</string>
     <string name="about_version">%1$s %2$s (%3$d)</string>
     <string name="about_licenses">Open-source licenses</string>
     <string name="licenses_libraries">AndroidX, Jetpack Compose, Kotlin, kotlinx and Dagger Hilt: Apache License 2.0</string>

@@ -78,6 +78,11 @@ class BackArrowTest {
     fun d052_screenTime() = tapsBack { ScreenTimeSettingsScreen(ScreenTimeSettings(), ScreenTimeActions({}, {}, {}, {}, {}), onBack = it) }
 
     @Test
+    fun d052_shortVideos() = tapsBack {
+        ShortFormSettingsScreen(ShortFormUiState(), ShortFormActions({}, { _, _ -> }, {}, {}, {}), onBack = it)
+    }
+
+    @Test
     fun d052_about() = tapsBack { AboutScreen(AboutState(), onLicenses = {}, onBack = it) }
 
     @Test
@@ -100,6 +105,7 @@ class BackArrowTest {
             SettingsPage.FOCUS to SettingsPage.WELLBEING,
             SettingsPage.FOCUS_ICON to SettingsPage.FOCUS,
             SettingsPage.SCREEN_TIME to SettingsPage.MAIN,
+            SettingsPage.SHORT_VIDEOS to SettingsPage.WELLBEING,
             SettingsPage.BACKUP to SettingsPage.MAIN,
             SettingsPage.ABOUT to SettingsPage.MAIN,
             SettingsPage.LICENSES to SettingsPage.ABOUT

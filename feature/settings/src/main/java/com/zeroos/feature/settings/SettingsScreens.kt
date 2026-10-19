@@ -52,6 +52,7 @@ enum class SettingsPage(val logName: String) {
     FOCUS("focus"),
     FOCUS_ICON("focus icon"),
     SCREEN_TIME("screen time"),
+    SHORT_VIDEOS("short videos"),
     BACKUP("backup"),
     ABOUT("about"),
     LICENSES("licenses");
@@ -63,7 +64,7 @@ enum class SettingsPage(val logName: String) {
             PICK_SWIPE_LEFT, PICK_SWIPE_RIGHT -> GESTURES
             LICENSES -> ABOUT
             PHONE_WALLPAPER -> APPEARANCE
-            WELLBEING_APPS, FOCUS -> WELLBEING
+            WELLBEING_APPS, FOCUS, SHORT_VIDEOS -> WELLBEING
             FOCUS_ICON -> FOCUS
             else -> MAIN
         }
@@ -146,6 +147,7 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, open:
             showApps = page == SettingsPage.WELLBEING_APPS,
             onOpenApps = { onOpen(SettingsPage.WELLBEING_APPS) },
             onOpenFocus = { onOpen(SettingsPage.FOCUS) },
+            onOpenShortForm = { onOpen(SettingsPage.SHORT_VIDEOS) },
             onBack = onBack
         )
 
@@ -155,6 +157,8 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, open:
             onStartFocus = open.focus,
             onBack = onBack
         )
+
+        SettingsPage.SHORT_VIDEOS -> ShortFormSettingsRoute(onBack = onBack)
 
         SettingsPage.SCREEN_TIME -> ScreenTimeSettingsRoute(onOpenInsights = open.insights, onBack = onBack)
 
@@ -275,6 +279,8 @@ object SettingsTestTags {
     const val FOCUS = "settings_focus"
     const val FOCUS_ICON = "settings_focus_icon"
     const val SCREEN_TIME = "settings_screen_time"
+    const val SHORT_VIDEOS = "settings_short_videos"
+    const val SHORT_MESSAGE = "settings_short_message"
 
     fun wallpaper(id: String) = "wallpaper_$id"
 
