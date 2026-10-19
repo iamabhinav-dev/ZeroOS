@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-t="page_title"></title>
+  <meta name="description" data-t-attr="content:page_description">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <!-- @data -->
+</head>
+<body>
+  <a class="skip" href="#main" data-t="skip_to_content"></a>
+
+  <header class="bar">
+    <a class="bar-brand" href="#top" data-t-attr="aria-label:brand_name"><!-- @logo --></a>
+    <nav class="bar-nav">
+      <a href="#look" data-t="nav_look"></a>
+      <a href="#features" data-t="nav_features"></a>
+      <a href="#get" data-t="nav_get"></a>
+      <a href="#docs" data-t="nav_docs"></a>
+    </nav>
+    <button class="theme" type="button" id="theme" data-t-attr="aria-label:theme_toggle,title:theme_toggle">
+      <span class="theme-dot" aria-hidden="true"></span>
+      <span class="theme-label" id="theme-label" data-t="theme_dark"></span>
+    </button>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-text">
+        <p class="kicker" data-t="hero_kicker"></p>
+        <h1 class="hero-title" data-t="hero_title"></h1>
+        <p class="lead" data-t="hero_body"></p>
+        <div class="actions">
+          <a class="button" href="#get" data-t="hero_cta_get"></a>
+          <a class="link" href="#look" data-t="hero_cta_look"></a>
+        </div>
+        <p class="note" data-t="hero_note"></p>
+      </div>
+      <figure class="phone hero-phone">
+        <img src="assets/screens/home.png" width="1176" height="2616" data-t-attr="alt:hero_screen_alt">
+      </figure>
+    </section>
+
+    <div class="dots" aria-hidden="true"></div>
+
+    <section class="section" id="look">
+      <h2 data-t="look_title"></h2>
+      <p class="lead" data-t="look_body"></p>
+      <div class="gallery" tabindex="0" data-t-attr="aria-label:look_hint">
+        <!-- @screens -->
+      </div>
+      <p class="note" data-t="look_hint"></p>
+    </section>
+
+    <div class="dots" aria-hidden="true"></div>
+
+    <section class="section" id="features">
+      <h2 data-t="features_title"></h2>
+      <ul class="features">
+        <!-- @features -->
+      </ul>
+    </section>
+
+    <div class="dots" aria-hidden="true"></div>
+
+    <section class="section" id="get">
+      <h2 data-t="get_title"></h2>
+      <p class="lead" data-t="get_body"></p>
+
+      <div class="disclaimer" role="note" aria-labelledby="disclaimer-title">
+        <h3 id="disclaimer-title" data-t="disclaimer_title"></h3>
+        <p data-t="disclaimer_docs"></p>
+        <ul class="doc-links">
+          <!-- @doclinks -->
+        </ul>
+        <p data-t="disclaimer_risk"></p>
+        <p class="strong" data-t="disclaimer_liability"></p>
+        <p data-t="disclaimer_personal"></p>
+        <label class="accept">
+          <input type="checkbox" id="accept">
+          <span class="box" aria-hidden="true"></span>
+          <span data-t="disclaimer_accept"></span>
+        </label>
+      </div>
+
+      <p class="locked-note" id="locked-note" data-t="disclaimer_locked"></p>
+      <div class="channels" id="channels" data-locked="true">
+        <!-- @channels -->
+      </div>
+      <p class="note">
+        <a class="link" data-href="releasesPage" data-t="releases_all"></a>
+      </p>
+
+      <h3 data-t="install_title"></h3>
+      <ol class="steps">
+        <li data-t="install_step_backup"></li>
+        <li data-t="install_step_download"></li>
+        <li data-t="install_step_allow"></li>
+        <li data-t="install_step_home"></li>
+        <li data-t="install_step_back"></li>
+      </ol>
+    </section>
+
+    <div class="dots" aria-hidden="true"></div>
+
+    <section class="section" id="docs">
+      <h2 data-t="docs_title"></h2>
+      <p class="lead" data-t="docs_body"></p>
+      <ul class="docs">
+        <!-- @docs -->
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-brand"><!-- @logo --></div>
+    <p data-t="footer_license"></p>
+    <p data-t="footer_font"></p>
+    <p><a class="link" data-href="repoPage" data-t="footer_repo"></a></p>
+    <p class="note" data-t="footer_android"></p>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

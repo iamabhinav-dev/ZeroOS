@@ -1,0 +1,45 @@
+{
+  "releasesApi": "https://api.github.com/repos/iamabhinav-dev/ZeroOS/releases?per_page=50",
+  "releasesPage": "https://github.com/iamabhinav-dev/ZeroOS/releases",
+  "repoPage": "https://github.com/iamabhinav-dev/ZeroOS",
+  "docsBase": "https://github.com/iamabhinav-dev/ZeroOS/blob/main/",
+  "apkSuffix": "-release.apk",
+  "channels": [
+    {
+      "id": "stable",
+      "prerelease": false,
+      "tagPattern": "^v[1-9][0-9]*\\.[0-9]+\\.[0-9]+$"
+    },
+    {
+      "id": "beta",
+      "prerelease": true,
+      "tagPattern": "^v[0-9]+\\.[0-9]+\\.[0-9]+-(beta|rc)"
+    },
+    {
+      "id": "early",
+      "retireWhen": "stable",
+      "tagPattern": "^v0\\.[0-9]+\\.[0-9]+"
+    }
+  ],
+  "docs": [
+    { "key": "readme", "path": "README.md" },
+    { "key": "license", "path": "LICENSE" },
+    { "key": "notices", "path": "THIRD_PARTY_NOTICES.md" },
+    { "key": "changelog", "path": "CHANGELOG.md" }
+  ],
+  "screens": [
+    { "key": "home", "src": "feature/home/src/test/screenshots/com.zeroos.feature.home.HomeScreenTest.step2_3_homeScreenshot.png" },
+    { "key": "applist", "src": "feature/applist/src/test/screenshots/com.zeroos.feature.applist.AppListScreenTest.step2_4_listScreenshot.png" },
+    { "key": "focus", "src": "feature/focus/src/test/screenshots/com.zeroos.feature.focus.FocusScreensTest.step4_5_pickerScreenshot.png" },
+    { "key": "pause", "src": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.StopScreensTest.step4_3_pauseScreenshot.png" },
+    { "key": "shorts", "src": "feature/wellbeing/src/test/screenshots/com.zeroos.feature.wellbeing.ShortFormScreenTest.step6_3_shortFormScreenshot.png" },
+    { "key": "insights", "src": "feature/insights/src/test/screenshots/com.zeroos.feature.insights.InsightsScreenTest.step4_6_insightsScreenshot.png" },
+    { "key": "settings", "src": "feature/settings/src/test/screenshots/com.zeroos.feature.settings.SettingsScreensTest.step2_11_settingsMainScreenshot.png" }
+  ],
+  "features": ["home", "applist", "limits", "focus", "shorts", "insights", "look", "private", "backup", "safe"],
+  "fonts": {
+    "regular": "core/ui/src/main/res/font/doto_regular.ttf",
+    "bold": "core/ui/src/main/res/font/doto_bold.ttf"
+  },
+  "logo": "docs/brand/zeroos-logo.svg"
+}
