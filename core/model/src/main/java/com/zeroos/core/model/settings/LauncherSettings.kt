@@ -27,7 +27,9 @@ data class LauncherSettings(
     val wellbeing: WellbeingSettings = WellbeingSettings(),
     val focus: FocusSettings = FocusSettings(),
     val screenTime: ScreenTimeSettings = ScreenTimeSettings(),
-    val shortForm: ShortFormSettings = ShortFormSettings()
+    val shortForm: ShortFormSettings = ShortFormSettings(),
+    /** Fingerprint of the README notes, LICENSE and notices the user accepted (F14.8); null until accepted. */
+    val acceptedDocuments: String? = null
 ) {
     companion object {
         const val CURRENT_VERSION = 1
