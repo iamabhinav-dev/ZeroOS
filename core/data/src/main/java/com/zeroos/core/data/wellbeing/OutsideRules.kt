@@ -35,17 +35,20 @@ fun currentSessionStart(
 ): Long? {
     val intervals = mutableListOf<LongArray>()
     var openSince: Long? = null
+    var first = true
     for (event in events.filter { it.packageName == packageName }.sortedBy { it.timeMillis }) {
         when (event.type) {
             UsageEvent.Type.RESUMED -> if (openSince == null) openSince = event.timeMillis
 
+            // A "left" with nothing open is the stop after a pause; only the very first one means "open at the start".
             UsageEvent.Type.PAUSED -> {
-                intervals += longArrayOf(openSince ?: windowStartMillis, event.timeMillis)
+                (openSince ?: windowStartMillis.takeIf { first })?.let { intervals += longArrayOf(it, event.timeMillis) }
                 openSince = null
             }
 
             UsageEvent.Type.UNLOCKED -> Unit
         }
+        first = false
     }
     val open = openSince ?: nowMillis.takeIf { knownInFront } ?: return null
     var start = open
