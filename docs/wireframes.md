@@ -1004,8 +1004,8 @@ Android's normal permission dialog for "Calendar", after one explanation line in
 
 ---
 
-## K. Before going public — DRAFT, not approved (2026-10-19)
-Proposed requirement changes, added to REQUIREMENTS.md once approved:
+## K. Before going public — approved 2026-10-19
+Requirements (added to REQUIREMENTS.md):
 - **F13.6** Before an import replaces anything, the confirmation warns what it does and what a backup can't carry.
 - **F13.7** A backup records the ZeroOS version that made it (an added field, D-059), so the warning can say whether
   it's from an older or a newer version.
