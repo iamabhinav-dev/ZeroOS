@@ -350,7 +350,7 @@ Grayscale screen, widget settings, and home calendar/to-do lines. **Approved by 
 ### Step 6.0 — Wireframes for Phase 6 ✅
 Block overlay, short-form blocker settings, explanation screen. **Approved by me before Step 6.1.**
 
-### Step 6.1 — Detection rules as data
+### Step 6.1 — Detection rules as data ✅
 - `assets/shortform_rules.json`: `{ version, apps: [{ package, viewIds: [...], minAppVersion? }] }`.
 - View IDs taken from the node-tree dumps captured with the debug dumper (Step 0.5); re-capture if apps have updated.
 

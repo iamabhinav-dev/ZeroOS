@@ -1,0 +1,32 @@
+package: com.instagram.android
+
+FrameLayout - [1,80][1066,2445]
+  ViewPager com.instagram.android:id/swipeable_tab_view_pager [1,204][1066,2275] scrollable
+    FrameLayout - [1,204][1066,2275]
+      RecyclerView android:id/list [1,204][1066,2275]
+        ViewGroup - [1,349][1066,722]
+          ViewGroup com.instagram.android:id/recycler_view_container_id [1,349][1066,722]
+            RecyclerView - [1,349][1066,722] scrollable
+              Button - [1,349][291,722] clickable has-text
+                ViewGroup - [1,381][291,660]
+                  ViewGroup - [17,397][275,655]
+              Button - [291,349][581,722] clickable has-text
+                ViewGroup - [291,381][581,660]
+                  ViewGroup - [307,397][565,655]
+              Button - [581,349][871,722] clickable has-text
+                ViewGroup - [581,381][871,660]
+                  ViewGroup - [597,397][855,655]
+              Button - [871,349][1066,722] clickable has-text
+                ViewGroup - [871,381][1066,660]
+                  ViewGroup - [887,397][1066,655]
+        FrameLayout com.instagram.android:id/shimmer_content [1,722][1066,2015]
+      ImageView com.instagram.android:id/action_bar_left_button [1,204][127,349] clickable
+      ViewAnimator com.instagram.android:id/action_bar_title_view [127,223][941,329] clickable
+        ImageView com.instagram.android:id/title_logo [383,223][683,329] has-text
+      FrameLayout com.instagram.android:id/notification [941,204][1066,349] clickable
+  FrameLayout com.instagram.android:id/feed_tab [1,2275][214,2399] clickable has-text
+  FrameLayout com.instagram.android:id/clips_tab [214,2275][427,2399] clickable has-text
+  FrameLayout com.instagram.android:id/direct_tab [427,2275][640,2399] clickable has-text
+    TextView com.instagram.android:id/notification [537,2329][591,2383] has-text
+  FrameLayout com.instagram.android:id/search_tab [640,2275][853,2399] clickable has-text
+  FrameLayout com.instagram.android:id/profile_tab [853,2275][1066,2399] clickable has-text

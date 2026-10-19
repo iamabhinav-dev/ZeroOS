@@ -1,0 +1,102 @@
+package: com.instagram.android
+
+FrameLayout - [0,0][1080,2400]
+  ViewPager com.instagram.android:id/swipeable_tab_view_pager [0,126][1080,2227]
+    FrameLayout - [0,126][1080,2227]
+      RecyclerView android:id/list [0,126][1080,2227] scrollable
+        ViewGroup - [0,126][1080,384]
+          ViewGroup com.instagram.android:id/row_feed_view_group_buttons [0,126][1080,181]
+            ViewGroup - [32,126][106,181] clickable
+              Button com.instagram.android:id/row_feed_button_like [32,126][95,181] has-text
+            ViewGroup - [106,126][212,181] clickable
+              Button com.instagram.android:id/row_feed_button_comment [138,126][201,181] has-text
+            Button - [212,126][234,181] clickable has-text
+            ViewGroup - [250,126][340,181] clickable
+              ViewGroup com.instagram.android:id/row_feed_button_share [266,126][329,181] has-text
+            Button com.instagram.android:id/row_feed_button_save [959,126][1075,170] clickable has-text
+          ViewGroup - [0,181][1080,241]
+            ViewGroup - [32,181][164,241] clickable has-text
+            TextView - [180,189][723,233] clickable has-text
+              Button - [331,189][507,233] clickable has-text
+          ViewGroup - [0,252][1080,312]
+            IgTextLayoutView - [32,252][1080,301] has-text
+              Button - [32,252][210,296] clickable has-text
+          TextView - [0,312][1080,353] has-text
+        ViewGroup - [0,384][1080,521]
+          ViewGroup com.instagram.android:id/row_feed_profile_header [0,384][1080,521] has-text
+            Button - [0,384][134,521] clickable
+              ViewGroup - [29,384][134,521] has-text
+            Button com.instagram.android:id/row_feed_photo_profile_name [134,384][768,450] has-text
+            ViewGroup - [134,450][768,521] clickable
+              Button com.instagram.android:id/secondary_label [134,450][768,521] clickable has-text
+            TextView com.instagram.android:id/inline_follow_button [768,410][965,494] clickable has-text
+            ImageView com.instagram.android:id/media_option_button [965,389][1080,516] clickable has-text
+        ViewGroup - [0,521][1080,1601]
+          ViewGroup - [0,521][1080,1601]
+            ViewGroup - [0,521][1080,1601]
+            ViewGroup - [0,521][1080,1601]
+              ViewGroup - [938,1496][1080,1601] clickable
+                LinearLayout - [975,1496][1043,1564] has-text
+            ViewGroup - [540,1061][540,1061]
+            ViewGroup - [0,1492][938,1601]
+              ViewGroup com.instagram.android:id/indicator_background_view [37,1492][107,1562] clickable
+                Button com.instagram.android:id/indicator_icon_view [54,1509][90,1545] has-text
+          FrameLayout - [0,521][1080,1601]
+            ViewGroup - [0,521][1080,1601]
+              FrameLayout com.instagram.android:id/carousel_video_media_group [0,521][1080,1601] clickable has-text
+        ViewGroup - [0,1601][1080,1977]
+          ViewGroup com.instagram.android:id/row_feed_view_group_buttons [0,1601][1080,1774]
+            ViewGroup - [32,1653][106,1774] clickable
+              Button com.instagram.android:id/row_feed_button_like [32,1653][95,1774] has-text
+            ViewGroup - [106,1653][212,1774] clickable
+              Button com.instagram.android:id/row_feed_button_comment [138,1653][201,1774] has-text
+            Button - [212,1653][234,1774] clickable has-text
+            Button com.instagram.android:id/reposts_ufi_icon [234,1653][388,1774]
+              ViewGroup - [234,1653][351,1774] clickable
+                Button - [266,1653][340,1774] has-text
+              Button - [351,1653][388,1774] clickable has-text
+            ViewGroup - [404,1653][494,1774] clickable
+              ViewGroup com.instagram.android:id/row_feed_button_share [420,1653][483,1774] has-text
+            Button com.instagram.android:id/row_feed_button_save [959,1653][1075,1763] clickable has-text
+          ViewGroup - [0,1774][1080,1834]
+            ViewGroup - [32,1774][164,1834] clickable has-text
+            TextView - [180,1782][861,1826] clickable has-text
+              Button - [331,1782][646,1826] clickable has-text
+          ViewGroup - [0,1845][1080,1905]
+            IgTextLayoutView - [32,1845][1080,1894] has-text
+              Button - [32,1845][271,1889] clickable has-text
+              Button - [280,1845][922,1889] clickable has-text
+              Button - [280,1845][922,1889] clickable has-text
+              Button - [955,1845][1040,1889] clickable has-text
+          TextView - [0,1905][1080,1946] has-text
+        ViewGroup - [0,1977][1080,2114]
+          ViewGroup com.instagram.android:id/row_feed_profile_header [0,1977][1080,2114] has-text
+            Button - [0,1977][128,2114] clickable
+              ImageView com.instagram.android:id/row_feed_photo_profile_imageview [39,2006][118,2085] has-text
+            Button com.instagram.android:id/row_feed_photo_profile_name [128,1977][965,2043] clickable has-text
+            ViewGroup - [128,2043][965,2114] clickable
+              Button com.instagram.android:id/secondary_label [128,2043][965,2114] clickable has-text
+            ImageView com.instagram.android:id/media_option_button [965,1982][1080,2109] clickable has-text
+        ViewGroup - [0,2114][1080,2227]
+          FrameLayout - [0,2114][1080,2227]
+            ViewGroup - [0,2114][1080,2227]
+              FrameLayout com.instagram.android:id/carousel_video_media_group [0,2114][1080,2227] clickable has-text
+          ViewGroup - [0,2114][1080,2227]
+            ViewGroup - [0,2114][1080,2227]
+            ViewGroup - [0,2114][1080,2227]
+              ViewGroup - [938,3089][1080,2227] clickable
+                LinearLayout - [975,3089][1043,2227] has-text
+      ImageView com.instagram.android:id/action_bar_left_button [0,126][127,126] clickable
+      ViewAnimator com.instagram.android:id/action_bar_title_view [127,126][953,106] clickable
+        ImageView com.instagram.android:id/title_logo [362,126][667,106] has-text
+      FrameLayout com.instagram.android:id/notification [953,126][1080,126] clickable
+    FrameLayout - [1080,126][1080,2227]
+    FrameLayout - [2160,126][1080,2227]
+    FrameLayout - [3240,126][1080,2227]
+    FrameLayout - [4320,126][1080,2227]
+  FrameLayout com.instagram.android:id/feed_tab [0,2227][216,2353] clickable has-text
+  FrameLayout com.instagram.android:id/clips_tab [216,2227][432,2353] clickable has-text
+  FrameLayout com.instagram.android:id/direct_tab [432,2227][648,2353] clickable has-text
+    TextView com.instagram.android:id/notification [558,2309][584,2335] has-text
+  FrameLayout com.instagram.android:id/search_tab [648,2227][864,2353] clickable has-text
+  FrameLayout com.instagram.android:id/profile_tab [864,2227][1080,2353] clickable has-text
