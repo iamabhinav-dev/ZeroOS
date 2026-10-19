@@ -853,7 +853,7 @@ Kept for when F7 is built; not part of v1.1.
 ```
 *Opened from here and from the digest notification. Home shows no badge or count (F1.5).*
 
-## I. Phase 5: grayscale and minimal widgets (F11, F12) — PROPOSED, awaiting approval (Step 5.0)
+## I. Phase 5: grayscale and minimal widgets (F11, F12) — DRAFT, not approved; Phase 5 deferred to the end (D-056)
 
 Doto has no ○ or ☐, so the calendar and to-do markers are drawn as dots (like the back arrow).
 

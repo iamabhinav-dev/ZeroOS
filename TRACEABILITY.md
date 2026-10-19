@@ -60,8 +60,8 @@ Update this file in the same commit as the code and tests.
 | F9.1–F9.5, F9.7–F9.10 | ✅ | FocusRepositoryTest › f9_*, WellbeingRulesTest › f9_3_*, AppListViewModelTest › f9_3_*, HomeUiStateTest › f9_*, HomeScreenTest › f9_*, FocusPickerViewModelTest › f9_*, FocusScreensTest › f9_*, d052_*, d054_*, FocusSettingsViewModelTest › f9_*, FocusSettingsScreensTest › f9_*, step4_5_*, landscape_* | Focus start/end, icon, filtered apps, DND, end early with reason; passed on the phone 2026-10-18 (0.0.26) |
 | F9.6 | ⏸ | Deferred to the end (D-054) | |
 | F10.1–F10.13 | ✅ | UsageSummaryTest › f10_*, f8_6_*, HomeStatsTest › f10_*, step4_6_*, landscape_*, InsightsScreenTest › f10_*, step4_6_*, landscape_*, HomeStatsViewModelTest › f10_*, ScreenTimeSettingsViewModelTest › f10_*, ScreenTimeSettingsScreenTest › f10_*, BackArrowTest › d052_screenTime, FocusNavigationTest › d051_* | Compare with the phone's screen-time screen; passed on the phone 2026-10-19 (0.0.27) |
-| F11.1–F11.3 | ⬜ | | |
-| F12.2–F12.4 | ⬜ | | |
+| F11.1–F11.3 | ⏸ | Deferred to the end (D-056) | |
+| F12.2–F12.4 | ⏸ | Deferred to the end (D-056) | |
 | F12.1 | ❌ | Removed (D-008) | |
 | F13.1 | ✅ | BackupTest › f13_1_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_rowsAndNeverExported | Export to Downloads on the phone |
 | F13.2 | ✅ | BackupTest › f13_2_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_2_* | Export → reinstall → import |
