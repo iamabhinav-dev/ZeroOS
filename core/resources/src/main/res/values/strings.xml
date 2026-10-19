@@ -103,6 +103,7 @@
     <string name="rename_reset">Reset to original</string>
     <string name="common_save">Save</string>
     <string name="common_next">Next</string>
+    <string name="common_continue">Continue</string>
     <string name="common_done">Done</string>
     <string name="onboarding_skip">Skip</string>
     <string name="onboarding_page">Page %1$d of %2$d</string>
@@ -359,6 +360,15 @@
     <string name="accessibility_service_description">Lets ZeroOS lock the screen with a double-tap and open notifications with a swipe down. It reads nothing on your screen.</string>
     <string name="about_version">%1$s %2$s (%3$d)</string>
     <string name="about_licenses">Open-source licenses</string>
+    <!-- Read before using (F14.8, wireframes K2, K3) -->
+    <string name="docs_gate_title">Before you start</string>
+    <string name="docs_gate_title_changed">The documents changed</string>
+    <string name="docs_gate_body">ZeroOS replaces your home screen and may cause problems on your phone, including ones not known when this version was released. You use it at your own risk; its author is not responsible for any damage or loss.</string>
+    <string name="docs_gate_read_these">Read these for ZeroOS %1$s:</string>
+    <string name="docs_gate_accept">I have read and understood them and I agree.</string>
+    <string name="docs_readme">README</string>
+    <string name="docs_license">License</string>
+    <string name="docs_notices">Third-party notices</string>
     <string name="licenses_libraries">AndroidX, Jetpack Compose, Kotlin, kotlinx and Dagger Hilt: Apache License 2.0</string>
     <string name="licenses_doto">Doto font: SIL Open Font License 1.1</string>
     <string name="backup_export">Export settings</string>
