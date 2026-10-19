@@ -19,11 +19,30 @@ data class SettingsBackup(
     val schemaVersion: Int = SCHEMA_VERSION,
     val exportedAtMillis: Long = 0,
     val settings: LauncherSettings = LauncherSettings(),
-    val diagnostics: DiagnosticsBackup = DiagnosticsBackup()
+    val diagnostics: DiagnosticsBackup = DiagnosticsBackup(),
+    /** The ZeroOS that made it (F13.7); missing in backups from 0.0.29 and earlier. */
+    val appVersionName: String? = null,
+    val appVersionCode: Long? = null
 ) {
     companion object {
         const val FORMAT = "zeroos-settings"
         const val SCHEMA_VERSION = 1
+    }
+}
+
+/** The installed ZeroOS, written into every export (F13.7). */
+data class AppVersion(val name: String, val code: Long)
+
+/** How a backup's ZeroOS compares with the installed one, for the import warning (F13.6, wireframe K1). */
+enum class BackupAge { SAME, OLDER, NEWER, UNKNOWN }
+
+fun SettingsBackup.age(installed: AppVersion?): BackupAge {
+    val code = appVersionCode
+    return when {
+        code == null || installed == null -> BackupAge.UNKNOWN
+        code < installed.code -> BackupAge.OLDER
+        code > installed.code -> BackupAge.NEWER
+        else -> BackupAge.SAME
     }
 }
 

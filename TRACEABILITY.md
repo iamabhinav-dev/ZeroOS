@@ -68,6 +68,8 @@ Update this file in the same commit as the code and tests.
 | F13.3 | ✅ | AutoBackupRulesTest › f13_3_* | Android Auto Backup (system) |
 | F13.4 | ✅ | By design: the backup holds the whole LauncherSettings, so new settings are included automatically; BackupTest › f13_1_f13_2_* round-trips every field | |
 | F13.5 | ✅ | BackupTest › f13_5_*, f13_2_otherFilesAreNotBackups, BackupScreenTest › f13_5_*, BackupCompatibilityTest › d059_* (every saved release backup imports with nothing lost; values kept in Appendix A ranges), SettingsStorageTest › d059_* | |
+| F13.6 | ✅ | BackupScreenTest › f13_6_*, landscape_importWarningScreenshot | Import a backup: the warning is shown before anything changes |
+| F13.7 | ✅ | BackupTest › f13_7_*, BackupScreenTest › f13_7_* | Import a backup from an older version: the version line shows |
 | F14.1 | ✅ | OnboardingViewModelTest › f14_1_*, OnboardingScreenTest › f14_1_*, step2_9_* screenshots | Read the intro on the phone |
 | F14.2 | ✅ | OnboardingViewModelTest › f14_2_*, OnboardingScreenTest › f14_2_*, AndroidOnboardingSystemTest › f14_2_* | "Set as default" shows Android's home-app dialog |
 | F14.3 | ✅ | OnboardingViewModelTest › f14_3_*, OnboardingScreenTest › f14_3_*, AndroidOnboardingSystemTest › f14_3_* | Suggestions match the the phone's default apps |

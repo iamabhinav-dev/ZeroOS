@@ -5,9 +5,12 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +23,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zeroos.core.data.backup.BackupAge
+import com.zeroos.core.data.backup.SettingsBackup
 import com.zeroos.core.resources.R
 import com.zeroos.core.ui.BackTitle
 import com.zeroos.core.ui.BodyText
@@ -91,9 +96,31 @@ fun BackupScreen(
             onDismissRequest = onCancelImport,
             containerColor = tokens.colors.background,
             title = { Text(stringResource(R.string.backup_confirm_title)) },
+            text = { ImportWarning(state.pending, state.pendingAge) },
             confirmButton = { TextAction(stringResource(R.string.backup_confirm_import), onClick = onConfirmImport, compact = true) },
             dismissButton = { TextAction(stringResource(R.string.common_cancel), onClick = onCancelImport, compact = true) }
         )
+    }
+}
+
+/** Wireframe K1 (F13.6): what an import replaces, the backup's version if it differs, and what isn't in a backup. */
+@Composable
+private fun ImportWarning(backup: SettingsBackup, age: BackupAge) {
+    val tokens = ZeroTheme.tokens
+    val version = backup.appVersionName.orEmpty()
+    val lines = listOfNotNull(
+        stringResource(R.string.backup_confirm_body) to false,
+        when (age) {
+            BackupAge.OLDER -> stringResource(R.string.backup_confirm_older, version) to false
+            BackupAge.NEWER -> stringResource(R.string.backup_confirm_newer, version) to false
+            BackupAge.SAME, BackupAge.UNKNOWN -> null
+        },
+        stringResource(R.string.backup_confirm_permissions) to true
+    )
+    Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(tokens.spacing.sectionGap)) {
+        lines.forEach { (line, muted) ->
+            Text(line, color = if (muted) tokens.colors.textMuted else tokens.colors.text, fontSize = tokens.textSizes.body)
+        }
     }
 }
 

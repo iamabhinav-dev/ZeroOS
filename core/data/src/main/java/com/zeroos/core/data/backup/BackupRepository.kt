@@ -18,7 +18,9 @@ class BackupRepository(
     private val diagnostics: DiagnosticsSettings,
     private val prefs: SharedPreferences,
     private val clock: Clock,
-    private val logger: Logger
+    private val logger: Logger,
+    /** The installed version, recorded in exports (F13.7); null in tests that don't care. */
+    private val appVersion: AppVersion? = null
 ) {
     /** When settings were last exported, or null. */
     val lastExportMillis: Long?
@@ -31,12 +33,17 @@ class BackupRepository(
         val backup = SettingsBackup(
             exportedAtMillis = clock.millis(),
             settings = settings.settings.first(),
-            diagnostics = DiagnosticsBackup(diagnostics.isLoggingEnabled, diagnostics.minLevel.name)
+            diagnostics = DiagnosticsBackup(diagnostics.isLoggingEnabled, diagnostics.minLevel.name),
+            appVersionName = appVersion?.name,
+            appVersionCode = appVersion?.code
         )
         output.write(SettingsBackupCodec.encode(backup).encodeToByteArray())
         prefs.edit().putLong(KEY_LAST_EXPORT, backup.exportedAtMillis).apply()
         logger.info(TAG, "settings exported")
     }
+
+    /** Whether [backup] came from an older or newer ZeroOS than this one (F13.6). */
+    fun ageOf(backup: SettingsBackup): BackupAge = backup.age(appVersion)
 
     fun read(input: InputStream): BackupReadResult = SettingsBackupCodec.decode(input.readBytes().decodeToString())
 
