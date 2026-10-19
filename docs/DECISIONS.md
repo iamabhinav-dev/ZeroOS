@@ -204,8 +204,8 @@ Wellbeing's per-app rules (mindful pause, daily limit) and focus schedules are s
 *Why:* User's choice; less machinery, backup for free.
 
 **D-042 — Idle memory target 80 MB** · 2026-10-17 · Accepted
-NFR-P4 changes from 60 MB to 80 MB idle. Measured on the test phone with the release build: [measured] in the background
-(10 s after leaving ZeroOS), [measured] on screen.
+NFR-P4 changes from 60 MB to 80 MB idle. The release build's background use (10 s after leaving ZeroOS) was within
+the new target on the test phone; the numbers are in the git-ignored PERSONAL.md (D-048).
 *Why:* User's choice; most of it is the fixed cost of Android's runtime and the Compose UI library, so cutting
 to 60 MB wasn't worth the effort for a single-user launcher.
 
