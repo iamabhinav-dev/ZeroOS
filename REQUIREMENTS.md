@@ -234,6 +234,8 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 | F13.3 | Support Android Auto Backup for settings. |
 | F13.4 | Available from v1.0. Every later feature that adds settings must add them to the export/import format in the same step, with a round-trip test. |
 | F13.5 | The backup file has a schema version; importing a file from an older version works (missing fields get Appendix A defaults). |
+| F13.6 | Before an import replaces anything, the confirmation warns that all current settings are replaced and it can't be undone, suggests exporting first, and says that permissions (Accessibility, Usage access and others) aren't in a backup (wireframe K1). |
+| F13.7 | A backup records the ZeroOS version that made it; the import warning says when it's from an older version (added settings get defaults) or a newer one (settings this version lacks are left out). |
 
 ### F14 — Onboarding
 
@@ -243,9 +245,10 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 | F14.2 | Prompt to set ZeroOS as default launcher (`RoleManager.ROLE_HOME` on Android 10+, otherwise open home settings). |
 | F14.3 | Pick initial favorites (suggest Phone, Messages, Camera, Maps). |
 | F14.4 | Permissions requested **just-in-time** when the related feature is enabled, never all upfront. |
-| F14.5 | Onboarding is skippable. |
+| F14.5 | Onboarding is skippable, except the documents page (F14.8). |
 | F14.6 | **Background reliability step**: detect if battery optimization is on for ZeroOS and offer to open the relevant screen (`ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`). Show plain-text tips for phones that restrict background apps as plain text; never depend on OEM-private APIs. |
 | F14.7 | **Not the home app** (D-049): whenever ZeroOS comes to the front and isn't the default home app (some phones' battery-saving modes switch it back to the stock launcher), home shows one line at the top: "ZeroOS isn't your home app · Set as default". Tapping it opens Android's "default home app" dialog (`RoleManager.ROLE_HOME`; home settings before Android 10). The line disappears once ZeroOS is the default again; "Dismiss" hides it until ZeroOS next comes to the front. Each detection is logged (F17.7). |
+| F14.8 | **Read before using** (wireframes K2, K3): before ZeroOS can be used, the user opens and accepts the README notes, LICENSE and third-party notices **of the installed release**, which are inside the app, with a tick box ("I have read and understood them and I agree") and Continue. Not skippable. Asked again, once, only when a later release changes those documents. Safe mode (F18) never shows it. The documents can be read again from Settings → About. |
 
 ### ~~F15 — Monetization~~ (removed)
 Not needed for personal use. All features are always available.
