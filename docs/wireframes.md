@@ -922,19 +922,19 @@ ZeroOS can't switch grayscale itself (that needs ADB, F11.3); it opens Android's
 Android's normal permission dialog for "Calendar", after one explanation line in Settings:
 "Shows your next event on home. Nothing leaves your phone." Declined → the switch stays off.
 
-## J. Phase 6: short-form blocker (F16) — PROPOSED, awaiting approval (Step 6.0)
+## J. Phase 6: short-form blocker (F16) — approved 2026-10-19 (D-057)
 
-### J1. Settings main after Phase 6
+### J1. Settings → Wellbeing after Phase 6
 ```
-│  Screen time                     › │
-│  Short videos                    › │  → J2 (F16)            new
-│  Backup                          › │
+│  Focus                           › │  (H10)
+│  Short videos                    › │  → J2 (F16); shown even when Wellbeing is off,
+│                                    │  like Focus (the blocker works without F8, F16.11)
 ```
 
 ### J2. Settings → Short videos (F16.1, F16.3, F16.4, F16.7–F16.11, F16.15)
 ```
 ┌────────────────────────────────────┐
-│  ‹ Short videos                    │
+│  ‹ Short videos                    │  (Settings → Wellbeing → Short videos)
 │  Block short videos        ‹off›   │  master, off by default; first time → J4
 │                                    │  (rows below only while it's on)
 │  YouTube Shorts            ‹on›    │  F16.4
