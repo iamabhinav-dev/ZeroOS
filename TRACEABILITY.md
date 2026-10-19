@@ -77,7 +77,7 @@ Update this file in the same commit as the code and tests.
 | F14.7 | ✅ | LauncherViewModelTest › f14_7_*, NotHomeAppBannerTest › f14_7_* | Line after battery saving resets the home app; Set as default fixes it; passed on the phone 2026-10-18 |
 | F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
-| F16.1–F16.16 (excl. F16.13) | ⬜ | | |
+| F16.1–F16.18 (excl. F16.13) | 🟡 | ShortFormRulesTest › f16_*, ShortFormGuardTest › f16_*, WellbeingStateRepositoryTest › f16_8_*, ShortFormScreenTest › f16_*, step6_3_*, landscape_*, ShortFormSettingsViewModelTest › f16_*, ShortFormSettingsScreenTest › f16_*, step6_3_*, landscape_*, ShortFormOverlayTest › f16_*, InsightsScreenTest › f16_14_*, BackArrowTest › d052_shortVideos, AccessibilityServiceTest › step4_2_d057_* | Shorts/Reels blocked within ~300 ms, normal videos untouched, battery OK after 1 day |
 | F16.13 | ❌ | Removed (D-006) | |
 | F17.1 | 🟡 | FileLoggerTest › f17_1_*, AndroidDiagnosticsTest › f17_1_logcatMirrorUsesMatchingPriority, ZeroRulesTest › f17_1_flagsDirectLogging | |
 | F17.2 | 🟡 | LogEntryTest › f17_2_*, LogFileStoreTest › f17_2_*, FileLoggerTest › f17_2_* | |
