@@ -4,6 +4,11 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.29 (versionCode 29)
+- Fixed: the take-a-break screen appeared at once when you went home and came back to the app from recent apps
+  within a minute
+- Only one blocking screen at a time: the limit or break screen comes first; a short-video block waits and shows
+  after it if you're still in Shorts or Reels
 ## 0.0.28 (versionCode 28)
 - Short-video blocker (F16), off until you turn it on in Settings → Wellbeing → Short videos: blocks YouTube
   Shorts and Instagram Reels with a black screen (dot shutter over a play symbol, a pun or your own message,
