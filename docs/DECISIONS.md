@@ -304,3 +304,8 @@ comparison uses a dotted arrow and every chart is drawn as dots (F10.6). At the 
 fall back to Text so home never scrolls (A1 layout rules). With the progress style and no goal set, the 2 h default
 is used. Durations read "2h 14m", "4h" or "14m".
 *Why:* Implementation choices for Step 4.6 within the approved wireframes A3, H4, H12.
+
+**D-056 — Phase 5 deferred to the end** · 2026-10-19 · Accepted
+The grayscale shortcut (F11), calendar line and to-do (F12) move to the end, with focus schedules (F9.6) and the
+notification filter (F7). The draft wireframes (section I) stay unapproved until then. Phase 6 (F16) is next.
+*Why:* User's choice.

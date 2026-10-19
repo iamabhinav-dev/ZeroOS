@@ -323,7 +323,9 @@ Reuses the usage calculation from Step 4.3.
 
 ---
 
-## Phase 5 — v1.2 Extras (F11, F12)
+## Phase 5 — v1.2 Extras (F11, F12) — deferred to the end (D-056)
+Draft wireframes are in section I of docs/wireframes.md, not yet approved. Open questions for then: to-do storage
+(settings file vs Room) and whether done tasks disappear at once.
 
 ### Step 5.0 — Wireframes for Phase 5
 Grayscale screen, widget settings, and home calendar/to-do lines. **Approved by me before Step 5.1.**
@@ -389,6 +391,7 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 
 ## Deferred Work (not planned now; revisit when wanted)
 - Notification filter and inbox (F7, Step 4.4, wireframe H9; D-039).
+- Phase 5: grayscale shortcut (F11), calendar line and to-do (F12) (D-056).
 - Scheduled focus sessions (F9.6, wireframe H10a; editor H10c to be approved; WorkManager for Do Not Disturb at the exact times) (D-054).
 - Instrumented tests on an emulator or the phone.
 - Macrobenchmark + Baseline Profiles for startup (NFR-P1/P2 measured automatically).

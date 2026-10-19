@@ -208,6 +208,8 @@ Kept for later; not built in v1.1.
 | F10.13 | Each chart has a content description stating its values (e.g., "Screen time 2 hours 14 minutes, 38 unlocks") for accessibility. |
 
 ### F11 — Grayscale Shortcut
+**Deferred to the end (D-056).** Draft wireframe I2 kept for then.
+
 Android stores grayscale (color correction) in *Secure Settings*, which third-party apps can only change with `WRITE_SECURE_SETTINGS`, a permission grantable only via ADB. Since ADB is out of scope, ZeroOS helps me use the **system's own** grayscale instead.
 
 | ID | Requirement |
@@ -217,6 +219,8 @@ Android stores grayscale (color correction) in *Secure Settings*, which third-pa
 | F11.3 | No ADB-based toggling, scheduling, or `WRITE_SECURE_SETTINGS` usage. |
 
 ### F12 — Minimal Widgets
+**Deferred to the end (D-056).** Draft wireframes I3–I6 kept for then.
+
 
 | ID | Requirement |
 |---|---|
