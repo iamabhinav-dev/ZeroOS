@@ -35,7 +35,8 @@ and link to the releases page. For a local preview, save a releases list as `bui
 A channel with no release says "Not released yet", so Stable and Beta appear by themselves when the first one is
 published. Drafts are never shown.
 
-## Publishing (when the repo is public)
-GitHub Pages for a private repo needs a paid plan, and visitors can't download from a private repo's releases, so
-the site goes live together with making the repo public. Then: Settings → Pages → Source: GitHub Actions, with a
-workflow that runs `python3 scripts/build-site.py` and deploys `build/site/`.
+## Publishing
+[.github/workflows/site.yml](../.github/workflows/site.yml) builds and deploys the site when it, or the screens and
+font it uses, change on `main` (or when run by hand). It needs Settings → Pages → Source: GitHub Actions.
+GitHub Pro can publish Pages from the private repo, and the site is then public. Until the repo itself is public,
+visitors can't download its releases or open its docs on GitHub, and the release cards can't load.
