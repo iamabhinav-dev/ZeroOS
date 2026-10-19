@@ -454,8 +454,20 @@ main,
   outline-offset: 4px;
 }
 
-.locked-note {
+/* Locked: a released card shows why there's no button. Unlocked or nothing released: hidden. */
+.channel-lock {
+  margin-top: auto;
+  padding: 12px var(--gap);
+  border: 2px dotted var(--faint);
+  border-radius: 999px;
   color: var(--muted);
+  font-size: var(--text-s);
+  text-align: center;
+}
+
+.channels[data-locked="false"] .channel-lock,
+.channel:not([data-state="released"]) .channel-lock {
+  display: none;
 }
 
 .channels {
@@ -505,7 +517,6 @@ main,
   display: none;
 }
 
-.locked-note[hidden],
 .channel[hidden] {
   display: none;
 }

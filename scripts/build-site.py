@@ -96,7 +96,7 @@ def css_problems(source):
 
 def generated_keys(config):
     """Keys the generated blocks use, so they're checked too."""
-    keys = {"brand_name", "channel_loading"}
+    keys = {"brand_name", "channel_loading", "disclaimer_locked"}
     for screen in config["screens"]:
         keys |= {f"screen_{screen['key']}_{part}" for part in ("title", "body", "alt")}
     for feature in config["features"]:
@@ -176,6 +176,7 @@ def blocks(strings, config, logo):
         f'<p class="channel-body">{text(strings, "channel_" + c["id"] + "_body")}</p>'
         f'<p class="channel-version" data-role="version"></p>'
         f'<p class="channel-meta" data-role="meta" aria-live="polite">{text(strings, "channel_loading")}</p>'
+        f'<p class="channel-lock">{text(strings, "disclaimer_locked")}</p>'
         f'<div class="channel-actions" data-role="actions"></div></article>'
         for c in config["channels"]
     )

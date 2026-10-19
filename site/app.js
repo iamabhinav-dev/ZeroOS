@@ -62,14 +62,13 @@
     showTheme();
   });
 
-  // Download gate: the download buttons appear only after the disclaimer is accepted, on every visit.
+  // Download gate: until the disclaimer is accepted, each released card shows a locked line instead of its
+  // download button. It starts locked on every visit.
   const accept = document.getElementById("accept");
   const channels = document.getElementById("channels");
-  const lockedNote = document.getElementById("locked-note");
 
   function syncGate() {
     channels.dataset.locked = String(!accept.checked);
-    lockedNote.hidden = accept.checked;
   }
 
   accept.addEventListener("change", syncGate);

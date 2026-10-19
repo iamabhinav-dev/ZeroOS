@@ -75,7 +75,7 @@
   "disclaimer_liability": "You install and use it at your own risk. The author and owner of the repository is not responsible or liable for any damage or loss.",
   "disclaimer_personal": "Personal use only. Don't upload or share the APKs anywhere: no app stores, APK sites, websites or file-sharing. To tell someone about ZeroOS, send them this page.",
   "disclaimer_accept": "I have read the README, the licence and the third-party notices, I understand what I'm installing and that problems may happen, and I accept that the author and owner is not responsible.",
-  "disclaimer_locked": "Tick the box above to show the downloads.",
+  "disclaimer_locked": "Locked: tick the box in the notice above to download.",
 
   "channel_stable_title": "Stable",
   "channel_stable_body": "For everyday use. Tested the longest.",
