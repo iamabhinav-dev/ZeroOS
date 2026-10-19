@@ -6,6 +6,7 @@ import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
+import com.zeroos.core.logging.warn
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.Clock
@@ -39,9 +40,11 @@ class BackupRepository(
 
     fun read(input: InputStream): BackupReadResult = SettingsBackupCodec.decode(input.readBytes().decodeToString())
 
-    /** Replaces all settings with [backup] (after the user confirmed, F13.2). */
+    /** Replaces all settings with [backup] (after the user confirmed, F13.2), keeping every value in range (D-059). */
     suspend fun restore(backup: SettingsBackup) {
-        settings.update("settings imported (schema ${backup.schemaVersion})") { backup.settings }
+        val imported = backup.settings.withinAllowedRanges()
+        if (imported != backup.settings) logger.warn(TAG, "backup had values outside the allowed ranges; corrected")
+        settings.update("settings imported (schema ${backup.schemaVersion})") { imported }
         diagnostics.isLoggingEnabled = backup.diagnostics.loggingEnabled
         backup.diagnostics.level?.let { name -> LogLevel.entries.firstOrNull { it.name == name } }?.let { diagnostics.minLevel = it }
     }
