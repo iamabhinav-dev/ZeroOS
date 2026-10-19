@@ -11,6 +11,9 @@ sealed interface Overlay {
 
     /** In the app too long without a break (F8.16). */
     data class Break(override val packageName: String, val waitSeconds: Int) : Overlay
+
+    /** Short videos blocked inside YouTube / Instagram (F16.7, wireframe J3). */
+    data class ShortForm(override val packageName: String, val allowLeft: Int, val autoHomeSeconds: Int?) : Overlay
 }
 
 /** Result of checking the app in front: an overlay to show now, and when to check again (one timer, NFR-P1). */

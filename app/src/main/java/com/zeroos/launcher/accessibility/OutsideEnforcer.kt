@@ -24,10 +24,20 @@ data class OverlayContent(
     val app: AppEntry,
     val pun: Int,
     val buttonPun: Int,
-    val appearance: AppearanceSettings
+    val appearance: AppearanceSettings,
+    /** The short-video blocker's own message instead of a pun (F16.9). */
+    val message: String? = null,
+    /** "Allow 5 minutes" first shows the mindful pause (F16.11). */
+    val pauseSeconds: Int = 0,
+    val pausePun: Int = 0
 )
 
-data class OverlayActions(val onGoHome: () -> Unit, val onMoreMinutes: () -> Unit, val onBreakDone: () -> Unit)
+data class OverlayActions(
+    val onGoHome: () -> Unit,
+    val onMoreMinutes: () -> Unit = {},
+    val onBreakDone: () -> Unit = {},
+    val onAllow: () -> Unit = {}
+)
 
 /** The window over other apps; a fake in tests. */
 interface OverlayDisplay {
@@ -43,7 +53,7 @@ interface OverlayDisplay {
 }
 
 /** Sizes of the pun lists used over other apps (F8.13, F8.16). */
-data class OverlayPunSizes(val limit: Int, val breakLine: Int, val breakButton: Int)
+data class OverlayPunSizes(val limit: Int, val breakLine: Int, val breakButton: Int, val shorts: Int = 1, val pause: Int = 1)
 
 /** Builds [OverlayContent]: the app's name as shown in ZeroOS, the puns and the appearance. */
 class OverlayContentFactory(
@@ -60,6 +70,20 @@ class OverlayContentFactory(
         val (pun, button) = when (overlay) {
             is Overlay.Limit -> state.nextPun(PunList.LIMIT, sizes.limit) to 0
             is Overlay.Break -> state.nextPun(PunList.BREAK, sizes.breakLine) to state.nextPun(PunList.BREAK_BUTTON, sizes.breakButton)
+            is Overlay.ShortForm -> state.nextPun(PunList.SHORTS, sizes.shorts) to state.nextPun(PunList.PAUSE, sizes.pause)
+        }
+        if (overlay is Overlay.ShortForm) {
+            val s = current.shortForm
+            return OverlayContent(
+                overlay,
+                app,
+                pun,
+                0,
+                current.appearance,
+                message = s.customMessage.takeIf { s.useCustomMessage && it.isNotBlank() },
+                pauseSeconds = current.wellbeing.pauseSeconds,
+                pausePun = button
+            )
         }
         return OverlayContent(overlay, app, pun, button, current.appearance)
     }
@@ -141,7 +165,11 @@ class OutsideEnforcer(
             TAG,
             when (overlay) {
                 is Overlay.Limit -> "outside: limit screen over $pkg (${overlay.usedMinutes} min used, ${overlay.extrasLeft} extra left)"
+
                 is Overlay.Break -> "break screen over $pkg"
+
+                // Shown by the short-video blocker, never by this enforcer.
+                is Overlay.ShortForm -> "short videos screen over $pkg"
             }
         )
         display.show(

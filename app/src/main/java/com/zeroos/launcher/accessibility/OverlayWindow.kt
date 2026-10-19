@@ -6,6 +6,10 @@ import android.view.KeyEvent
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleRegistry
@@ -18,6 +22,7 @@ import com.zeroos.core.data.wellbeing.Overlay
 import com.zeroos.core.data.wellbeing.StopScreen
 import com.zeroos.core.ui.ZeroTheme
 import com.zeroos.feature.wellbeing.BreakScreen
+import com.zeroos.feature.wellbeing.ShortFormScreen
 import com.zeroos.feature.wellbeing.StopActions
 import com.zeroos.feature.wellbeing.StopUiState
 
@@ -82,7 +87,26 @@ fun OverlayScreen(content: OverlayContent, actions: OverlayActions) {
             )
 
             is Overlay.Break -> BreakScreen(content.pun, content.buttonPun, overlay.waitSeconds, actions.onBreakDone)
+
+            is Overlay.ShortForm -> ShortFormOverlay(content, overlay, actions)
         }
+    }
+}
+
+/** The short-video block screen; "Allow 5 minutes" goes through the mindful pause first (J3, F16.11). */
+@Composable
+private fun ShortFormOverlay(content: OverlayContent, overlay: Overlay.ShortForm, actions: OverlayActions) {
+    var pausing by remember { mutableStateOf(false) }
+    if (pausing) {
+        com.zeroos.feature.wellbeing.StopScreen(
+            StopUiState(content.app, StopScreen.Pause(content.pauseSeconds, intentionPrompt = false), content.pausePun),
+            StopActions(onOpen = actions.onAllow, onMoreMinutes = {}, onBack = { pausing = false })
+        )
+    } else {
+        ShortFormScreen(content.pun, content.message, overlay.allowLeft, overlay.autoHomeSeconds, actions.onGoHome, onAllow = {
+            pausing =
+                true
+        })
     }
 }
 
