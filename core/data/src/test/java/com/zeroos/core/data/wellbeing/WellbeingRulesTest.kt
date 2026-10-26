@@ -162,6 +162,24 @@ class WellbeingStateRepositoryTest {
     }
 
     @Test
+    fun f16_8_shortVideoCountersResetAtLocalMidnightTimeZoneAndClockChanges() = runTest {
+        val clock = MutableClock(Instant.parse("2026-10-17T22:50:00Z"), ZoneId.of("+01:00")) // 23:50 local
+        val repo = repository(clock)
+        repo.recordShortForm(millis = 5 * MIN, blocks = 1, allowUses = 1)
+        assertEquals(ShortFormDay(5 * MIN, 1, 1), repo.shortFormToday())
+        clock.advanceBy(Duration.ofMinutes(11)) // 00:01 the next day
+        assertEquals(ShortFormDay(), repo.shortFormToday())
+        repo.recordShortForm(millis = 2 * MIN)
+        // The day's "5 more minutes" uses reset along with them.
+        assertEquals(emptyMap<String, Int>(), repo.extrasUsedToday())
+        clock.setZone(ZoneId.of("America/New_York")) // still the 17th there: a different day
+        assertEquals(ShortFormDay(), repo.shortFormToday())
+        clock.setZone(ZoneId.of("+01:00"))
+        clock.setTo(Instant.parse("2026-10-16T10:00:00Z")) // clock set back a day by hand
+        assertEquals(ShortFormDay(), repo.shortFormToday())
+    }
+
+    @Test
     fun f8_13_punListsHaveSeparateBags() = runTest {
         val repo = repository(MutableClock())
         val pause = List(20) { repo.nextPun(PunList.PAUSE, 20) }

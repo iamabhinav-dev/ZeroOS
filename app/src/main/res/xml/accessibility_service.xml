@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- ZeroOS's Accessibility service (Step 4.2). Reads no screen content: it only learns which app's window came to
-     the front. By default only ZeroOS's own events; wellbeing widens packageNames at runtime to just the apps it
-     watches outside ZeroOS (F8.7, F8.16, D-023). -->
+<!-- ZeroOS's Accessibility service (Step 4.2). By default it only gets ZeroOS's own window events; wellbeing widens
+     packageNames at runtime to the apps it watches outside ZeroOS (F8.7, F8.16, D-023). It can read screen layout
+     (view IDs, for the short-video blocker, F16) but the code only does so inside the enabled target apps while the
+     blocker is on; then it also gets window changes from all apps, using only the app name (F16.18, D-057). -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFlags="flagReportViewIds"
     android:accessibilityFeedbackType="feedbackGeneric"
-    android:canRetrieveWindowContent="false"
+    android:canRetrieveWindowContent="true"
     android:description="@string/accessibility_service_description"
     android:isAccessibilityTool="false"
     android:notificationTimeout="100"

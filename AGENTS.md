@@ -72,6 +72,11 @@ If these files conflict, **stop and ask the user**. Do not resolve it yourself.
 - **Performance:** no polling loops, no work on the main thread, and use system callbacks (NFR-P1–P6).
 - **Time:** never call `System.currentTimeMillis()` or `LocalDate.now()` directly in logic; inject a `Clock`/`TimeSource` so tests can control time.
 - **State:** survive process death and config changes (`SavedStateHandle`, persisted settings) (NFR-R7).
+- **Settings compatibility (D-059):** settings are only ever **added**, with a default from Appendix A. Never rename,
+  retype, remove or reuse a stored setting. If a change can't be done by adding, raise `SettingsBackup.SCHEMA_VERSION`
+  and `LauncherSettings.CURRENT_VERSION`, write a migration and a migration test. For every release, add its export to
+  `core/data/src/test/resources/backups/zeroos-<version>.json` (sample apps only, every setting changed from its
+  default); never edit an old one to make a test pass.
 - **Logging (F17):** use only the `Logger` from `core/logging`; never `android.util.Log` or `println`. Every new feature must log its key events (F17.7) and every caught exception at WARN/ERROR. **Never log** the private content in F17.8 (notification text, intention text, search queries, to-do text, custom app names, custom block message, other apps' screen content); free-text setting values are logged as `<redacted, N chars>`. Logs stay on the device (NFR-S5).
 
 ## 5. Privacy & Permissions (non-negotiable)

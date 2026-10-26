@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.zeroos.core.data.docs.DocumentsGate
 import com.zeroos.core.data.system.defaultHomeIntent
 import com.zeroos.feature.applist.AppListRoute
 import com.zeroos.feature.focus.FocusEndRoute
@@ -27,6 +28,8 @@ import com.zeroos.feature.insights.HomeStatsRoute
 import com.zeroos.feature.insights.InsightsRoute
 import com.zeroos.feature.insights.UsageAccessRoute
 import com.zeroos.feature.onboarding.OnboardingRoute
+import com.zeroos.feature.onboarding.ReadBeforeUsingRoute
+import com.zeroos.feature.onboarding.ReadBeforeUsingViewModel
 import com.zeroos.feature.settings.SettingsPage
 import com.zeroos.feature.settings.SettingsRoute
 import com.zeroos.feature.wellbeing.StopHost
@@ -70,12 +73,7 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
     }
     LaunchedEffect(screen) { viewModel.onScreenShown(screen) }
 
-    // Shown once, before anything else (F14); the window stays black while settings load.
-    when (onboardingCompleted) {
-        null -> return
-        false -> return OnboardingRoute()
-        true -> Unit
-    }
+    if (!startPagesDone(onboardingCompleted)) return
 
     // A wellbeing stop screen covers everything while an app waits behind it (F8.1, F8.4).
     StopHost(homePresses) {
@@ -192,5 +190,31 @@ private fun HomeBanners(
     Column(modifier) {
         crashReport?.let { report -> CrashBanner(onView = { onViewReport(report) }, onDismiss = onDismissCrash) }
         if (notHomeApp) NotHomeAppBanner(onSetDefault = onSetDefault, onDismiss = onDismissHome)
+    }
+}
+
+/**
+ * What comes before everything else: the release's documents (F14.8; first start and once after they change), then
+ * onboarding (F14, once). Shows whichever is due and returns true only when both are done. The window stays black
+ * while they load.
+ */
+@Composable
+private fun startPagesDone(onboardingCompleted: Boolean?): Boolean {
+    val documents: ReadBeforeUsingViewModel = hiltViewModel()
+    val gate by documents.gate.collectAsStateWithLifecycle()
+    return when {
+        gate == DocumentsGate.LOADING || onboardingCompleted == null -> false
+
+        gate != DocumentsGate.ACCEPTED -> {
+            ReadBeforeUsingRoute(gate, documents)
+            false
+        }
+
+        !onboardingCompleted -> {
+            OnboardingRoute()
+            false
+        }
+
+        else -> true
     }
 }

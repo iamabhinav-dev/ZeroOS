@@ -11,6 +11,9 @@ sealed interface Overlay {
 
     /** In the app too long without a break (F8.16). */
     data class Break(override val packageName: String, val waitSeconds: Int) : Overlay
+
+    /** Short videos blocked inside YouTube / Instagram (F16.7, wireframe J3). */
+    data class ShortForm(override val packageName: String, val allowLeft: Int, val autoHomeSeconds: Int?) : Overlay
 }
 
 /** Result of checking the app in front: an overlay to show now, and when to check again (one timer, NFR-P1). */
@@ -35,17 +38,20 @@ fun currentSessionStart(
 ): Long? {
     val intervals = mutableListOf<LongArray>()
     var openSince: Long? = null
+    var first = true
     for (event in events.filter { it.packageName == packageName }.sortedBy { it.timeMillis }) {
         when (event.type) {
             UsageEvent.Type.RESUMED -> if (openSince == null) openSince = event.timeMillis
 
+            // A "left" with nothing open is the stop after a pause; only the very first one means "open at the start".
             UsageEvent.Type.PAUSED -> {
-                intervals += longArrayOf(openSince ?: windowStartMillis, event.timeMillis)
+                (openSince ?: windowStartMillis.takeIf { first })?.let { intervals += longArrayOf(it, event.timeMillis) }
                 openSince = null
             }
 
             UsageEvent.Type.UNLOCKED -> Unit
         }
+        first = false
     }
     val open = openSince ?: nowMillis.takeIf { knownInFront } ?: return null
     var start = open

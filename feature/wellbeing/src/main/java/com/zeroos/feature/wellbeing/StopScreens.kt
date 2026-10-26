@@ -251,4 +251,5 @@ object StopTestTags {
     const val INTENTION = "stop_intention"
     const val BREAK = "break_screen"
     const val BREAK_BUTTON = "break_button"
+    const val SHORTS = "shorts_screen"
 }

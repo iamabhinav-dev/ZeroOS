@@ -55,8 +55,8 @@ Update this file in the same commit as the code and tests.
 | F8.4 | ✅ | StopRulesTest › f8_4_*, StopViewModelTest › f8_4_*, StopScreensTest › f8_4_*, step4_3_limitScreenshotLight | Limit screen and "5 more minutes" on the phone; passed on the phone 2026-10-18 |
 | F8.5 | ✅ | StopRulesTest › f8_5_*, AppListViewModelTest › f8_5_* | "12m left" in the app list; passed on the phone 2026-10-18 |
 | F8.13–F8.15 | ✅ | PunBagTest › f8_13_*, WellbeingStateRepositoryTest › f8_13_*, StopScreensTest › f8_14_* (always a pun, D-045), screenshots | Dots animate; still with "Remove animations"; passed on the phone 2026-10-18 |
-| F8.7 | ✅ | OutsideRulesTest › f8_7_*, OutsideEnforcerTest › f8_7_*, f8_4_*, WellbeingViewModelTest › f8_11_f8_16_* | Limit screen over the app when opened from a notification or recents; passed on the phone 2026-10-18 |
-| F8.16–F8.18 | ✅ | OutsideRulesTest › f8_16_*, f8_17_*, f8_18_*, OutsideWatcherTest › f8_16_*, OutsideEnforcerTest › f8_16_*, f8_17_*, StopScreensTest › f8_16_*, step4_3_breakScreenshot, WellbeingViewModelTest › f8_16_f8_18_*, WellbeingScreensTest › f8_9_* | Break after 15 min on YouTube; button countdown; Back does nothing; passed on the phone 2026-10-18 |
+| F8.7 | ✅ | OutsideRulesTest › f8_7_*, OutsideEnforcerTest › f8_7_*, f8_4_*, OneScreenTest › f8_7_*, WellbeingViewModelTest › f8_11_f8_16_* | Limit screen over the app when opened from a notification or recents; passed on the phone 2026-10-18 |
+| F8.16–F8.18 | ✅ | OutsideRulesTest › f8_16_*, f8_17_*, f8_18_*, OutsideWatcherTest › f8_16_*, OutsideEnforcerTest › f8_16_*, f8_17_*, StopScreensTest › f8_16_*, step4_3_breakScreenshot, WellbeingViewModelTest › f8_16_f8_18_*, WellbeingScreensTest › f8_9_* | Break after 15 min on YouTube; button countdown; Back does nothing; passed on the phone 2026-10-18. Recheck: no break screen when back from recents within a minute |
 | F9.1–F9.5, F9.7–F9.10 | ✅ | FocusRepositoryTest › f9_*, WellbeingRulesTest › f9_3_*, AppListViewModelTest › f9_3_*, HomeUiStateTest › f9_*, HomeScreenTest › f9_*, FocusPickerViewModelTest › f9_*, FocusScreensTest › f9_*, d052_*, d054_*, FocusSettingsViewModelTest › f9_*, FocusSettingsScreensTest › f9_*, step4_5_*, landscape_* | Focus start/end, icon, filtered apps, DND, end early with reason; passed on the phone 2026-10-18 (0.0.26) |
 | F9.6 | ⏸ | Deferred to the end (D-054) | |
 | F10.1–F10.13 | ✅ | UsageSummaryTest › f10_*, f8_6_*, HomeStatsTest › f10_*, step4_6_*, landscape_*, InsightsScreenTest › f10_*, step4_6_*, landscape_*, HomeStatsViewModelTest › f10_*, ScreenTimeSettingsViewModelTest › f10_*, ScreenTimeSettingsScreenTest › f10_*, BackArrowTest › d052_screenTime, FocusNavigationTest › d051_* | Compare with the phone's screen-time screen; passed on the phone 2026-10-19 (0.0.27) |
@@ -67,7 +67,9 @@ Update this file in the same commit as the code and tests.
 | F13.2 | ✅ | BackupTest › f13_2_*, BackupViewModelTest › f13_1_f13_2_*, BackupScreenTest › f13_2_* | Export → reinstall → import |
 | F13.3 | ✅ | AutoBackupRulesTest › f13_3_* | Android Auto Backup (system) |
 | F13.4 | ✅ | By design: the backup holds the whole LauncherSettings, so new settings are included automatically; BackupTest › f13_1_f13_2_* round-trips every field | |
-| F13.5 | ✅ | BackupTest › f13_5_*, f13_2_otherFilesAreNotBackups, BackupScreenTest › f13_5_* | |
+| F13.5 | ✅ | BackupTest › f13_5_*, f13_2_otherFilesAreNotBackups, BackupScreenTest › f13_5_*, BackupCompatibilityTest › d059_* (every saved release backup imports with nothing lost; values kept in Appendix A ranges), SettingsStorageTest › d059_* | |
+| F13.6 | ✅ | BackupScreenTest › f13_6_*, landscape_importWarningScreenshot | Import a backup: the warning is shown before anything changes |
+| F13.7 | ✅ | BackupTest › f13_7_*, BackupScreenTest › f13_7_* | Import a backup from an older version: the version line shows |
 | F14.1 | ✅ | OnboardingViewModelTest › f14_1_*, OnboardingScreenTest › f14_1_*, step2_9_* screenshots | Read the intro on the phone |
 | F14.2 | ✅ | OnboardingViewModelTest › f14_2_*, OnboardingScreenTest › f14_2_*, AndroidOnboardingSystemTest › f14_2_* | "Set as default" shows Android's home-app dialog |
 | F14.3 | ✅ | OnboardingViewModelTest › f14_3_*, OnboardingScreenTest › f14_3_*, AndroidOnboardingSystemTest › f14_3_* | Suggestions match the the phone's default apps |
@@ -75,9 +77,10 @@ Update this file in the same commit as the code and tests.
 | F14.5 | ✅ | OnboardingViewModelTest › f14_5_*, OnboardingScreenTest › f14_1_f14_5_*, OnboardingGateTest › f14_5_* | |
 | F14.6 | ✅ | OnboardingViewModelTest › f14_2_f14_6_*, OnboardingScreenTest › f14_6_*, AndroidOnboardingSystemTest › f14_6_* | Battery dialog on the phone |
 | F14.7 | ✅ | LauncherViewModelTest › f14_7_*, NotHomeAppBannerTest › f14_7_* | Line after battery saving resets the home app; Set as default fixes it; passed on the phone 2026-10-18 |
+| F14.8 | ✅ | DocumentsRepositoryTest › f14_8_*, DocumentParserTest › f14_8_*, DocumentReaderTest › f14_8_*, landscape_readerScreenshot, ReadBeforeUsingScreenTest › f14_8_*, landscape_readBeforeUsingScreenshot, ReadBeforeUsingViewModelTest › f14_8_*, nfrR7_*, OnboardingGateTest › f14_8_f14_5_*, ReleaseDocsAssetsTest › f14_8_*, SettingsScreensTest › f14_8_*, BackArrowTest › d052_document | First start: documents page before onboarding; after an update that changes them, asked once more |
 | F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
-| F16.1–F16.16 (excl. F16.13) | ⬜ | | |
+| F16.1–F16.18 (excl. F16.13) | 🟡 | ShortFormRulesTest › f16_*, ShortFormGuardTest › f16_*, WellbeingStateRepositoryTest › f16_8_*, ShortFormScreenTest › f16_*, step6_3_*, landscape_*, ShortFormSettingsViewModelTest › f16_*, ShortFormSettingsScreenTest › f16_*, step6_3_*, landscape_*, ShortFormOverlayTest › f16_*, OneScreenTest › f16_7_*, InsightsScreenTest › f16_14_*, BackArrowTest › d052_shortVideos, AccessibilityServiceTest › step4_2_d057_* | Shorts/Reels blocked within ~300 ms, normal videos untouched, battery OK after 1 day; only one screen at a time with a limit or break |
 | F16.13 | ❌ | Removed (D-006) | |
 | F17.1 | 🟡 | FileLoggerTest › f17_1_*, AndroidDiagnosticsTest › f17_1_logcatMirrorUsesMatchingPriority, ZeroRulesTest › f17_1_flagsDirectLogging | |
 | F17.2 | 🟡 | LogEntryTest › f17_2_*, LogFileStoreTest › f17_2_*, FileLoggerTest › f17_2_* | |

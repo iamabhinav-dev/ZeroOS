@@ -1,6 +1,7 @@
 package com.zeroos.launcher.accessibility
 
 import android.accessibilityservice.AccessibilityService
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -53,7 +54,7 @@ class AccessibilityServiceTest {
     }
 
     @Test
-    fun step4_2_onlyTheSystemCanBindAndItReadsNoScreenContent() {
+    fun step4_2_d057_onlyTheSystemCanBindAndByDefaultItHearsOnlyZeroOs() {
         val services = context.packageManager.queryIntentServices(
             Intent(AccessibilityService.SERVICE_INTERFACE).setPackage(context.packageName),
             PackageManager.GET_META_DATA
@@ -65,7 +66,11 @@ class AccessibilityServiceTest {
         val config = context.resources.getXml(R.xml.accessibility_service)
         while (config.next() != XmlPullParser.START_TAG) Unit
         val android = "http://schemas.android.com/apk/res/android"
-        assertEquals("false", config.getAttributeValue(android, "canRetrieveWindowContent"))
+        // D-057: layout (view IDs) can be read for the short-video blocker, which looks only inside its target apps.
+        assertEquals("true", config.getAttributeValue(android, "canRetrieveWindowContent"))
+        val flags = Integer.decode(config.getAttributeValue(android, "accessibilityFlags"))
+        assertEquals(AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS, flags)
+        // Until a feature widens it at runtime, only ZeroOS's own events arrive.
         assertEquals(context.packageName, config.getAttributeValue(android, "packageNames"))
     }
 }

@@ -1,6 +1,7 @@
 package com.zeroos.launcher
 
 import android.content.Intent
+import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.longClick
 import androidx.compose.ui.test.onAllNodesWithTag
@@ -12,10 +13,14 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.zeroos.core.data.docs.AssetDocumentSource
+import com.zeroos.core.data.docs.ReleaseDocument
+import com.zeroos.core.data.docs.fingerprintOf
 import com.zeroos.core.data.settings.SETTINGS_FILE_NAME
 import com.zeroos.feature.applist.AppListTestTags
 import com.zeroos.feature.home.HomeTestTags
 import com.zeroos.feature.onboarding.OnboardingTestTags
+import com.zeroos.feature.onboarding.ReadBeforeUsingTags
 import com.zeroos.feature.settings.SettingsTestTags
 import com.zeroos.launcher.diagnostics.DiagnosticsTestTags
 import org.junit.Before
@@ -92,25 +97,33 @@ class MainActivityTest {
 
 private const val WAIT_MS = 5_000L
 
-/** Writes settings with onboarding finished before the activity starts. */
+/** Writes settings with the documents accepted (F14.8) and onboarding finished before the activity starts. */
 class OnboardingDoneRule : org.junit.rules.ExternalResource() {
     override fun before() {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val source = AssetDocumentSource(context.assets)
+        val accepted = requireNotNull(fingerprintOf(ReleaseDocument.entries.map(source::read))) { "release documents missing from assets" }
         java.io.File(context.filesDir, "datastore/$SETTINGS_FILE_NAME").apply {
             parentFile?.mkdirs()
-            writeText("""{"onboardingCompleted":true}""")
+            writeText("""{"onboardingCompleted":true,"acceptedDocuments":"$accepted"}""")
         }
     }
 }
 
-/** First start shows onboarding; skipping it lands on home (F14.5). */
+/** First start: the documents page (F14.8), then onboarding; skipping it lands on home (F14.5). */
 @RunWith(AndroidJUnit4::class)
 class OnboardingGateTest {
     @get:Rule
     val compose = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun f14_5_firstStartShowsOnboardingThenHome() {
+    fun f14_8_f14_5_firstStartShowsDocumentsThenOnboardingThenHome() {
+        compose.waitUntil(WAIT_MS) { compose.onAllNodesWithTag(ReadBeforeUsingTags.ROOT).fetchSemanticsNodes().isNotEmpty() }
+        // Continue does nothing until the box is ticked; there's no Skip on this page.
+        compose.onNodeWithText("Continue").assertIsNotEnabled()
+        compose.onNodeWithText("Skip").assertDoesNotExist()
+        compose.onNodeWithTag(ReadBeforeUsingTags.ACCEPT).performClick()
+        compose.onNodeWithText("Continue").performClick()
         compose.waitUntil(WAIT_MS) { compose.onAllNodesWithTag(OnboardingTestTags.ROOT).fetchSemanticsNodes().isNotEmpty() }
         compose.onNodeWithText("Skip").performClick()
         compose.waitUntil(WAIT_MS) { compose.onAllNodesWithTag(HomeTestTags.ROOT).fetchSemanticsNodes().isNotEmpty() }

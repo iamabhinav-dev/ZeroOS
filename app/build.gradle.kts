@@ -20,8 +20,8 @@ android {
 
     defaultConfig {
         applicationId = "com.zeroos.launcher"
-        versionCode = 27
-        versionName = "0.0.27"
+        versionCode = 30
+        versionName = "0.0.30"
     }
 
     signingConfigs {
@@ -54,6 +54,50 @@ android {
         compose = true
         buildConfig = true
     }
+}
+
+/**
+ * F14.8: the release's README notes, LICENSE and third-party notices inside the APK (assets/docs/), so the app shows
+ * exactly the documents of the installed release, offline. Only the README part between the in-app markers is used.
+ */
+abstract class ReleaseDocsTask : DefaultTask() {
+    @get:InputFile
+    abstract val readme: RegularFileProperty
+
+    @get:InputFile
+    abstract val license: RegularFileProperty
+
+    @get:InputFile
+    abstract val notices: RegularFileProperty
+
+    @get:OutputDirectory
+    abstract val outputDir: DirectoryProperty
+
+    @TaskAction
+    fun copy() {
+        val docs = outputDir.get().asFile.resolve("docs").apply {
+            deleteRecursively()
+            mkdirs()
+        }
+        val text = readme.get().asFile.readText()
+        val start = "<!-- in-app:start -->"
+        val end = "<!-- in-app:end -->"
+        require(start in text && end in text) { "README.md needs $start and $end around the part shown in the app" }
+        docs.resolve("README.md").writeText(text.substringAfter(start).substringBefore(end).trim() + "\n")
+        license.get().asFile.copyTo(docs.resolve("LICENSE.txt"))
+        notices.get().asFile.copyTo(docs.resolve("THIRD_PARTY_NOTICES.md"))
+    }
+}
+
+val releaseDocs = tasks.register<ReleaseDocsTask>("releaseDocs") {
+    readme.set(rootProject.file("README.md"))
+    license.set(rootProject.file("LICENSE"))
+    notices.set(rootProject.file("THIRD_PARTY_NOTICES.md"))
+    outputDir.set(layout.buildDirectory.dir("generated/releaseDocs"))
+}
+
+androidComponents {
+    onVariants { variant -> variant.sources.assets?.addGeneratedSourceDirectory(releaseDocs, ReleaseDocsTask::outputDir) }
 }
 
 dependencies {

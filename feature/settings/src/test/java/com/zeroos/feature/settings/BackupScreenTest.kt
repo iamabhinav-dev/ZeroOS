@@ -10,6 +10,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
+import com.zeroos.core.data.backup.BackupAge
 import com.zeroos.core.data.backup.BackupRepository
 import com.zeroos.core.data.backup.SettingsBackup
 import com.zeroos.core.data.settings.SettingsRepository
@@ -79,6 +80,39 @@ class BackupScreenTest {
         compose.onNodeWithText("Replace all settings with this backup?").assertExists()
         compose.onNodeWithText("Import").performClick()
         assertEquals(listOf("confirm"), calls)
+    }
+
+    @Test
+    fun f13_6_warnsWhatAnImportReplaces() {
+        show(BackupState(pending = SettingsBackup()))
+        compose.onNodeWithText("This can't be undone", substring = true).assertExists()
+        compose.onNodeWithText("Permissions such as Accessibility", substring = true).assertExists()
+        compose.onNodeWithText("Made with ZeroOS", substring = true).assertDoesNotExist()
+    }
+
+    @Test
+    fun f13_7_saysWhenTheBackupIsFromAnotherVersion() {
+        show(BackupState(pending = SettingsBackup(appVersionName = "0.0.20"), pendingAge = BackupAge.OLDER))
+        compose.onNodeWithText("Made with ZeroOS 0.0.20, an older version: settings added since then get their defaults.").assertExists()
+    }
+
+    @Test
+    fun f13_7_newerBackupSaysWhatIsLeftOut() {
+        show(BackupState(pending = SettingsBackup(appVersionName = "0.0.35"), pendingAge = BackupAge.NEWER))
+        compose.onNodeWithText("Made with ZeroOS 0.0.35, a newer version: settings this version doesn't have are left out.").assertExists()
+    }
+
+    @Test
+    fun f13_6_importWarningScreenshot() {
+        show(BackupState(pending = SettingsBackup(appVersionName = "0.0.20"), pendingAge = BackupAge.OLDER))
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
+    @Config(qualifiers = "w872dp-h392dp-land-xxhdpi")
+    fun landscape_importWarningScreenshot() {
+        show(BackupState(pending = SettingsBackup(appVersionName = "0.0.35"), pendingAge = BackupAge.NEWER))
+        compose.onRoot().captureRoboImage()
     }
 
     @Test

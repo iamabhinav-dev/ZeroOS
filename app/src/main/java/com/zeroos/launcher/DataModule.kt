@@ -7,7 +7,10 @@ import com.zeroos.core.data.apps.AndroidLauncherAppsSource
 import com.zeroos.core.data.apps.AppActions
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.HomeAppsCache
+import com.zeroos.core.data.backup.AppVersion
 import com.zeroos.core.data.backup.BackupRepository
+import com.zeroos.core.data.docs.AssetDocumentSource
+import com.zeroos.core.data.docs.DocumentsRepository
 import com.zeroos.core.data.settings.AppCustomizationRepository
 import com.zeroos.core.data.settings.FavoritesRepository
 import com.zeroos.core.data.settings.SettingsRepository
@@ -68,8 +71,15 @@ object DataModule {
         diagnostics,
         context.getSharedPreferences("backup", Context.MODE_PRIVATE),
         clock,
-        logger
+        logger,
+        AppVersion(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toLong())
     )
+
+    /** F14.8: the release's documents from the APK's assets. */
+    @Provides
+    @Singleton
+    fun documentsRepository(@ApplicationContext context: Context, settings: SettingsRepository, logger: Logger): DocumentsRepository =
+        DocumentsRepository(AssetDocumentSource(context.assets), settings, Dispatchers.IO, logger, BuildConfig.VERSION_NAME)
 
     @Provides
     @Singleton

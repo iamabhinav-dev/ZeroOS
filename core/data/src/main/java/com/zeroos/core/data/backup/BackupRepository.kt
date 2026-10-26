@@ -6,6 +6,7 @@ import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.LogLevel
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.info
+import com.zeroos.core.logging.warn
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.Clock
@@ -17,7 +18,9 @@ class BackupRepository(
     private val diagnostics: DiagnosticsSettings,
     private val prefs: SharedPreferences,
     private val clock: Clock,
-    private val logger: Logger
+    private val logger: Logger,
+    /** The installed version, recorded in exports (F13.7); null in tests that don't care. */
+    private val appVersion: AppVersion? = null
 ) {
     /** When settings were last exported, or null. */
     val lastExportMillis: Long?
@@ -30,18 +33,25 @@ class BackupRepository(
         val backup = SettingsBackup(
             exportedAtMillis = clock.millis(),
             settings = settings.settings.first(),
-            diagnostics = DiagnosticsBackup(diagnostics.isLoggingEnabled, diagnostics.minLevel.name)
+            diagnostics = DiagnosticsBackup(diagnostics.isLoggingEnabled, diagnostics.minLevel.name),
+            appVersionName = appVersion?.name,
+            appVersionCode = appVersion?.code
         )
         output.write(SettingsBackupCodec.encode(backup).encodeToByteArray())
         prefs.edit().putLong(KEY_LAST_EXPORT, backup.exportedAtMillis).apply()
         logger.info(TAG, "settings exported")
     }
 
+    /** Whether [backup] came from an older or newer ZeroOS than this one (F13.6). */
+    fun ageOf(backup: SettingsBackup): BackupAge = backup.age(appVersion)
+
     fun read(input: InputStream): BackupReadResult = SettingsBackupCodec.decode(input.readBytes().decodeToString())
 
-    /** Replaces all settings with [backup] (after the user confirmed, F13.2). */
+    /** Replaces all settings with [backup] (after the user confirmed, F13.2), keeping every value in range (D-059). */
     suspend fun restore(backup: SettingsBackup) {
-        settings.update("settings imported (schema ${backup.schemaVersion})") { backup.settings }
+        val imported = backup.settings.withinAllowedRanges()
+        if (imported != backup.settings) logger.warn(TAG, "backup had values outside the allowed ranges; corrected")
+        settings.update("settings imported (schema ${backup.schemaVersion})") { imported }
         diagnostics.isLoggingEnabled = backup.diagnostics.loggingEnabled
         backup.diagnostics.level?.let { name -> LogLevel.entries.firstOrNull { it.name == name } }?.let { diagnostics.minLevel = it }
     }

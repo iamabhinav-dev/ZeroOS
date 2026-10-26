@@ -1002,6 +1002,88 @@ Android's normal permission dialog for "Calendar", after one explanation line in
 │  Cancel                    Save    │
 ```
 
+---
+
+## K. Before going public — approved 2026-10-19
+Requirements (added to REQUIREMENTS.md):
+- **F13.6** Before an import replaces anything, the confirmation warns what it does and what a backup can't carry.
+- **F13.7** A backup records the ZeroOS version that made it (an added field, D-059), so the warning can say whether
+  it's from an older or a newer version.
+- **F14.8** Before ZeroOS can be used, the user confirms they have read and accept the README notes, LICENSE and
+  third-party notices **of the installed release**. The documents are inside the app (copied from the repo when the
+  APK is built), so they work offline and always match the release. Not skippable (an exception to F14.5). Asked
+  again only when a later release changes those documents. Safe mode (F18) never shows it.
+
+### K1. Import confirmation (replaces the one-line dialog in F6)
+```
+┌────────────────────────────────────┐
+│  Replace all settings with this    │
+│  backup?                           │
+│                                    │
+│  Everything you've set up now is   │  always shown
+│  replaced: favourites, hidden and  │
+│  renamed apps, limits, Focus and   │
+│  short videos. This can't be       │
+│  undone. Export your current       │
+│  settings first if you might want  │
+│  them back.                        │
+│                                    │
+│  Made with ZeroOS 0.0.20, an older │  one of these, from F13.7:
+│  version: settings added since     │  · older: "…settings added since then get their defaults."
+│  then get their defaults.          │  · newer: "Made with ZeroOS 0.0.35, a newer version:
+│                                    │     settings this version doesn't have are left out."
+│                                    │  · same version, or not recorded: no line
+│  Permissions such as Accessibility │  always shown
+│  and Usage access aren't in a      │
+│  backup; turn them on again in     │
+│  Settings if you need them.        │
+│                                    │
+│            [ Cancel ]  [ Import ]  │
+└────────────────────────────────────┘
+```
+*Scrolls if the text is large; landscape: the same dialog, wider.*
+
+### K2. Read before using (first onboarding page, before G1)
+```
+┌────────────────────────────────────┐
+│  Before you start                  │  no Skip on this page
+│                                    │
+│  ZeroOS replaces your home screen  │
+│  and may cause problems on your    │
+│  phone, including ones not known   │
+│  when this version was released.   │
+│  You use it at your own risk; its  │
+│  author is not responsible for any │
+│  damage or loss.                   │
+│                                    │
+│  Read these for ZeroOS 0.0.30:     │  versionName of the installed app
+│  README                          › │  → K3
+│  Licence                         › │  → K3
+│  Third-party notices             › │  → K3
+│                                    │
+│  ☐ I have read and understood      │  dotted box, like the website
+│    them and I agree.               │
+│                                    │
+│                       [ Continue ] │  dimmed until the box is ticked
+└────────────────────────────────────┘
+```
+*Landscape: two panes, the text and links on the left, the box and Continue on the right.*
+*After an update that changed the documents: the same page, titled "The documents changed", shown once on the next
+start before home; Continue then goes straight to home.*
+
+### K3. Document reader
+```
+┌────────────────────────────────────┐
+│  ← Licence                         │  BackTitle (D-052); back returns to K2
+│                                    │
+│  ZeroOS Launcher — Personal Use    │  the document's text as in the release:
+│  Licence                           │  headings in bold, lists kept, scrolls
+│  Copyright (c) 2026 …              │
+│  …                                 │
+└────────────────────────────────────┘
+```
+*Also reachable later from Settings → About: "README", "Licence", "Third-party notices".*
+
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
 - **Q2. Fonts:** Doto for all text, no font picker (D-020).

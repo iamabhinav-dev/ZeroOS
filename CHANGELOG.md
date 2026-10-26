@@ -4,6 +4,27 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 0.0.30 (versionCode 30)
+- **Before you start:** on first start, and once after an update that changes them, ZeroOS asks you to read the
+  README notes, licence and third-party notices of the installed version and tick that you agree (F14.8). They're
+  inside the app and also in Settings → About
+- **Import warning:** importing a settings backup now says that it replaces everything and can't be undone,
+  that permissions aren't in a backup, and whether the backup is from an older or newer version (F13.6, F13.7)
+- **Safer settings:** imported values are kept within their allowed ranges, and if the settings file ever can't
+  be read, a copy is kept before it's reset (D-059)
+## 0.0.29 (versionCode 29)
+- Fixed: the take-a-break screen appeared at once when you went home and came back to the app from recent apps
+  within a minute
+- Only one blocking screen at a time: the limit or break screen comes first; a short-video block waits and shows
+  after it if you're still in Shorts or Reels
+## 0.0.28 (versionCode 28)
+- Short-video blocker (F16), off until you turn it on in Settings → Wellbeing → Short videos: blocks YouTube
+  Shorts and Instagram Reels with a black screen (dot shutter over a play symbol, a pun or your own message,
+  Go home). Block at once, or after a daily allowance (15 min by default); "Allow 5 minutes" once a day after a
+  mindful pause; always blocked during Focus. The rest of each app stays usable
+- Insights shows today's short-video time and how often it was blocked
+- The Accessibility service can now read screen layout, used only inside YouTube and Instagram while the blocker
+  is on; the explanation screens say so. Android may ask you to turn the service on again after updating
 ## 0.0.27 (versionCode 27)
 - Screen time on home (F10): today's screen time and unlocks under the date, in one of four styles: text,
   progress bar against a daily goal, weekly dots or hourly dots. Until Usage access is granted, home shows

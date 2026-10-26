@@ -204,8 +204,8 @@ Wellbeing's per-app rules (mindful pause, daily limit) and focus schedules are s
 *Why:* User's choice; less machinery, backup for free.
 
 **D-042 — Idle memory target 80 MB** · 2026-10-17 · Accepted
-NFR-P4 changes from 60 MB to 80 MB idle. Measured on the test phone with the release build: [measured] in the background
-(10 s after leaving ZeroOS), [measured] on screen.
+NFR-P4 changes from 60 MB to 80 MB idle. The release build's background use (10 s after leaving ZeroOS) was within
+the new target on the test phone; the numbers are in the git-ignored PERSONAL.md (D-048).
 *Why:* User's choice; most of it is the fixed cost of Android's runtime and the Compose UI library, so cutting
 to 60 MB wasn't worth the effort for a single-user launcher.
 
@@ -318,3 +318,14 @@ target apps (YouTube, Instagram), and only while the blocker is on. To know whic
 receives window changes from all apps while the blocker is on and uses only the app name. The explanation screens
 say this plainly. This updates D-023 for F16.
 *Why:* User's choice; required by F16 as written.
+
+**D-059 — Settings stay compatible across versions** · 2026-10-19 · Accepted
+Settings are only ever added, each with an Appendix A default; nothing stored is renamed, retyped, removed or
+reused. Older files (settings and backups) get defaults for what's missing; newer ones of the same schema keep what
+this version knows and drop the rest, and an unknown option falls back to its default. A change that can't be done
+by adding raises the schema version (older ZeroOS then refuses the backup instead of half-importing it) and comes
+with a migration and its test. A real export of every release is kept under `core/data/src/test/resources/backups/`
+and must keep importing with nothing lost (`BackupCompatibilityTest`). Imported values are pulled into their
+Appendix A ranges. If the settings file ever can't be read, it's copied to `launcher_settings.unreadable.json`
+before the reset to defaults, so the setup can still be recovered.
+*Why:* User's question about forward and backward compatibility; they chose all four safeguards.

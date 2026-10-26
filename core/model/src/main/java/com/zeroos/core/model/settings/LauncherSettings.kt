@@ -26,7 +26,10 @@ data class LauncherSettings(
     /** Mindful pause and daily limits (F8); off by default, settings kept while off (F8.10). */
     val wellbeing: WellbeingSettings = WellbeingSettings(),
     val focus: FocusSettings = FocusSettings(),
-    val screenTime: ScreenTimeSettings = ScreenTimeSettings()
+    val screenTime: ScreenTimeSettings = ScreenTimeSettings(),
+    val shortForm: ShortFormSettings = ShortFormSettings(),
+    /** Fingerprint of the README notes, LICENSE and notices the user accepted (F14.8); null until accepted. */
+    val acceptedDocuments: String? = null
 ) {
     companion object {
         const val CURRENT_VERSION = 1
@@ -207,3 +210,35 @@ data class ScreenTimeSettings(
 /** F10.5: how home shows screen time. */
 @Serializable
 enum class StatsStyle { TEXT, PROGRESS, WEEKLY, HOURLY }
+
+/** Short-video blocker (F16); defaults from Appendix A. Works whether or not Wellbeing is on (F16.11). */
+@Serializable
+data class ShortFormSettings(
+    /** F16.1: off by default; needs the Accessibility service. */
+    val enabled: Boolean = false,
+    /** Apps whose short videos are blocked (F16.4), by package. */
+    val blockedApps: Set<String> = setOf(YOUTUBE_PACKAGE, INSTAGRAM_PACKAGE),
+    /** F16.7 / F16.8. */
+    val mode: ShortFormMode = ShortFormMode.BLOCK,
+    /** Limit mode's daily allowance (F16.8): 0–120 min. */
+    val allowanceMinutes: Int = 15,
+    /** Show [customMessage] instead of a random pun (F16.9). */
+    val useCustomMessage: Boolean = false,
+    /** Up to 120 characters; never logged (F17.8). */
+    val customMessage: String = "",
+    /** Go home by itself after this many seconds, or null when off (F16.10): 3–10 s. */
+    val autoHomeSeconds: Int? = null,
+    /** "Allow 5 minutes" uses per day (F16.11): 0–5. */
+    val allowUsesPerDay: Int = 1
+)
+
+/** F16.7 block at once, F16.8 block after a daily allowance. */
+@Serializable
+enum class ShortFormMode { BLOCK, LIMIT }
+
+/** F16.3: the supported apps. */
+const val YOUTUBE_PACKAGE = "com.google.android.youtube"
+const val INSTAGRAM_PACKAGE = "com.instagram.android"
+
+/** F16.9: the custom message's length limit. */
+const val CUSTOM_MESSAGE_MAX = 120

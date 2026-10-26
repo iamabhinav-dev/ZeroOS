@@ -5,12 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.datastore.core.DataStoreFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.github.takahirom.roborazzi.captureRoboImage
@@ -222,6 +224,14 @@ class InsightsScreenTest {
         compose.onNodeWithText("12% vs yesterday").assertExists()
         compose.onNodeWithContentDescription("Back").performClick()
         assertEquals(1, backs)
+    }
+
+    @Test
+    fun f16_14_shortVideoTimeAndBlocks() {
+        val shorts = com.zeroos.core.data.wellbeing.ShortFormDay(millis = 12 * MIN, blocks = 4)
+        compose.setContent { ZeroTheme { InsightsScreen(InsightsState(sample, labels, shortForm = shorts), {}, onBack = {}) } }
+        compose.onNodeWithTag(InsightsTestTags.SCREEN).performScrollToNode(hasText("12m today · blocked 4 times"))
+        compose.onNodeWithText("12m today · blocked 4 times").assertExists()
     }
 
     @Test

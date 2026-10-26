@@ -3,6 +3,7 @@ package com.zeroos.feature.settings
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -12,6 +13,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
+import com.zeroos.core.data.docs.ReleaseDocument
 import com.zeroos.core.logging.Logger
 import com.zeroos.core.logging.warn
 import com.zeroos.core.resources.R
@@ -71,14 +73,19 @@ class AboutViewModel @Inject constructor(
 }
 
 @Composable
-fun AboutRoute(onLicenses: () -> Unit, onBack: () -> Unit, viewModel: AboutViewModel = hiltViewModel()) {
+fun AboutRoute(
+    onLicenses: () -> Unit,
+    onDocument: (ReleaseDocument) -> Unit,
+    onBack: () -> Unit,
+    viewModel: AboutViewModel = hiltViewModel()
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    AboutScreen(state, onLicenses, onBack)
+    AboutScreen(state, onLicenses, onBack, onDocument)
 }
 
-/** Wireframe F7. */
+/** Wireframe F7, with the release's documents (F14.8, K3). */
 @Composable
-fun AboutScreen(state: AboutState, onLicenses: () -> Unit, onBack: () -> Unit) {
+fun AboutScreen(state: AboutState, onLicenses: () -> Unit, onBack: () -> Unit, onDocument: (ReleaseDocument) -> Unit = {}) {
     SettingsPageScaffold(stringResource(R.string.settings_about), SettingsTestTags.ABOUT, onBack) {
         item {
             ZeroWordmark(
@@ -88,6 +95,7 @@ fun AboutScreen(state: AboutState, onLicenses: () -> Unit, onBack: () -> Unit) {
         item {
             BodyText(stringResource(R.string.about_version, stringResource(R.string.app_name), state.versionName, state.versionCode))
         }
+        items(ReleaseDocument.entries) { document -> NavRow(document.title()) { onDocument(document) } }
         item { NavRow(R.string.about_licenses, onLicenses) }
     }
 }
