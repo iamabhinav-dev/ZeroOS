@@ -13,6 +13,7 @@ Screenshots, the Doto font and the logo are copied from the app's own files, so 
 """
 
 import argparse
+import datetime
 import html
 import json
 import re
@@ -96,7 +97,8 @@ def css_problems(source):
 
 def generated_keys(config):
     """Keys the generated blocks use, so they're checked too."""
-    keys = {"brand_name", "channel_loading", "disclaimer_locked"}
+    keys = {"brand_name", "channel_loading", "disclaimer_locked", "page_title", "page_description"}
+    keys |= {"seo_operating_system", "seo_image_alt"}
     for screen in config["screens"]:
         keys |= {f"screen_{screen['key']}_{part}" for part in ("title", "body", "alt")}
     for feature in config["features"]:
@@ -149,6 +151,61 @@ def screen_images(key, alt):
     )
 
 
+def seo_block(strings, config):
+    """Canonical URL, link previews (Open Graph, X/Twitter), theme colours and structured data for search engines."""
+    url = config["siteUrl"].rstrip("/") + "/"
+    image = url + "assets/og-image.png"
+    meta = [
+        f'<link rel="canonical" href="{html.escape(url)}">',
+        '<meta name="robots" content="index, follow">',
+        '<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">',
+        '<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">',
+        '<meta property="og:type" content="website">',
+        f'<meta property="og:url" content="{html.escape(url)}">',
+        f'<meta property="og:site_name" content="{text(strings, "brand_name")}">',
+        f'<meta property="og:title" content="{text(strings, "page_title")}">',
+        f'<meta property="og:description" content="{text(strings, "page_description")}">',
+        f'<meta property="og:image" content="{html.escape(image)}">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        f'<meta property="og:image:alt" content="{text(strings, "seo_image_alt")}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{text(strings, "page_title")}">',
+        f'<meta name="twitter:description" content="{text(strings, "page_description")}">',
+        f'<meta name="twitter:image" content="{html.escape(image)}">',
+    ]
+    data = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": strings["brand_name"],
+        "description": strings["page_description"],
+        "url": url,
+        "image": image,
+        "applicationCategory": config["applicationCategory"],
+        "operatingSystem": strings["seo_operating_system"],
+        "downloadUrl": config["releasesPage"],
+        "license": config["docsBase"] + "LICENSE",
+        "isAccessibleForFree": True,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+    }
+    payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
+    return "\n  ".join(meta + [f'<script type="application/ld+json">{payload}</script>'])
+
+
+def robots_txt(config):
+    return f"User-agent: *\nAllow: /\n\nSitemap: {config['siteUrl'].rstrip('/')}/sitemap.xml\n"
+
+
+def sitemap_xml(config, day):
+    url = html.escape(config["siteUrl"].rstrip("/") + "/")
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        f"  <url><loc>{url}</loc><lastmod>{day}</lastmod></url>\n"
+        "</urlset>\n"
+    )
+
+
 def blocks(strings, config, logo):
     screens = "\n".join(
         f'<figure class="shot"><div class="phone">{screen_images(s["key"], text(strings, "screen_" + s["key"] + "_alt"))}</div>'
@@ -189,6 +246,7 @@ def blocks(strings, config, logo):
         "doclinks": doclinks,
         "channels": channels,
         "logo": logo,
+        "seo": seo_block(strings, config),
         "data": f'<script id="site-data" type="application/json">{payload}</script>',
     }
 
@@ -242,6 +300,10 @@ def build(out_dir, only_check=False):
     for screen in config["screens"]:
         shutil.copy(ROOT / screen["src"], out_dir / "assets" / "screens" / f"{screen['key']}.png")
         shutil.copy(ROOT / screen["light"], out_dir / "assets" / "screens" / f"{screen['key']}-light.png")
+    for asset in sorted((SITE / "assets").glob("*.png")):
+        shutil.copy(asset, out_dir / "assets" / asset.name)
+    (out_dir / "robots.txt").write_text(robots_txt(config), encoding="utf-8")
+    (out_dir / "sitemap.xml").write_text(sitemap_xml(config, datetime.date.today().isoformat()), encoding="utf-8")
     (out_dir / ".nojekyll").write_text("", encoding="utf-8")
 
 

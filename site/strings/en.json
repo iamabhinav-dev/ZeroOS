@@ -2,6 +2,8 @@
   "page_title": "ZeroOS — a quiet Android launcher",
   "page_description": "ZeroOS is a minimalist, text-only Android home screen in black and white, with screen-time limits, focus mode and a short-video blocker.",
   "brand_name": "ZeroOS",
+  "seo_operating_system": "Android 8.0 or newer",
+  "seo_image_alt": "The dotted ZeroOS wordmark next to the text-only home screen",
   "skip_to_content": "Skip to content",
 
   "nav_look": "Look",

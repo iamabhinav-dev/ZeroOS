@@ -2,6 +2,7 @@
 """Tests for build-site.py; run by `./gradlew check` (task checkSite)."""
 
 import importlib.util
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,6 +21,8 @@ CONFIG = {
     "releasesApi": "https://example.invalid/api",
     "releasesPage": "https://example.invalid/releases",
     "apkSuffix": "-release.apk",
+    "siteUrl": "https://example.invalid",
+    "applicationCategory": "UtilitiesApplication",
 }
 STRINGS = {
     key: "Text"
@@ -85,6 +88,24 @@ class RenderTest(unittest.TestCase):
         self.assertNotIn("<title>", svg)
 
 
+class SeoTest(unittest.TestCase):
+    def test_robots_allows_everything_and_points_to_the_sitemap(self):
+        self.assertEqual("User-agent: *\nAllow: /\n\nSitemap: https://example.invalid/sitemap.xml\n", site.robots_txt(CONFIG))
+
+    def test_sitemap_lists_the_page(self):
+        xml = site.sitemap_xml(CONFIG, "2026-10-26")
+        self.assertIn("<loc>https://example.invalid/</loc><lastmod>2026-10-26</lastmod>", xml)
+
+    def test_seo_block_has_canonical_previews_and_valid_structured_data(self):
+        block = site.seo_block({**STRINGS, "page_title": "ZeroOS & co"}, CONFIG)
+        self.assertIn('<link rel="canonical" href="https://example.invalid/">', block)
+        self.assertIn('<meta property="og:title" content="ZeroOS &amp; co">', block)
+        self.assertIn('content="https://example.invalid/assets/og-image.png"', block)
+        data = json.loads(block.split('<script type="application/ld+json">')[1].split("</script>")[0])
+        self.assertEqual("SoftwareApplication", data["@type"])
+        self.assertEqual("0", data["offers"]["price"])
+
+
 class RealSiteTest(unittest.TestCase):
     def test_the_real_site_builds_without_hardcoded_text(self):
         with tempfile.TemporaryDirectory() as out:
@@ -96,6 +117,10 @@ class RealSiteTest(unittest.TestCase):
             self.assertTrue((Path(out) / "site" / "assets" / "screens" / "home-light.png").is_file())
             self.assertEqual(page.count('class="only-dark"'), page.count('class="only-light"'))
             self.assertTrue((Path(out) / "site" / ".nojekyll").is_file())
+            for name in ("robots.txt", "sitemap.xml", "assets/og-image.png", "assets/apple-touch-icon.png"):
+                self.assertTrue((Path(out) / "site" / name).is_file(), name)
+            self.assertIn('rel="canonical"', page)
+            self.assertIn("application/ld+json", page)
 
 
 if __name__ == "__main__":
