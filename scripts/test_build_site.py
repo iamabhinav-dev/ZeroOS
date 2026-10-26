@@ -104,6 +104,9 @@ class SeoTest(unittest.TestCase):
         data = json.loads(block.split('<script type="application/ld+json">')[1].split("</script>")[0])
         self.assertEqual("SoftwareApplication", data["@type"])
         self.assertEqual("0", data["offers"]["price"])
+        self.assertNotIn("google-site-verification", block)
+        verified = site.seo_block(STRINGS, {**CONFIG, "googleSiteVerification": "abc_123"})
+        self.assertIn('<meta name="google-site-verification" content="abc_123">', verified)
 
 
 class RealSiteTest(unittest.TestCase):

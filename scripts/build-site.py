@@ -158,6 +158,11 @@ def seo_block(strings, config):
     meta = [
         f'<link rel="canonical" href="{html.escape(url)}">',
         '<meta name="robots" content="index, follow">',
+        *(
+            [f'<meta name="google-site-verification" content="{html.escape(config["googleSiteVerification"])}">']
+            if config.get("googleSiteVerification")
+            else []
+        ),
         '<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">',
         '<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">',
         '<meta property="og:type" content="website">',
