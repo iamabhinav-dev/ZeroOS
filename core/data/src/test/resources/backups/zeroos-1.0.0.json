@@ -1,0 +1,97 @@
+{
+    "format": "zeroos-settings",
+    "schemaVersion": 1,
+    "exportedAtMillis": 1792886400000,
+    "settings": {
+        "version": 1,
+        "onboardingCompleted": true,
+        "favorites": [
+            "com.example.phone/com.example.phone.Main#0",
+            "com.example.notes/com.example.notes.Main#0"
+        ],
+        "hiddenApps": [
+            "com.example.game/com.example.game.Main#0"
+        ],
+        "renamedApps": {
+            "com.example.notes/com.example.notes.Main#0": "Notes"
+        },
+        "home": {
+            "maxFavorites": 8,
+            "alignment": "CENTER",
+            "showBattery": false,
+            "showNextAlarm": true
+        },
+        "appList": {
+            "keyboardAutoOpen": false,
+            "autoLaunchSingleMatch": true,
+            "fastScroller": true,
+            "hiddenAppsConfirmation": "DELAY"
+        },
+        "gestures": {
+            "swipeLeftApp": "com.example.phone/com.example.phone.Main#0",
+            "swipeRightApp": "com.example.notes/com.example.notes.Main#0",
+            "doubleTapLock": true
+        },
+        "appearance": {
+            "theme": "LIGHT",
+            "wallpaper": "SYSTEM",
+            "textSize": "LARGE",
+            "showClock": false,
+            "showSeconds": true,
+            "showDate": false,
+            "showStatusBar": false
+        },
+        "phoneWallpapers": {
+            "home": [
+                "white",
+                "black"
+            ],
+            "lock": [
+                "black"
+            ]
+        },
+        "wellbeing": {
+            "enabled": true,
+            "pauseEnabled": false,
+            "pauseSeconds": 8,
+            "intentionPrompt": true,
+            "limitsEnabled": false,
+            "extraMinutesPerDay": 4,
+            "outsideEnforcement": true,
+            "breaksEnabled": true,
+            "breakAfterMinutes": 30,
+            "breakWaitSeconds": 10,
+            "disableFriction": "PAUSE",
+            "apps": {
+                "com.example.video": {
+                    "pause": true,
+                    "dailyLimitMinutes": 45,
+                    "takeBreak": true
+                }
+            }
+        },
+        "focus": {
+            "showOnHome": false,
+            "icon": "FLOW",
+            "doNotDisturb": true,
+            "lastMinutes": 50,
+            "lastAllowed": [
+                "com.example.phone/com.example.phone.Main#0"
+            ]
+        },
+        "screenTime": {
+            "showOnHome": false,
+            "style": "HOURLY",
+            "goalMinutes": 90,
+            "compareYesterday": true,
+            "hintDismissed": true
+        },
+        "acceptedDocuments": "8fe22a4e04e271729a3e9428316f36747f58cbc43e3b0309baddb72e3b17b75f"
+    },
+    "diagnostics": {
+        "loggingEnabled": false,
+        "level": "WARN"
+    },
+    "appVersionName": "1.0.0",
+    "appVersionCode": 31
+}

@@ -345,3 +345,10 @@ Content-Security-Policy; GitHub Pages and its workflow are dropped. The build ad
 canonical URL, Open Graph and X/Twitter preview tags, and schema.org SoftwareApplication data; preview images are
 drawn from the app's own logo and screenshot. Vercel Analytics stays off (no trackers, NFR-S3 in spirit).
 *Why:* User's choice after the Actions billing lock; wanted the page live and findable.
+
+**D-061 — First Stable release 1.0.0** · 2026-10-26 · Accepted
+1.0.0 is built from the 0.0.27 code the user confirmed on the phone (branch `release-1.0`), plus the documents page
+(F14.8), the import warning (F13.6, F13.7), the D-059 safeguards and the take-a-break fix from 0.0.29. The
+short-video blocker (F16) is not in it. Its versionCode is 31, above the 0.0.30 early build, so it installs over
+any earlier build; every later release, Stable or not, must use versionCode 32 or higher.
+*Why:* User's choice: 0.0.27 as Stable, keeping the in-app warnings.
