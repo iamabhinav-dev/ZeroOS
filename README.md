@@ -66,6 +66,7 @@ Gradle memory is capped in `gradle.properties` for an 8 GB machine.
 | `./gradlew recordRoborazziDebug` | Re-record reference screenshots after an approved UI change |
 | `./gradlew koverHtmlReportAggregate` | Coverage report in `build/reports/kover/htmlAggregate/` |
 | `./gradlew assembleDebug` | Debug APK in `app/build/outputs/apk/debug/` |
+| `python3 scripts/build-site.py` | Website into `build/site/` ([site/README.md](site/README.md)) |
 
 ## Project layout
 ```
@@ -79,7 +80,8 @@ core/testing      test helpers (e.g. MutableClock)
 feature/home      home screen
 feature/applist   app list
 build-logic/      Gradle convention plugins (shared module settings)
-scripts/          helper scripts (add-wallpapers.py)
+scripts/          helper scripts (add-wallpapers.py, build-site.py)
+site/             the GitHub Pages website (see site/README.md)
 detekt-rules/     custom detekt rules (hardcoded text/values, direct logging)
 config/           detekt config, permission allowlists, Robolectric settings
 ```

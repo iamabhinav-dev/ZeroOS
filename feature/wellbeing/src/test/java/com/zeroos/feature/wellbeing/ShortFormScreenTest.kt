@@ -77,6 +77,14 @@ class ShortFormScreenTest {
     }
 
     @Test
+    fun step6_3_shortFormLightScreenshot() {
+        compose.mainClock.autoAdvance = false
+        show(theme = ThemeMode.LIGHT)
+        compose.mainClock.advanceTimeBy(1_000)
+        compose.onRoot().captureRoboImage()
+    }
+
+    @Test
     fun step6_3_shutterHalfwayLightScreenshot() {
         compose.mainClock.autoAdvance = false
         show(theme = ThemeMode.LIGHT)

@@ -71,3 +71,14 @@ kover {
 tasks.named("check") {
     dependsOn("koverVerifyAggregate")
 }
+
+// Website (site/): fails on hardcoded text and missing strings or files, like the app's HardcodedUiText rule.
+val checkSite by tasks.registering(Exec::class) {
+    description = "Tests scripts/build-site.py and checks site/ for hardcoded text."
+    group = "verification"
+    commandLine("python3", "-B", "scripts/test_build_site.py")
+}
+
+tasks.named("check") {
+    dependsOn(checkSite)
+}

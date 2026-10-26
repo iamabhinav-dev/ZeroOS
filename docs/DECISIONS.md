@@ -319,6 +319,15 @@ receives window changes from all apps while the blocker is on and uses only the 
 say this plainly. This updates D-023 for F16.
 *Why:* User's choice; required by F16 as written.
 
+**D-058 — Website on GitHub Pages; release channels by tag** · 2026-10-19 · Accepted 2026-10-26
+A one-page site in `site/`, built by `scripts/build-site.py`, in the launcher's look. All its text is in
+`site/strings/en.json` and `./gradlew check` fails on hardcoded text (`checkSite`), as for the app (NFR-L3). It links
+to APKs on GitHub Releases and never hosts them (LICENSE §2). Channels: Stable = `vX.Y.Z` from 1.0.0, not a
+pre-release; Beta = pre-release tagged `-beta.N`/`-rc.N`; Early builds = `v0.x.y`, hidden once Stable exists. It went
+live on 2026-10-26, after the repo was made public, through `.github/workflows/site.yml` (Pages source: GitHub
+Actions).
+*Why:* User's request for a site that shows the app and stays correct when Stable and Beta releases start.
+
 **D-059 — Settings stay compatible across versions** · 2026-10-19 · Accepted
 Settings are only ever added, each with an Appendix A default; nothing stored is renamed, retyped, removed or
 reused. Older files (settings and backups) get defaults for what's missing; newer ones of the same schema keep what
