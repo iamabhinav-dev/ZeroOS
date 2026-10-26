@@ -37,7 +37,7 @@ published. Drafts are never shown.
 
 ## Publishing (Vercel, D-060)
 [vercel.json](../vercel.json) builds the site on Vercel with `python3 scripts/build-site.py` and serves `build/site/`
-at the address in `config.json` → `siteUrl`. Only `main` is deployed. The build also writes `robots.txt`,
+at the address in `config.json` → `siteUrl` (https://zeroos-jade.vercel.app). Only `main` is deployed. The build also writes `robots.txt`,
 `sitemap.xml` and the search and link-preview tags (canonical URL, Open Graph, X/Twitter card, schema.org
 SoftwareApplication data). The share image and home-screen icon in `site/assets/` are drawn by
 `python3 scripts/site-images.py` (needs Pillow) from the app's logo and home screenshot; run it again when those

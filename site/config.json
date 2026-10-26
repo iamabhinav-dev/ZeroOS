@@ -1,5 +1,5 @@
 {
-  "siteUrl": "https://zeroos.vercel.app",
+  "siteUrl": "https://zeroos-jade.vercel.app",
   "applicationCategory": "UtilitiesApplication",
   "releasesApi": "https://api.github.com/repos/iamabhinav-dev/ZeroOS/releases?per_page=50",
   "releasesPage": "https://github.com/iamabhinav-dev/ZeroOS/releases",
