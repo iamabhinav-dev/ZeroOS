@@ -36,6 +36,7 @@ A channel with no release says "Not released yet", so Stable and Beta appear by 
 published. Drafts are never shown.
 
 ## Publishing
-Not set up yet (D-058). When the site goes live: switch on Settings → Pages → Source: GitHub Actions first, then add
-a workflow that runs `python3 scripts/build-site.py` and deploys `build/site/` with the official Pages actions. (A
-first workflow was taken out because, without Pages switched on, every push ended in a startup failure.)
+Live at https://iamabhinav-dev.github.io/ZeroOS/ (D-058). [.github/workflows/site.yml](../.github/workflows/site.yml)
+checks for hardcoded text, builds the site and deploys `build/site/` whenever the site, or the screens and font it
+shows, change on `main` (or when run by hand from the Actions tab). Settings → Pages → Source is "GitHub Actions";
+the workflow fails at startup if Pages is switched off.
