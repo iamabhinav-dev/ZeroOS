@@ -320,3 +320,11 @@ and must keep importing with nothing lost (`BackupCompatibilityTest`). Imported 
 Appendix A ranges. If the settings file ever can't be read, it's copied to `launcher_settings.unreadable.json`
 before the reset to defaults, so the setup can still be recovered.
 *Why:* User's question about forward and backward compatibility; they chose all four safeguards.
+
+**D-061 — First Stable release 1.0.0** · 2026-10-26 · Accepted
+1.0.0 is built from the 0.0.27 code the user confirmed on the phone (branch `release-1.0`), plus the documents page
+(F14.8), the import warning (F13.6, F13.7), the D-059 safeguards and the take-a-break fix from 0.0.29. The
+short-video blocker (F16) is not in it. Its versionCode is 31, above the 0.0.30 early build, so it installs over
+any earlier build; every later release, Stable or not, must use versionCode 32 or higher.
+*Why:* User's choice: 0.0.27 as Stable, keeping the in-app warnings.
+

@@ -4,6 +4,18 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 1.0.0 (versionCode 31), first Stable release
+The features of 0.0.27, plus:
+- **Before you start:** on first start, and once after an update that changes them, ZeroOS asks you to read the
+  README notes, licence and third-party notices of the installed version and tick that you agree (F14.8). They're
+  inside the app and also in Settings → About
+- **Import warning:** importing a settings backup says that it replaces everything and can't be undone, that
+  permissions aren't in a backup, and whether the backup is from an older or newer version (F13.6, F13.7)
+- **Safer settings:** imported values are kept within their allowed ranges, and if the settings file ever can't
+  be read, a copy is kept before it's reset (D-059)
+- **Fixed:** the take-a-break screen appeared at once when you came back to the app within a minute, from recent
+  apps or after locking and unlocking the phone
+- Not included: the short-video blocker (in the 0.0.28–0.0.30 early builds)
 ## 0.0.27 (versionCode 27)
 - Screen time on home (F10): today's screen time and unlocks under the date, in one of four styles: text,
   progress bar against a daily goal, weekly dots or hourly dots. Until Usage access is granted, home shows
