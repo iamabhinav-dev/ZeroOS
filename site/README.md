@@ -35,8 +35,12 @@ and link to the releases page. For a local preview, save a releases list as `bui
 A channel with no release says "Not released yet", so Stable and Beta appear by themselves when the first one is
 published. Drafts are never shown.
 
-## Publishing
-Live at https://iamabhinav-dev.github.io/ZeroOS/ (D-058). [.github/workflows/site.yml](../.github/workflows/site.yml)
-checks for hardcoded text, builds the site and deploys `build/site/` whenever the site, or the screens and font it
-shows, change on `main` (or when run by hand from the Actions tab). Settings → Pages → Source is "GitHub Actions";
-the workflow fails at startup if Pages is switched off.
+## Publishing (Vercel, D-060)
+[vercel.json](../vercel.json) builds the site on Vercel with `python3 scripts/build-site.py` and serves `build/site/`
+at the address in `config.json` → `siteUrl`. Only `main` is deployed. The build also writes `robots.txt`,
+`sitemap.xml` and the search and link-preview tags (canonical URL, Open Graph, X/Twitter card, schema.org
+SoftwareApplication data). The share image and home-screen icon in `site/assets/` are drawn by
+`python3 scripts/site-images.py` (needs Pillow) from the app's logo and home screenshot; run it again when those
+change. Keep Vercel Analytics and Speed Insights off: the site has no trackers, like the app.
+
+If the address changes (another Vercel name or your own domain), change `siteUrl` and push.

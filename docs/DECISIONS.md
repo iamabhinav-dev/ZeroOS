@@ -324,8 +324,7 @@ A one-page site in `site/`, built by `scripts/build-site.py`, in the launcher's 
 `site/strings/en.json` and `./gradlew check` fails on hardcoded text (`checkSite`), as for the app (NFR-L3). It links
 to APKs on GitHub Releases and never hosts them (LICENSE §2). Channels: Stable = `vX.Y.Z` from 1.0.0, not a
 pre-release; Beta = pre-release tagged `-beta.N`/`-rc.N`; Early builds = `v0.x.y`, hidden once Stable exists. It went
-live on 2026-10-26, after the repo was made public, through `.github/workflows/site.yml` (Pages source: GitHub
-Actions).
+live after the repo was made public; it's hosted on Vercel (D-060).
 *Why:* User's request for a site that shows the app and stays correct when Stable and Beta releases start.
 
 **D-059 — Settings stay compatible across versions** · 2026-10-19 · Accepted
@@ -338,3 +337,11 @@ and must keep importing with nothing lost (`BackupCompatibilityTest`). Imported 
 Appendix A ranges. If the settings file ever can't be read, it's copied to `launcher_settings.unreadable.json`
 before the reset to defaults, so the setup can still be recovered.
 *Why:* User's question about forward and backward compatibility; they chose all four safeguards.
+
+**D-060 — Website hosted on Vercel, with SEO basics** · 2026-10-26 · Accepted
+GitHub Actions can't run on the account for now (a billing lock), so the site is built and served by Vercel's free
+Hobby plan (personal, non-commercial) from `main`, configured in `vercel.json` with security headers and a strict
+Content-Security-Policy; GitHub Pages and its workflow are dropped. The build adds `robots.txt`, `sitemap.xml`, a
+canonical URL, Open Graph and X/Twitter preview tags, and schema.org SoftwareApplication data; preview images are
+drawn from the app's own logo and screenshot. Vercel Analytics stays off (no trackers, NFR-S3 in spirit).
+*Why:* User's choice after the Actions billing lock; wanted the page live and findable.
