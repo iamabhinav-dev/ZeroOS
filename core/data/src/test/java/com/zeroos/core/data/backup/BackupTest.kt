@@ -87,6 +87,14 @@ class BackupTest {
     }
 
     @Test
+    fun d059_restoreKeepsValuesInTheirAllowedRanges() = runTest {
+        val (target, targetSettings) = repository(diagnostics("diag-c"))
+        target.restore(SettingsBackup(settings = custom.copy(home = HomeSettings(maxFavorites = 99))))
+        assertEquals(10, targetSettings.settings.first().home.maxFavorites)
+        assertTrue(logged.contains("backup had values outside the allowed ranges; corrected"))
+    }
+
+    @Test
     fun f13_5_olderBackupGetsDefaultsForMissingFields() {
         val old = """{ "format": "zeroos-settings", "schemaVersion": 1, "settings": { "favorites": ["x/x.Main#0"] } }"""
         val backup = (SettingsBackupCodec.decode(old) as BackupReadResult.Ok).backup
