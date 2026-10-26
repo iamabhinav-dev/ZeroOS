@@ -36,7 +36,6 @@ A channel with no release says "Not released yet", so Stable and Beta appear by 
 published. Drafts are never shown.
 
 ## Publishing
-[.github/workflows/site.yml](../.github/workflows/site.yml) builds and deploys the site when it, or the screens and
-font it uses, change on `main` (or when run by hand). It needs Settings → Pages → Source: GitHub Actions.
-GitHub Pro can publish Pages from the private repo, and the site is then public. Until the repo itself is public,
-visitors can't download its releases or open its docs on GitHub, and the release cards can't load.
+Not set up yet (D-058). When the site goes live: switch on Settings → Pages → Source: GitHub Actions first, then add
+a workflow that runs `python3 scripts/build-site.py` and deploys `build/site/` with the official Pages actions. (A
+first workflow was taken out because, without Pages switched on, every push ended in a startup failure.)
