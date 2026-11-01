@@ -1,6 +1,9 @@
 package com.zeroos.feature.applist
 
 import androidx.activity.ComponentActivity
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.click
 import androidx.compose.ui.test.junit4.v2.createAndroidComposeRule
 import androidx.compose.ui.test.longClick
@@ -88,6 +91,17 @@ class AppListScreenTest {
         show(listState())
         compose.onNodeWithTag(AppListTestTags.SEARCH).performTextInput("gm")
         assertEquals(listOf("query:gm"), calls)
+    }
+
+    @Test
+    fun f2_3_leavingTheListReportsIt() {
+        var shown by mutableStateOf(true)
+        val left = mutableListOf<Boolean>()
+        compose.setContent { if (shown) ClearSearchWhenLeft { left += it } }
+        compose.runOnIdle { assertEquals(emptyList<Boolean>(), left) }
+        // Home pressed: the list leaves the screen.
+        shown = false
+        compose.runOnIdle { assertEquals(listOf(false), left) }
     }
 
     @Test

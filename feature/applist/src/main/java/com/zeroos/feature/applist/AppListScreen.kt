@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -32,6 +33,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -84,6 +86,8 @@ fun AppListRoute(onClose: () -> Unit, viewModel: AppListViewModel = hiltViewMode
         viewModel.refreshUsage()
         onPauseOrDispose {}
     }
+    // However the list is left (Back, swipe, Home, an app or a web search), it opens empty next time (F2.3).
+    ClearSearchWhenLeft(viewModel::onLeft)
     fun external(target: String, intent: Intent) {
         try {
             context.startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
@@ -94,7 +98,7 @@ fun AppListRoute(onClose: () -> Unit, viewModel: AppListViewModel = hiltViewMode
         }
     }
     val close = {
-        viewModel.clearQuery()
+        viewModel.onLeft()
         onClose()
     }
     var menuFor by remember { mutableStateOf<AppEntry?>(null) }
@@ -318,4 +322,12 @@ object AppListTestTags {
     const val LIST = "app_list"
     const val SEARCH = "app_list_search"
     const val SCROLLER = "app_list_scroller"
+}
+
+/** Tells [onLeft] when the list leaves the screen, and whether that's only a rotation (F2.3, NFR-R7). */
+@Composable
+internal fun ClearSearchWhenLeft(onLeft: (changingConfiguration: Boolean) -> Unit) {
+    val activity = LocalActivity.current
+    val latest by rememberUpdatedState(onLeft)
+    DisposableEffect(Unit) { onDispose { latest(activity?.isChangingConfigurations == true) } }
 }
