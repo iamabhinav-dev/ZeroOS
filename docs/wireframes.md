@@ -1088,37 +1088,38 @@ start before home; Continue then goes straight to home.*
 
 ## L. Screen-time lock (F19) — DRAFT, not approved (2026-11-01)
 Proposed requirements (added to REQUIREMENTS.md once approved; numbers and defaults go to Appendix A):
-- **F19.1** Off by default. Turning it on asks for a daily screen-time cap, the apps that stay usable ("essential
-  apps") and a password, in that order.
+- **F19.1** Off by default. Turning it on asks for a daily screen-time cap (default 4 h, 30 min–8 h) and the apps
+  that stay usable ("essential apps").
 - **F19.2** Screen time is counted as in F10 (apps in front, ZeroOS itself not counted) and resets at local
   midnight (F8.6).
 - **F19.3** Once today's screen time reaches the cap, the lock is on until midnight: home and the app list show only
   the essential apps, and any other app brought to the front (from a notification, recents or a shortcut) is covered
   by the lock screen (L3). The Phone app and emergency calls always work, whether or not they were picked.
-- **F19.4** The lock screen offers "Go home" and "Unlock with password". The right password unlocks
-  {for the rest of the day | for 15 minutes, then the lock comes back} (question 1).
-- **F19.5** While the lock is set up, turning it off, raising the cap, adding essential apps or changing the
-  password needs the password. Lowering the cap or removing essential apps doesn't.
-- **F19.6** The password is stored only as a salted hash on the phone; it's never logged, shown or put in a backup.
-  After importing a backup, the lock stays off until a new password is set.
+- **F19.4** The lock screen offers "Go home" and "Unlock". Unlocking means typing the unlock phrase exactly (default
+  `IamWeakIneedThis`, case-sensitive; it's a confession to type, not a secret). The right phrase unlocks for 15
+  minutes, then the lock comes back.
+- **F19.5** A wrong phrase shows a pun in the pattern "I am ___, I need ___" (for example "I am bored, I need a
+  walk"), then asks "Do you really need this?" with Go home and Try again.
+- **F19.6** While the lock is set up, turning it off, raising the cap, adding essential apps or changing the phrase
+  needs the phrase. Lowering the cap or removing essential apps doesn't. The phrase is part of the settings backup
+  like any other setting; it's never logged.
 - **F19.7** Needs Usage access (to count screen time) and Accessibility (to cover apps opened outside ZeroOS), each
   explained first (H2 template). Without Accessibility, ZeroOS can only hide apps on its own home and list, and the
   settings page says so.
-- **F19.8** Honest limit, shown when turning it on: Android always lets you change the home app or clear ZeroOS's
-  storage in Android Settings, so the lock is strong friction, not an unbreakable lock. Forgetting the password means
-  clearing ZeroOS's storage, which resets all its settings.
-- **F19.9** Each lock, unlock, wrong password and change of the lock's settings is logged (no password, F17.8).
+- **F19.8** Android's own Settings app is never covered. Honest limit, shown when turning it on: Android always lets
+  you change the home app or clear ZeroOS's storage there, so the lock is strong friction, not an unbreakable lock.
+- **F19.9** Each lock, unlock, wrong phrase and change of the lock's settings is logged, never the typed text (F17.8).
 
 ### L1. Settings → Wellbeing → Screen-time lock
 ```
 ┌────────────────────────────────────┐
 │  ‹ Screen-time lock                │
-│  Lock after                ‹3 h›   │  first time → L2; while set up, raising it asks for the password
+│  Lock after                ‹4 h›   │  30 min–8 h; while set up, raising it asks for the phrase
 │  Essential apps                  › │  picker like Focus (H11); Phone always included
-│  Change password                 › │  asks for the current one first
-│  Today: 1h 52m of 3h               │  dotted progress, as on home (F10.5)
+│  Unlock phrase   IamWeakIneedThis › │  → L2; asks for the current phrase first
+│  Today: 1h 52m of 4h               │  dotted progress, as on home (F10.5)
 │                                    │
-│  Turn off                        › │  asks for the password
+│  Turn off                        › │  asks for the phrase
 │                                    │
 │  Android lets you change the home  │  F19.8, small and muted
 │  app or clear ZeroOS's storage in  │
@@ -1127,17 +1128,12 @@ Proposed requirements (added to REQUIREMENTS.md once approved; numbers and defau
 └────────────────────────────────────┘
 ```
 
-### L2. Set the password (first time, and "Change password")
+### L2. Change the unlock phrase
 ```
 ┌────────────────────────────────────┐
-│  ‹ Set a password                  │
-│  ●●●●●●                            │  PIN or text (question 3), shown as dots
-│  Again: ●●●●●●                     │
-│                                    │
-│  If you forget it, the only way    │
-│  out is clearing ZeroOS's storage, │
-│  which resets all its settings.    │
-│                         [ Save ]   │  dimmed until both match
+│  ‹ Unlock phrase                   │
+│  New phrase: [ IamWeakIneedThis ]  │  shown as typed; 8–40 characters
+│                         [ Save ]   │  needs the current phrase first (L4)
 └────────────────────────────────────┘
 ```
 
@@ -1153,7 +1149,7 @@ Proposed requirements (added to REQUIREMENTS.md once approved; numbers and defau
 │                                    │
 │   pun line (F8.13 style)           │
 │                                    │
-│  Go home        Unlock with password│  → L4
+│  Go home                    Unlock │  → L4
 └────────────────────────────────────┘
 ```
 *Landscape: art on the left, text and buttons on the right (like the stop screens).*
@@ -1162,12 +1158,24 @@ Proposed requirements (added to REQUIREMENTS.md once approved; numbers and defau
 ```
 ┌────────────────────────────────────┐
 │  ‹ Unlock                          │
-│  Password: ●●●●                    │
-│  Wrong password. 2 tries before a  │  after 5 wrong tries: wait 1 min, then 5, 15 (question 4)
-│  1-minute wait.                    │
-│                       [ Unlock ]   │
+│  Type: IamWeakIneedThis            │  the current phrase, shown so you can't be locked out
+│  [                    ]            │  no autocorrect, no suggestions
+│                       [ Unlock ]   │  dimmed until something is typed
 └────────────────────────────────────┘
 ```
+Wrong phrase (L5):
+```
+│   I am bored, I need a walk.       │  random pun from a new list, F8.13 style
+│                                    │
+│   Do you really need this?         │
+│                                    │
+│  Go home                 Try again │
+```
+*Right phrase: unlocked for 15 minutes, back to the app. Landscape: two panes, like the stop screens.*
+
+*Answers 2026-11-01: unlock 15 min then relock; Android Settings never covered; an unlock phrase to type (default
+`IamWeakIneedThis`) instead of a secret password, with an "I am ___, I need ___" pun and "Do you really need this?"
+after a wrong one; default cap 4 h.*
 
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
