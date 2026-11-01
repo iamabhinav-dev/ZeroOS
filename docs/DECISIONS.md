@@ -352,3 +352,13 @@ drawn from the app's own logo and screenshot. Vercel Analytics stays off (no tra
 short-video blocker (F16) is not in it. Its versionCode is 31, above the 0.0.30 early build, so it installs over
 any earlier build; every later release, Stable or not, must use versionCode 32 or higher.
 *Why:* User's choice: 0.0.27 as Stable, keeping the in-app warnings.
+
+**D-062 — Screen-time lock (F19)** · 2026-11-01 · Accepted
+After a daily cap (default 4 h) only the essential apps work until midnight. Unlocking is typing a phrase (default
+`IamWeakIneedThis`), shown on the unlock screen so it can never lock the user out; it unlocks for 15 minutes. A
+wrong phrase shows an "I am ___, I need ___" pun and "Do you really need this?". Changes that weaken the lock need
+the phrase. Outside ZeroOS only launchable apps are covered (so system UI, keyboards and permission dialogs never
+are), and the default and system dialer, Android Settings and ZeroOS are always allowed. The lock screen's Unlock
+opens ZeroOS's own unlock page, which reopens the app afterwards (an overlay can't reliably take keyboard input).
+*Why:* User's request and answers (15-minute unlocks, Settings never covered, phrase instead of a password, 4 h).
+

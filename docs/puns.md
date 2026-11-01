@@ -111,3 +111,32 @@ survives restarts.
 13. Not yet, I'm on a roll.
 14. Give me a moment.
 15. Last one. Definitely.
+
+## F. Screen-time lock (F19.3): the day's cap is reached
+1. That's enough phone for one day.
+2. Your screen time clocked out.
+3. The phone is tired. Are you?
+4. Today's screen is a wrap.
+5. Out of scrolls for today.
+6. Your thumbs have earned a rest.
+7. The internet will still be here tomorrow.
+8. Daily quota: reached. Real life: open.
+9. Screens off, world on.
+10. You've seen enough pixels today.
+11. Time to look up.
+12. The rest of today is offline.
+
+## G. Wrong unlock phrase (F19.5): "I am ___, I need ___"
+1. I am bored, I need a walk.
+2. I am tired, I need sleep.
+3. I am restless, I need fresh air.
+4. I am hungry, I need a real meal.
+5. I am lonely, I need to call a friend.
+6. I am stressed, I need a deep breath.
+7. I am thirsty, I need a glass of water.
+8. I am curious, I need a book.
+9. I am wired, I need a stretch.
+10. I am distracted, I need a quiet minute.
+11. I am stuck, I need a short break.
+12. I am scrolling, I need to stop.
+

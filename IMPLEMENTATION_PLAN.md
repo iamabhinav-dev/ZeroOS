@@ -371,6 +371,28 @@ Block overlay, short-form blocker settings, explanation screen. **Approved by me
 
 ---
 
+## Phase 7 — v1.1 Screen-Time Lock (F19, D-062)
+
+### Step 7.0 — Wireframes for Phase 7 ✅
+Settings page, unlock phrase, lock screen, unlock and wrong-phrase screens (section L). Approved 2026-11-01.
+
+### Step 7.1 — Screen-time lock
+- Today's screen time counted as in F10; lock state from the cap, the essential apps and the 15-minute unlock;
+  single timers for the cap and the unlock's end, no polling (NFR-P1).
+- Inside ZeroOS: home and the app list show only essential apps while locked; other apps show the lock screen.
+- Outside: the shared Accessibility service covers non-essential launchable apps; the Phone app, Android Settings
+  and ZeroOS itself are never covered.
+- Settings → Wellbeing → Screen-time lock; changes that weaken the lock need the phrase.
+
+**Tests:** lock state at the cap, before and after it, across midnight, time-zone and clock changes; unlock for
+15 minutes; wrong phrase; essential and always-allowed apps; backup round-trip (D-059); screenshots of every new
+screen in portrait, landscape and light.
+
+**Done when:** F19 met and traced; manual check on the phone: the lock comes on at the cap, essential apps and calls
+keep working, other apps are covered from notifications and recents, the phrase unlocks for 15 minutes.
+
+---
+
 ## Install Checklist (every time a new APK goes on the phone)
 1. `./gradlew check` passes.
 2. Bump `versionCode`; update `versionName` if a milestone changed.

@@ -1086,8 +1086,8 @@ start before home; Continue then goes straight to home.*
 
 ---
 
-## L. Screen-time lock (F19) — DRAFT, not approved (2026-11-01)
-Proposed requirements (added to REQUIREMENTS.md once approved; numbers and defaults go to Appendix A):
+## L. Screen-time lock (F19) — approved 2026-11-01
+Requirements (in REQUIREMENTS.md, defaults in Appendix A):
 - **F19.1** Off by default. Turning it on asks for a daily screen-time cap (default 4 h, 30 min–8 h) and the apps
   that stay usable ("essential apps").
 - **F19.2** Screen time is counted as in F10 (apps in front, ZeroOS itself not counted) and resets at local
