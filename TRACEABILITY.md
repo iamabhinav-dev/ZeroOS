@@ -17,10 +17,10 @@ Update this file in the same commit as the code and tests.
 | F1.8 | ✅ | HomeSourcesTest › f1_8_*, HomeUiStateTest › f1_3_f1_8_*, HomeScreenTest › f1_8_* | |
 | F1.9 | ✅ | HomeScreenTest › f1_9_*, MainActivityTest › f1_9_longPressOpensSettingsAndBackReturnsHome | |
 | F2.1 | ✅ | MainActivityTest (swipe up opens list) | |
-| F2.3 | ✅ | AppListScreenTest › f2_2_f2_3_* | Keyboard opens on the phone |
+| F2.3 | ✅ | AppListScreenTest › f2_2_f2_3_*, AppListViewModelTest › f2_3_*, AppListScreenTest › f2_3_* | Keyboard opens on the phone |
 | F2.4 | ✅ | AppSearchTest › f2_4_*, AppListViewModelTest › f2_4_*, AppListScreenTest › f2_4_* | |
 | F2.5 | ✅ | AppListViewModelTest › f2_5_* | |
-| F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_* | |
+| F2.6 | ✅ | AppListScreenTest › f2_6_*, AppListViewModelTest › f2_6_*, AppListViewModelTest › f2_6_searchIsCleared* | |
 | F2.7 | ✅ | AppListScreenTest › f2_7_* (jump, slide, highlight screenshots) | Current letter grows and brightens on the phone |
 | F2.8 | ✅ | AppMenuTest › f2_8_*, AppListViewModelTest › f2_8_*, AppListScreenTest › f2_8_*, HomeScreenTest › f2_8_*, AppsRepositoryTest › f2_8_*, AndroidLauncherAppsSourceTest › f2_8_* | App info and uninstall dialog open on the phone (incl. a clone); no Uninstall on system apps |
 | F2.11 | ✅ | AppListScreenTest › f2_11_*, MainActivityTest › f2_11_* | |
@@ -80,7 +80,7 @@ Update this file in the same commit as the code and tests.
 | F14.8 | ✅ | DocumentsRepositoryTest › f14_8_*, DocumentParserTest › f14_8_*, DocumentReaderTest › f14_8_*, landscape_readerScreenshot, ReadBeforeUsingScreenTest › f14_8_*, landscape_readBeforeUsingScreenshot, ReadBeforeUsingViewModelTest › f14_8_*, nfrR7_*, OnboardingGateTest › f14_8_f14_5_*, ReleaseDocsAssetsTest › f14_8_*, SettingsScreensTest › f14_8_*, BackArrowTest › d052_document | First start: documents page before onboarding; after an update that changes them, asked once more |
 | F18.7 (onboarding) | ✅ | OnboardingScreenTest › f14_2_f18_7_* | |
 | F15 | ❌ | Removed (D-001) | |
-| F16.1–F16.18 (excl. F16.13) | 🟡 | ShortFormRulesTest › f16_*, ShortFormGuardTest › f16_*, WellbeingStateRepositoryTest › f16_8_*, ShortFormScreenTest › f16_*, step6_3_*, landscape_*, ShortFormSettingsViewModelTest › f16_*, ShortFormSettingsScreenTest › f16_*, step6_3_*, landscape_*, ShortFormOverlayTest › f16_*, OneScreenTest › f16_7_*, InsightsScreenTest › f16_14_*, BackArrowTest › d052_shortVideos, AccessibilityServiceTest › step4_2_d057_* | Shorts/Reels blocked within ~300 ms, normal videos untouched, battery OK after 1 day; only one screen at a time with a limit or break |
+| F16.1–F16.18 (excl. F16.13) | 🟡 | ShortFormRulesTest › f16_*, ShortFormGuardTest › f16_*, WellbeingStateRepositoryTest › f16_8_*, ShortFormScreenTest › f16_*, step6_3_*, landscape_*, ShortFormSettingsViewModelTest › f16_*, ShortFormSettingsScreenTest › f16_*, step6_3_*, landscape_*, ShortFormOverlayTest › f16_*, OneScreenTest › f16_7_*, InsightsScreenTest › f16_14_*, BackArrowTest › d052_shortVideos, AccessibilityServiceTest › step4_2_d057_* | Shorts/Reels blocked within ~300 ms, normal videos untouched, battery OK after 1 day; only one screen at a time with a limit or break **Known issue (2026-11-01): detection/blocking not reliable on the test phone; to be fixed later.** |
 | F16.13 | ❌ | Removed (D-006) | |
 | F17.1 | 🟡 | FileLoggerTest › f17_1_*, AndroidDiagnosticsTest › f17_1_logcatMirrorUsesMatchingPriority, ZeroRulesTest › f17_1_flagsDirectLogging | |
 | F17.2 | 🟡 | LogEntryTest › f17_2_*, LogFileStoreTest › f17_2_*, FileLoggerTest › f17_2_* | |

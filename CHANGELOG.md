@@ -3,6 +3,10 @@
 Entries go under **Unreleased** as work lands; they move under a version number when an APK is installed on the phone (Install Checklist).
 
 ## Unreleased
+- Fixed: text left in the app list's search (half-typed, or after a web or Play Store search) was still there the
+  next time the list opened; the search now starts empty, while rotating the phone keeps what you typed (F2.3, F2.6)
+- **Known issue:** the short-video blocker doesn't always detect or block YouTube Shorts and Instagram Reels
+  correctly (reported on the test phone; to be fixed later, F16)
 
 ## 1.0.0 (versionCode 31), first Stable release (built from branch release-1.0, D-061)
 The features of 0.0.27, plus:

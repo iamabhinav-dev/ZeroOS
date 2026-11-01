@@ -26,6 +26,10 @@ short-video blocker. It is made by one person for personal use and is not on any
 **Updating:** export your settings first (ZeroOS Settings → Backup → Export settings), then install the new APK
 over the old one.
 
+## Known issues
+- The short-video blocker (YouTube Shorts, Instagram Reels) doesn't always detect or block them correctly. It's
+  being worked on; until then, don't rely on it.
+
 ## Go back to your old launcher
 Choose your old launcher in Settings → Apps → Default apps → Home app. Keep it installed: it's your fallback if
 anything goes wrong. If ZeroOS keeps crashing, it starts in a simple safe mode with a button for this.
