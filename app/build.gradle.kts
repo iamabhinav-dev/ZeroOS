@@ -20,8 +20,8 @@ android {
 
     defaultConfig {
         applicationId = "com.zeroos.launcher"
-        versionCode = 30
-        versionName = "0.0.30"
+        versionCode = 32
+        versionName = "1.1.0-beta.1"
     }
 
     signingConfigs {
