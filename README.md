@@ -2,8 +2,9 @@
 
 <!-- in-app:start -->
 ZeroOS is a minimalist Android home screen: plain text in black and white, with no icons, badges or feeds. It
-shows the time, the date and the few apps you choose, and has optional screen-time limits, a Focus mode and a
-short-video blocker. It is made by one person for personal use and is not on any app store.
+shows the time, the date and the few apps you choose, and has optional screen-time limits, a Focus mode, a
+short-video blocker and a screen-time lock that keeps only your essential apps after a daily cap. It is made by one
+person for personal use and is not on any app store.
 
 ## Before you install — read this
 - Read this README, the [LICENSE](LICENSE) and the [third-party notices](THIRD_PARTY_NOTICES.md) first.
@@ -37,9 +38,9 @@ anything goes wrong. If ZeroOS keeps crashing, it starts in a simple safe mode w
 ## What ZeroOS can access
 - **No internet.** ZeroOS has no internet permission, no ads, no analytics and no accounts; everything stays on
   your phone.
-- **Optional, off until you turn on the feature that needs it:** Usage access (screen time and limits),
-  Accessibility (limits and breaks outside ZeroOS, the short-video blocker, double-tap to lock), and Do Not
-  Disturb access (Focus). Each one is explained before Android asks.
+- **Optional, off until you turn on the feature that needs it:** Usage access (screen time, limits and the
+  screen-time lock), Accessibility (limits, breaks and the screen-time lock outside ZeroOS, the short-video blocker,
+  double-tap to lock), and Do Not Disturb access (Focus). Each one is explained before Android asks.
 - **Also used:** setting the wallpaper, opening alarms, asking to keep running in the background, and opening
   Android's uninstall dialog for an app you choose.
 <!-- in-app:end -->
