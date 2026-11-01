@@ -246,6 +246,28 @@
     <string name="wellbeing_turn_off">Turn off</string>
     <string name="wellbeing_go_back">Go back</string>
     <string name="wellbeing_go_home">Go home</string>
+    <!-- Screen-time lock (F19, wireframes L1–L5) -->
+    <string name="lock_title">Screen time is up for today.</string>
+    <string name="lock_used">%1$s used. Essential apps still work.</string>
+    <string name="lock_unlock">Unlock</string>
+    <string name="lock_type_phrase">Type: %1$s</string>
+    <string name="lock_phrase_field">Unlock phrase</string>
+    <string name="lock_really_need">Do you really need this?</string>
+    <string name="lock_try_again">Try again</string>
+    <string name="lock_settings_title">Screen-time lock</string>
+    <string name="lock_settings_cap">Lock after</string>
+    <string name="lock_settings_essential">Essential apps</string>
+    <string name="lock_settings_phrase">Unlock phrase</string>
+    <string name="lock_settings_today">Today: %1$s of %2$s</string>
+    <string name="lock_settings_turn_on">Turn on</string>
+    <string name="lock_settings_turn_off">Turn off</string>
+    <string name="lock_settings_off_note">Off. Turn it on to lock all but your essential apps after a daily screen-time cap.</string>
+    <string name="lock_settings_note">Android lets you change the home app or clear ZeroOS\'s storage in its Settings, so this is strong friction, not an unbreakable lock.</string>
+    <string name="lock_settings_no_accessibility">Accessibility is off, so only ZeroOS\'s own home and app list are locked.</string>
+    <string name="lock_essential_phone_note">The phone app and Android Settings always work.</string>
+    <string name="lock_confirm_title">Type the unlock phrase</string>
+    <string name="lock_confirm_wrong">That isn\'t the phrase.</string>
+    <string name="lock_new_phrase">New phrase, 8–40 characters</string>
     <string name="wellbeing_open_app">Open %1$s</string>
     <string name="wellbeing_intention_hint">Why are you opening it?</string>
     <string name="wellbeing_used_today">%1$s · %2$s used today</string>
@@ -310,6 +332,35 @@
     <string name="shorts_allow">"\"Allow 5 minutes\""</string>
     <string name="shorts_allow_button">Allow 5 minutes (%1$d)</string>
     <string name="shorts_play">Short video blocked</string>
+    <!-- Screen-time lock puns (docs/puns.md F and G, F19.3, F19.5) -->
+    <string-array name="lock_puns">
+        <item>That\'s enough phone for one day.</item>
+        <item>Your screen time clocked out.</item>
+        <item>The phone is tired. Are you?</item>
+        <item>Today\'s screen is a wrap.</item>
+        <item>Out of scrolls for today.</item>
+        <item>Your thumbs have earned a rest.</item>
+        <item>The internet will still be here tomorrow.</item>
+        <item>Daily quota: reached. Real life: open.</item>
+        <item>Screens off, world on.</item>
+        <item>You\'ve seen enough pixels today.</item>
+        <item>Time to look up.</item>
+        <item>The rest of today is offline.</item>
+    </string-array>
+    <string-array name="lock_wrong_puns">
+        <item>I am bored, I need a walk.</item>
+        <item>I am tired, I need sleep.</item>
+        <item>I am restless, I need fresh air.</item>
+        <item>I am hungry, I need a real meal.</item>
+        <item>I am lonely, I need to call a friend.</item>
+        <item>I am stressed, I need a deep breath.</item>
+        <item>I am thirsty, I need a glass of water.</item>
+        <item>I am curious, I need a book.</item>
+        <item>I am wired, I need a stretch.</item>
+        <item>I am distracted, I need a quiet minute.</item>
+        <item>I am stuck, I need a short break.</item>
+        <item>I am scrolling, I need to stop.</item>
+    </string-array>
     <string-array name="shorts_puns">
         <item>Short answer: no.</item>
         <item>This Short has been cut short.</item>

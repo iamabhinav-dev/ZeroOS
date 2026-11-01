@@ -51,7 +51,7 @@ internal fun foregroundIntervals(events: List<UsageEvent>, windowStart: Long, no
     return out
 }
 
-private fun List<Interval>.overlap(from: Long, to: Long): Long =
+internal fun List<Interval>.overlap(from: Long, to: Long): Long =
     sumOf { (minOf(it.end, to) - maxOf(it.start, from)).coerceAtLeast(0) }
 
 private fun LocalDate.start(zone: ZoneId) = atStartOfDay(zone).toInstant().toEpochMilli()

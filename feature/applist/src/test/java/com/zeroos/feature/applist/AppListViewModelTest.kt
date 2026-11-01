@@ -188,6 +188,30 @@ class AppListViewModelTest {
     }
 
     @Test
+    fun f2_6_searchIsClearedAfterAWebOrPlayStoreSearch() = runTest {
+        // Regression: after "Search the web", the typed text was still there the next time the list opened.
+        val vm = viewModel()
+        vm.onQueryChange("unfinished")
+        vm.onExternalSearch("web")
+        assertEquals("", vm.state.first { it.query.isEmpty() }.query)
+        // A search that couldn't open keeps the text, so it can be tried again.
+        vm.onQueryChange("again")
+        vm.onExternalSearch("play store", android.content.ActivityNotFoundException())
+        assertEquals("again", vm.state.value.query)
+    }
+
+    @Test
+    fun f2_3_leavingTheListClearsTheSearchButRotatingKeepsIt() = runTest {
+        // Regression: pressing Home with half-typed text left it in the search bar next time.
+        val vm = viewModel()
+        vm.onQueryChange("half typ")
+        vm.onLeft(changingConfiguration = true)
+        assertEquals("half typ", vm.state.first { it.query == "half typ" }.query)
+        vm.onLeft(changingConfiguration = false)
+        assertEquals("", vm.state.first { it.query.isEmpty() }.query)
+    }
+
+    @Test
     fun f8_5_minutesLeftForLimitedAppsAndRefreshedOnReturn() = runTest {
         val limits = WellbeingSettings(enabled = true, apps = mapOf("pkg.Instagram" to AppRule(dailyLimitMinutes = 30)))
         usageEvents = listOf(UsageEvent("pkg.Instagram", UsageEvent.Type.RESUMED, Instant.parse("2026-10-17T09:42:00Z").toEpochMilli()))

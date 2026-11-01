@@ -63,9 +63,11 @@ class AppListViewModel @Inject constructor(
 
     private class Indexed(val search: AppSearchIndex, val settings: LauncherSettings)
 
-    // During focus only the allowed apps are listed (F9.3).
-    private val index = combine(repository.apps, settingsRepository.settings, gate.focus) { apps, settings, focus ->
-        val visible = visibleApps(apps, settings).filter { focus == null || focus.allows(it.key.asString()) }
+    // During focus only the allowed apps are listed (F9.3), and while the screen-time lock is on only those it allows (F19.3).
+    private val index = combine(repository.apps, settingsRepository.settings, gate.focus, gate.lock) { apps, settings, focus, lock ->
+        val visible = visibleApps(apps, settings)
+            .filter { focus == null || focus.allows(it.key.asString()) }
+            .filter { lock.allowsKey(it.key.asString()) }
         Indexed(AppSearchIndex(visible), settings)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), null)
 
@@ -142,13 +144,26 @@ class AppListViewModel @Inject constructor(
 
     fun refreshUsage() = usageRefresh.update { it + 1 }
 
-    fun clearQuery() {
-        savedState[KEY_QUERY] = ""
+    /**
+     * The list was left (Back, swipe, Home, an app or a web search opened): the search starts empty next time
+     * (F2.3). A rotation keeps what was typed (NFR-R7).
+     */
+    fun onLeft(changingConfiguration: Boolean = false) {
+        if (!changingConfiguration) savedState[KEY_QUERY] = ""
     }
 
-    /** Web or Play Store search opened, or [failure] if it couldn't (F2.6); queries aren't logged. */
-    fun onExternalSearch(target: String, failure: Exception? = null) =
-        if (failure == null) logger.info(TAG, "opened: $target") else logger.warn(TAG, "could not open $target", failure)
+    /**
+     * Web or Play Store search opened, or [failure] if it couldn't (F2.6); queries aren't logged. Once it opened,
+     * the search is cleared so it doesn't wait in the list next time; after a failure it stays to try again.
+     */
+    fun onExternalSearch(target: String, failure: Exception? = null) {
+        if (failure == null) {
+            logger.info(TAG, "opened: $target")
+            onLeft()
+        } else {
+            logger.warn(TAG, "could not open $target", failure)
+        }
+    }
 
     private companion object {
         const val TAG = "applist"

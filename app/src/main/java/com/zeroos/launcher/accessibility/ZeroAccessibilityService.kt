@@ -9,6 +9,7 @@ import android.os.Build
 import android.view.accessibility.AccessibilityEvent
 import androidx.core.content.ContextCompat
 import com.zeroos.core.data.apps.AppsRepository
+import com.zeroos.core.data.lock.ScreenTimeLock
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.shortform.ShortFormGuard
 import com.zeroos.core.data.shortform.ShortFormRules
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -66,10 +68,14 @@ class ZeroAccessibilityService : AccessibilityService() {
 
     @Inject lateinit var clock: Clock
 
+    @Inject lateinit var screenTimeLock: ScreenTimeLock
+
     private var scope: CoroutineScope? = null
     private var enforcer: OutsideEnforcer? = null
     private var shortForm: ShortFormBridge? = null
+    private var lockEnforcer: LockEnforcer? = null
     private var watchedNow: Set<String> = emptySet()
+    private var lockOnNow = false
 
     private val screen = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -90,7 +96,8 @@ class ZeroAccessibilityService : AccessibilityService() {
             resources.getStringArray(R.array.wellbeing_puns_break).size,
             resources.getStringArray(R.array.wellbeing_puns_break_button).size,
             resources.getStringArray(R.array.shorts_puns).size,
-            resources.getStringArray(R.array.wellbeing_puns_pause).size
+            resources.getStringArray(R.array.wellbeing_puns_pause).size,
+            resources.getStringArray(R.array.lock_puns).size
         )
         val contentFactory = OverlayContentFactory(settings, apps, wellbeingState, sizes)
         // One window for every blocker: only one screen at a time.
@@ -105,10 +112,19 @@ class ZeroAccessibilityService : AccessibilityService() {
             homeActivity = MainActivity::class.java.name
         )
         shortForm = startShortForm(scope, contentFactory, oneScreen.shortForm)
+        lockEnforcer = LockEnforcer(
+            screenTimeLock,
+            { apps.apps.first().map { it.key.packageName }.toSet() },
+            contentFactory,
+            oneScreen.lock,
+            scope,
+            logger,
+            LockTarget(packageName, MainActivity::class.java.name, clock, ::openUnlock)
+        )
         scope.launch {
-            combine(watcher.watched, settings.settings.map { it.shortForm.enabled }) { w, on -> w to on }
+            combine(watcher.watched, settings.settings.map { it.shortForm.enabled to it.screenTimeLock.enabled }) { w, on -> w to on }
                 .distinctUntilChanged()
-                .collect { (watched, on) -> configure(watched, on) }
+                .collect { (watched, on) -> configure(watched, on.first, on.second) }
         }
         val filter = IntentFilter(Intent.ACTION_SCREEN_OFF).apply { addAction(Intent.ACTION_USER_PRESENT) }
         ContextCompat.registerReceiver(this, screen, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
@@ -131,20 +147,33 @@ class ZeroAccessibilityService : AccessibilityService() {
     }
 
     /**
-     * Which apps' events the service receives (D-023, D-057): ZeroOS and the apps wellbeing watches; while the
-     * short-video blocker is on, window changes from all apps (only the app name is used) plus content changes,
-     * so the target apps' screens can be checked.
+     * Which apps' events the service receives (D-023, D-057, D-062): ZeroOS and the apps wellbeing watches; while the
+     * short-video blocker or the screen-time lock is on, window changes from all apps (only the app name is used),
+     * plus content changes for the blocker, so the target apps' screens can be checked.
      */
-    private fun configure(watched: Set<String>, shortFormOn: Boolean) {
+    private fun configure(watched: Set<String>, shortFormOn: Boolean, lockOn: Boolean) {
         watchedNow = watched
+        lockOnNow = lockOn
         serviceInfo = serviceInfo.apply {
-            packageNames = if (shortFormOn) null else (watched + packageName).toTypedArray()
+            packageNames = if (shortFormOn || lockOn) null else (watched + packageName).toTypedArray()
             eventTypes =
                 AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED or (if (shortFormOn) AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED else 0)
         }
-        logger.info(TAG, "watching ${watched.size} apps outside ZeroOS; short videos ${if (shortFormOn) "on" else "off"}")
+        val shortsState = if (shortFormOn) "on" else "off"
+        val lockState = if (lockOn) "on" else "off"
+        logger.info(TAG, "watching ${watched.size} apps outside ZeroOS; short videos $shortsState; lock $lockState")
         if (watched.isEmpty()) enforcer?.stop()
         if (!shortFormOn) shortForm?.stop()
+        if (!lockOn) lockEnforcer?.stop()
+    }
+
+    /** The lock screen's "Unlock" (F19.4): ZeroOS's own unlock page for [packageName], which reopens it afterwards. */
+    private fun openUnlock(packageName: String) {
+        startActivity(
+            Intent(this, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_UNLOCK_PACKAGE, packageName)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
@@ -155,6 +184,7 @@ class ZeroAccessibilityService : AccessibilityService() {
             enforcer?.onWindow(pkg, className)
         }
         shortForm?.onEvent(event.eventType, pkg, className)
+        if (lockOnNow && event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) lockEnforcer?.onWindow(pkg, className)
     }
 
     override fun onInterrupt() = Unit
@@ -163,6 +193,7 @@ class ZeroAccessibilityService : AccessibilityService() {
         if (scope != null) unregisterReceiver(screen)
         enforcer?.stop()
         shortForm?.stop()
+        lockEnforcer?.stop()
         scope?.cancel()
         bridge.disconnected(this)
         logger.info(TAG, "accessibility service disconnected")

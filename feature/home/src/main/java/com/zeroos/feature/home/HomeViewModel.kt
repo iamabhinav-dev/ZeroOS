@@ -39,7 +39,7 @@ class HomeViewModel @Inject constructor(
     private val time = settingsRepository.settings.map { it.appearance.showSeconds }.distinctUntilChanged()
         .flatMapLatest { seconds -> if (seconds) timeTicks.secondTicks else timeTicks.ticks }
 
-    private val settingsAndFocus = combine(settingsRepository.settings, homeApps.focus) { s, f -> s to f }
+    private val settingsAndFocus = combine(settingsRepository.settings, homeApps.focus, homeApps.lock) { s, f, l -> Triple(s, f, l) }
 
     val state: StateFlow<HomeUiState> = combine(
         time,
@@ -48,9 +48,9 @@ class HomeViewModel @Inject constructor(
         homeApps.snapshots(),
         batteryLevel.status.onStart { emit(null) },
         nextAlarm.time
-    ) { time, (settings, focus), apps, battery, alarm ->
+    ) { time, (settings, focus, lock), apps, battery, alarm ->
         saver.onShown(apps, settings)
-        homeUiState(time, settings, apps.apps, battery, alarm).withFocus(settings.focus, focus)
+        homeUiState(time, settings, apps.apps, battery, alarm).withFocus(settings.focus, focus).withLock(lock)
     }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(STOP_TIMEOUT_MS), HomeUiState(timeTicks.now()))
 

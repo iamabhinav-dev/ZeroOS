@@ -4,6 +4,17 @@ Entries go under **Unreleased** as work lands; they move under a version number 
 
 ## Unreleased
 
+## 1.1.0-beta.1 (versionCode 32), Beta
+- **Screen-time lock** (F19), off until you turn it on in Settings → Wellbeing → Screen-time lock: after a daily
+  cap (4 h by default), only your essential apps, calls and Android Settings work until midnight; other apps show a
+  lock screen, also when opened from notifications or recents (needs Usage access and Accessibility). Typing the
+  unlock phrase (`IamWeakIneedThis` by default) opens them for 15 minutes; a wrong phrase gets an "I am ___, I need
+  ___" pun and "Do you really need this?". Making the lock weaker needs the phrase
+- Fixed: text left in the app list's search (half-typed, or after a web or Play Store search) was still there the
+  next time the list opened; the search now starts empty, while rotating the phone keeps what you typed (F2.3, F2.6)
+- **Known issue:** the short-video blocker doesn't always detect or block YouTube Shorts and Instagram Reels
+  correctly (reported on the test phone; to be fixed later, F16)
+
 ## 1.0.0 (versionCode 31), first Stable release (built from branch release-1.0, D-061)
 The features of 0.0.27, plus:
 - **Before you start:** on first start, and once after an update that changes them, ZeroOS asks you to read the

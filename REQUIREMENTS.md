@@ -56,6 +56,7 @@ Default launchers are designed for engagement: bright icons, notification badges
 | F16 | Short-form content blocker (Reels, Shorts) | P2 | v1.3 |
 | F17 | Diagnostics: event log & crash log | P0 | M0 (from the first build) |
 | F18 | Safe mode (crash-loop protection) | P0 | M0 (from the first build) |
+| F19 | Screen-time lock (essential apps only after a daily cap) | P1 | v1.1 (D-062) |
 | ~~F15~~ | ~~Premium / monetization~~ | Removed | Not needed for personal use |
 
 Priority: **P0** = must have, **P1** = should have, **P2** = nice to have.
@@ -322,6 +323,23 @@ As the default home app, a crash on start would repeat on every Home press and m
 | F18.6 | "Exit safe mode" resets the crash counter and restarts normally. A start without a crash for 60 s also resets the counter. |
 | F18.7 | **Never disable or uninstall the phone's stock launcher**: it is the fallback if ZeroOS is unusable. Documented in README and onboarding. |
 
+
+### F19 — Screen-Time Lock
+After a daily screen-time cap, only the essential apps the user picked work until midnight; typing the unlock phrase
+opens the rest for 15 minutes (wireframes L1–L5, D-062).
+
+| ID | Requirement |
+|---|---|
+| F19.1 | Off by default. Turning it on asks for a daily screen-time cap (default 4 h, 30 min–8 h) and the apps that stay usable ("essential apps"). |
+| F19.2 | Screen time is counted as in F10 (apps in front, ZeroOS itself not counted) and resets at local midnight (F8.6). |
+| F19.3 | Once today's screen time reaches the cap, the lock is on until midnight: home and the app list show only the essential apps, and any other app brought to the front (from a notification, recents or a shortcut) is covered by the lock screen (L3). The Phone app and emergency calls always work, whether or not they were picked. |
+| F19.4 | The lock screen offers "Go home" and "Unlock". Unlocking means typing the unlock phrase exactly (default `IamWeakIneedThis`, case-sensitive; it's a confession to type, not a secret). The right phrase unlocks for 15 minutes, then the lock comes back. |
+| F19.5 | A wrong phrase shows a pun in the pattern "I am ___, I need ___" (for example "I am bored, I need a walk"), then asks "Do you really need this?" with Go home and Try again. |
+| F19.6 | While the lock is set up, turning it off, raising the cap, adding essential apps or changing the phrase needs the phrase. Lowering the cap or removing essential apps doesn't. The phrase is part of the settings backup like any other setting; it's never logged. |
+| F19.7 | Needs Usage access (to count screen time) and Accessibility (to cover apps opened outside ZeroOS), each explained first (H2 template). Without Accessibility, ZeroOS can only hide apps on its own home and list, and the settings page says so. |
+| F19.8 | Android's own Settings app is never covered. Honest limit, shown when turning it on: Android always lets you change the home app or clear ZeroOS's storage there, so the lock is strong friction, not an unbreakable lock. |
+| F19.9 | Each lock, unlock, wrong phrase and change of the lock's settings is logged, never the typed text (F17.8). |
+
 ---
 
 ## 4. Non-Functional Requirements
@@ -557,3 +575,7 @@ Agents must use these values instead of guessing. Change them here only with my 
 | Log retention (F17.3) | 7 days | 1–30 days |
 | Crash entries attached to crash report (F17.5) | Last 50 log entries | — |
 | Safe mode trigger (F18.2) | 3 crashes within 60 s of start | — |
+| Screen-time lock (F19.1) | Off | on/off |
+| Screen-time lock cap (F19.1) | 4 h | 30 min–8 h, in 30 min steps |
+| Unlock phrase (F19.4) | IamWeakIneedThis | 8–40 characters, case-sensitive |
+| Unlock lasts (F19.4) | 15 min | fixed |

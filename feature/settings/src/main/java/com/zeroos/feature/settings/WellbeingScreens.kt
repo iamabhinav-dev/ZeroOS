@@ -55,6 +55,7 @@ fun WellbeingRoute(
     onOpenFocus: () -> Unit,
     onBack: () -> Unit,
     onOpenShortForm: () -> Unit = {},
+    onOpenLock: () -> Unit = {},
     viewModel: WellbeingViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -102,7 +103,8 @@ fun WellbeingRoute(
             onCycle = viewModel::cycle,
             onOpenApps = onOpenApps,
             onOpenFocus = onOpenFocus,
-            onOpenShortForm = onOpenShortForm
+            onOpenShortForm = onOpenShortForm,
+            onOpenLock = onOpenLock
         ),
         onBack = onBack
     )
@@ -140,7 +142,8 @@ data class WellbeingActions(
     val onCycle: (WellbeingCycle) -> Unit,
     val onOpenApps: () -> Unit,
     val onOpenFocus: () -> Unit = {},
-    val onOpenShortForm: () -> Unit = {}
+    val onOpenShortForm: () -> Unit = {},
+    val onOpenLock: () -> Unit = {}
 )
 
 /** Wireframe H3. With Wellbeing off, only the master switch and a note are shown (F8.8, F8.10). */
@@ -150,9 +153,10 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
         item { ToggleRow(stringResource(R.string.settings_wellbeing), settings.enabled, { actions.onToggle(WellbeingToggle.ENABLED, it) }) }
         if (!settings.enabled) {
             item { BodyText(stringResource(R.string.wellbeing_off_note), muted = true, small = true) }
-            // Focus and the short-video blocker work without Wellbeing (F9.10, F16.11).
+            // Focus, the short-video blocker and the screen-time lock work without Wellbeing (F9.10, F16.11, F19.1).
             item { NavRow(R.string.focus_title, actions.onOpenFocus) }
             item { NavRow(R.string.shorts_title, actions.onOpenShortForm) }
+            item { NavRow(R.string.lock_settings_title, actions.onOpenLock) }
             return@SettingsPageScaffold
         }
         item { ToggleRow(stringResource(R.string.wellbeing_pause), settings.pauseEnabled, { actions.onToggle(WellbeingToggle.PAUSE, it) }) }
@@ -208,6 +212,7 @@ fun WellbeingScreen(settings: WellbeingSettings, actions: WellbeingActions, onBa
         }
         item { NavRow(R.string.focus_title, actions.onOpenFocus) }
         item { NavRow(R.string.shorts_title, actions.onOpenShortForm) }
+        item { NavRow(R.string.lock_settings_title, actions.onOpenLock) }
     }
 }
 

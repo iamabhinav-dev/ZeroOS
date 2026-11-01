@@ -53,6 +53,8 @@ enum class SettingsPage(val logName: String) {
     FOCUS_ICON("focus icon"),
     SCREEN_TIME("screen time"),
     SHORT_VIDEOS("short videos"),
+    SCREEN_TIME_LOCK("screen-time lock"),
+    LOCK_ESSENTIAL_APPS("essential apps"),
     BACKUP("backup"),
     ABOUT("about"),
     LICENSES("licenses"),
@@ -67,7 +69,8 @@ enum class SettingsPage(val logName: String) {
             PICK_SWIPE_LEFT, PICK_SWIPE_RIGHT -> GESTURES
             LICENSES, DOC_README, DOC_LICENSE, DOC_NOTICES -> ABOUT
             PHONE_WALLPAPER -> APPEARANCE
-            WELLBEING_APPS, FOCUS, SHORT_VIDEOS -> WELLBEING
+            WELLBEING_APPS, FOCUS, SHORT_VIDEOS, SCREEN_TIME_LOCK -> WELLBEING
+            LOCK_ESSENTIAL_APPS -> SCREEN_TIME_LOCK
             FOCUS_ICON -> FOCUS
             else -> MAIN
         }
@@ -151,6 +154,7 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, open:
             onOpenApps = { onOpen(SettingsPage.WELLBEING_APPS) },
             onOpenFocus = { onOpen(SettingsPage.FOCUS) },
             onOpenShortForm = { onOpen(SettingsPage.SHORT_VIDEOS) },
+            onOpenLock = { onOpen(SettingsPage.SCREEN_TIME_LOCK) },
             onBack = onBack
         )
 
@@ -162,6 +166,12 @@ private fun SimplePage(page: SettingsPage, onOpen: (SettingsPage) -> Unit, open:
         )
 
         SettingsPage.SHORT_VIDEOS -> ShortFormSettingsRoute(onBack = onBack)
+
+        SettingsPage.SCREEN_TIME_LOCK, SettingsPage.LOCK_ESSENTIAL_APPS -> ScreenTimeLockRoute(
+            showApps = page == SettingsPage.LOCK_ESSENTIAL_APPS,
+            onOpenApps = { onOpen(SettingsPage.LOCK_ESSENTIAL_APPS) },
+            onBack = onBack
+        )
 
         SettingsPage.SCREEN_TIME -> ScreenTimeSettingsRoute(onOpenInsights = open.insights, onBack = onBack)
 
@@ -285,6 +295,10 @@ object SettingsTestTags {
     const val PHONE_WALLPAPER = "settings_phone_wallpaper"
     const val WALLPAPER_PREVIEW = "settings_wallpaper_preview"
     const val WELLBEING = "settings_wellbeing"
+    const val SCREEN_TIME_LOCK = "settings_screen_time_lock"
+    const val LOCK_APPS = "settings_lock_apps"
+    const val LOCK_RAISE = "settings_lock_raise"
+    const val LOCK_PHRASE = "settings_lock_phrase"
     const val WELLBEING_APPS = "settings_wellbeing_apps"
     const val FOCUS = "settings_focus"
     const val FOCUS_ICON = "settings_focus_icon"

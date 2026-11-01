@@ -20,4 +20,9 @@
         <item quantity="one">%1$s today · blocked %2$d time</item>
         <item quantity="other">%1$s today · blocked %2$d times</item>
     </plurals>
+    <!-- Screen-time lock: essential apps picked (F19.1, L1) -->
+    <plurals name="lock_essential_count">
+        <item quantity="one">%1$d app</item>
+        <item quantity="other">%1$d apps</item>
+    </plurals>
 </resources>

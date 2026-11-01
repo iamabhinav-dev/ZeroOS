@@ -1,8 +1,10 @@
 package com.zeroos.core.data.backup
 
 import com.zeroos.core.model.settings.AppRule
+import com.zeroos.core.model.settings.DEFAULT_UNLOCK_PHRASE
 import com.zeroos.core.model.settings.HomeSettings
 import com.zeroos.core.model.settings.LauncherSettings
+import com.zeroos.core.model.settings.ScreenTimeLockSettings
 import com.zeroos.core.model.settings.ShortFormSettings
 import com.zeroos.core.model.settings.WellbeingSettings
 import java.io.File
@@ -73,6 +75,18 @@ class BackupCompatibilityTest {
         assertEquals(3, fixed.shortForm.autoHomeSeconds)
         assertEquals(5, fixed.shortForm.allowUsesPerDay)
         assertEquals("defaults are untouched", LauncherSettings(), LauncherSettings().withinAllowedRanges())
+    }
+
+    @Test
+    fun f19_d059_lockCapAndPhraseAreKeptValid() {
+        val wild = LauncherSettings(screenTimeLock = ScreenTimeLockSettings(capMinutes = 5, phrase = "short"))
+        val fixed = wild.withinAllowedRanges().screenTimeLock
+        assertEquals(30, fixed.capMinutes)
+        assertEquals(DEFAULT_UNLOCK_PHRASE, fixed.phrase)
+        assertEquals(
+            480,
+            LauncherSettings(screenTimeLock = ScreenTimeLockSettings(capMinutes = 9_999)).withinAllowedRanges().screenTimeLock.capMinutes
+        )
     }
 
     /** Every key and value of [expected] is still in [actual]; [actual] may have more (settings added since). */

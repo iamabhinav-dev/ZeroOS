@@ -50,6 +50,14 @@ class BackArrowTest {
     fun d052_wellbeingApps() = tapsBack { WellbeingAppsScreen(WellbeingUiState(), {}, { _, _, _ -> }, {}, onBack = it) }
 
     @Test
+    fun d052_screenTimeLock() = tapsBack {
+        ScreenTimeLockScreen(LockSettingsState(), LockSettingsActions({}, {}, {}, {}, {}, {}), onBack = it)
+    }
+
+    @Test
+    fun d052_lockEssentialApps() = tapsBack { EssentialAppsScreen(LockSettingsState(), {}, { _, _ -> }, onBack = it) }
+
+    @Test
     fun d052_focusSettings() = tapsBack { FocusSettingsScreen(FocusSettings(), FocusSettingsActions({}, {}, {}, {}), onBack = it) }
 
     @Test
@@ -110,6 +118,8 @@ class BackArrowTest {
             SettingsPage.FOCUS_ICON to SettingsPage.FOCUS,
             SettingsPage.SCREEN_TIME to SettingsPage.MAIN,
             SettingsPage.SHORT_VIDEOS to SettingsPage.WELLBEING,
+            SettingsPage.SCREEN_TIME_LOCK to SettingsPage.WELLBEING,
+            SettingsPage.LOCK_ESSENTIAL_APPS to SettingsPage.SCREEN_TIME_LOCK,
             SettingsPage.BACKUP to SettingsPage.MAIN,
             SettingsPage.ABOUT to SettingsPage.MAIN,
             SettingsPage.LICENSES to SettingsPage.ABOUT,
