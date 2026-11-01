@@ -22,6 +22,7 @@ import com.zeroos.core.data.wellbeing.Overlay
 import com.zeroos.core.data.wellbeing.StopScreen
 import com.zeroos.core.ui.ZeroTheme
 import com.zeroos.feature.wellbeing.BreakScreen
+import com.zeroos.feature.wellbeing.LockScreen
 import com.zeroos.feature.wellbeing.ShortFormScreen
 import com.zeroos.feature.wellbeing.StopActions
 import com.zeroos.feature.wellbeing.StopUiState
@@ -43,7 +44,11 @@ class OverlayWindow(private val service: AccessibilityService) : OverlayDisplay 
         val root = object : FrameLayout(service) {
             override fun dispatchKeyEvent(event: KeyEvent): Boolean {
                 if (event.keyCode != KeyEvent.KEYCODE_BACK) return super.dispatchKeyEvent(event)
-                if (event.action == KeyEvent.ACTION_UP && content.overlay is Overlay.Limit) actions.onGoHome()
+                if (event.action == KeyEvent.ACTION_UP &&
+                    (content.overlay is Overlay.Limit || content.overlay is Overlay.Lock)
+                ) {
+                    actions.onGoHome()
+                }
                 return true
             }
         }
@@ -89,6 +94,8 @@ fun OverlayScreen(content: OverlayContent, actions: OverlayActions) {
             is Overlay.Break -> BreakScreen(content.pun, content.buttonPun, overlay.waitSeconds, actions.onBreakDone)
 
             is Overlay.ShortForm -> ShortFormOverlay(content, overlay, actions)
+
+            is Overlay.Lock -> LockScreen(overlay.usedMillis, content.pun, onGoHome = actions.onGoHome, onUnlock = actions.onUnlock)
         }
     }
 }

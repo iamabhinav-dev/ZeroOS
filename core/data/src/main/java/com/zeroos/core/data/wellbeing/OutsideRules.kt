@@ -14,6 +14,9 @@ sealed interface Overlay {
 
     /** Short videos blocked inside YouTube / Instagram (F16.7, wireframe J3). */
     data class ShortForm(override val packageName: String, val allowLeft: Int, val autoHomeSeconds: Int?) : Overlay
+
+    /** Today's screen-time cap is reached and this app isn't essential (F19.3, wireframe L3). */
+    data class Lock(override val packageName: String, val usedMillis: Long) : Overlay
 }
 
 /** Result of checking the app in front: an overlay to show now, and when to check again (one timer, NFR-P1). */

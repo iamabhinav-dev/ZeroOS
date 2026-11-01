@@ -218,7 +218,7 @@ class LaunchGateTest {
         override fun log(level: LogLevel, tag: String, message: String, throwable: Throwable?) = Unit
     }
     private val source = object : LauncherAppsSource {
-        override fun launchableActivities() = emptyList<LaunchableActivity>()
+        override fun launchableActivities() = listOf(LaunchableActivity(AppKey("video", "Main", 0), "Video"))
 
         override fun registerChangeListener(onChange: (String) -> Unit) = LauncherAppsSource.ChangeListenerHandle {}
 
@@ -296,6 +296,15 @@ class LaunchGateTest {
         assertEquals("not opened", listOf("maps", "dialer"), launched)
         gate.dismiss()
         assertEquals(null, gate.lockFor.value)
+    }
+
+    @Test
+    fun f19_4_unlockFromTheLockScreenOverAnotherAppOpensItsUnlockPage() = runTest(UnconfinedTestDispatcher()) {
+        val gate = gate(LauncherSettings(screenTimeLock = ScreenTimeLockSettings(enabled = true, capMinutes = 60)), usedMinutes = 61)
+        gate.requestUnlock("not.installed")
+        assertEquals(null, gate.lockFor.value)
+        gate.requestUnlock("video")
+        assertEquals("video", gate.lockFor.first { it != null }?.key?.packageName)
     }
 
     @Test

@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.zeroos.core.data.system.isDefaultHome
+import com.zeroos.core.data.wellbeing.LaunchGate
 import com.zeroos.core.logging.DiagnosticsSettings
 import com.zeroos.core.logging.LogFileStore
 import com.zeroos.core.logging.Logger
@@ -45,6 +46,9 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var logStore: LogFileStore
 
     @Inject lateinit var logger: Logger
+
+    /** Lazy so safe mode never creates it (F18.6: safe mode stays independent of DataStore and features). */
+    @Inject lateinit var launchGate: dagger.Lazy<LaunchGate>
 
     /**
      * Back on home does nothing while ZeroOS is the default launcher (there's nowhere to go back to).
@@ -78,6 +82,16 @@ class MainActivity : ComponentActivity() {
                 LauncherRoot(homePresses, showDebugTools = BuildConfig.DEBUG, viewModel = launcher)
             }
         }
+        handleUnlock(intent)
+    }
+
+    /** The lock screen over another app sent us here to unlock it (F19.4): show the unlock page for that app. */
+    private fun handleUnlock(intent: Intent) {
+        val pkg = intent.getStringExtra(EXTRA_UNLOCK_PACKAGE) ?: return
+        intent.removeExtra(EXTRA_UNLOCK_PACKAGE)
+        if (crashLoopGuard.isSafeMode) return
+        logger.info(TAG_LOCK, "unlock page asked for $pkg")
+        launchGate.get().requestUnlock(pkg)
     }
 
     /** F18.3–F18.5: only LauncherApps, core/logging and core/resources; no settings or feature modules. */
@@ -138,9 +152,13 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         if (intent.hasCategory(Intent.CATEGORY_HOME)) homePresses.tryEmit(Unit)
+        handleUnlock(intent)
     }
 
-    private companion object {
-        const val TAG = "safemode"
+    companion object {
+        /** Extra with the package the lock screen wants to unlock (F19.4). */
+        const val EXTRA_UNLOCK_PACKAGE = "com.zeroos.launcher.UNLOCK_PACKAGE"
+        private const val TAG = "safemode"
+        private const val TAG_LOCK = "lock"
     }
 }

@@ -41,6 +41,19 @@ class OneScreenTest {
     private val shorts = content(Overlay.ShortForm(YOUTUBE_PACKAGE, allowLeft = 1, autoHomeSeconds = null))
 
     @Test
+    fun f19_3_theLockCoversEverythingAndTheOthersComeBackAfterIt() {
+        val locked = content(Overlay.Lock(YOUTUBE_PACKAGE, usedMillis = 4 * 60 * 60_000L))
+        screen.wellbeing.show(limit, actions)
+        screen.lock.show(locked, actions)
+        assertEquals(Overlay.Lock(YOUTUBE_PACKAGE, 4 * 60 * 60_000L), window.current)
+        // A short-video block or a break asked for meanwhile waits behind the lock.
+        screen.shortForm.show(shorts, actions)
+        assertEquals(Overlay.Lock(YOUTUBE_PACKAGE, 4 * 60 * 60_000L), window.current)
+        screen.lock.hide()
+        assertEquals(Overlay.Limit(YOUTUBE_PACKAGE, 30, 2), window.current)
+    }
+
+    @Test
     fun f16_7_shortVideoBlockWaitsWhileTheBreakScreenIsUp() {
         screen.wellbeing.show(pause, actions)
         screen.shortForm.show(shorts, actions)

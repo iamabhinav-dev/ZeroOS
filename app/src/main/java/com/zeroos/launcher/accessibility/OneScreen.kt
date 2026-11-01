@@ -1,34 +1,39 @@
 package com.zeroos.launcher.accessibility
 
 /**
- * The one overlay window shared by wellbeing (limit, break; F8.7, F8.16) and the short-video blocker (F16.7), so
- * only one screen is ever shown. The limit or break screen covers the whole app, so it wins; a short-video block
- * asked for meanwhile waits and appears when that screen goes, if it's still wanted.
+ * The one overlay window shared by the screen-time lock (F19.3), wellbeing (limit, break; F8.7, F8.16) and the
+ * short-video blocker (F16.7), so only one screen is ever shown. The lock covers everything, so it wins; then the
+ * limit or break screen, which covers the whole app; a short-video block asked for meanwhile waits and appears when
+ * the screens above it go, if it's still wanted.
  */
 class OneScreen(private val window: OverlayDisplay) {
     private class Screen(val content: OverlayContent, val actions: OverlayActions)
 
-    private var wellbeingScreen: Screen? = null
-    private var shortFormScreen: Screen? = null
+    private enum class Level { LOCK, WELLBEING, SHORT_FORM }
+
+    private val screens = mutableMapOf<Level, Screen>()
     private var shown: Screen? = null
 
-    /** For [OutsideEnforcer]: always shown at once. */
-    val wellbeing: OverlayDisplay = Slot(wins = true)
+    /** For the screen-time lock: always shown at once (F19.3). */
+    val lock: OverlayDisplay = Slot(Level.LOCK)
 
-    /** For the short-video blocker: shown only while no limit or break screen is up. */
-    val shortForm: OverlayDisplay = Slot(wins = false)
+    /** For [OutsideEnforcer]: shown unless the lock is up. */
+    val wellbeing: OverlayDisplay = Slot(Level.WELLBEING)
+
+    /** For the short-video blocker: shown only while no lock, limit or break screen is up. */
+    val shortForm: OverlayDisplay = Slot(Level.SHORT_FORM)
 
     /** Touches the window only when the visible screen changes, so a waiting request never restarts a countdown. */
     private fun refresh() {
-        val next = wellbeingScreen ?: shortFormScreen
+        val next = Level.entries.firstNotNullOfOrNull { screens[it] }
         if (next === shown) return
         shown = next
         if (next == null) window.hide() else window.show(next.content, next.actions)
     }
 
-    private inner class Slot(private val wins: Boolean) : OverlayDisplay {
+    private inner class Slot(private val level: Level) : OverlayDisplay {
         override val showingFor: String?
-            get() = (if (wins) wellbeingScreen else shortFormScreen)?.content?.overlay?.packageName
+            get() = screens[level]?.content?.overlay?.packageName
 
         override fun show(content: OverlayContent, actions: OverlayActions) = set(Screen(content, actions))
 
@@ -37,7 +42,7 @@ class OneScreen(private val window: OverlayDisplay) {
         override fun goHome() = window.goHome()
 
         private fun set(screen: Screen?) {
-            if (wins) wellbeingScreen = screen else shortFormScreen = screen
+            if (screen == null) screens.remove(level) else screens[level] = screen
             refresh()
         }
     }

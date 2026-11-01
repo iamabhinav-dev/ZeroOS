@@ -36,7 +36,9 @@ data class OverlayActions(
     val onGoHome: () -> Unit,
     val onMoreMinutes: () -> Unit = {},
     val onBreakDone: () -> Unit = {},
-    val onAllow: () -> Unit = {}
+    val onAllow: () -> Unit = {},
+    /** The lock screen's "Unlock": opens ZeroOS's unlock page for this app (F19.4). */
+    val onUnlock: () -> Unit = {}
 )
 
 /** The window over other apps; a fake in tests. */
@@ -53,7 +55,14 @@ interface OverlayDisplay {
 }
 
 /** Sizes of the pun lists used over other apps (F8.13, F8.16). */
-data class OverlayPunSizes(val limit: Int, val breakLine: Int, val breakButton: Int, val shorts: Int = 1, val pause: Int = 1)
+data class OverlayPunSizes(
+    val limit: Int,
+    val breakLine: Int,
+    val breakButton: Int,
+    val shorts: Int = 1,
+    val pause: Int = 1,
+    val lock: Int = 1
+)
 
 /** Builds [OverlayContent]: the app's name as shown in ZeroOS, the puns and the appearance. */
 class OverlayContentFactory(
@@ -71,6 +80,7 @@ class OverlayContentFactory(
             is Overlay.Limit -> state.nextPun(PunList.LIMIT, sizes.limit) to 0
             is Overlay.Break -> state.nextPun(PunList.BREAK, sizes.breakLine) to state.nextPun(PunList.BREAK_BUTTON, sizes.breakButton)
             is Overlay.ShortForm -> state.nextPun(PunList.SHORTS, sizes.shorts) to state.nextPun(PunList.PAUSE, sizes.pause)
+            is Overlay.Lock -> state.nextPun(PunList.LOCK, sizes.lock) to 0
         }
         if (overlay is Overlay.ShortForm) {
             val s = current.shortForm
@@ -168,8 +178,10 @@ class OutsideEnforcer(
 
                 is Overlay.Break -> "break screen over $pkg"
 
-                // Shown by the short-video blocker, never by this enforcer.
+                // Shown by the short-video blocker and the screen-time lock, never by this enforcer.
                 is Overlay.ShortForm -> "short videos screen over $pkg"
+
+                is Overlay.Lock -> "lock screen over $pkg"
             }
         )
         display.show(
