@@ -3,16 +3,21 @@ package com.zeroos.launcher
 import android.app.NotificationManager
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import androidx.datastore.core.DataStore
 import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.focus.AndroidDoNotDisturb
 import com.zeroos.core.data.focus.FocusRepository
 import com.zeroos.core.data.focus.createFocusStateDataStore
+import com.zeroos.core.data.insights.InsightsRepository
+import com.zeroos.core.data.lock.LockUnlockStore
+import com.zeroos.core.data.lock.ScreenTimeLock
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.wellbeing.AndroidUsageEventSource
 import com.zeroos.core.data.wellbeing.LaunchGate
 import com.zeroos.core.data.wellbeing.OutsideWatcher
 import com.zeroos.core.data.wellbeing.TodayUsage
 import com.zeroos.core.data.wellbeing.UsageEventSource
+import com.zeroos.core.data.wellbeing.WellbeingState
 import com.zeroos.core.data.wellbeing.WellbeingStateRepository
 import com.zeroos.core.data.wellbeing.WellbeingStatus
 import com.zeroos.core.data.wellbeing.createWellbeingStateDataStore
@@ -35,8 +40,40 @@ import kotlinx.coroutines.SupervisorJob
 object WellbeingModule {
     @Provides
     @Singleton
-    fun launchGate(apps: AppsRepository, settings: SettingsRepository, focus: FocusRepository, logger: Logger): LaunchGate =
-        LaunchGate(apps, settings, focus, CoroutineScope(SupervisorJob() + Dispatchers.Default), logger)
+    fun launchGate(
+        apps: AppsRepository,
+        settings: SettingsRepository,
+        focus: FocusRepository,
+        logger: Logger,
+        lock: ScreenTimeLock
+    ): LaunchGate =
+        LaunchGate(apps, settings, focus, CoroutineScope(SupervisorJob() + Dispatchers.Default), logger, lock)
+
+    /** The screen-time lock (F19): counts screen time like home (F10) and never covers the always-allowed apps. */
+    @Provides
+    @Singleton
+    @Suppress("LongParameterList")
+    fun screenTimeLock(
+        @ApplicationContext context: Context,
+        settings: SettingsRepository,
+        insights: InsightsRepository,
+        state: DataStore<WellbeingState>,
+        clock: Clock,
+        logger: Logger
+    ): ScreenTimeLock = ScreenTimeLock(
+        settings,
+        insights::todayMillis,
+        LockUnlockStore(state),
+        clock,
+        CoroutineScope(SupervisorJob() + Dispatchers.Default),
+        logger
+    ) { alwaysAllowedPackages(context) }
+
+    /** Wellbeing's running state file, shared by its repository and the screen-time lock's unlock. */
+    @Provides
+    @Singleton
+    fun wellbeingStateStore(@ApplicationContext context: Context, logger: Logger, io: CoroutineDispatcher): DataStore<WellbeingState> =
+        createWellbeingStateDataStore(context, logger, CoroutineScope(SupervisorJob() + io))
 
     @Provides
     @Singleton
@@ -50,13 +87,8 @@ object WellbeingModule {
 
     @Provides
     @Singleton
-    fun wellbeingState(
-        @ApplicationContext context: Context,
-        clock: Clock,
-        logger: Logger,
-        io: CoroutineDispatcher
-    ): WellbeingStateRepository =
-        WellbeingStateRepository(createWellbeingStateDataStore(context, logger, CoroutineScope(SupervisorJob() + io)), clock, logger)
+    fun wellbeingState(state: DataStore<WellbeingState>, clock: Clock, logger: Logger): WellbeingStateRepository =
+        WellbeingStateRepository(state, clock, logger)
 
     @Provides
     fun wellbeingStatus(

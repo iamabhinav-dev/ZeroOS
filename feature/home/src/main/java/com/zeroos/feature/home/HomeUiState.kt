@@ -2,6 +2,7 @@ package com.zeroos.feature.home
 
 import com.zeroos.core.data.apps.renamedTo
 import com.zeroos.core.data.focus.FocusSession
+import com.zeroos.core.data.lock.LockState
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.Alignment
 import com.zeroos.core.model.settings.FocusIcon
@@ -41,6 +42,10 @@ data class HomeUiState(
     val focusProgress: Float = 0f,
     val focusIcon: FocusIcon = FocusIcon.MIX
 )
+
+/** While the screen-time lock is on, home shows only the favorites it allows (F19.3). */
+fun HomeUiState.withLock(lock: LockState): HomeUiState =
+    if (lock.active) copy(favorites = favorites.filter { lock.allowsKey(it.key.asString()) }) else this
 
 /**
  * Applies a running focus session (F9.3, F9.4): only allowed favorites, and the minutes left, rounded up so

@@ -1,6 +1,7 @@
 package com.zeroos.feature.home
 
 import com.zeroos.core.data.focus.FocusSession
+import com.zeroos.core.data.lock.LockState
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.FocusIcon
@@ -18,6 +19,16 @@ class HomeUiStateTest {
     private fun app(name: String) = AppEntry(AppKey("pkg.$name", "Main", 0), name)
     private val apps = listOf("Phone", "Messages", "Camera", "Maps").map(::app)
     private fun key(name: String) = AppKey("pkg.$name", "Main", 0).asString()
+
+    @Test
+    fun f19_3_whileLockedHomeShowsOnlyAllowedFavorites() {
+        val settings = LauncherSettings(favorites = listOf(key("Phone"), key("Camera"), key("Maps")))
+        val base = homeUiState(time, settings, apps, null, null)
+        val lock =
+            LockState(enabled = true, active = true, essentialKeys = setOf(key("Maps")), allowedPackages = setOf("pkg.Phone", "pkg.Maps"))
+        assertEquals(listOf("Phone", "Maps"), base.withLock(lock).favorites.map { it.label })
+        assertEquals("not locked: all favorites", 3, base.withLock(lock.copy(active = false)).favorites.size)
+    }
 
     @Test
     fun f1_4_favoritesKeepSavedOrder() {

@@ -32,6 +32,7 @@ import com.zeroos.feature.onboarding.ReadBeforeUsingRoute
 import com.zeroos.feature.onboarding.ReadBeforeUsingViewModel
 import com.zeroos.feature.settings.SettingsPage
 import com.zeroos.feature.settings.SettingsRoute
+import com.zeroos.feature.wellbeing.LockHost
 import com.zeroos.feature.wellbeing.StopHost
 import com.zeroos.launcher.diagnostics.CrashBanner
 import com.zeroos.launcher.diagnostics.DiagnosticsRoute
@@ -75,87 +76,89 @@ fun LauncherRoot(homePresses: Flow<Unit>, showDebugTools: Boolean, viewModel: La
 
     if (!startPagesDone(onboardingCompleted)) return
 
-    // A wellbeing stop screen covers everything while an app waits behind it (F8.1, F8.4).
-    StopHost(homePresses) {
-        when (screen) {
-            LauncherScreen.HOME -> Box {
-                HomeRoute(
-                    onSwipeUp = { screen = LauncherScreen.APP_LIST },
-                    // Swipe down opens search: the app list with its search field (F4.4).
-                    // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
-                    onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
-                    onLongPress = {
-                        settingsPage = SettingsPage.MAIN
-                        screen = LauncherScreen.SETTINGS
-                    },
-                    onDoubleTap = viewModel::lockScreen,
-                    onOpenFocus = { open(LauncherScreen.FOCUS, null) },
-                    onEndFocusEarly = { screen = LauncherScreen.FOCUS_END },
-                    stats = {
-                        HomeStatsRoute(
-                            onOpenInsights = { open(LauncherScreen.INSIGHTS, null) },
-                            onAskAccess = {
-                                accessReturn = LauncherScreen.HOME
-                                screen = LauncherScreen.USAGE_ACCESS
+    // The screen-time lock and the wellbeing stop screens cover everything while an app waits behind them (F19.3, F8.1, F8.4).
+    LockHost(homePresses) {
+        StopHost(homePresses) {
+            when (screen) {
+                LauncherScreen.HOME -> Box {
+                    HomeRoute(
+                        onSwipeUp = { screen = LauncherScreen.APP_LIST },
+                        // Swipe down opens search: the app list with its search field (F4.4).
+                        // Swipe down: notification shade while Accessibility runs, otherwise search (F4.4, D-033).
+                        onSwipeDown = { if (!viewModel.openNotificationShade()) screen = LauncherScreen.APP_LIST },
+                        onLongPress = {
+                            settingsPage = SettingsPage.MAIN
+                            screen = LauncherScreen.SETTINGS
+                        },
+                        onDoubleTap = viewModel::lockScreen,
+                        onOpenFocus = { open(LauncherScreen.FOCUS, null) },
+                        onEndFocusEarly = { screen = LauncherScreen.FOCUS_END },
+                        stats = {
+                            HomeStatsRoute(
+                                onOpenInsights = { open(LauncherScreen.INSIGHTS, null) },
+                                onAskAccess = {
+                                    accessReturn = LauncherScreen.HOME
+                                    screen = LauncherScreen.USAGE_ACCESS
+                                }
+                            )
+                        }
+                    )
+                    HomeBanners(
+                        crashReport = crashReport,
+                        notHomeApp = notHomeApp,
+                        onViewReport = { report ->
+                            viewModel.markCrashSeen()
+                            openReport = report
+                            screen = LauncherScreen.DIAGNOSTICS
+                        },
+                        onDismissCrash = viewModel::markCrashSeen,
+                        onSetDefault = {
+                            try {
+                                homeDialog.launch(defaultHomeIntent(context))
+                            } catch (e: ActivityNotFoundException) {
+                                viewModel.onHomeDialogFailed(e)
                             }
-                        )
+                        },
+                        onDismissHome = viewModel::dismissHomeApp,
+                        modifier = Modifier.align(Alignment.TopCenter).safeDrawingPadding()
+                    )
+                }
+
+                LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
+
+                LauncherScreen.FOCUS, LauncherScreen.FOCUS_END, LauncherScreen.INSIGHTS, LauncherScreen.USAGE_ACCESS -> SideScreen(
+                    screen = screen,
+                    onBack = {
+                        val (back, page) = backFrom(cameFrom)
+                        settingsPage = page
+                        screen = back
+                    },
+                    onHome = { screen = LauncherScreen.HOME },
+                    onAccessDone = { screen = accessReturn },
+                    onAskAccess = {
+                        accessReturn = LauncherScreen.INSIGHTS
+                        screen = LauncherScreen.USAGE_ACCESS
                     }
                 )
-                HomeBanners(
-                    crashReport = crashReport,
-                    notHomeApp = notHomeApp,
-                    onViewReport = { report ->
-                        viewModel.markCrashSeen()
-                        openReport = report
-                        screen = LauncherScreen.DIAGNOSTICS
+
+                LauncherScreen.SETTINGS -> SettingsRoute(
+                    onClose = { screen = LauncherScreen.HOME },
+                    onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS },
+                    onStartFocus = { open(LauncherScreen.FOCUS, SettingsPage.FOCUS) },
+                    onOpenInsights = { open(LauncherScreen.INSIGHTS, SettingsPage.SCREEN_TIME) },
+                    startPage = settingsPage
+                )
+
+                LauncherScreen.DIAGNOSTICS -> DiagnosticsRoute(
+                    onClose = {
+                        // Opened from a crash banner on home, or from Settings (wireframe F1).
+                        screen = if (openReport != null) LauncherScreen.HOME else LauncherScreen.SETTINGS
+                        openReport = null
                     },
-                    onDismissCrash = viewModel::markCrashSeen,
-                    onSetDefault = {
-                        try {
-                            homeDialog.launch(defaultHomeIntent(context))
-                        } catch (e: ActivityNotFoundException) {
-                            viewModel.onHomeDialogFailed(e)
-                        }
-                    },
-                    onDismissHome = viewModel::dismissHomeApp,
-                    modifier = Modifier.align(Alignment.TopCenter).safeDrawingPadding()
+                    showDebugTools = showDebugTools,
+                    openReport = openReport
                 )
             }
-
-            LauncherScreen.APP_LIST -> AppListRoute(onClose = { screen = LauncherScreen.HOME })
-
-            LauncherScreen.FOCUS, LauncherScreen.FOCUS_END, LauncherScreen.INSIGHTS, LauncherScreen.USAGE_ACCESS -> SideScreen(
-                screen = screen,
-                onBack = {
-                    val (back, page) = backFrom(cameFrom)
-                    settingsPage = page
-                    screen = back
-                },
-                onHome = { screen = LauncherScreen.HOME },
-                onAccessDone = { screen = accessReturn },
-                onAskAccess = {
-                    accessReturn = LauncherScreen.INSIGHTS
-                    screen = LauncherScreen.USAGE_ACCESS
-                }
-            )
-
-            LauncherScreen.SETTINGS -> SettingsRoute(
-                onClose = { screen = LauncherScreen.HOME },
-                onOpenDiagnostics = { screen = LauncherScreen.DIAGNOSTICS },
-                onStartFocus = { open(LauncherScreen.FOCUS, SettingsPage.FOCUS) },
-                onOpenInsights = { open(LauncherScreen.INSIGHTS, SettingsPage.SCREEN_TIME) },
-                startPage = settingsPage
-            )
-
-            LauncherScreen.DIAGNOSTICS -> DiagnosticsRoute(
-                onClose = {
-                    // Opened from a crash banner on home, or from Settings (wireframe F1).
-                    screen = if (openReport != null) LauncherScreen.HOME else LauncherScreen.SETTINGS
-                    openReport = null
-                },
-                showDebugTools = showDebugTools,
-                openReport = openReport
-            )
         }
     }
 }

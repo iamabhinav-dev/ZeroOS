@@ -6,6 +6,8 @@ import com.zeroos.core.data.apps.LaunchableActivity
 import com.zeroos.core.data.apps.LauncherAppsSource
 import com.zeroos.core.data.focus.FocusRepository
 import com.zeroos.core.data.focus.FocusStateSerializer
+import com.zeroos.core.data.lock.LockUnlockStore
+import com.zeroos.core.data.lock.ScreenTimeLock
 import com.zeroos.core.data.settings.SettingsRepository
 import com.zeroos.core.data.settings.SettingsSerializer
 import com.zeroos.core.logging.LogLevel
@@ -14,6 +16,7 @@ import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.AppKey
 import com.zeroos.core.model.settings.AppRule
 import com.zeroos.core.model.settings.LauncherSettings
+import com.zeroos.core.model.settings.ScreenTimeLockSettings
 import com.zeroos.core.model.settings.WellbeingSettings
 import com.zeroos.core.testing.MutableClock
 import java.time.Clock
@@ -251,20 +254,55 @@ class LaunchGateTest {
         assertTrue(gate.launch(app("yt")))
     }
 
-    private suspend fun TestScope.gate(settings: LauncherSettings): LaunchGate {
+    private suspend fun TestScope.gate(settings: LauncherSettings, usedMinutes: Long = 0): LaunchGate {
         val store = DataStoreFactory.create(SettingsSerializer, scope = backgroundScope, produceFile = {
             temp.newFile().apply { delete() }
         })
         store.updateData { settings }
         val repo = SettingsRepository(store, logger)
         repo.settings.first()
+        val lock = ScreenTimeLock(
+            repo,
+            { usedMinutes * 60_000L },
+            LockUnlockStore(
+                DataStoreFactory.create(WellbeingStateSerializer, scope = backgroundScope, produceFile = {
+                    temp.newFile().apply { delete() }
+                })
+            ),
+            Clock.systemUTC(),
+            backgroundScope,
+            logger
+        ) { setOf("dialer") }
         return LaunchGate(
             AppsRepository(source, logger, UnconfinedTestDispatcher(testScheduler)),
             repo,
             focusRepository(),
             backgroundScope,
-            logger
-        )
+            logger,
+            lock
+        ).also { lock.refresh() }
+    }
+
+    @Test
+    fun f19_3_whileLockedOnlyEssentialAppsOpenOthersWaitForTheLockScreen() = runTest(UnconfinedTestDispatcher()) {
+        val lockOn = ScreenTimeLockSettings(enabled = true, capMinutes = 60, essentialApps = listOf(app("maps").key.asString()))
+        val gate = gate(LauncherSettings(screenTimeLock = lockOn), usedMinutes = 61)
+        assertTrue(gate.lock.value.active)
+        assertTrue(gate.launch(app("maps")))
+        assertTrue("the phone app always opens", gate.launch(app("dialer")))
+        assertEquals(listOf("maps", "dialer"), launched)
+        assertTrue(gate.launch(app("yt")))
+        assertEquals(app("yt"), gate.lockFor.value)
+        assertEquals("not opened", listOf("maps", "dialer"), launched)
+        gate.dismiss()
+        assertEquals(null, gate.lockFor.value)
+    }
+
+    @Test
+    fun f19_3_beforeTheCapEverythingOpens() = runTest(UnconfinedTestDispatcher()) {
+        val gate = gate(LauncherSettings(screenTimeLock = ScreenTimeLockSettings(enabled = true, capMinutes = 60)), usedMinutes = 30)
+        assertTrue(gate.launch(app("yt")))
+        assertEquals(listOf("yt"), launched)
     }
 
     @Test

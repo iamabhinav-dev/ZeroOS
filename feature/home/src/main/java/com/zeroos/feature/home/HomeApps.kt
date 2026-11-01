@@ -4,6 +4,7 @@ import com.zeroos.core.data.apps.AppsRepository
 import com.zeroos.core.data.apps.HomeAppsCache
 import com.zeroos.core.data.apps.homeAppsToCache
 import com.zeroos.core.data.focus.FocusSession
+import com.zeroos.core.data.lock.LockState
 import com.zeroos.core.data.wellbeing.LaunchGate
 import com.zeroos.core.model.AppEntry
 import com.zeroos.core.model.settings.LauncherSettings
@@ -31,6 +32,9 @@ class HomeApps @Inject constructor(
 
     /** The running focus session (F9.3, F9.4). */
     val focus: Flow<FocusSession?> = gate.focus
+
+    /** The screen-time lock (F19.3): while it's on, home shows only the apps it allows. */
+    val lock: Flow<LockState> = gate.lock
 
     fun saver(scope: CoroutineScope) = HomeAppsSaver(cache, scope, io)
 }
