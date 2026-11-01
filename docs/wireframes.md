@@ -1084,6 +1084,91 @@ start before home; Continue then goes straight to home.*
 ```
 *Also reachable later from Settings → About: "README", "Licence", "Third-party notices".*
 
+---
+
+## L. Screen-time lock (F19) — DRAFT, not approved (2026-11-01)
+Proposed requirements (added to REQUIREMENTS.md once approved; numbers and defaults go to Appendix A):
+- **F19.1** Off by default. Turning it on asks for a daily screen-time cap, the apps that stay usable ("essential
+  apps") and a password, in that order.
+- **F19.2** Screen time is counted as in F10 (apps in front, ZeroOS itself not counted) and resets at local
+  midnight (F8.6).
+- **F19.3** Once today's screen time reaches the cap, the lock is on until midnight: home and the app list show only
+  the essential apps, and any other app brought to the front (from a notification, recents or a shortcut) is covered
+  by the lock screen (L3). The Phone app and emergency calls always work, whether or not they were picked.
+- **F19.4** The lock screen offers "Go home" and "Unlock with password". The right password unlocks
+  {for the rest of the day | for 15 minutes, then the lock comes back} (question 1).
+- **F19.5** While the lock is set up, turning it off, raising the cap, adding essential apps or changing the
+  password needs the password. Lowering the cap or removing essential apps doesn't.
+- **F19.6** The password is stored only as a salted hash on the phone; it's never logged, shown or put in a backup.
+  After importing a backup, the lock stays off until a new password is set.
+- **F19.7** Needs Usage access (to count screen time) and Accessibility (to cover apps opened outside ZeroOS), each
+  explained first (H2 template). Without Accessibility, ZeroOS can only hide apps on its own home and list, and the
+  settings page says so.
+- **F19.8** Honest limit, shown when turning it on: Android always lets you change the home app or clear ZeroOS's
+  storage in Android Settings, so the lock is strong friction, not an unbreakable lock. Forgetting the password means
+  clearing ZeroOS's storage, which resets all its settings.
+- **F19.9** Each lock, unlock, wrong password and change of the lock's settings is logged (no password, F17.8).
+
+### L1. Settings → Wellbeing → Screen-time lock
+```
+┌────────────────────────────────────┐
+│  ‹ Screen-time lock                │
+│  Lock after                ‹3 h›   │  first time → L2; while set up, raising it asks for the password
+│  Essential apps                  › │  picker like Focus (H11); Phone always included
+│  Change password                 › │  asks for the current one first
+│  Today: 1h 52m of 3h               │  dotted progress, as on home (F10.5)
+│                                    │
+│  Turn off                        › │  asks for the password
+│                                    │
+│  Android lets you change the home  │  F19.8, small and muted
+│  app or clear ZeroOS's storage in  │
+│  its Settings, so this is strong   │
+│  friction, not an unbreakable lock.│
+└────────────────────────────────────┘
+```
+
+### L2. Set the password (first time, and "Change password")
+```
+┌────────────────────────────────────┐
+│  ‹ Set a password                  │
+│  ●●●●●●                            │  PIN or text (question 3), shown as dots
+│  Again: ●●●●●●                     │
+│                                    │
+│  If you forget it, the only way    │
+│  out is clearing ZeroOS's storage, │
+│  which resets all its settings.    │
+│                         [ Save ]   │  dimmed until both match
+└────────────────────────────────────┘
+```
+
+### L3. Lock screen (over any non-essential app, and when one is tapped on home)
+```
+┌────────────────────────────────────┐
+│                                    │
+│          (dot padlock art)         │  drawn in dots like the stop screens
+│                                    │
+│   Screen time is up for today.     │
+│   3h used. Essential apps still    │
+│   work.                            │
+│                                    │
+│   pun line (F8.13 style)           │
+│                                    │
+│  Go home        Unlock with password│  → L4
+└────────────────────────────────────┘
+```
+*Landscape: art on the left, text and buttons on the right (like the stop screens).*
+
+### L4. Unlock
+```
+┌────────────────────────────────────┐
+│  ‹ Unlock                          │
+│  Password: ●●●●                    │
+│  Wrong password. 2 tries before a  │  after 5 wrong tries: wait 1 min, then 5, 15 (question 4)
+│  1-minute wait.                    │
+│                       [ Unlock ]   │
+└────────────────────────────────────┘
+```
+
 ## Answered questions
 - **Q1. "Swipe up for apps" hint on home:** no; taught in intro page G3 only (D-027).
 - **Q2. Fonts:** Doto for all text, no font picker (D-020).
