@@ -119,6 +119,19 @@ class PunBagTest {
     }
 }
 
+class WellbeingStateMigrationTest {
+    @Test
+    fun f19_olderStateFileLoadsWithTheLockFieldsEmpty() = runTest {
+        // A state file written before the screen-time lock existed (F19): no unlock running, fresh pun bags.
+        val old = """{ "day": "2026-10-31", "extrasUsed": { "x": 1 }, "shortFormBlocks": 2 }"""
+        val state = WellbeingStateSerializer.readFrom(old.byteInputStream())
+        assertEquals(mapOf("x" to 1), state.extrasUsed)
+        assertEquals(2, state.shortFormBlocks)
+        assertEquals(0L, state.lockUnlockedUntil)
+        assertEquals(PunBag(), state.lockWrongBag)
+    }
+}
+
 class WellbeingStateRepositoryTest {
     @get:Rule
     val temp = TemporaryFolder()

@@ -35,6 +35,20 @@ class InsightsRepository(
         }
     }
 
+    /** Today's screen time so far, counted as on home (F10, used by the screen-time lock F19.2); null without Usage access. */
+    suspend fun todayMillis(): Long? = withContext(io) {
+        val now = clock.instant()
+        val start = startOfDay(now, zone()).toEpochMilli()
+        try {
+            foregroundIntervals(source.events(start, now.toEpochMilli()), start, now.toEpochMilli())
+                .filter { it.packageName != ownPackage }
+                .overlap(start, now.toEpochMilli())
+        } catch (e: SecurityException) {
+            logger.warn(TAG, "usage events not readable", e)
+            null
+        }
+    }
+
     private companion object {
         const val TAG = "insights"
     }

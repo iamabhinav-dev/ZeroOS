@@ -37,14 +37,18 @@ data class WellbeingState(
     val shortFormMillis: Long = 0,
     val shortFormBlocks: Int = 0,
     val shortFormAllowUses: Int = 0,
-    val shortsBag: PunBag = PunBag()
+    val shortsBag: PunBag = PunBag(),
+    /** Screen-time lock (F19.4): the typed phrase opens other apps until this time; 0 when not unlocked. */
+    val lockUnlockedUntil: Long = 0,
+    val lockBag: PunBag = PunBag(),
+    val lockWrongBag: PunBag = PunBag()
 )
 
 /** Today's short-video numbers (F16.8, F16.14). */
 data class ShortFormDay(val millis: Long = 0, val blocks: Int = 0, val allowUses: Int = 0)
 
 /** The pun lists in docs/puns.md: A short videos (F16.9), B pause, C limit (F8.13), D break and E break button (F8.16). */
-enum class PunList { PAUSE, LIMIT, BREAK, BREAK_BUTTON, SHORTS }
+enum class PunList { PAUSE, LIMIT, BREAK, BREAK_BUTTON, SHORTS, LOCK, LOCK_WRONG }
 
 /** Reads and changes [WellbeingState]. The day follows the phone's current time zone ([zone] is read each time). */
 class WellbeingStateRepository(
@@ -98,6 +102,8 @@ class WellbeingStateRepository(
                 PunList.BREAK -> s.copy(breakBag = bag)
                 PunList.BREAK_BUTTON -> s.copy(breakButtonBag = bag)
                 PunList.SHORTS -> s.copy(shortsBag = bag)
+                PunList.LOCK -> s.copy(lockBag = bag)
+                PunList.LOCK_WRONG -> s.copy(lockWrongBag = bag)
             }
         }
         return index
@@ -111,6 +117,8 @@ class WellbeingStateRepository(
         PunList.BREAK -> breakBag
         PunList.BREAK_BUTTON -> breakButtonBag
         PunList.SHORTS -> shortsBag
+        PunList.LOCK -> lockBag
+        PunList.LOCK_WRONG -> lockWrongBag
     }
 
     /** This state on [today]: the day's counters start again when the date changes (F8.6, F16.8). */

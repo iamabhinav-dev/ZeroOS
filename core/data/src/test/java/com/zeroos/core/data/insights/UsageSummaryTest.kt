@@ -133,4 +133,26 @@ class UsageSummaryTest {
             }, clock, UnconfinedTestDispatcher(testScheduler), logger, "zeroos", true)
         assertNull(denied.summary())
     }
+
+    @Test
+    fun f19_2_todaysScreenTimeForTheLockMatchesHomeAndSkipsZeroOs() = runTest {
+        val clock = MutableClock(Instant.parse("2026-10-18T10:00:00Z"), ZONE)
+        val logger = object : Logger {
+            override fun log(level: LogLevel, tag: String, message: String, throwable: Throwable?) = Unit
+        }
+        val events = listOf(
+            e("zeroos", UsageEvent.Type.RESUMED, "2026-10-18T08:00:00Z"),
+            e("zeroos", UsageEvent.Type.PAUSED, "2026-10-18T09:00:00Z"),
+            e("video", UsageEvent.Type.RESUMED, "2026-10-18T09:00:00Z"),
+            e("video", UsageEvent.Type.PAUSED, "2026-10-18T09:40:00Z")
+        )
+        val repo =
+            InsightsRepository({ _, _ -> events }, clock, UnconfinedTestDispatcher(testScheduler), logger, "zeroos", true, clock::getZone)
+        assertEquals(40 * 60_000L, repo.todayMillis())
+        val denied =
+            InsightsRepository({ _, _ ->
+                throw SecurityException()
+            }, clock, UnconfinedTestDispatcher(testScheduler), logger, "zeroos", true)
+        assertNull(denied.todayMillis())
+    }
 }

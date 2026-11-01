@@ -1,6 +1,7 @@
 package com.zeroos.core.data.backup
 
 import com.zeroos.core.model.settings.CUSTOM_MESSAGE_MAX
+import com.zeroos.core.model.settings.DEFAULT_UNLOCK_PHRASE
 import com.zeroos.core.model.settings.LauncherSettings
 import com.zeroos.core.model.settings.PhoneWallpaperHistory
 import com.zeroos.core.model.settings.ShortFormSettings
@@ -19,6 +20,8 @@ internal object AllowedRanges {
     val allowanceMinutes = 0..120
     val autoHomeSeconds = 3..10
     val allowUsesPerDay = 0..5
+    val lockCapMinutes = 30..480
+    val unlockPhraseLength = 8..40
 }
 
 /**
@@ -35,7 +38,11 @@ fun LauncherSettings.withinAllowedRanges(): LauncherSettings = copy(
     wellbeing = wellbeing.withinAllowedRanges(),
     focus = focus.copy(lastMinutes = focus.lastMinutes.coerceIn(AllowedRanges.focusMinutes)),
     screenTime = screenTime.copy(goalMinutes = screenTime.goalMinutes?.coerceIn(AllowedRanges.goalMinutes)),
-    shortForm = shortForm.withinAllowedRanges()
+    shortForm = shortForm.withinAllowedRanges(),
+    screenTimeLock = screenTimeLock.copy(
+        capMinutes = screenTimeLock.capMinutes.coerceIn(AllowedRanges.lockCapMinutes),
+        phrase = screenTimeLock.phrase.takeIf { it.length in AllowedRanges.unlockPhraseLength } ?: DEFAULT_UNLOCK_PHRASE
+    )
 )
 
 private fun WellbeingSettings.withinAllowedRanges() = copy(

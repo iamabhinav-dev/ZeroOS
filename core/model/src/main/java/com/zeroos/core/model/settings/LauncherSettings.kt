@@ -29,7 +29,8 @@ data class LauncherSettings(
     val screenTime: ScreenTimeSettings = ScreenTimeSettings(),
     val shortForm: ShortFormSettings = ShortFormSettings(),
     /** Fingerprint of the README notes, LICENSE and notices the user accepted (F14.8); null until accepted. */
-    val acceptedDocuments: String? = null
+    val acceptedDocuments: String? = null,
+    val screenTimeLock: ScreenTimeLockSettings = ScreenTimeLockSettings()
 ) {
     companion object {
         const val CURRENT_VERSION = 1
@@ -242,3 +243,22 @@ const val INSTAGRAM_PACKAGE = "com.instagram.android"
 
 /** F16.9: the custom message's length limit. */
 const val CUSTOM_MESSAGE_MAX = 120
+
+/** Screen-time lock (F19, D-062); defaults from Appendix A. */
+@Serializable
+data class ScreenTimeLockSettings(
+    /** F19.1: off by default. */
+    val enabled: Boolean = false,
+    /** Daily cap; at it, only [essentialApps] work until midnight (F19.3): 30–480 min in 30 min steps. */
+    val capMinutes: Int = DEFAULT_LOCK_CAP_MINUTES,
+    /** App keys (`AppKey.asString()`) that stay usable while locked (F19.3). */
+    val essentialApps: List<String> = emptyList(),
+    /** Typed exactly to unlock for 15 minutes (F19.4); a confession, not a secret. Never logged (F17.8). */
+    val phrase: String = DEFAULT_UNLOCK_PHRASE
+)
+
+/** F19.1, Appendix A. */
+const val DEFAULT_LOCK_CAP_MINUTES = 240
+
+/** F19.4, Appendix A. */
+const val DEFAULT_UNLOCK_PHRASE = "IamWeakIneedThis"
